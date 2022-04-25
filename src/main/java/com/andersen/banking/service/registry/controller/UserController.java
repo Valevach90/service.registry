@@ -3,33 +3,16 @@ package com.andersen.banking.service.registry.controller;
 
 import com.andersen.banking.service.registry.domain.UserEntity;
 import com.andersen.banking.service.registry.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.catalina.User;
-import org.hibernate.property.access.spi.PropertyAccess;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
 
-@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
-        @ApiResponse(responseCode = "401",
-                description = "Unauthorized",
-                content = @Content),
-        @ApiResponse(responseCode = "403",
-                description = "Forbidden",
-                content = @Content),
-        @ApiResponse(responseCode = "500",
-                description = "Internal Server Error",
-                content = @Content)
-})
 @RestController
 public class UserController {
 
