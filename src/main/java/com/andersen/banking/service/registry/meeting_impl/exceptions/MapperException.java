@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_impl.mapping;
+package com.andersen.banking.service.registry.meeting_impl.exceptions;
 
 /**
  * Exception for mapping actions.

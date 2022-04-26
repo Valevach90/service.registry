@@ -1,6 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.config;
 
-import com.andersen.banking.service.registry.meeting_impl.mapping.MapperException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.MapperException;
 import org.mapstruct.MapperConfig;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;

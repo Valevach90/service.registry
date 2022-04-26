@@ -41,21 +41,12 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_FLAT = "Flat";
     public static final String EXAMPLE_FLAT = "11";
 
-    public static final String HTTP_BAD_REQUEST = "400";
-    public static final String HTTP_UNAUTHORIZED = "401";
-    public static final String HTTP_FORBIDDEN = "403";
     public static final String HTTP_NOT_FOUND = "404";
-    public static final String HTTP_METHOD_NOT_ALLOWED = "405";
-    public static final String HTTP_CONFLICT = "409";
 
 
     public static final String DESCRIPTION_ERROR_DESCRIPTION = "Error description";
-    public static final String EXAMPLE_ERROR_BAD_REQUEST = "Bad request";
-    public static final String EXAMPLE_ERROR_UNAUTHORIZED = "Unauthorized";
+
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";
-    public static final String EXAMPLE_ERROR_CONFLICT = "Conflict";
-    public static final String EXAMPLE_ERROR_FORBIDDEN = "Forbidden";
-    public static final String EXAMPLE_ERROR_METHOD_NOT_ALLOWED = "Method not allowed";
 
     public static final String DESCRIPTION_ERROR_CODE = "Error code";
 }
