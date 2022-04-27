@@ -1,8 +1,6 @@
 package com.andersen.banking.service.registry.meeting_db.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,12 +14,28 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class UserEntity {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "name")
-    private String name;
+    @Column(nullable = false, name = "first_name")
+    private String firstName;
+
+    @Column(nullable = false, name = "last_name")
+    private String lastName;
+
+    @Column(nullable = false, name = "patronymic")
+    private String patronymic;
+
+    @Column(nullable = false, name = "email")
+    private String email;
+
+    @Column(nullable = false, name = "phone")
+    private String phone;
+
 }
