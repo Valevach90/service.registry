@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.Optional;
+
 /**
  * Mapper user.
  */
@@ -15,9 +17,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = MeetingMapperConfig.class)
 public interface UserMapper {
 
-    @Mapping(target = "id", ignore = true)
+  
     UserDto toUserDto(UserEntity user);
+    @Mapping(target = "id", ignore = true)
+    UserEntity toUserEntity(UserDto user);
 
-    void updateUserDetails(@MappingTarget UserEntity oldUser, UserEntity newUser);
-
+    void updateUserDetails(@MappingTarget Optional<UserEntity> oldUser, UserEntity newUser);
 }
