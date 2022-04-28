@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+/**
+ * Passport entity.
+ */
 @Getter
 @Setter
 @Entity
@@ -28,11 +32,11 @@ public class PassportEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "users_id", nullable = false)
     private UserEntity user;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "address_id", nullable = false)
     private AddressEntity address;
 

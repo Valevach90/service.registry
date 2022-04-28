@@ -32,6 +32,9 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PASSPORT_SERIAL_NUMBER;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PATRONYMIC;
 
+/**
+ * Dto for passport.
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for passport")

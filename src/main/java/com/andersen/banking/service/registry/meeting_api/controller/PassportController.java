@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller for passport.
+ */
 @Tag(name = "Passport Controller", description = "work with passports")
 @RequestMapping("/api/v1/passport")
 public interface PassportController {

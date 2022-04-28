@@ -2,6 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.service.local.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.PassportEntity;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.local.PassportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class PassportServiceImpl implements PassportService {
         log.debug("Find passport by id: {}", id);
 
         PassportEntity passportEntity = passportRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
 
         log.debug("Found passport: {} by id: {}", passportEntity, id);
         return passportEntity;
@@ -31,7 +32,7 @@ public class PassportServiceImpl implements PassportService {
         log.debug("Find passport by id: {}", userId);
 
         PassportEntity passportEntity = passportRepository.findByUserId(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
 
         log.debug("Found passport: {} by user id: {}", passportEntity, userId);
         return passportEntity;
@@ -42,7 +43,7 @@ public class PassportServiceImpl implements PassportService {
         log.debug("Find passport by address id: {}", addressId);
 
         PassportEntity passportEntity = passportRepository.findByAddressId(addressId)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
 
         log.debug("Found passport: {} by address id: {}", passportEntity, addressId);
         return passportEntity;

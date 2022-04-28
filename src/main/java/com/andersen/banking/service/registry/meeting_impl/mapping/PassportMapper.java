@@ -6,6 +6,9 @@ import com.andersen.banking.service.registry.meeting_impl.config.MeetingMapperCo
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper for passport.
+ */
 @Mapper(config = MeetingMapperConfig.class)
 public interface PassportMapper {
 
