@@ -38,7 +38,7 @@ public interface UserService {
      * @param user
      * @return UserEntity
      */
-    Optional<UserEntity> saveUser(Optional<UserEntity> user);
+    Optional<UserEntity> saveUser(UserEntity user);
 
     /**
      * Update user from database by id

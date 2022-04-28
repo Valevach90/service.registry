@@ -27,13 +27,5 @@ public interface UserProcessingService {
      */
     List<UserDto> findAllUsersDto();
 
-    /**
-     * Update user by id
-     *
-     * @param id
-     * @param userDto
-     */
-    void updateUser(Long id, UserDto userDto);
-
 
 }

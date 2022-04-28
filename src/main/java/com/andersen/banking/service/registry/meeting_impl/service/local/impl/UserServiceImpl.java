@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     public List<UserEntity> findAll() {
         log.debug("Find all users");
 
-        List<UserEntity> users = (List<UserEntity>) userRepository.findAll();
+        List<UserEntity> users = userRepository.findAll();
 
         log.debug("Return counts all users with pageable success: {}", users.size());
         return users;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> saveUser(Optional<UserEntity> user) {
+    public Optional<UserEntity> saveUser(UserEntity user) {
         log.debug("Saving user in database: {}", user);
 
         UserEntity savedUser = userRepository.save(user);

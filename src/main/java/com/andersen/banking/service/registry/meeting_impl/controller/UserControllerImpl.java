@@ -1,11 +1,9 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import com.andersen.banking.service.registry.meeting_db.entities.UserEntity;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
-import com.andersen.banking.service.registry.meeting_impl.service.processing.UserProcessingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,29 +16,27 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
 
-    private final UserProcessingService userProcessingService;
-
     private final UserService userService;
 
     @Override
-    public List<UserDto> findAll() {
+    public List<UserEntity> findAll() {
         log.trace("Find all users");
 
-        List<UserDto> users = userProcessingService.findAllUsersDto();
+        List<UserEntity> users = userService.findAll();
 
-        log.trace("Return list of Addresses: {}", users);
+        log.trace("Return list of users success: {}", users);
         return users;
     }
 
     @Override
-    public UserDto findUserById(Long id) {
-        log.trace("Find user by userId: {}", id);
+    public Optional<UserEntity> findUserById(Long id) {
+        log.trace("Find user by Id: {}", id);
 
-        UserDto userDto = userProcessingService.findByIdUserDto(id);
+        Optional<UserEntity> user = userService.findById(id);
 
-        log.trace("Return address: {}", userDto);
+        log.trace("Return user success: {}", user);
 
-        return userDto;
+        return user;
     }
 
     @Override
@@ -51,7 +47,7 @@ public class UserControllerImpl implements UserController {
             throw new RuntimeException("The user with id: " + newUser.getId() + " is already saved before");
         });
 
-        Optional<UserEntity> savedUser = Optional.ofNullable(userService.saveUser(Optional.of(newUser)).orElseThrow(() -> {
+        Optional<UserEntity> savedUser = Optional.ofNullable(userService.saveUser(newUser).orElseThrow(() -> {
             throw new RuntimeException("The user with id " + newUser.getId() + " is successful saved");
         }));
 
@@ -60,10 +56,10 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void updateAddress(Long id, UserDto user) {
+    public void updateUser(Long id, UserEntity user) {
         log.trace("Try to update user: {}", user);
 
-        userProcessingService.updateUser(id, user);
+        userService.updateUser(id, user);
 
         log.trace("Updated user success");
 

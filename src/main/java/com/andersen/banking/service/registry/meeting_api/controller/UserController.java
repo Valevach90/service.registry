@@ -21,12 +21,12 @@ public interface UserController {
     @Operation(summary = "Get all users",
             description = "get all users information")
     @GetMapping("/users")
-    List<UserDto> findAll();
+    List<UserEntity> findAll();
 
     @Operation(summary = "Get user by user id",
             description = "get user information by user id")
     @GetMapping("/users/{id}")
-    UserDto findUserById(@Parameter(description = "user id", required = true)
+    Optional<UserEntity> findUserById(@Parameter(description = "user id", required = true)
                          @PathVariable Long id);
 
     @Operation(summary = "Save user in database",
@@ -38,15 +38,15 @@ public interface UserController {
     @Operation(summary = "Update user",
             description = "update user by params in dto")
     @PutMapping("/users/{id}")
-    void updateAddress(
+    void updateUser(
             @Parameter(description = "user id", required = true)
             @PathVariable Long id,
-            @RequestBody UserDto user
+            @RequestBody UserEntity user
     );
 
     @Operation(summary = "Delete user by user id",
             description = "delete user information by user id")
-    @GetMapping("/users/{id}")
+    @DeleteMapping("/users/{id}")
     void deleteUserById(@Parameter(description = "user id", required = true)
                          @PathVariable Long id);
 
