@@ -2,17 +2,24 @@ server:
   port: 8181
 
 spring:
+  config:
+    activate:
+      on-profile: test
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/registry
-    username: benefits
-    password: ben0147
+    url: jdbc:postgresql://localhost:5432/registry-service
+    username: benefit
+    password: ben01479
 
   jpa:
     hibernate.ddl-auto: create
     show-sql: true
   flyway:
     enabled: true
+    user: benefit
+    password: ben01479
+    schema: registry-service
+
 
 
 springdoc:

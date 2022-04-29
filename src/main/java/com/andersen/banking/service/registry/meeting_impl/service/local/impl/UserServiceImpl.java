@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserEntity> saveUser(UserEntity user) {
         log.debug("Saving user in database: {}", user);
-
+        userRepository.findById(user.getId()).ifPresent(usr -> {
+            throw new RuntimeException("The user with id: " + user.getId() + " is already saved before");
+        });
         UserEntity savedUser = userRepository.save(user);
 
         log.debug("Return saved user success: {}", savedUser);
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
             user.setPhone(newUser.getPhone());
             return userRepository.save(user);
         }).orElseThrow(() -> {
-            return new RuntimeException("Problem with update user by id " + id);
+            return new NotFoundException(NotFoundException.BY_ID);
         });
         log.debug("Update user by id success: {}", newUser);
         return Optional.of(newUser);

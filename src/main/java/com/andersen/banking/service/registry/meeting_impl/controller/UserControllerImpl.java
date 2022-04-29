@@ -43,10 +43,6 @@ public class UserControllerImpl implements UserController {
     public Optional<UserEntity> saveUser(UserEntity newUser) {
         log.trace("Saving new user in database: {}", newUser);
 
-        userService.findById(newUser.getId()).ifPresent(user -> {
-            throw new RuntimeException("The user with id: " + newUser.getId() + " is already saved before");
-        });
-
         Optional<UserEntity> savedUser = Optional.ofNullable(userService.saveUser(newUser).orElseThrow(() -> {
             throw new RuntimeException("The user with id " + newUser.getId() + " is successful saved");
         }));
