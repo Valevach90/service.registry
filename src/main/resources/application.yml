@@ -1,10 +1,10 @@
 server:
-  port: 8181
+  port: 8282
 
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/registry
+    url: jdbc:postgresql://localhost:5432/service-registry
     username: benefits
     password: ben0147
 
