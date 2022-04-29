@@ -2,24 +2,27 @@ package com.andersen.banking.service.registry.meeting_impl.mapping;
 
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressModifyDto;
-import com.andersen.banking.service.registry.meeting_db.entities.AddressEntity;
-import com.andersen.banking.service.registry.meeting_impl.config.MeetingMapperConfig;
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import com.andersen.banking.service.registry.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 /**
  * Mapper addresses.
  */
-@Mapper(config = MeetingMapperConfig.class)
+@Mapper(config = MapperConfig.class)
 public interface AddressMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    AddressDto toAddressDto(AddressEntity address);
+    AddressDto toAddressDto(Address address);
 
+    List<AddressDto> toAddressDto(List<Address> addresses);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    AddressEntity toAddressEntity(AddressModifyDto event);
+    Address toAddressEntity(AddressModifyDto event);
 
-    void updateAddressDetails(@MappingTarget AddressEntity oldAddress, AddressEntity updateEvent);
+    void updateAddressDetails(@MappingTarget Address oldAddress, Address updateAddress);
 }

@@ -14,8 +14,8 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_USER_ID = "User Id";
     public static final String EXAMPLE_LONG = "10";
 
-    public static final String DESCRIPTION_ZIPO_CODE = "Post office index";
-    public static final String EXAMPLE_ZIPO_CODE = "220014";
+    public static final String DESCRIPTION_ZIP_CODE = "Post office index";
+    public static final String EXAMPLE_ZIP_CODE = "220014";
 
     public static final String DESCRIPTION_COUNTRY = "Country";
     public static final String EXAMPLE_COUNTRY = "Belarus";
@@ -35,8 +35,8 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_HOUSE = "House number";
     public static final String EXAMPLE_HOUSE = "22";
 
-    public static final String DESCRIPTION_BUILD = "Building block number";
-    public static final String EXAMPLE_BUILD = "2";
+    public static final String DESCRIPTION_BUILDING = "Building block number";
+    public static final String EXAMPLE_BUILDING = "2";
 
     public static final String DESCRIPTION_FLAT = "Flat";
     public static final String EXAMPLE_FLAT = "11";
@@ -44,7 +44,7 @@ public class OpenApiConstants {
     public static final String HTTP_NOT_FOUND = "404";
 
 
-    public static final String DESCRIPTION_ERROR_DESCRIPTION = "Error description";
+    public static final String DESCRIPTION_ERROR = "Error description";
 
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";
 

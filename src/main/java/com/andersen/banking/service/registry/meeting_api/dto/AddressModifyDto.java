@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_BUILD;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_BUILDING;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_CITY;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_COUNTRY;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_FLAT;
@@ -13,8 +13,8 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_LOCATION;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_REGION;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_STREET;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ZIPO_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_BUILD;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ZIP_CODE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_BUILDING;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_CITY;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_COUNTRY;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_FLAT;
@@ -22,7 +22,7 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LOCATION;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_REGION;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_STREET;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_ZIPO_CODE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_ZIP_CODE;
 
 /**
  * Dto for updating Address.
@@ -32,9 +32,9 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 @Schema(description = "dto for address")
 public class AddressModifyDto {
 
-    @Schema(description = DESCRIPTION_ZIPO_CODE, example = EXAMPLE_ZIPO_CODE, defaultValue = EXAMPLE_ZIPO_CODE)
-    @JsonProperty("zipoCode")
-    private Integer zipoCode;
+    @Schema(description = DESCRIPTION_ZIP_CODE, example = EXAMPLE_ZIP_CODE, defaultValue = EXAMPLE_ZIP_CODE)
+    @JsonProperty("zipCode")
+    private Integer zipCode;
 
     @Schema(description = DESCRIPTION_COUNTRY, example = EXAMPLE_COUNTRY, defaultValue = EXAMPLE_COUNTRY)
     @JsonProperty("country")
@@ -60,9 +60,9 @@ public class AddressModifyDto {
     @JsonProperty("house")
     private String house;
 
-    @Schema(description = DESCRIPTION_BUILD, example = EXAMPLE_BUILD, defaultValue = EXAMPLE_BUILD)
-    @JsonProperty("build")
-    private String build;
+    @Schema(description = DESCRIPTION_BUILDING, example = EXAMPLE_BUILDING, defaultValue = EXAMPLE_BUILDING)
+    @JsonProperty("building")
+    private String building;
 
     @Schema(description = DESCRIPTION_FLAT, example = EXAMPLE_FLAT, defaultValue = EXAMPLE_FLAT)
     @JsonProperty("flat")

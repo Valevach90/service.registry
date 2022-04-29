@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "address")
 @NoArgsConstructor
-public class AddressEntity {
+public class Address {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +30,10 @@ public class AddressEntity {
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private Users user;
 
-    @Column(name = "zipo_code")
-    private Integer zipoCode;
+    @Column(name = "zip_code")
+    private Integer zipCode;
 
     @Column(nullable = false, name = "country", length = 30)
     private String country;
@@ -53,8 +53,8 @@ public class AddressEntity {
     @Column(nullable = false, name = "house", length = 5)
     private String house;
 
-    @Column(name = "build", length = 5)
-    private String build;
+    @Column(name = "building", length = 5)
+    private String building;
 
     @Column(name = "flat", length = 5)
     private String flat;
