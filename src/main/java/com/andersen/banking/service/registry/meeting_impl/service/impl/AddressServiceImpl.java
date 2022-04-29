@@ -23,7 +23,9 @@ public class AddressServiceImpl implements AddressService {
     @Transactional(readOnly = true)
     public Optional<Address> findById(Long addressId) {
         log.debug("Find address by id: {}", addressId);
+
         Optional<Address> result = addressRepository.findById(addressId);
+
         log.debug("Return address: {}", result);
         return result;
     }
@@ -32,7 +34,9 @@ public class AddressServiceImpl implements AddressService {
     @Transactional(readOnly = true)
     public Optional<Address> findAddressByUserId(Long userId) {
         log.debug("Find address by userId: {}", userId);
+
         Optional<Address> result = addressRepository.findAddressByUserId(userId);
+
         log.debug("Return address: {}", result);
         return result;
     }
@@ -41,20 +45,23 @@ public class AddressServiceImpl implements AddressService {
     @Transactional(readOnly = true)
     public List<Address> findAllAddress() {
         log.debug("Find all address");
+
         List<Address> result = addressRepository.findAll();
+
         log.debug("Return list size of address: {}", result.size());
         return result;
     }
 
     @Override
     @Transactional
-    public void update(Address address) {
-        log.debug("Trying to update Address: {}", address);
-        Address result = addressRepository.findById(address.getId())
-                .orElseThrow(() -> new NotFoundException(Address.class, address.getId()));
+    public void update(Address updateAddress) {
+        log.debug("Trying to update Address: {}", updateAddress);
 
-        addressRepository.save(result);
+        Address address = addressRepository.findById(updateAddress.getId())
+                .orElseThrow(() -> new NotFoundException(Address.class, updateAddress.getId()));
+        updateAddress.setUser(address.getUser());
+        addressRepository.save(updateAddress);
 
-        log.debug("Return updated Address: {}", result);
+        log.debug("Return updated Address: {}", updateAddress);
     }
 }

@@ -6,7 +6,6 @@ import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -23,6 +22,4 @@ public interface AddressMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     Address toAddressEntity(AddressModifyDto event);
-
-    void updateAddressDetails(@MappingTarget Address oldAddress, Address updateAddress);
 }

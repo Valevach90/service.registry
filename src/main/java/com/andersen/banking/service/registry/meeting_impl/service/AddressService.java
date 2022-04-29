@@ -37,7 +37,7 @@ public interface AddressService {
     /**
      * Update address.
      *
-     * @param address update address
+     * @param updateAddress update address
      */
-    void update(Address address);
+    void update(Address updateAddress);
 }

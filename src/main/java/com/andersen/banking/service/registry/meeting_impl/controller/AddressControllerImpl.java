@@ -4,7 +4,6 @@ import com.andersen.banking.service.registry.meeting_api.controller.AddressContr
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressModifyDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
-import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import lombok.RequiredArgsConstructor;
@@ -62,17 +61,10 @@ public class AddressControllerImpl implements AddressController {
         log.info("Try to update address: {}", addressModifyDto);
 
         Address addressUpdate = addressMapper.toAddressEntity(addressModifyDto);
-
-        Address address = addressService.findById(id)
-                .orElseThrow(() -> new NotFoundException(Address.class, id));
-
         addressUpdate.setId(id);
-        addressUpdate.setUser(address.getUser());
 
-        addressMapper.updateAddressDetails(address, addressUpdate);
+        addressService.update(addressUpdate);
 
-        addressService.update(address);
-
-        log.info("Return updated address : {}", address);
+        log.info("Return updated address : {}", addressUpdate);
     }
 }
