@@ -19,7 +19,8 @@ public interface AddressMapper {
     AddressDto toAddressDto(Address address);
 
     List<AddressDto> toAddressDto(List<Address> addresses);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    Address toAddressEntity(AddressModifyDto event);
+    Address toAddress(AddressModifyDto event);
 }

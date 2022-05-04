@@ -26,8 +26,4 @@ public class NotFoundError {
     @Schema(description = DESCRIPTION_ERROR_CODE, example = HTTP_NOT_FOUND, defaultValue = HTTP_NOT_FOUND)
     @JsonProperty("errorCode")
     private int errorCode;
-//
-//    @Schema(description = DESCRIPTION_ERROR_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
-//    @JsonProperty("id")
-//    private Long id;
 }

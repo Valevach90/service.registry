@@ -27,7 +27,7 @@ public class AddressControllerImpl implements AddressController {
     public List<AddressDto> findAll() {
         log.info("Find all offices");
 
-        List<Address> allAddresses = addressService.findAllAddress();
+        List<Address> allAddresses = addressService.findAllAddress().orElse(null);
         List<AddressDto> result = addressMapper.toAddressDto(allAddresses);
 
         log.info("Return list of all AddressDto {}", result);
@@ -60,11 +60,9 @@ public class AddressControllerImpl implements AddressController {
     public void updateAddress(Long id, AddressModifyDto addressModifyDto) {
         log.info("Try to update address: {}", addressModifyDto);
 
-        Address addressUpdate = addressMapper.toAddressEntity(addressModifyDto);
-        addressUpdate.setId(id);
+        Address addressUpdated = addressMapper.toAddress(addressModifyDto);
+        addressService.update(id, addressUpdated);
 
-        addressService.update(addressUpdate);
-
-        log.info("Return updated address : {}", addressUpdate);
+        log.info("Return updated address : {}", addressUpdated);
     }
 }

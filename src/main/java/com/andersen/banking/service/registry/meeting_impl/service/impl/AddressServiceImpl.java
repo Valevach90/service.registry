@@ -43,25 +43,26 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Address> findAllAddress() {
+    public Optional<List<Address>> findAllAddress() {
         log.debug("Find all address");
 
-        List<Address> result = addressRepository.findAll();
+        Optional<List<Address>> result = Optional.of(addressRepository.findAll());
 
-        log.debug("Return list size of address: {}", result.size());
+        log.debug("Return list of address: {}", result);
         return result;
     }
 
     @Override
     @Transactional
-    public void update(Address updateAddress) {
-        log.debug("Trying to update Address: {}", updateAddress);
+    public void update(Long addressId, Address updatedAddress) {
+        log.debug("Trying to update Address: {}", updatedAddress);
 
-        Address address = addressRepository.findById(updateAddress.getId())
-                .orElseThrow(() -> new NotFoundException(Address.class, updateAddress.getId()));
-        updateAddress.setUser(address.getUser());
-        addressRepository.save(updateAddress);
+        updatedAddress.setId(addressId);
+        Address address = addressRepository.findById(updatedAddress.getId())
+                .orElseThrow(() -> new NotFoundException(Address.class, updatedAddress.getId()));
+        updatedAddress.setUser(address.getUser());
+        addressRepository.save(updatedAddress);
 
-        log.debug("Return updated Address: {}", updateAddress);
+        log.debug("Return updated Address: {}", updatedAddress);
     }
 }
