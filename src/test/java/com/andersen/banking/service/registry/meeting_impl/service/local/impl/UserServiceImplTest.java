@@ -1,6 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.service.local.impl;
 
-import com.andersen.banking.service.registry.meeting_db.entities.UserEntity;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
@@ -37,14 +37,14 @@ class UserServiceImplTest {
     @Test
     void whenFindAllUsersSuccess() {
         //given
-        List<UserEntity> users = List.of( new UserEntity(1L, "Jack", "Nicholson", "Strong", "jack@mail.com", "555-55-55"),
-                new UserEntity(2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
-                new UserEntity(3L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
+        List<User> users = List.of( new User(1L, "Jack", "Nicholson", "Strong", "jack@mail.com", "555-55-55"),
+                new User(2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
+                new User(3L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
         //when
         when(this.userRepository.findAll()).thenReturn(users);
 
-        List<UserEntity> foundUsers = this.userService.findAll();
+        List<User> foundUsers = this.userService.findAll();
 
         //then
         assertEquals(foundUsers, users);
@@ -54,12 +54,12 @@ class UserServiceImplTest {
     @Test
     void whenFindByIdSuccess() {
         //given
-        UserEntity userExpected = new UserEntity(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User userExpected = new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         //when
         when(userRepository.findById(any())).thenReturn(Optional.of(userExpected));
 
-        Optional<UserEntity> userReturn = userService.findById(1L);
+        Optional<User> userReturn = userService.findById(1L);
 
         //then
         assertEquals(Optional.of(userExpected), userReturn);
@@ -82,11 +82,11 @@ class UserServiceImplTest {
     @Test
     void whenSaveUserSuccess() {
         //given
-        UserEntity userExpected = new UserEntity(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User userExpected = new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         //when
         when(userRepository.save(any())).thenReturn(userExpected);
-        Optional<UserEntity> userActual = userService.saveUser(userExpected);
+        Optional<User> userActual = userService.saveUser(userExpected);
 
         //given
         assertEquals(Optional.of(userExpected), userActual);
@@ -97,13 +97,13 @@ class UserServiceImplTest {
     void whenUpdateUserSuccess() {
         //given
         long id = 1L;
-        UserEntity userOld = new UserEntity(id,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
-        UserEntity userNew = new UserEntity(id,"James", "Bond", "Agent", "bond@mail.com", "888-88-88");
+        User userOld = new User(id,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User userNew = new User(id,"James", "Bond", "Agent", "bond@mail.com", "888-88-88");
 
         //when
         when(userRepository.findById(id)).thenReturn(Optional.of(userOld));
         when(userRepository.save(any())).thenReturn(userNew);
-        Optional<UserEntity> userActual = userService.updateUser(id, userNew);
+        Optional<User> userActual = userService.updateUser(id, userNew);
 
         //then
         assertEquals(Optional.of(userNew), userActual);
@@ -115,7 +115,7 @@ class UserServiceImplTest {
     @Test
     void whenDeleteUserSuccess() {
         //given
-        UserEntity user = new UserEntity(11L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User user = new User(11L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         //when
         when(userRepository.save(any())).thenReturn(user);

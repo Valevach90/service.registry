@@ -1,6 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.service.local;
 
-import com.andersen.banking.service.registry.meeting_db.entities.UserEntity;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface UserService {
      *
      * @return List<UserEntity>
      */
-    List<UserEntity> findAll();
+    List<User> findAll();
 
     /**
      * Find by id user and return user from database
@@ -30,7 +30,7 @@ public interface UserService {
      * @param id
      * @return UserEntity
      */
-    Optional<UserEntity> findById(Long id);
+    Optional<User> findById(Long id);
 
     /**
      * Save user in database and return user
@@ -38,7 +38,7 @@ public interface UserService {
      * @param user
      * @return UserEntity
      */
-    Optional<UserEntity> saveUser(UserEntity user);
+    Optional<User> saveUser(User user);
 
     /**
      * Update user from database by id
@@ -47,7 +47,7 @@ public interface UserService {
      * @param user
      * @return UserEntity
      */
-    Optional<UserEntity> updateUser(Long id, UserEntity user);
+    Optional<User> updateUser(Long id, User user);
 
 
     /**

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserEntity {
+public class User {
 
     @Id
     @Column(name = "id")

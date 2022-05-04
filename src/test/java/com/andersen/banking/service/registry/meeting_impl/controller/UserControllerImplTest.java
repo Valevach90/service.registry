@@ -1,10 +1,9 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
-import com.andersen.banking.service.registry.meeting_db.entities.UserEntity;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,14 +23,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -80,10 +77,10 @@ class UserControllerTest {
     @Test
     @Order(1)
     void whenAllUsersFindSuccess() throws Exception {
-        UserEntity userFirst = new UserEntity(1L,"Sasha", "Drinov", "Labovich", "sasha@mail.com", "787-57-75");
-        UserEntity userSecond = new UserEntity(2L,"Dima", "Vlasov", "Slenchaev", "dima@mail.com", "799-78-77");
-        UserEntity userThird = new UserEntity(3L,"Vasya", "Norris", "Fringer", "vasya@mail.com", "563-23-34");
-        List<UserEntity> userList = new ArrayList<>();
+        User userFirst = new User(1L,"Sasha", "Drinov", "Labovich", "sasha@mail.com", "787-57-75");
+        User userSecond = new User(2L,"Dima", "Vlasov", "Slenchaev", "dima@mail.com", "799-78-77");
+        User userThird = new User(3L,"Vasya", "Norris", "Fringer", "vasya@mail.com", "563-23-34");
+        List<User> userList = new ArrayList<>();
         userList.add(userFirst);
         userList.add(userSecond);
         userList.add(userThird);
@@ -132,7 +129,7 @@ class UserControllerTest {
     @Test
     @Order(4)
     public void whenAddUserPositiveScenario() throws Exception {
-        UserEntity userExpected = new UserEntity(4L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User userExpected = new User(4L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         mockMvc.perform(post("/api/v1/users")
                 .content(objectMapper.writeValueAsString(userExpected))
@@ -148,7 +145,7 @@ class UserControllerTest {
     @Test
     @Order(5)
     public void whenUpdateUserPositiveScenario() throws Exception {
-        UserEntity newUser = new UserEntity(1L,"Dima", "Mickailovich", "Svetlichni", "micha@mail.com", "888-88-88");
+        User newUser = new User(1L,"Dima", "Mickailovich", "Svetlichni", "micha@mail.com", "888-88-88");
 
         userService.updateUser(1L, newUser);
 
@@ -167,7 +164,7 @@ class UserControllerTest {
     @Test
     @Order(6)
     public void whenDeletePositiveScenario() throws Exception {
-        UserEntity user= new UserEntity(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        User user= new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
         userRepository.save(user);
 
         mockMvc.perform(MockMvcRequestBuilders

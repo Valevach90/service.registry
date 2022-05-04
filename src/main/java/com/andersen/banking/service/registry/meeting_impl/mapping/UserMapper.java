@@ -2,25 +2,32 @@ package com.andersen.banking.service.registry.meeting_impl.mapping;
 
 
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
-import com.andersen.banking.service.registry.meeting_db.entities.UserEntity;
-import com.andersen.banking.service.registry.meeting_impl.config.MeetingMapperConfig;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Mapper user.
  */
 
-@Mapper(config = MeetingMapperConfig.class)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
-  
-    UserDto toUserDto(UserEntity user);
-    @Mapping(target = "id", ignore = true)
-    UserEntity toUserEntity(UserDto user);
 
-    void updateUserDetails(@MappingTarget Optional<UserEntity> oldUser, UserEntity newUser);
+    @Mappings({
+            @Mapping(source = "firstName", target = "firstName"),
+            @Mapping(source = "lastName", target = "lastName"),
+            @Mapping(source = "patronymic", target = "patronymic"),
+            @Mapping(source = "email", target = "email"),
+            @Mapping(source = "phone", target = "phone")
+    })
+    UserDto toUserDto(User user);
+
+    @Mapping(target = "id", ignore = true)
+    User toUserEntity(UserDto user);
+
+    List<UserDto> toListDtoUsers(List<User> user);
 }
