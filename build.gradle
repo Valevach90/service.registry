@@ -40,6 +40,7 @@ dependencies {
 	annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.4.2.Final'
 	implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
+	implementation group: 'io.opentracing.contrib', name: 'opentracing-spring-jaeger-web-starter', version: '3.3.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
