@@ -30,7 +30,7 @@ public interface AddressService {
     /**
      * Return all addresses.
      *
-     * @return Address
+     * @return list of addresses
      */
     Optional<List<Address>> findAllAddress();
 
