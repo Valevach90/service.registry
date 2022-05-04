@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @Table(name = "passport")
 @ToString
 @NoArgsConstructor
-public class PassportEntity {
+public class Passport {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -34,11 +34,11 @@ public class PassportEntity {
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "users_id", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "address_id", nullable = false)
-    private AddressEntity address;
+    private Address address;
 
     @Column(name = "serial_number", nullable = false, length = 5)
     private String serialNumber;

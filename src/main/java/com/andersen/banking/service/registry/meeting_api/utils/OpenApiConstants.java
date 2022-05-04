@@ -37,8 +37,7 @@ public class OpenApiConstants {
 
     public static final String DESCRIPTION_PASSPORT_DEPARTMENT_ISSUED = "Department issued";
     public static final String DESCRIPTION_PASSPORT_BORN_PLACE = "Born Place";
-    public static final String EXAMPLE_PASSPORT_DEPARTMENT_ISSUED = "Management Department of the Federal Migration Service of Russia "
-            + "in Moscow in Taganskiy district";
+    public static final String EXAMPLE_PASSPORT_DEPARTMENT_ISSUED = "Moscow Taganskiy district";
     public static final String EXAMPLE_PASSPORT_BORN_PLACE = "Minsk";
 
     public static final String DESCRIPTION_ZIPO_CODE = "Post office index";
