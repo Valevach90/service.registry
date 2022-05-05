@@ -2,10 +2,15 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
+import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.jupiter.api.*;
+
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -54,6 +59,9 @@ class UserControllerTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Container
     public static final PostgreSQLContainer<?> postgreSQLContainer =
@@ -113,6 +121,45 @@ class UserControllerTest {
 
     @Test
     @Order(3)
+    public void whenFindUserDtoByIdSuccess() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/usersDto/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.first_name", is("Sasha")));
+    }
+
+    @Test
+    @Order(4)
+    public void whenFindListUserDtoByIdSuccess() throws Exception {
+        User userFirst = new User(1L,"Sasha", "Drinov", "Labovich", "sasha@mail.com", "787-57-75");
+        User userSecond = new User(2L,"Dima", "Vlasov", "Slenchaev", "dima@mail.com", "799-78-77");
+        User userThird = new User(3L,"Vasya", "Norris", "Fringer", "vasya@mail.com", "563-23-34");
+        List<User> userList = new ArrayList<>();
+        userList.add(userFirst);
+        userList.add(userSecond);
+        userList.add(userThird);
+        userRepository.saveAll(userList);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1//usersDto")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$[0]first_name", is("Sasha")))
+                .andExpect(jsonPath("$[1]first_name", is("Dima")))
+                .andExpect(jsonPath("$[2]first_name", is("Vasya")));
+
+    }
+
+
+
+
+    @Test
+    @Order(5)
     public void whenGetUserByIdNegativeScenario() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -127,7 +174,7 @@ class UserControllerTest {
 
 
     @Test
-    @Order(4)
+    @Order(6)
     public void whenAddUserPositiveScenario() throws Exception {
         User userExpected = new User(4L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
@@ -143,7 +190,7 @@ class UserControllerTest {
 
 
     @Test
-    @Order(5)
+    @Order(7)
     public void whenUpdateUserPositiveScenario() throws Exception {
         User newUser = new User(1L,"Dima", "Mickailovich", "Svetlichni", "micha@mail.com", "888-88-88");
 
@@ -162,7 +209,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     public void whenDeletePositiveScenario() throws Exception {
         User user= new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
         userRepository.save(user);
@@ -175,7 +222,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     public void whenDeleteNegativeScenario() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -186,5 +233,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.message", is("Not found by id")));
     }
+
+
 
 }
