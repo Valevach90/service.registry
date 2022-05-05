@@ -2,7 +2,6 @@ package com.andersen.banking.service.registry.meeting_impl.service.local.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
-import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,29 +67,16 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void whenFindByIdUserNotFound(){
-        //given
-        long id = 10L;
-
-        //when
-        Throwable throwable = assertThrows(NotFoundException.class,
-                () -> userService.findById(id));
-
-        //then
-        assertEquals(NotFoundException.class, throwable.getClass());
-    }
-
-    @Test
     void whenSaveUserSuccess() {
         //given
         User userExpected = new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         //when
         when(userRepository.save(any())).thenReturn(userExpected);
-        Optional<User> userActual = userService.saveUser(userExpected);
+        User userActual = userService.saveUser(userExpected);
 
         //given
-        assertEquals(Optional.of(userExpected), userActual);
+        assertEquals(userExpected, userActual);
         verify(userRepository, times(1)).save(userExpected);
     }
 
@@ -105,10 +90,10 @@ class UserServiceImplTest {
         //when
         when(userRepository.findById(id)).thenReturn(Optional.of(userOld));
         when(userRepository.save(any())).thenReturn(userNew);
-        Optional<User> userActual = userService.updateUser(id, userNew);
+        User userActual = userService.updateUser(id, userNew);
 
         //then
-        assertEquals(Optional.of(userNew), userActual);
+        assertEquals(userNew, userActual);
         verify(userRepository, times(1)).save(userNew);
 
 
@@ -128,16 +113,5 @@ class UserServiceImplTest {
 
     }
 
-    @Test
-    void whenDeletedUserByIdWithException(){
-        //given
-        Long id = 1L;
 
-        //when
-        doThrow(RuntimeException.class).when(userRepository).deleteById(id);
-
-        //then
-        assertThrows(RuntimeException.class, () -> userService.deleteUser(id));
-
-    }
 }

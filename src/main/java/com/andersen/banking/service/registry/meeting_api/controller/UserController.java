@@ -32,7 +32,7 @@ public interface UserController {
     @Operation(summary = "Save user in database",
             description = "save user in database")
     @PostMapping("/users")
-    Optional<User> saveUser(@Parameter(description = "user", required = true)
+    User saveUser(@Parameter(description = "user", required = true)
                          @RequestBody User user);
 
     @Operation(summary = "Update user",

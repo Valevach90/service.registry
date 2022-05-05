@@ -46,12 +46,10 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public Optional<User> saveUser(User newUser) {
+    public User saveUser(User newUser) {
         log.trace("Saving new user in database: {}", newUser);
 
-        Optional<User> savedUser = Optional.ofNullable(userService.saveUser(newUser).orElseThrow(() -> {
-            throw new RuntimeException("The user with id " + newUser.getId() + " is successful saved");
-        }));
+        User savedUser = userService.saveUser(newUser);
 
         log.trace("Save new user success in database: {}", newUser);
         return savedUser;
@@ -71,11 +69,8 @@ public class UserControllerImpl implements UserController {
     public void deleteUserById(Long id) {
         log.trace("Delete user with id: {}", id);
 
-        Optional.ofNullable(userService.findById(id).orElseThrow(() -> {
-            throw new NotFoundException(NotFoundException.BY_ID);
-        }));
-
         userService.deleteUser(id);
+
         log.trace("Delete success user with id: {}", id);
     }
 

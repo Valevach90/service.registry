@@ -33,26 +33,26 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findById(Long id) {
         log.debug("Find user by id: {}", id);
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+        Optional<User> user = userRepository.findById(id);
+
         log.debug("Return user find by id success: {}", user);
-        return Optional.of(user);
+        return user;
     }
 
     @Override
-    public Optional<User> saveUser(User user) {
+    public User saveUser(User user) {
         log.debug("Saving user in database: {}", user);
-        userRepository.findById(user.getId()).ifPresent(usr -> {
+        findById(user.getId()).ifPresent(usr -> {
             throw new RuntimeException("The user with id: " + user.getId() + " is already saved before");
         });
         User savedUser = userRepository.save(user);
 
         log.debug("Return saved user success: {}", savedUser);
-        return Optional.of(savedUser);
+        return savedUser;
     }
 
     @Override
-    public Optional<User> updateUser(Long id, User newUser) {
+    public User updateUser(Long id, User newUser) {
         log.debug("Update user by id: {}", id);
 
         userRepository.findById(id).map(user -> {
@@ -66,19 +66,16 @@ public class UserServiceImpl implements UserService {
             return new NotFoundException(NotFoundException.BY_ID);
         });
         log.debug("Update user by id success: {}", newUser);
-        return Optional.of(newUser);
+        return newUser;
     }
 
     @Override
     public boolean deleteUser(Long id) {
         log.debug("Delete user by id: {}", id);
 
-        if (userRepository.findById(id) != null) {
-            userRepository.deleteById(id);
-            return true;
+        findById(id).ifPresent(u -> userRepository.deleteById(u.getId()));
 
-        } else {
-            throw new NotFoundException(NotFoundException.BY_ID);
-        }
+        log.debug("Delete user by id success: {}", id);
+        return true;
     }
 }

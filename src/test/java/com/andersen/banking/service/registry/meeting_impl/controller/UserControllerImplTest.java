@@ -155,24 +155,6 @@ class UserControllerTest {
 
     }
 
-
-
-
-    @Test
-    @Order(5)
-    public void whenGetUserByIdNegativeScenario() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1/users/{id}", 5)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.message", is("Not found by id")));
-
-    }
-
-
     @Test
     @Order(6)
     public void whenAddUserPositiveScenario() throws Exception {
@@ -219,19 +201,6 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @Order(9)
-    public void whenDeleteNegativeScenario() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/api/v1/users/{id}", 5)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.message", is("Not found by id")));
     }
 
 
