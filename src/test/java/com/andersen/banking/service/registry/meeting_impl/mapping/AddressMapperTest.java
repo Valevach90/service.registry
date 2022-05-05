@@ -10,12 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = {
@@ -29,7 +24,6 @@ public class AddressMapperTest {
 
     private Address address;
     private AddressModifyDto addressModifyDto;
-    private Random random;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -81,21 +75,5 @@ public class AddressMapperTest {
         assertEquals(address.getHouse(), addressModifyDto.getHouse());
         assertEquals(address.getBuilding(), addressModifyDto.getBuilding());
         assertEquals(address.getFlat(), addressModifyDto.getFlat());
-    }
-
-    @Test
-    void whenMapListOfAddressToListOfAddressDto_andOk() {
-        random = new Random();
-
-        List<Address> addressList = Stream.generate(() -> addressGenerator.generateAddress(userGenerator.generateUser()))
-                .limit(random.nextInt(1000))
-                .toList();
-        var addressDtoList = addressMapper.toAddressDto(addressList);
-
-        assertNotNull(addressDtoList);
-
-        assertFalse(addressDtoList.isEmpty());
-        assertEquals(addressList.size(), addressDtoList.size());
-
     }
 }

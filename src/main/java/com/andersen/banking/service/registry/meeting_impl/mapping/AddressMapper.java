@@ -18,8 +18,6 @@ public interface AddressMapper {
     @Mapping(target = "userId", source = "user.id")
     AddressDto toAddressDto(Address address);
 
-    List<AddressDto> toAddressDto(List<Address> addresses);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     Address toAddress(AddressModifyDto event);

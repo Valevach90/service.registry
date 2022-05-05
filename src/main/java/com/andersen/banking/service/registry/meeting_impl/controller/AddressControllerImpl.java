@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Addresses controller Implementation.
@@ -27,8 +28,10 @@ public class AddressControllerImpl implements AddressController {
     public List<AddressDto> findAll() {
         log.info("Find all offices");
 
-        List<Address> allAddresses = addressService.findAllAddress().orElse(null);
-        List<AddressDto> result = addressMapper.toAddressDto(allAddresses);
+        List<Address> allAddresses = addressService.findAllAddress();
+        List<AddressDto> result = allAddresses.stream()
+                .map(addressMapper::toAddressDto)
+                .collect(Collectors.toList());
 
         log.info("Return list of all AddressDto {}", result);
         return result;

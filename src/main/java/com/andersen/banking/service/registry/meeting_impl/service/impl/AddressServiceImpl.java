@@ -43,10 +43,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Address>> findAllAddress() {
+    public List<Address> findAllAddress() {
         log.debug("Find all address");
 
-        Optional<List<Address>> result = Optional.of(addressRepository.findAll());
+        List<Address> result = addressRepository.findAll();
 
         log.debug("Return list of address: {}", result);
         return result;

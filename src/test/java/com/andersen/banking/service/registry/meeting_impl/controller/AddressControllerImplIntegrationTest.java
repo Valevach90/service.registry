@@ -69,7 +69,7 @@ class AddressControllerImplIntegrationTest {
     @Test
     void whenFindAll_andOk() throws Exception {
 
-        List<Address> allAddresses = addressService.findAllAddress().orElse(null);
+        List<Address> allAddresses = addressService.findAllAddress();
 
         assertNotNull(allAddresses);
         assertFalse(allAddresses.isEmpty());

@@ -101,12 +101,12 @@ class AddressControllerImplTest {
                 .filter(element -> element.getCountry().length() <= 30)
                 .limit(100).toList();
 
-        Optional<List<Address>> addressesList = Optional.of(addresses);
-        List<AddressDto> addressesDto = addressMapper.toAddressDto(addresses);
-
+        List<AddressDto> addressesDto = addresses.stream()
+                .map(addressMapper::toAddressDto)
+                .toList();
         Mockito
                 .when(addressService.findAllAddress())
-                .thenReturn(addressesList);
+                .thenReturn(addresses);
 
         var result = addressController.findAll();
 

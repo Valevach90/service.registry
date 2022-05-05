@@ -32,7 +32,7 @@ public interface AddressService {
      *
      * @return list of addresses
      */
-    Optional<List<Address>> findAllAddress();
+    List<Address> findAllAddress();
 
     /**
      * Update address.

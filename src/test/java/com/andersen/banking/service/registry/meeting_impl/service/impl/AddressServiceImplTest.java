@@ -83,10 +83,9 @@ class AddressServiceImplTest {
                 .when(addressRepository.findAll())
                 .thenReturn(addresses);
 
-        Optional<List<Address>> addressList = Optional.of(addresses);
-        Optional<List<Address>> result = addressService.findAllAddress();
+        List<Address> result = addressService.findAllAddress();
 
-        assertEquals(addressList, result);
+        assertEquals(addresses, result);
     }
 
     @Test
