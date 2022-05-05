@@ -63,5 +63,5 @@ public interface PassportService {
      * @param passport passport to create
      * @return passport
      */
-    Passport create(Passport passport);
+    Passport create(Passport passport, Long userId, Long addressId);
 }

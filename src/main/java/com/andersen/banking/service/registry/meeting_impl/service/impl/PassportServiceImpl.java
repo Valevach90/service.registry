@@ -1,9 +1,13 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,38 +22,44 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PassportServiceImpl implements PassportService {
     private final PassportRepository passportRepository;
+    private final AddressService addressService;
+    private final UserService userService;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Passport> findById(Long id) {
         log.info("Find passport by id: {}", id);
 
-        Optional<Passport> passportEntity = passportRepository.findById(id);
+        Optional<Passport> passport = passportRepository.findById(id);
 
-        log.info("Found passport: {} by id: {}", passportEntity, id);
-        return passportEntity;
+        log.info("Found passport: {} by id: {}", passport, id);
+        return passport;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Passport> findByUserId(Long userId) {
         log.info("Find passport by id: {}", userId);
 
-        Optional<Passport> passportEntity = passportRepository.findByUserId(userId);
+        Optional<Passport> passport = passportRepository.findByUserId(userId);
 
-        log.info("Found passport: {} by user id: {}", passportEntity, userId);
-        return passportEntity;
+        log.info("Found passport: {} by user id: {}", passport, userId);
+        return passport;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Passport> findByAddressId(Long addressId) {
         log.info("Find passport by address id: {}", addressId);
 
-        Optional<Passport> passportEntity = passportRepository.findByAddressId(addressId);
+        Optional<Passport> passport = passportRepository.findByAddressId(addressId);
 
-        log.info("Found passport: {} by address id: {}", passportEntity, addressId);
-        return passportEntity;
+        log.info("Found passport: {} by address id: {}", passport, addressId);
+        return passport;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Passport> findAll(Pageable pageable) {
         log.info("Find all passports for pageable: {}", pageable);
 
@@ -61,38 +71,57 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     @Transactional
-    public void update(Passport passportEntity) {
-        log.info("Try to update passport: {}", passportEntity);
+    public void update(Passport passport) {
+        log.info("Try to update passport: {}", passport);
 
-        Passport passport = passportRepository.findById(passportEntity.getId())
+        Passport foundPassport = passportRepository.findById(passport.getId())
                 .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
 
-        passportEntity.setUser(passport.getUser());
-        passportEntity.setAddress(passport.getAddress());
+        passport.setUser(foundPassport.getUser());
+        passport.setAddress(foundPassport.getAddress());
 
-        passportRepository.save(passportEntity);
+        passportRepository.save(passport);
 
-        log.info("Updated passport : {}", passportEntity);
+        log.info("Updated passport : {}", passport);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         log.info("deleting passport with id: {}", id);
 
+        Passport passport = findById(id).orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
         passportRepository.deleteById(id);
 
-        log.info("deleted passport with id: {}", id);
+        log.info("deleted passport: {} with id: {}", passport, id);
     }
 
     @Override
-    public Passport create(Passport passportEntity) {
-        log.info("creating passport: {}", passportEntity);
+    @Transactional
+    public Passport create(Passport passport, Long userId, Long addressId) {
+        log.info("creating passport: {}", passport);
 
-        passportEntity.setId(null);
+        findByAddressId(userId)
+                .ifPresent(e -> {
+                    throw new NotFoundException("exists"); //TODO change exception and message
+                });
+        findByUserId(addressId)
+                .ifPresent(e -> {
+                    throw new NotFoundException("exists");
+                });
 
-        Passport passport = passportRepository.save(passportEntity);
+        Address address = addressService.findById(addressId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+        User user = userService.findById(userId)
+                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+        passport.setAddress(address);
+        passport.setUser(user);
 
-        log.info("created passport: {}", passport);
-        return passport;
+        passport.setId(null);
+
+        Passport savedPassport = passportRepository.save(passport);
+
+        log.info("created passport: {}", savedPassport);
+        return savedPassport;
     }
 }

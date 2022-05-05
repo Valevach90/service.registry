@@ -1,4 +1,4 @@
-INSERT INTO passport(users_id, address_id, serial_number, passport_code, division_code, birthday, date_issue,
+INSERT INTO passport(user_id, address_id, serial_number, passport_code, division_code, birthday, date_issue,
                      termination_date,
                      first_name, last_name, patronymic, born_place, department_issued)
 VALUES (3, 1, 13377, 133777, 1337777, '2000-04-13', '2018-04-13', '2028-04-13', 'hehe', 'hoho', 'hihi', 'here',

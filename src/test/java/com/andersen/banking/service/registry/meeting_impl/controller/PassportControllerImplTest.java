@@ -2,9 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
-import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
-import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
@@ -195,10 +193,6 @@ class PassportControllerImplTest {
 
     @Test
     void whenDelete_andOk() {
-        Mockito
-                .when(passportService.findById(ID))
-                .thenReturn(passport);
-
         passportController.deleteById(ID);
 
         Mockito
@@ -207,122 +201,28 @@ class PassportControllerImplTest {
     }
 
     @Test
-    void whenDelete_andNotFound_shouldThrowException() {
-        Mockito
-                .when(passportService.findById(ID))
-                .thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> passportController.deleteById(ID));
-
-        Mockito
-                .verify(passportService, Mockito.times(0))
-                .deleteById(ID);
-    }
-
-    @Test
     void whenCreate_andOk() {
         passportDto.setUserId(ID);
         passportDto.setAddressId(ID);
-        var user = Optional.of(new User());
-        var address = Optional.of(new Address());
+
+        var createdPassport = new Passport();
+        var createdPassportDto = new PassportDto();
 
         Mockito
                 .when(passportMapper.toPassport(passportDto))
                 .thenReturn(passport.get());
         Mockito
-                .when(passportService.findByAddressId(ID))
-                .thenReturn(Optional.empty());
+                .when(passportService.create(passport.get(), passportDto.getUserId(), passportDto.getUserId()))
+                .thenReturn(createdPassport);
         Mockito
-                .when(passportService.findByUserId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(addressService.findById(ID))
-                .thenReturn(address);
-        Mockito
-                .when(userService.findById(ID))
-                .thenReturn(user);
-        Mockito
-                .when(passportService.create(passport.get()))
-                .thenReturn(passport.get());
-        Mockito
-                .when(passportMapper.toPassportDto(passport.get()))
-                .thenReturn(passportDto);
+                .when(passportMapper.toPassportDto(createdPassport))
+                .thenReturn(createdPassportDto);
 
-        PassportDto result = passportController.create(passportDto);
-        assertEquals(passportDto, result);
-        assertEquals(user.get(), passport.get().getUser());
-        assertEquals(address.get(), passport.get().getAddress());
-    }
-
-    @Test
-    void whenCreate_andPassportWithAddressFound_shouldThrowException() {
-        passportDto.setAddressId(ID);
+        passportController.create(passportDto);
 
         Mockito
-                .when(passportService.findByAddressId(ID))
-                .thenReturn(passport);
-
-        assertThrows(NotFoundException.class, () -> passportController.create(passportDto));
-    }
-
-    @Test
-    void whenCreate_andPassportWithUserFound_shouldThrowException() {
-        passportDto.setAddressId(ID);
-
-        Mockito
-                .when(passportService.findByAddressId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(passportService.findByUserId(ID))
-                .thenReturn(passport);
-
-        assertThrows(NotFoundException.class, () -> passportController.create(passportDto));
-    }
-
-    @Test
-    void whenCreate_andAddressNotFound_shouldThrowException() {
-        passportDto.setUserId(ID);
-        passportDto.setAddressId(ID);
-
-        Mockito
-                .when(passportMapper.toPassport(passportDto))
-                .thenReturn(passport.get());
-        Mockito
-                .when(passportService.findByAddressId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(passportService.findByUserId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(addressService.findById(ID))
-                .thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> passportController.create(passportDto));
-    }
-
-    @Test
-    void whenCreate_andUserNotFound_shouldThrowException() {
-        passportDto.setUserId(ID);
-        passportDto.setAddressId(ID);
-        var address = Optional.of(new Address());
-
-        Mockito
-                .when(passportMapper.toPassport(passportDto))
-                .thenReturn(passport.get());
-        Mockito
-                .when(passportService.findByAddressId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(passportService.findByUserId(ID))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(addressService.findById(ID))
-                .thenReturn(address);
-        Mockito
-                .when(userService.findById(ID))
-                .thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> passportController.create(passportDto));
+                .verify(passportService, Mockito.times(1))
+                .create(passport.get(), passportDto.getUserId(), passportDto.getAddressId());
     }
 
     private List<Passport> generatePassports() {

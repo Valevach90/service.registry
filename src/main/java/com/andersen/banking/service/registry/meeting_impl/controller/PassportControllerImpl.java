@@ -2,19 +2,14 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
-import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
-import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
-import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
-import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -29,9 +24,6 @@ public class PassportControllerImpl implements PassportController {
 
     private final PassportService passportService;
     private final PassportMapper passportMapper;
-    private final UserService userService;
-    private final AddressService addressService;
-
 
     @Override
     public PassportDto findById(Long id) {
@@ -91,39 +83,22 @@ public class PassportControllerImpl implements PassportController {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         log.debug("deleting passport with id: {}", id);
 
-        Passport passport = passportService.findById(id).orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
         passportService.deleteById(id);
 
-        log.debug("deleted passport {} with id: {}", passport, id);
+        log.debug("deleted passport with id: {}", id);
     }
 
     @Override
-    @Transactional
     public PassportDto create(PassportDto passportDto) {
         log.debug("creating passport: {}", passportDto);
 
         Passport passport = passportMapper.toPassport(passportDto);
-        passportService.findByAddressId(passportDto.getAddressId())
-                .ifPresent(e -> {
-                    throw new NotFoundException("exists"); //TODO change exception message
-                });
-        passportService.findByUserId(passportDto.getUserId())
-                .ifPresent(e -> {
-                    throw new NotFoundException("exists");
-                });
 
-        Address address = addressService.findById(passportDto.getAddressId())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
-        User user = userService.findById(passportDto.getUserId())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
-        passport.setAddress(address);
-        passport.setUser(user);
+        Passport savedPassport = passportService.create(passport, passportDto.getUserId(), passportDto.getAddressId());
 
-        Passport savedPassport = passportService.create(passport);
         PassportDto savedPassportDto = passportMapper.toPassportDto(savedPassport);
 
         log.debug("created Passport: {}", savedPassportDto);

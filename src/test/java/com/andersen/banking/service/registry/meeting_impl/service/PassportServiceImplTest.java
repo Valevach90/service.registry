@@ -9,9 +9,9 @@ import com.andersen.banking.service.registry.meeting_impl.service.impl.PassportS
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = PassportServiceImpl.class)
@@ -37,10 +36,14 @@ class PassportServiceImplTest {
     private Optional<Passport> passport;
     private Passport passportToUpdate;
 
-    @Autowired
+    @SpyBean
     PassportService passportService;
     @MockBean
     PassportRepository passportRepository;
+    @MockBean
+    AddressService addressService;
+    @MockBean
+    UserService userService;
 
     @BeforeEach
     void initData() {
@@ -131,6 +134,10 @@ class PassportServiceImplTest {
 
     @Test
     void whenDeleteById_andOk() {
+        Mockito
+                .when(passportRepository.findById(ID))
+                .thenReturn(passport);
+
         passportService.deleteById(ID);
 
         Mockito
@@ -139,16 +146,103 @@ class PassportServiceImplTest {
     }
 
     @Test
-    void whenCreate_andOk() {
-        passport.get().setId(ID);
-
-        passportService.create(passport.get());
-
-        assertNull(passport.get().getId());
+    void whenDeleteById_andNotFound_shouldThrowException() {
+        assertThrows(NotFoundException.class, () -> passportService.deleteById(ID));
 
         Mockito
-                .verify(passportRepository, Mockito.times(1))
-                .save(passport.get());
+                .verify(passportRepository, Mockito.times(0))
+                .deleteById(ID);
+    }
+
+    @Test
+    void whenCreate_andOk() {
+        var user = Optional.of(new User());
+        var address = Optional.of(new Address());
+
+        Mockito
+                .when(passportService.findByAddressId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(passportService.findByUserId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(addressService.findById(ID))
+                .thenReturn(address);
+        Mockito
+                .when(userService.findById(ID))
+                .thenReturn(user);
+        Mockito
+                .when(passportRepository.save(passport.get()))
+                .thenReturn(passport.get());
+
+        var result = passportService.create(passport.get(), ID, ID);
+
+        assertEquals(passport.get(), result);
+        assertEquals(user.get(), passport.get().getUser());
+        assertEquals(address.get(), passport.get().getAddress());
+    }
+
+    @Test
+    void whenCreate_andPassportWithAddressFound_shouldThrowException() {
+        var pas = passport.get();
+
+        Mockito
+                .when(passportService.findByAddressId(ID))
+                .thenReturn(passport);
+
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+    }
+
+    @Test
+    void whenCreate_andPassportWithUserFound_shouldThrowException() {
+        var pas = passport.get();
+
+        Mockito
+                .when(passportService.findByAddressId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(passportService.findByUserId(ID))
+                .thenReturn(passport);
+
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+    }
+
+    @Test
+    void whenCreate_andAddressNotFound_shouldThrowException() {
+        var pas = passport.get();
+
+        Mockito
+                .when(passportService.findByAddressId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(passportService.findByUserId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(addressService.findById(ID))
+                .thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+    }
+
+    @Test
+    void whenCreate_andUserNotFound_shouldThrowException() {
+        var address = Optional.of(new Address());
+        var pas = passport.get();
+
+        Mockito
+                .when(passportService.findByAddressId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(passportService.findByUserId(ID))
+                .thenReturn(Optional.empty());
+        Mockito
+                .when(addressService.findById(ID))
+                .thenReturn(address);
+        Mockito
+                .when(userService.findById(ID))
+                .thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
     }
 
     private List<Passport> generatePassports() {
