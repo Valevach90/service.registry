@@ -48,7 +48,6 @@ class AddressControllerImplIntegrationTest {
             @Autowired UserGenerator userGenerator)
     {
        Stream.generate(() -> addressGenerator.generateAddress(userGenerator.generateUser()))
-               .filter(element -> element.getCountry().length() <= 30)
                .limit(100)
                .forEach(addressRepository::save);
     }
@@ -65,11 +64,10 @@ class AddressControllerImplIntegrationTest {
         assertThat(addressController).isNotNull();
     }
 
-
     @Test
     void whenFindAll_andOk() throws Exception {
 
-        List<Address> allAddresses = addressService.findAllAddress();
+        List<Address> allAddresses = addressService.findAllAddresses();
 
         assertNotNull(allAddresses);
         assertFalse(allAddresses.isEmpty());
@@ -143,7 +141,7 @@ class AddressControllerImplIntegrationTest {
         address.setHouse("99999");
         address.setBuilding("99999");
         address.setFlat("99999");
-        addressService.update(address.getId(), address);
+        addressService.update(address);
 
         mvc.perform(
                         get("/api/v1/addresses/" + address.getId())

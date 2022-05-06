@@ -1,9 +1,8 @@
 package com.andersen.banking.service.registry.meeting_impl.mapping;
 
-import com.andersen.banking.service.registry.meeting_api.dto.AddressModifyDto;
+import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
-import com.andersen.banking.service.registry.meeting_test.generators.AddressModifyDtoGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,14 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(classes = {
         AddressMapperImpl.class,
         AddressGenerator.class,
-        UserGenerator.class,
-        AddressModifyDtoGenerator.class
+        UserGenerator.class
 })
 public class AddressMapperTest {
 
 
     private Address address;
-    private AddressModifyDto addressModifyDto;
+    private AddressDto addressDto;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -31,13 +29,11 @@ public class AddressMapperTest {
     private AddressGenerator addressGenerator;
     @Autowired
     private UserGenerator userGenerator;
-    @Autowired
-    private AddressModifyDtoGenerator addressModifyDtoGenerator;
 
     @BeforeEach
     void initTestData() {
         address = addressGenerator.generateAddress(userGenerator.generateUser());
-        addressModifyDto = addressModifyDtoGenerator.generateAddressModifyDto();
+        addressDto = addressMapper.toAddressDto(address);
     }
 
     @Test
@@ -62,18 +58,18 @@ public class AddressMapperTest {
     @Test
     void whenMapAddressDtoToAddress_andOK() {
 
-        var address = addressMapper.toAddress(addressModifyDto);
+        var address = addressMapper.toAddress(addressDto);
 
         assertNotNull(address);
 
-        assertEquals(address.getZipCode(), addressModifyDto.getZipCode());
-        assertEquals(address.getCountry(), addressModifyDto.getCountry());
-        assertEquals(address.getRegion(), addressModifyDto.getRegion());
-        assertEquals(address.getLocation(), addressModifyDto.getLocation());
-        assertEquals(address.getCity(), addressModifyDto.getCity());
-        assertEquals(address.getStreet(), addressModifyDto.getStreet());
-        assertEquals(address.getHouse(), addressModifyDto.getHouse());
-        assertEquals(address.getBuilding(), addressModifyDto.getBuilding());
-        assertEquals(address.getFlat(), addressModifyDto.getFlat());
+        assertEquals(address.getZipCode(), addressDto.getZipCode());
+        assertEquals(address.getCountry(), addressDto.getCountry());
+        assertEquals(address.getRegion(), addressDto.getRegion());
+        assertEquals(address.getLocation(), addressDto.getLocation());
+        assertEquals(address.getCity(), addressDto.getCity());
+        assertEquals(address.getStreet(), addressDto.getStreet());
+        assertEquals(address.getHouse(), addressDto.getHouse());
+        assertEquals(address.getBuilding(), addressDto.getBuilding());
+        assertEquals(address.getFlat(), addressDto.getFlat());
     }
 }

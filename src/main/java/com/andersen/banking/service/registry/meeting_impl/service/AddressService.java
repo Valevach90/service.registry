@@ -32,13 +32,12 @@ public interface AddressService {
      *
      * @return list of addresses
      */
-    List<Address> findAllAddress();
+    List<Address> findAllAddresses();
 
     /**
      * Update address.
      *
      * @param updateAddress update address
-     * @param addressId id of the address
      */
-    void update(Long addressId, Address updateAddress);
+    void update(Address updateAddress);
 }

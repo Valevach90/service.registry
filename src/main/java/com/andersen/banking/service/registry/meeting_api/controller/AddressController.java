@@ -1,10 +1,10 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
-import com.andersen.banking.service.registry.meeting_api.dto.AddressModifyDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,10 +43,10 @@ public interface AddressController {
 
     @Operation(summary = "Update address",
             description = "update address by params in dto object")
-    @PutMapping("/{id}")
+    @PutMapping()
     void updateAddress(
             @Parameter(description = "address id", required = true)
-            @PathVariable Long id,
-            @RequestBody AddressModifyDto addressModifyDto
+            @RequestBody
+            @Validated AddressDto addressDto
     );
 }

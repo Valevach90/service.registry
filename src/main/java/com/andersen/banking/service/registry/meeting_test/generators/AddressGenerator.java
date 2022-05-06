@@ -18,7 +18,7 @@ public class AddressGenerator {
         address.setId(random.nextLong(1_000_000));
         address.setUser(user);
         address.setZipCode(random.nextInt(999_999));
-        address.setCountry(faker.address().country());
+        address.setCountry(countryWithLimitLenght(faker.address().country()));
         address.setRegion(faker.hobbit().location());
         address.setLocation(faker.hobbit().location());
         address.setCity(faker.address().city());
@@ -27,6 +27,14 @@ public class AddressGenerator {
         address.setBuilding(faker.address().buildingNumber());
         address.setFlat(faker.address().streetAddressNumber());
 
+        return address;
+    }
+
+    private String countryWithLimitLenght(String address){
+
+        while (address.length() > 30) {
+            address = faker.address().country();
+        }
         return address;
     }
 

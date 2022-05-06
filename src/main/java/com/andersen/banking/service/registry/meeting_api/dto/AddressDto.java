@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ADDRESS_ID;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_BUILDING;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_CITY;
@@ -49,6 +51,7 @@ public class AddressDto {
 
     @Schema(description = DESCRIPTION_COUNTRY, example = EXAMPLE_COUNTRY, defaultValue = EXAMPLE_COUNTRY)
     @JsonProperty("country")
+    @NotNull
     private String country;
 
     @Schema(description = DESCRIPTION_REGION, example = EXAMPLE_REGION, defaultValue = EXAMPLE_REGION)
@@ -69,6 +72,7 @@ public class AddressDto {
 
     @Schema(description = DESCRIPTION_HOUSE, example = EXAMPLE_HOUSE, defaultValue = EXAMPLE_HOUSE)
     @JsonProperty("house")
+    @NotNull
     private String house;
 
     @Schema(description = DESCRIPTION_BUILDING, example = EXAMPLE_BUILDING, defaultValue = EXAMPLE_BUILDING)

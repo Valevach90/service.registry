@@ -83,7 +83,7 @@ class AddressServiceImplTest {
                 .when(addressRepository.findAll())
                 .thenReturn(addresses);
 
-        List<Address> result = addressService.findAllAddress();
+        List<Address> result = addressService.findAllAddresses();
 
         assertEquals(addresses, result);
     }
@@ -97,7 +97,7 @@ class AddressServiceImplTest {
                 .when(addressRepository.findById(address.getId()))
                 .thenReturn(addressUpdated);
 
-        addressService.update(address.getId(), addressUpdated.get());
+        addressService.update(addressUpdated.get());
 
         assertEquals(address.getZipCode(), addressUpdated.get().getZipCode());
         assertEquals(address.getCountry(), addressUpdated.get().getCountry());

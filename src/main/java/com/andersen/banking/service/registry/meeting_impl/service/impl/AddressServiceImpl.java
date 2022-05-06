@@ -43,7 +43,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Address> findAllAddress() {
+    public List<Address> findAllAddresses() {
         log.debug("Find all address");
 
         List<Address> result = addressRepository.findAll();
@@ -54,13 +54,14 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public void update(Long addressId, Address updatedAddress) {
+    public void update(Address updatedAddress) {
         log.debug("Trying to update Address: {}", updatedAddress);
 
-        updatedAddress.setId(addressId);
         Address address = addressRepository.findById(updatedAddress.getId())
                 .orElseThrow(() -> new NotFoundException(Address.class, updatedAddress.getId()));
+
         updatedAddress.setUser(address.getUser());
+
         addressRepository.save(updatedAddress);
 
         log.debug("Return updated Address: {}", updatedAddress);
