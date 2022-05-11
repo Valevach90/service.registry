@@ -6,7 +6,11 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,5 +30,19 @@ public interface UserMapper {
     })
     UserDto toUserDto(User user);
 
-    List<UserDto> toListDtoUsers(List<User> user);
+    default Page<UserDto> toListDtoUsers(Page<User> users) {
+
+        Pageable pageable = users.getPageable();
+        long total = users.getTotalElements();
+
+        List<User> listUsers = users.getContent();
+        List<UserDto> listDto = new ArrayList<>();
+
+        for (User user : listUsers){
+            listDto.add(toUserDto(user));
+        }
+        Page<UserDto> page = new PageImpl<>(listDto, pageable, total);
+
+        return page;
+    }
 }

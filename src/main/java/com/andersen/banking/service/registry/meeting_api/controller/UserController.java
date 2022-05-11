@@ -5,6 +5,8 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public interface UserController {
     @Operation(summary = "Get all users",
             description = "get all users information")
     @GetMapping("/users")
-    List<User> findAll();
+    Page<User> findAll(Pageable pageable);
 
     @Operation(summary = "Get user by user id",
             description = "get user information by user id")
@@ -52,7 +54,7 @@ public interface UserController {
     @Operation(summary = "Get all users dto",
             description = "get all users information")
     @GetMapping("/usersDto")
-    List<UserDto> findAllDto();
+    Page<UserDto> findAllDto(Pageable pageable);
 
     @Operation(summary = "Get user by user id and return user dto",
             description = "get user information by user id dto")

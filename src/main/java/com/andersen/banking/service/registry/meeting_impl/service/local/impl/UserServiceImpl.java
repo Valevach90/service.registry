@@ -6,6 +6,8 @@ import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundExc
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +22,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> findAll() {
+    public Page<User> findAll(Pageable pageable) {
         log.debug("Find all users");
 
-        List<User> users = userRepository.findAll();
+        Page<User> users = userRepository.findAll(pageable);
 
-        log.debug("Return counts all users with pageable success: {}", users.size());
+        log.debug("Return counts all users with pageable success: {}", users.getContent().size());
         return users;
     }
 

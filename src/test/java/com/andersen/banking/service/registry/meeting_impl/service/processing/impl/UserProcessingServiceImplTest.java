@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -22,6 +23,9 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class UserProcessingServiceImplTest {
 
+    private static final Integer NUMBER_PAGE = 0;
+    private static final Integer SIZE_PAGE = 10;
+    private static final String SORT_FIELD = "firstName";
     @MockBean
     private UserMapper userMapper;
 
@@ -60,11 +64,22 @@ class UserProcessingServiceImplTest {
                 new UserDto( "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
                 new UserDto("Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
-        when(userRepository.findAll()).thenReturn(users);
-        when(userMapper.toListDtoUsers(users)).thenReturn(usersDto);
+        Pageable pageableUser = createPageable();
+        Page<User> pageUsers = new PageImpl<>(users, pageableUser, SIZE_PAGE);
 
-        List<UserDto> userDtoExpected = processingService.findAllUsersDto();
+        Pageable pageableUserDto = createPageable();
+        Page<UserDto> pageUsersDto = new PageImpl<>(usersDto, pageableUserDto, SIZE_PAGE);
+
+        when(userRepository.findAll(pageableUser)).thenReturn(pageUsers);
+        when(userMapper.toListDtoUsers(pageUsers)).thenReturn(pageUsersDto);
+
+        Page<UserDto> userDtoExpected = processingService.findAllUsersDto(pageableUser);
 
         assertEquals(userDtoExpected, usersDto);
+    }
+
+    private Pageable createPageable() {
+        Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
+        return PageRequest.of(NUMBER_PAGE, SIZE_PAGE, sort);
     }
 }

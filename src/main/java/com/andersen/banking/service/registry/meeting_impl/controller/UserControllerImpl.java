@@ -9,6 +9,8 @@ import com.andersen.banking.service.registry.meeting_impl.service.local.UserServ
 import com.andersen.banking.service.registry.meeting_impl.service.processing.UserProcessingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,12 +27,12 @@ public class UserControllerImpl implements UserController {
 
 
     @Override
-    public List<User> findAll() {
+    public Page<User> findAll(Pageable pageable) {
         log.trace("Find all users");
 
-        List<User> users = userService.findAll();
+        Page<User> users = userService.findAll(pageable);
 
-        log.trace("Return list of users success: {}", users);
+        log.trace("Return list of users success: {}", users.getContent());
         return users;
     }
 
@@ -75,12 +77,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public List<UserDto> findAllDto() {
+    public Page<UserDto> findAllDto(Pageable pageable) {
         log.info("Find users list by id dto: {}");
 
-        List<UserDto> usersListDto = processingService.findAllUsersDto();
+        Page<UserDto> usersListDto = processingService.findAllUsersDto(pageable);
 
-        log.info("Return userDto: {}", usersListDto);
+        log.info("Return userDto: {}", usersListDto.getContent());
         return usersListDto;
     }
 

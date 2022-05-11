@@ -7,6 +7,8 @@ import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.processing.UserProcessingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,11 +34,11 @@ public class UserProcessingServiceImpl implements UserProcessingService {
     }
 
     @Override
-    public List<UserDto> findAllUsersDto() {
+    public Page<UserDto> findAllUsersDto(Pageable pageable) {
         log.debug("Find user list dto by id: {}");
 
-        List<User> users = userRepository.findAll();
-        List<UserDto> usersDto = userMapper.toListDtoUsers(users);
+        Page<User> users = userRepository.findAll(pageable);
+        Page<UserDto> usersDto = userMapper.toListDtoUsers(users);
 
         log.debug("Return user dto success: {}", usersDto);
         return usersDto;

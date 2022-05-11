@@ -1,6 +1,8 @@
 package com.andersen.banking.service.registry.meeting_impl.service.local;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public interface UserService {
      *
      * @return List<UserEntity>
      */
-    List<User> findAll();
+    Page<User> findAll(Pageable pageable);
 
     /**
      * Find by id user and return user from database

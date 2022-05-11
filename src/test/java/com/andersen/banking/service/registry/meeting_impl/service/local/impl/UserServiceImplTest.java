@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -22,6 +23,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class UserServiceImplTest {
+
+    private static final Integer NUMBER_PAGE = 0;
+    private static final Integer SIZE_PAGE = 10;
+    private static final String SORT_FIELD = "firstName";
 
     @MockBean
     private final UserRepository userRepository;
@@ -41,13 +46,17 @@ class UserServiceImplTest {
                 new User(2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
                 new User(3L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
-        //when
-        when(this.userRepository.findAll()).thenReturn(users);
+        Pageable pageable = createPageable();
 
-        List<User> foundUsers = this.userService.findAll();
+        Page<User> page = new PageImpl<>(users, pageable, SIZE_PAGE);
+
+        //when
+        when(this.userRepository.findAll(pageable)).thenReturn(page);
+
+        Page<User> foundUsers = this.userService.findAll(pageable);
 
         //then
-        assertEquals(foundUsers, users);
+        assertEquals(foundUsers, page);
         verify(this.userRepository, times(1)).findAll();
     }
 
@@ -113,5 +122,8 @@ class UserServiceImplTest {
 
     }
 
-
+    private Pageable createPageable() {
+        Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
+        return PageRequest.of(NUMBER_PAGE, SIZE_PAGE, sort);
+    }
 }
