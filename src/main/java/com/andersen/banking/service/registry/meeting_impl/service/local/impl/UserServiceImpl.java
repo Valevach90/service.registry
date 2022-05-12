@@ -2,6 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.service.local.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.SaveExistedException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user) {
         log.debug("Saving user in database: {}", user);
         findById(user.getId()).ifPresent(usr -> {
-            throw new RuntimeException("The user with id: " + user.getId() + " is already saved before");
+            throw new SaveExistedException(User.class, user.getId());
         });
         User savedUser = userRepository.save(user);
 
@@ -54,28 +54,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User newUser) {
-        log.debug("Update user by id: {}", id);
+    public User updateUser(User user) {
+        log.debug("Update user: {}", user);
 
-        userRepository.findById(id).map(user -> {
-            user.setFirstName(newUser.getFirstName());
-            user.setLastName(newUser.getLastName());
-            user.setPatronymic(newUser.getPatronymic());
-            user.setEmail(newUser.getEmail());
-            user.setPhone(newUser.getPhone());
-            return userRepository.save(user);
-        }).orElseThrow(() -> {
-            return new NotFoundException(NotFoundException.BY_ID);
-        });
-        log.debug("Update user by id success: {}", newUser);
-        return newUser;
+        userRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException(User.class, user.getId()));
+
+        userRepository.save(user);
+        log.debug("Update user success: {}", user);
+
+        return user;
     }
 
     @Override
     public boolean deleteUser(Long id) {
         log.debug("Delete user by id: {}", id);
 
-        findById(id).ifPresent(u -> userRepository.deleteById(u.getId()));
+        findById(id).ifPresent(user -> userRepository.deleteById(user.getId()));
 
         log.debug("Delete user by id success: {}", id);
         return true;

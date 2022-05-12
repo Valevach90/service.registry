@@ -45,7 +45,7 @@ class UserProcessingServiceImplTest {
     @Test
     void findByIdUserDto() {
         User user = new User(1L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
-        UserDto userDtoActual = new UserDto( "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+        UserDto userDtoActual = new UserDto( 1L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         when(userRepository.getById(1L)).thenReturn(user);
         when(userMapper.toUserDto(user)).thenReturn(userDtoActual);
@@ -60,9 +60,9 @@ class UserProcessingServiceImplTest {
                 new User(2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
                 new User(3L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
-        List<UserDto> usersDto = List.of( new UserDto( "Jack", "Nicholson", "Strong", "jack@mail.com", "555-55-55"),
-                new UserDto( "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
-                new UserDto("Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
+        List<UserDto> usersDto = List.of( new UserDto( 1L, "Jack", "Nicholson", "Strong", "jack@mail.com", "555-55-55"),
+                new UserDto( 2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
+                new UserDto(3L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
         Pageable pageableUser = createPageable();
         Page<User> pageUsers = new PageImpl<>(users, pageableUser, SIZE_PAGE);
@@ -71,7 +71,7 @@ class UserProcessingServiceImplTest {
         Page<UserDto> pageUsersDto = new PageImpl<>(usersDto, pageableUserDto, SIZE_PAGE);
 
         when(userRepository.findAll(pageableUser)).thenReturn(pageUsers);
-        when(userMapper.toListDtoUsers(pageUsers)).thenReturn(pageUsersDto);
+        when(userMapper.toListDtoUsers(users)).thenReturn(usersDto);
 
         Page<UserDto> userDtoExpected = processingService.findAllUsersDto(pageableUser);
 

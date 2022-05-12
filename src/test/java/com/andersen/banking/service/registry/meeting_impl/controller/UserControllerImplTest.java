@@ -100,9 +100,9 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$[0]firstName", is("Sasha")))
-                .andExpect(jsonPath("$[1]firstName", is("Dima")))
-                .andExpect(jsonPath("$[2]firstName", is("Vasya")));
+                .andExpect(jsonPath("$.content[0].first_name", is("Sasha")))
+                .andExpect(jsonPath("$.content[1].first_name", is("Dima")))
+                .andExpect(jsonPath("$.content[2].first_name", is("Vasya")));
     }
 
     @Test
@@ -116,7 +116,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Sasha")));
+                .andExpect(jsonPath("$.first_name", is("Sasha")));
     }
 
     @Test
@@ -149,9 +149,9 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$[0]first_name", is("Sasha")))
-                .andExpect(jsonPath("$[1]first_name", is("Dima")))
-                .andExpect(jsonPath("$[2]first_name", is("Vasya")));
+                .andExpect(jsonPath("$.content[0].first_name", is("Sasha")))
+                .andExpect(jsonPath("$.content[1].first_name", is("Dima")))
+                .andExpect(jsonPath("$.content[2].first_name", is("Vasya")));
 
     }
 
@@ -161,33 +161,24 @@ class UserControllerTest {
         User userExpected = new User(4L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
 
         mockMvc.perform(post("/api/v1/users")
-                .content(objectMapper.writeValueAsString(userExpected))
+                .content(objectMapper.writeValueAsString(userMapper.toUserDto(userExpected)))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.id", is(4)))
-                .andExpect(jsonPath("$.firstName", is("Chuck")));
+                .andExpect(status().isOk());
     }
-
 
     @Test
     @Order(7)
     public void whenUpdateUserPositiveScenario() throws Exception {
         User newUser = new User(1L,"Dima", "Mickailovich", "Svetlichni", "micha@mail.com", "888-88-88");
 
-        userService.updateUser(1L, newUser);
+        userService.updateUser(newUser);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/users/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.firstName", is("Dima")));
-
-
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -202,7 +193,5 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
-
 
 }

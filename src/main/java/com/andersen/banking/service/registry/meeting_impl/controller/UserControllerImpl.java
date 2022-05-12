@@ -10,6 +10,7 @@ import com.andersen.banking.service.registry.meeting_impl.service.processing.Use
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,49 +23,55 @@ import java.util.Optional;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
-
+    private final UserMapper userMapper;
     private final UserProcessingService processingService;
 
 
     @Override
-    public Page<User> findAll(Pageable pageable) {
+    public Page<UserDto> findAll(Pageable pageable) {
         log.trace("Find all users");
 
         Page<User> users = userService.findAll(pageable);
+        List<User> listUsers = users.getContent();
+
+        Page<UserDto> usersDto = new PageImpl<>(userMapper.toListDtoUsers(listUsers));
 
         log.trace("Return list of users success: {}", users.getContent());
-        return users;
+        return usersDto;
     }
 
     @Override
-    public Optional<User> findUserById(Long id) {
+    public UserDto findUserById(Long id) {
         log.trace("Find user by Id: {}", id);
 
         Optional<User> user = userService.findById(id);
 
+        UserDto userDto = userMapper.toUserDto(user
+                .orElseThrow(() -> new NotFoundException(User.class, id)));
+
         log.trace("Return user success: {}", user);
 
-        return user;
+        return userDto;
     }
 
     @Override
-    public User saveUser(User newUser) {
-        log.trace("Saving new user in database: {}", newUser);
+    public void saveUser(UserDto newUserDto) {
+        log.trace("Saving new user in database: {}", newUserDto);
 
-        User savedUser = userService.saveUser(newUser);
+        User savedUser = userMapper.toUser(newUserDto);
+        userService.saveUser(savedUser);
 
-        log.trace("Save new user success in database: {}", newUser);
-        return savedUser;
+        log.trace("Save new user success in database: {}", newUserDto);
     }
 
     @Override
-    public void updateUser(Long id, User user) {
-        log.trace("Try to update user: {}", user);
+    public void updateUser(UserDto userDto) {
+        log.trace("Try to update user: {}", userDto);
 
-        userService.updateUser(id, user);
+        User user = userMapper.toUser(userDto);
+        userService.updateUser(user);
 
         log.trace("Updated user success");
-
     }
 
     @Override

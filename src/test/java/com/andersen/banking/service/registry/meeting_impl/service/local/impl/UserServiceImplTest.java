@@ -99,7 +99,7 @@ class UserServiceImplTest {
         //when
         when(userRepository.findById(id)).thenReturn(Optional.of(userOld));
         when(userRepository.save(any())).thenReturn(userNew);
-        User userActual = userService.updateUser(id, userNew);
+        User userActual = userService.updateUser(userNew);
 
         //then
         assertEquals(userNew, userActual);

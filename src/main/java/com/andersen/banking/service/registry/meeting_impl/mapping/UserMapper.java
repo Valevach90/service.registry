@@ -20,29 +20,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    User toUser(UserDto userDto);
 
-    @Mappings({
-            @Mapping(source = "firstName", target = "firstName"),
-            @Mapping(source = "lastName", target = "lastName"),
-            @Mapping(source = "patronymic", target = "patronymic"),
-            @Mapping(source = "email", target = "email"),
-            @Mapping(source = "phone", target = "phone")
-    })
     UserDto toUserDto(User user);
 
-    default Page<UserDto> toListDtoUsers(Page<User> users) {
+    List<UserDto> toListDtoUsers(List<User> users);
 
-        Pageable pageable = users.getPageable();
-        long total = users.getTotalElements();
-
-        List<User> listUsers = users.getContent();
-        List<UserDto> listDto = new ArrayList<>();
-
-        for (User user : listUsers){
-            listDto.add(toUserDto(user));
-        }
-        Page<UserDto> page = new PageImpl<>(listDto, pageable, total);
-
-        return page;
-    }
 }

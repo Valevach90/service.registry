@@ -20,10 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 class UserMapperTest {
 
-    private static final Integer NUMBER_PAGE = 0;
-    private static final Integer SIZE_PAGE = 10;
-    private static final String SORT_FIELD = "firstName";
-
     @Autowired
     private UserMapper userMapper;
 
@@ -48,19 +44,10 @@ class UserMapperTest {
                 new User(2L, "Mickael", "Jackson", "Dancer", "mickael@mail.com", "888-88-88"),
                 new User(3L, "Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77"));
 
-        Pageable pageable = createPageable();
-        Page<User> page = new PageImpl<>(users, pageable, SIZE_PAGE);
-
-        Page<UserDto> usersListDto = userMapper.toListDtoUsers(page);
+       List<UserDto> usersListDto = userMapper.toListDtoUsers(users);
 
         assertNotNull(usersListDto);
         assertFalse(usersListDto.isEmpty());
-        assertEquals(users.size(), usersListDto.getContent().size());
+        assertEquals(users.size(), usersListDto.size());
     }
-
-    private Pageable createPageable() {
-        Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
-        return PageRequest.of(NUMBER_PAGE, SIZE_PAGE, sort);
-    }
-
 }

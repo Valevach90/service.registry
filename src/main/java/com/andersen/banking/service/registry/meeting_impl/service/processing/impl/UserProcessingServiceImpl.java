@@ -8,6 +8,7 @@ import com.andersen.banking.service.registry.meeting_impl.service.processing.Use
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,9 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         log.debug("Find user list dto by id: {}");
 
         Page<User> users = userRepository.findAll(pageable);
-        Page<UserDto> usersDto = userMapper.toListDtoUsers(users);
+        List<User> listUsers = users.getContent();
+
+        Page<UserDto> usersDto = new PageImpl<>(userMapper.toListDtoUsers(listUsers), pageable, users.getTotalElements());
 
         log.debug("Return user dto success: {}", usersDto);
         return usersDto;

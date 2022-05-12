@@ -45,11 +45,10 @@ public interface UserService {
     /**
      * Update user from database by id
      *
-     * @param id
      * @param user
      * @return UserEntity
      */
-    User updateUser(Long id, User user);
+    User updateUser(User user);
 
 
     /**

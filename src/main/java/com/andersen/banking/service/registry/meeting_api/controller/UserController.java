@@ -23,27 +23,24 @@ public interface UserController {
     @Operation(summary = "Get all users",
             description = "get all users information")
     @GetMapping("/users")
-    Page<User> findAll(Pageable pageable);
+    Page<UserDto> findAll(Pageable pageable);
 
     @Operation(summary = "Get user by user id",
             description = "get user information by user id")
     @GetMapping("/users/{id}")
-    Optional<User> findUserById(@Parameter(description = "user id", required = true)
+    UserDto findUserById(@Parameter(description = "user id", required = true)
                          @PathVariable Long id);
 
     @Operation(summary = "Save user in database",
             description = "save user in database")
     @PostMapping("/users")
-    User saveUser(@Parameter(description = "user", required = true)
-                         @RequestBody User user);
+    void saveUser(@Parameter(description = "user", required = true)
+                         @RequestBody UserDto userDto);
 
     @Operation(summary = "Update user",
             description = "update user by params in dto")
     @PutMapping("/users/{id}")
-    void updateUser(
-            @Parameter(description = "user id", required = true)
-            @PathVariable Long id,
-            @RequestBody User user
+    void updateUser(@RequestBody UserDto userDto
     );
 
     @Operation(summary = "Delete user by user id",
