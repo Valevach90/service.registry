@@ -4,6 +4,7 @@ import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
@@ -75,7 +76,7 @@ public class PassportServiceImpl implements PassportService {
         log.info("Try to update passport: {}", passport);
 
         Passport foundPassport = passportRepository.findById(passport.getId())
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+                .orElseThrow(() -> new NotFoundException(Passport.class, passport.getId()));
 
         passport.setUser(foundPassport.getUser());
         passport.setAddress(foundPassport.getAddress());
@@ -90,7 +91,7 @@ public class PassportServiceImpl implements PassportService {
     public void deleteById(Long id) {
         log.info("deleting passport with id: {}", id);
 
-        Passport passport = findById(id).orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+        Passport passport = findById(id).orElseThrow(() -> new NotFoundException(Passport.class, id));
         passportRepository.deleteById(id);
 
         log.info("deleted passport: {} with id: {}", passport, id);
@@ -103,17 +104,17 @@ public class PassportServiceImpl implements PassportService {
 
         findByAddressId(userId)
                 .ifPresent(e -> {
-                    throw new NotFoundException("exists"); //TODO change exception and message
+                    throw new FoundException(User.class, userId);
                 });
         findByUserId(addressId)
                 .ifPresent(e -> {
-                    throw new NotFoundException("exists");
+                    throw new FoundException(Address.class, addressId);
                 });
 
         Address address = addressService.findById(addressId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+                .orElseThrow(() -> new NotFoundException(Address.class, addressId));
         User user = userService.findById(userId)
-                .orElseThrow(() -> new NotFoundException(NotFoundException.BY_ID));
+                .orElseThrow(() -> new NotFoundException(User.class, userId));
         passport.setAddress(address);
         passport.setUser(user);
 

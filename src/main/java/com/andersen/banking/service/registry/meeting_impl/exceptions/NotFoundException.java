@@ -5,9 +5,7 @@ package com.andersen.banking.service.registry.meeting_impl.exceptions;
  */
 public class NotFoundException extends RuntimeException {
 
-    public static final String BY_ID = "Not found by id";
-
-    public NotFoundException(String message) {
-        super(message);
+    public <T> NotFoundException(Class<T> exceptionType, Long id) {
+        super(String.format("Not found %s with %d id", exceptionType.getSimpleName(), id));
     }
 }

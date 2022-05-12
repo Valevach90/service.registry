@@ -4,6 +4,7 @@ import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.impl.PassportServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ class PassportServiceImplTest {
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "userId";
 
-    private Optional<Passport> passport;
+    private Optional<Passport> passportOptional;
     private Passport passportToUpdate;
 
     @SpyBean
@@ -47,7 +48,7 @@ class PassportServiceImplTest {
 
     @BeforeEach
     void initData() {
-        passport = Optional.of(new Passport());
+        passportOptional = Optional.of(new Passport());
         passportToUpdate = new Passport();
     }
 
@@ -55,33 +56,33 @@ class PassportServiceImplTest {
     void whenFindById_andOk() {
         Mockito
                 .when(passportRepository.findById(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
         var result = passportService.findById(ID);
 
-        assertEquals(passport, result);
+        assertEquals(passportOptional, result);
     }
 
     @Test
     void whenFindByUserId_andOk() {
         Mockito
                 .when(passportRepository.findByUserId(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
         var result = passportService.findByUserId(ID);
 
-        assertEquals(passport, result);
+        assertEquals(passportOptional, result);
     }
 
     @Test
     void whenFindByAddressId_andOk() {
         Mockito
                 .when(passportRepository.findByAddressId(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
         var result = passportService.findByAddressId(ID);
 
-        assertEquals(passport, result);
+        assertEquals(passportOptional, result);
     }
 
     @Test
@@ -103,18 +104,18 @@ class PassportServiceImplTest {
     void whenUpdate_andOk() {
         User user = new User();
         Address address = new Address();
-        passport.get().setAddress(address);
-        passport.get().setUser(user);
+        passportOptional.get().setAddress(address);
+        passportOptional.get().setUser(user);
         passportToUpdate.setId(ID);
 
         Mockito
                 .when(passportRepository.findById(passportToUpdate.getId()))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
         passportService.update(passportToUpdate);
 
-        assertEquals(passport.get().getUser(), passportToUpdate.getUser());
-        assertEquals(passport.get().getAddress(), passportToUpdate.getAddress());
+        assertEquals(passportOptional.get().getUser(), passportToUpdate.getUser());
+        assertEquals(passportOptional.get().getAddress(), passportToUpdate.getAddress());
 
         Mockito
                 .verify(passportRepository, Mockito.times(1))
@@ -136,7 +137,7 @@ class PassportServiceImplTest {
     void whenDeleteById_andOk() {
         Mockito
                 .when(passportRepository.findById(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
         passportService.deleteById(ID);
 
@@ -172,44 +173,44 @@ class PassportServiceImplTest {
                 .when(userService.findById(ID))
                 .thenReturn(user);
         Mockito
-                .when(passportRepository.save(passport.get()))
-                .thenReturn(passport.get());
+                .when(passportRepository.save(passportOptional.get()))
+                .thenReturn(passportOptional.get());
 
-        var result = passportService.create(passport.get(), ID, ID);
+        var result = passportService.create(passportOptional.get(), ID, ID);
 
-        assertEquals(passport.get(), result);
-        assertEquals(user.get(), passport.get().getUser());
-        assertEquals(address.get(), passport.get().getAddress());
+        assertEquals(passportOptional.get(), result);
+        assertEquals(user.get(), passportOptional.get().getUser());
+        assertEquals(address.get(), passportOptional.get().getAddress());
     }
 
     @Test
     void whenCreate_andPassportWithAddressFound_shouldThrowException() {
-        var pas = passport.get();
+        var pas = passportOptional.get();
 
         Mockito
                 .when(passportService.findByAddressId(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
-        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(FoundException.class, () -> passportService.create(pas, ID, ID));
     }
 
     @Test
     void whenCreate_andPassportWithUserFound_shouldThrowException() {
-        var pas = passport.get();
+        var pas = passportOptional.get();
 
         Mockito
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(Optional.empty());
         Mockito
                 .when(passportService.findByUserId(ID))
-                .thenReturn(passport);
+                .thenReturn(passportOptional);
 
-        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(FoundException.class, () -> passportService.create(pas, ID, ID));
     }
 
     @Test
     void whenCreate_andAddressNotFound_shouldThrowException() {
-        var pas = passport.get();
+        var pas = passportOptional.get();
 
         Mockito
                 .when(passportService.findByAddressId(ID))
@@ -227,7 +228,7 @@ class PassportServiceImplTest {
     @Test
     void whenCreate_andUserNotFound_shouldThrowException() {
         var address = Optional.of(new Address());
-        var pas = passport.get();
+        var pas = passportOptional.get();
 
         Mockito
                 .when(passportService.findByAddressId(ID))

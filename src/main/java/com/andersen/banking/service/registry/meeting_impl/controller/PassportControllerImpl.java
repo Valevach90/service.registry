@@ -2,7 +2,9 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
@@ -31,7 +33,7 @@ public class PassportControllerImpl implements PassportController {
 
         Optional<Passport> passport = passportService.findById(id);
         PassportDto passportDto = passportMapper.toPassportDto(passport.orElseThrow(
-                () -> new NotFoundException(NotFoundException.BY_ID)));
+                () -> new NotFoundException(Passport.class, id)));
 
         log.debug("Found passport: {} by id: {}", passportDto, id);
         return passportDto;
@@ -43,7 +45,7 @@ public class PassportControllerImpl implements PassportController {
 
         Optional<Passport> passport = passportService.findByUserId(id);
         PassportDto passportDto = passportMapper.toPassportDto(passport.orElseThrow(
-                () -> new NotFoundException(NotFoundException.BY_ID)));
+                () -> new NotFoundException(User.class, id)));
 
         log.debug("Found passport: {} by user id: {}", passportDto, id);
         return passportDto;
@@ -55,7 +57,7 @@ public class PassportControllerImpl implements PassportController {
 
         Optional<Passport> passport = passportService.findByAddressId(id);
         PassportDto passportDto = passportMapper.toPassportDto(passport.orElseThrow(
-                () -> new NotFoundException(NotFoundException.BY_ID)));
+                () -> new NotFoundException(Address.class, id)));
 
         log.debug("Found passport: {} by address id: {}", passportDto, id);
         return passportDto;
