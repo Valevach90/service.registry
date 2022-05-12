@@ -5,8 +5,11 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,43 +26,34 @@ public interface UserController {
     @Operation(summary = "Get all users",
             description = "get all users information")
     @GetMapping("/users")
-    Page<User> findAll(Pageable pageable);
+    Page<UserDto> findAll(
+            @ParameterObject
+            @PageableDefault Pageable pageable);
 
     @Operation(summary = "Get user by user id",
-            description = "get user information by user id")
+            description = "get user information by id")
     @GetMapping("/users/{id}")
-    Optional<User> findUserById(@Parameter(description = "user id", required = true)
+    UserDto findById(@Parameter(description = "user id", required = true)
                          @PathVariable Long id);
 
-    @Operation(summary = "Save user in database",
-            description = "save user in database")
+    @Operation(summary = "Create user",
+            description = "create user by params in dto object")
     @PostMapping("/users")
-    User saveUser(@Parameter(description = "user", required = true)
-                         @RequestBody User user);
+    UserDto create(@Parameter(description = "user", required = true)
+                         @RequestBody
+                         @Validated UserDto userDto);
 
     @Operation(summary = "Update user",
-            description = "update user by params in dto")
+            description = "update user by params in dto object")
     @PutMapping("/users/{id}")
     void updateUser(
             @Parameter(description = "user id", required = true)
-            @PathVariable Long id,
-            @RequestBody User user
-    );
+            @RequestBody
+            @Validated UserDto userDto);
 
-    @Operation(summary = "Delete user by user id",
-            description = "delete user information by user id")
+    @Operation(summary = "Delete user",
+            description = "delete user by id")
     @DeleteMapping("/users/{id}")
-    void deleteUserById(@Parameter(description = "user id", required = true)
+    void deleteById(@Parameter(description = "user id", required = true)
                          @PathVariable Long id);
-    @Operation(summary = "Get all users dto",
-            description = "get all users information")
-    @GetMapping("/usersDto")
-    Page<UserDto> findAllDto(Pageable pageable);
-
-    @Operation(summary = "Get user by user id and return user dto",
-            description = "get user information by user id dto")
-    @GetMapping("/usersDto/{id}")
-    UserDto findUserByIdUserDto(@Parameter(description = "user id", required = true)
-                                          @PathVariable Long id);
-
 }

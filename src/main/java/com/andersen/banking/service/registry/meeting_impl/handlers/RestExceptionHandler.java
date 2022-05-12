@@ -33,6 +33,6 @@ public class RestExceptionHandler {
                 notFoundError.getMessage(),
                 notFoundError.getErrorCode());
 
-        return errorMapper.toNotFoundError(exception);
+        return notFoundError;
     }
 }
