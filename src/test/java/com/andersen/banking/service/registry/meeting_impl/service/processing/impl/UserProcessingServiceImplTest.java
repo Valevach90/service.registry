@@ -75,7 +75,7 @@ class UserProcessingServiceImplTest {
 
         Page<UserDto> userDtoExpected = processingService.findAllUsersDto(pageableUser);
 
-        assertEquals(userDtoExpected, usersDto);
+        assertEquals(userDtoExpected, pageUsersDto);
     }
 
     private Pageable createPageable() {

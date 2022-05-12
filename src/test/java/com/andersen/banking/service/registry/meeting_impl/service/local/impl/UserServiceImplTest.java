@@ -57,7 +57,7 @@ class UserServiceImplTest {
 
         //then
         assertEquals(foundUsers, page);
-        verify(this.userRepository, times(1)).findAll();
+        verify(this.userRepository, times(1)).findAll(pageable);
     }
 
     @Test
