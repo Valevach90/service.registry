@@ -73,6 +73,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_ERROR_DESCRIPTION = "Error description";
 
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";
+    public static final String EXAMPLE_ERROR_FOUND = "Found";
 
     public static final String DESCRIPTION_ERROR_CODE = "Error code";
 }
