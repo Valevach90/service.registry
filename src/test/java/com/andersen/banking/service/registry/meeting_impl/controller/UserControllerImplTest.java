@@ -1,197 +1,162 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import com.andersen.banking.service.registry.meeting_api.controller.UserController;
+import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
-import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
-import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-
-import java.util.ArrayList;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+@SpringBootTest(classes = UserControllerImpl.class)
+class UserControllerImplTest {
+    private static final Long ID = 23L;
+    private static final Integer NUMBER_PAGE = 0;
+    private static final Integer SIZE_PAGE = 10;
+    private static final String SORT_FIELD = "id";
 
-@ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@Testcontainers
-@AutoConfigureMockMvc
-@WithMockUser
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+    private UserDto userDto;
+    private Optional<User> user;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    UserController userController;
+    @MockBean
+    UserService userService;
+    @MockBean
+    UserMapper userMapper;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Container
-    public static final PostgreSQLContainer<?> postgreSQLContainer =
-            (new PostgreSQLContainer<>("postgres"))
-                    .withDatabaseName("registry-service")
-                    .withUsername("benefit")
-                    .withPassword("ben01479");
-
-    @DynamicPropertySource
-    public static void postgreSQLProperties(final DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-    }
-
-    @Before
-    public void initData(){
-        userRepository.deleteAll();
-    }
-
-
-
-    @Test
-    @Order(1)
-    void whenAllUsersFindSuccess() throws Exception {
-        User userFirst = new User(1L,"Sasha", "Drinov", "Labovich", "sasha@mail.com", "787-57-75");
-        User userSecond = new User(2L,"Dima", "Vlasov", "Slenchaev", "dima@mail.com", "799-78-77");
-        User userThird = new User(3L,"Vasya", "Norris", "Fringer", "vasya@mail.com", "563-23-34");
-        List<User> userList = new ArrayList<>();
-        userList.add(userFirst);
-        userList.add(userSecond);
-        userList.add(userThird);
-        userRepository.saveAll(userList);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1//users")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.content[0].first_name", is("Sasha")))
-                .andExpect(jsonPath("$.content[1].first_name", is("Dima")))
-                .andExpect(jsonPath("$.content[2].first_name", is("Vasya")));
+    @BeforeEach
+    void initData() {
+        user = Optional.of(new User());
+        userDto = new UserDto();
     }
 
     @Test
-    @Order(2)
-    public void whenGetUserByIdPositiveScenario() throws Exception {
+    void whenFindById_andOk() {
+        Mockito
+                .when(userService.findById(ID))
+                .thenReturn(user);
+        Mockito
+                .when(userMapper.toUserDto(user.get()))
+                .thenReturn(userDto);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1/users/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.first_name", is("Sasha")));
+        var result = userController.findById(ID);
+
+        assertEquals(userDto, result);
     }
 
     @Test
-    @Order(3)
-    public void whenFindUserDtoByIdSuccess() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1/usersDto/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.first_name", is("Sasha")));
+    void whenFindAll_andOk() {
+        List<User> passports = generateUser();
+        Pageable pageable = createPageable();
+        Page<User> page = new PageImpl<>(passports, pageable, SIZE_PAGE);
+
+        Mockito
+                .when(userService.findAll(pageable))
+                .thenReturn(page);
+        Mockito
+                .when(userMapper.toUserDto(Mockito.any(User.class)))
+                .thenAnswer(invocation -> {
+                    User entity = invocation.getArgument(0);
+                    if (passports.contains(entity)) {
+                        return userDto;
+                    }
+                    return new UserDto();
+                });
+
+        var result = userController.findAll(pageable);
+
+        result.forEach(resultDto -> assertEquals(userDto, resultDto));
     }
 
     @Test
-    @Order(4)
-    public void whenFindListUserDtoByIdSuccess() throws Exception {
-        User userFirst = new User(1L,"Sasha", "Drinov", "Labovich", "sasha@mail.com", "787-57-75");
-        User userSecond = new User(2L,"Dima", "Vlasov", "Slenchaev", "dima@mail.com", "799-78-77");
-        User userThird = new User(3L,"Vasya", "Norris", "Fringer", "vasya@mail.com", "563-23-34");
-        List<User> userList = new ArrayList<>();
-        userList.add(userFirst);
-        userList.add(userSecond);
-        userList.add(userThird);
-        userRepository.saveAll(userList);
+    void whenUpdate_andOk() {
+        Mockito
+                .when(userMapper.toUser(userDto))
+                .thenReturn(user.get());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1//usersDto")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.content[0].first_name", is("Sasha")))
-                .andExpect(jsonPath("$.content[1].first_name", is("Dima")))
-                .andExpect(jsonPath("$.content[2].first_name", is("Vasya")));
+        userController.updateUser(userDto);
 
+        Mockito
+                .verify(userService, Mockito.times(1))
+                .update(user.get());
     }
 
     @Test
-    @Order(6)
-    public void whenAddUserPositiveScenario() throws Exception {
-        User userExpected = new User(4L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
+    void whenUpdate_andNotFound_shouldThrowException() {
+        Mockito
+                .when(userMapper.toUser(userDto))
+                .thenReturn(user.get());
+        Mockito
+                .doThrow(NotFoundException.class)
+                .when(userService)
+                .update(user.get());
 
-        mockMvc.perform(post("/api/v1/users")
-                .content(objectMapper.writeValueAsString(userMapper.toUserDto(userExpected)))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        assertThrows(NotFoundException.class, () -> userController.updateUser(userDto));
+
+        Mockito
+                .verify(userService, Mockito.times(1))
+                .update(Mockito.any(User.class));
     }
 
     @Test
-    @Order(7)
-    public void whenUpdateUserPositiveScenario() throws Exception {
-        User newUser = new User(1L,"Dima", "Mickailovich", "Svetlichni", "micha@mail.com", "888-88-88");
+    void whenDelete_andOk() {
+        userController.deleteById(ID);
 
-        userService.updateUser(newUser);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/v1/users/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        Mockito
+                .verify(userService, Mockito.times(1))
+                .deleteById(ID);
     }
 
     @Test
-    @Order(8)
-    public void whenDeletePositiveScenario() throws Exception {
-        User user= new User(1L,"Chuck", "Norris", "Fighter", "chuck@mail.com", "777-77-77");
-        userRepository.save(user);
+    void whenCreate_andOk() {
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/v1/users/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+        var createdUser = new User();
+        var createdUserDto = new UserDto();
+
+        Mockito
+                .when(userMapper.toUser(userDto))
+                .thenReturn(user.get());
+        Mockito
+                .when(userService.create(user.get()))
+                .thenReturn(createdUser);
+        Mockito
+                .when(userMapper.toUserDto(createdUser))
+                .thenReturn(createdUserDto);
+
+        userController.create(userDto);
+
+        Mockito
+                .verify(userService, Mockito.times(1))
+                .create(user.get());
     }
 
+    private List<User> generateUser() {
+        return Stream
+                .generate(User::new)
+                .limit(23)
+                .collect(Collectors.toList());
+    }
+
+    private Pageable createPageable() {
+        Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
+        return PageRequest.of(NUMBER_PAGE, SIZE_PAGE, sort);
+    }
 }

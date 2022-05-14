@@ -3,19 +3,13 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
-import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
-import com.andersen.banking.service.registry.meeting_impl.service.local.UserService;
-import com.andersen.banking.service.registry.meeting_impl.service.processing.UserProcessingService;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -24,84 +18,61 @@ public class UserControllerImpl implements UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    private final UserProcessingService processingService;
-
 
     @Override
     public Page<UserDto> findAll(Pageable pageable) {
         log.trace("Find all users");
 
-        Page<User> users = userService.findAll(pageable);
-        List<User> listUsers = users.getContent();
+        Page<UserDto> result = userService.findAll(pageable)
+                .map(userMapper::toUserDto);
 
-        Page<UserDto> usersDto = new PageImpl<>(userMapper.toListDtoUsers(listUsers));
-
-        log.trace("Return list of users success: {}", users.getContent());
-        return usersDto;
+        log.trace("Return list of userDto: {}", result.getContent());
+        return result;
     }
 
     @Override
-    public UserDto findUserById(Long id) {
+    public UserDto findById(Long id) {
         log.trace("Find user by Id: {}", id);
 
-        Optional<User> user = userService.findById(id);
+        UserDto result = userService.findById(id)
+                .map(userMapper::toUserDto)
+                .orElse(null);
 
-        UserDto userDto = userMapper.toUserDto(user
-                .orElseThrow(() -> new NotFoundException(User.class, id)));
+        log.trace("Return userDto: {}", result);
 
-        log.trace("Return user success: {}", user);
-
-        return userDto;
+        return result;
     }
 
     @Override
-    public void saveUser(UserDto newUserDto) {
-        log.trace("Saving new user in database: {}", newUserDto);
+    public UserDto create(UserDto userDto) {
+        log.debug("Try to create user: {}", userDto);
 
-        User savedUser = userMapper.toUser(newUserDto);
-        userService.saveUser(savedUser);
+        User user = userMapper.toUser(userDto);
 
-        log.trace("Save new user success in database: {}", newUserDto);
+        User savedUser = userService.create(user);
+
+        UserDto savedUserDto = userMapper.toUserDto(savedUser);
+
+        log.debug("created Passport: {}", savedUserDto);
+        return savedUserDto;
     }
 
     @Override
     public void updateUser(UserDto userDto) {
         log.trace("Try to update user: {}", userDto);
 
-        User user = userMapper.toUser(userDto);
-        userService.updateUser(user);
+        User addressUpdated = userMapper.toUser(userDto);
+        userService.update(addressUpdated);
 
         log.trace("Updated user success");
     }
 
     @Override
-    public void deleteUserById(Long id) {
-        log.trace("Delete user with id: {}", id);
+    public void deleteById(Long id) {
+        log.trace("Try to delete user with id: {}", id);
 
-        userService.deleteUser(id);
+        userService.deleteById(id);
 
-        log.trace("Delete success user with id: {}", id);
+        log.trace("Deleted user with id: {}", id);
     }
-
-    @Override
-    public Page<UserDto> findAllDto(Pageable pageable) {
-        log.info("Find users list by id dto: {}");
-
-        Page<UserDto> usersListDto = processingService.findAllUsersDto(pageable);
-
-        log.info("Return userDto: {}", usersListDto.getContent());
-        return usersListDto;
-    }
-
-    @Override
-    public UserDto findUserByIdUserDto(Long id) {
-        log.info("Find user by id dto: {}", id);
-
-        UserDto userDto = processingService.findByIdUserDto(id);
-
-        log.info("Return userDto: {}", userDto);
-        return userDto;
-    }
-
-
 }

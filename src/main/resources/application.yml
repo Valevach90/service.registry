@@ -1,20 +1,14 @@
 server:
-  port: 8282
+  port: 8181
 
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/service-registry
-    username: benefits
-    password: ben0147
-  application:
-    name: registry-service
-  jpa:
-    hibernate.ddl-auto: create
-    show-sql: true
-  flyway:
-    enabled: true
-
+    url: jdbc:postgresql://localhost:5435/postgres?currentSchema=public
+    username: postgres
+    password: 12345
+    flyway:
+      enabled: true
 
 springdoc:
   api-docs:

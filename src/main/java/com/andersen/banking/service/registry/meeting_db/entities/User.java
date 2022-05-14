@@ -14,8 +14,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @ToString
 public class User {
 
