@@ -40,18 +40,14 @@ public class OpenApiConstants {
     public static final String EXAMPLE_PASSPORT_DEPARTMENT_ISSUED = "Moscow Taganskiy district";
     public static final String EXAMPLE_PASSPORT_BORN_PLACE = "Minsk";
 
-    public static final String DESCRIPTION_ZIPO_CODE = "Post office index";
-    public static final String EXAMPLE_ZIPO_CODE = "220014";
-
+    public static final String DESCRIPTION_ZIP_CODE = "Post office index";
+    public static final String EXAMPLE_ZIP_CODE = "220014";
     public static final String DESCRIPTION_COUNTRY = "Country";
     public static final String EXAMPLE_COUNTRY = "Belarus";
-
     public static final String DESCRIPTION_REGION = "Region";
     public static final String EXAMPLE_REGION = "Vitebsk";
-
     public static final String DESCRIPTION_LOCATION = "Administrative region";
     public static final String EXAMPLE_LOCATION = "Minsk";
-
     public static final String DESCRIPTION_EMAIL = "Email";
     public static final String EXAMPLE_EMAIL = "michail@mail.ru";
 
@@ -59,12 +55,20 @@ public class OpenApiConstants {
     public static final String EXAMPLE_PHONE = "555-55-55";
 
     public static final String HTTP_NOT_FOUND = "404";
+    public static final String DESCRIPTION_BUILDING = "Building block number";
+    public static final String EXAMPLE_BUILDING = "2";
+    public static final String DESCRIPTION_FLAT = "Flat";
+    public static final String EXAMPLE_FLAT = "11";
+    public static final String DESCRIPTION_CITY = "City";
+    public static final String EXAMPLE_CITY = "Minsk";
+    public static final String DESCRIPTION_STREET = "Street";
+    public static final String EXAMPLE_STREET = "Komsomolskaya";
+    public static final String DESCRIPTION_HOUSE = "House number";
+    public static final String EXAMPLE_HOUSE = "22";
 
     public static final String DESCRIPTION_ERROR = "Error description";
-
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";
     public static final String EXAMPLE_ERROR_FOUND = "Found";
-
     public static final String DESCRIPTION_ERROR_CODE = "Error code";
 
 }

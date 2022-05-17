@@ -21,7 +21,6 @@ public class UserGenerator {
         user.setEmail(faker.internet().emailAddress());
         user.setPatronymic(faker.elderScrolls().region());
         user.setPhone(faker.phoneNumber().phoneNumber());
-
         return user;
     }
 
@@ -31,4 +30,3 @@ public class UserGenerator {
         random = new Random();
     }
 }
-

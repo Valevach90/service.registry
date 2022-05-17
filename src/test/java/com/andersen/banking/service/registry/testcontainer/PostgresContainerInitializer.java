@@ -6,6 +6,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class PostgresContainerInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+
     private static final String IMAGE_VERSION = "postgres:13.2";
 
     private static PostgreSQLContainer<?> container;
@@ -15,8 +16,7 @@ public class PostgresContainerInitializer implements ApplicationContextInitializ
         instanceContainer();
 
         String jdbcUrl =
-
-                String.format("jdbc:postgresql://%s:%d/ib?currentSchema=mtnn",
+                String.format("jdbc:postgresql://%s:%d/postgres?currentSchema=public",
                         container.getContainerIpAddress(),
                         container.getFirstMappedPort()
                 );
@@ -25,8 +25,7 @@ public class PostgresContainerInitializer implements ApplicationContextInitializ
                 "spring.datasource.url=" + jdbcUrl,
                 "spring.datasource.username=" + container.getUsername(),
                 "spring.datasource.password=" + container.getPassword(),
-                "spring.flyway.enabled=true",
-                "spring.flyway.schemas=mtnn"
+                "spring.flyway.enabled=true"
         ).applyTo(genericApplicationContext.getEnvironment());
     }
 
@@ -35,9 +34,9 @@ public class PostgresContainerInitializer implements ApplicationContextInitializ
             container = new PostgreSQLContainer<>(IMAGE_VERSION);
             container
                     .withExposedPorts(5432)
-                    .withDatabaseName("ib")
+                    .withDatabaseName("postgres")
                     .withUsername("postgres")
-                    .withPassword("postgres")
+                    .withPassword("12345")
                     .start();
         }
     }
