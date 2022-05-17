@@ -4,12 +4,12 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ib?currentSchema=mtnn
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
     username: postgres
     password: postgres
 
   flyway:
-    schemas: mtnn
+    schemas: public
     user: postgres
     password: postgres
 
