@@ -4,11 +4,20 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5435/postgres?currentSchema=public
+    url: jdbc:postgresql://localhost:5432/ib?currentSchema=mtnn
     username: postgres
-    password: 12345
-    flyway:
-      enabled: true
+    password: postgres
+
+  flyway:
+    schemas: mtnn
+    user: postgres
+    password: postgres
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.andersen: TRACE
 
 springdoc:
   api-docs:
