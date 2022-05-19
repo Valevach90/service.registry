@@ -1,1 +1,10 @@
 rootProject.name = 'service.registry'
+include 'registration-service'
+include 'api-gateway'
+include 'api-gateway:gateway'
+findProject(':api-gateway:gateway')?.name = 'gateway'
+include 'api-gateway:discovery-service'
+findProject(':api-gateway:discovery-service')?.name = 'discovery-service'
+include 'payment-service'
+
+
