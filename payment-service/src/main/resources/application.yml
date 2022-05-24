@@ -1,0 +1,34 @@
+server:
+  port: 8282
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=payment_service
+    username: postgres
+    password: postgres
+
+  flyway:
+    schemas: payment_service
+    user: postgres
+    password: postgres
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.andersen: TRACE
+
+springdoc:
+  api-docs:
+    path: '/api-docs'
+  swagger-ui:
+    groups-order: DESC
+    path: '/swagger-ui'
+    disable-swagger-default-url: true
+    operationsSorter: method
+  default-consumes-media-type: 'application/json'
+  default-produces-media-type: 'application/json'
+  model-converters:
+    pageable-converter:
+      enabled: true
