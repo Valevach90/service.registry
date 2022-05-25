@@ -32,3 +32,22 @@ springdoc:
   model-converters:
     pageable-converter:
       enabled: true
+
+openapi:
+  info:
+    description: "This is the API for the Betta Bank project. The A-Banking as a project develops mobile application for Betta Bank."
+    version: "1.0"
+    title: "Meeting Room New (A-Banking)"
+    contact:
+      name: "Maksim Masarnovsky"
+      email: "m.masarnovsky@andersen.com"
+  security:
+    - bearerAuth: [ ]
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: "HTTP"
+        description: "If you have an access token, enter it in the value field for authorization, otherwise use the Authorization Controller to get an access token. For example token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        scheme: "bearer"
+        bearer_Format: "JWT"
+        name: "bearerAuth"

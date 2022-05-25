@@ -14,6 +14,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * This class presents an entity, which will be stored in the database.
+ */
+
 @Getter
 @Setter
 @Entity

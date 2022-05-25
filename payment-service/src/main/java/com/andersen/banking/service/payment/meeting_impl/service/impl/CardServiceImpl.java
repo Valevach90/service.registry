@@ -5,6 +5,8 @@ import com.andersen.banking.service.payment.meeting_db.repositories.CardReposito
 import com.andersen.banking.service.payment.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.exceptions.PaymentServiceException;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
+import java.time.LocalDate;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * CardService implementation.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,8 +29,11 @@ public class CardServiceImpl implements CardService {
   public Card findById(Long id) {
     log.debug("Find card by id: {}", id);
 
-    return cardRepository.findById(id)
-        .orElseThrow(() -> new PaymentServiceException(String.format("Card with id = %d not found.", id)));
+    Card card = cardRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Card.class, id));
+
+    log.debug("Card with id {} successfully found", id);
+    return card;
   }
 
   @Transactional(readOnly = true)
@@ -41,28 +49,33 @@ public class CardServiceImpl implements CardService {
 
   @Transactional
   @Override
-  public void update(Card updatedCard) {
-    log.debug("Trying to update card: {}", updatedCard);
+  public Card update(Card card) {
+    log.debug("Trying to update card: {}", card);
 
-    cardRepository.findById(updatedCard.getId())
-        .orElseThrow(() -> new NotFoundException(Card.class, updatedCard.getId()));
+    validateCard(card);
 
-    cardRepository.save(updatedCard);
+    cardRepository.findById(card.getId())
+        .orElseThrow(() -> new NotFoundException(Card.class, card.getId()));
+
+    Card updatedCard = cardRepository.save(card);
 
     log.debug("Return updated card: {}", updatedCard);
+
+    return updatedCard;
   }
 
   @Transactional
   @Override
-  public void deleteById(Long id) {
-    log.info("Deleting card with id: {}", id);
+  public Card deleteById(Long id) {
+    log.info("Trying to delete card with id: {}", id);
 
     Card card = cardRepository.findById(id)
         .orElseThrow(() -> new NotFoundException(Card.class, id));
 
     cardRepository.deleteById(id);
 
-    log.info("Deleted card: {} with id: {}", card, id);
+    log.info("Deleted card with id: {}", id);
+    return card;
   }
 
   @Transactional
@@ -70,10 +83,33 @@ public class CardServiceImpl implements CardService {
   public Card create(Card card) {
     log.info("Creating card: {}", card);
 
-    card.setId(null);
+    validateCard(card);
     Card savedCard = cardRepository.save(card);
 
     log.info("Created card: {}", savedCard);
     return savedCard;
+  }
+
+  private void validateCard(Card card) {
+    checkIfStringContainsOnlyNumbers(card.getCardNumber());
+    checkIfStringContainsOnlyNumbers(card.getPinCode());
+    checkIfDateIsLaterThanToday(card.getExpirationDate());
+  }
+
+  private void checkIfStringContainsOnlyNumbers(final String string) {
+
+    final Long numbersCounter = Arrays.stream(string.split(""))
+        .filter(x -> x.matches("[0-9]"))
+        .count();
+
+    if (string.length() != numbersCounter) {
+      throw new PaymentServiceException(String.format("This parameter should contain only numbers: %s", string));
+    }
+  }
+
+  private void checkIfDateIsLaterThanToday(LocalDate date) {
+    if (date.compareTo(LocalDate.now()) <= 0) {
+      throw new PaymentServiceException(String.format("Expiration date is incorrect: %s", date));
+    }
   }
 }

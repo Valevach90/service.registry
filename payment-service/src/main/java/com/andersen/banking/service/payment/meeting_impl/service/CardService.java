@@ -4,37 +4,48 @@ import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * This interface presents the basic contract for service, which works with Card entity.
+ */
 public interface CardService {
 
+  /**
+   * This method returns Card entity with the given id.
+   *
+   * @param id
+   * @return
+   */
   Card findById(Long id);
 
   /**
-   * Find all users.
+   * This method returns page of Card entities.
    *
-   * @param pageable page object
-   * @return page of users
+   * @param pageable
+   * @return
    */
   Page<Card> findAll(Pageable pageable);
 
   /**
-   * Update user.
+   * This method updates the given card and returns updated version.
    *
-   * @param user user entity to update
+   * @param card
+   * @return
    */
-  void update(Card user);
+  Card update(Card card);
 
   /**
-   * Delete user by Id.
+   * This method deletes the Card with the given id and the returns deleted entity.
    *
-   * @param id Id of user
+   * @param id
+   * @return
    */
-  void deleteById(Long id);
+  Card deleteById(Long id);
 
   /**
-   * Create new user.
+   * This method registers new Card.
    *
-   * @param user user to create
-   * @return passport
+   * @param card
+   * @return
    */
-  Card create(Card user);
+  Card create(Card card);
 }

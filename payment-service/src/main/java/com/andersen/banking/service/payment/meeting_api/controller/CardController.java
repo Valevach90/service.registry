@@ -1,6 +1,7 @@
 package com.andersen.banking.service.payment.meeting_api.controller;
 
 import com.andersen.banking.service.payment.meeting_api.dto.CardDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "User controller", description = "work with cards")
+/**
+ * Interface that presents basic endpoints for working with Card entity.
+ */
+
+@Tag(name = "Card controller", description = "work with cards")
 @RequestMapping(value = "/api/v1/")
 @RestController
 public interface CardController {
@@ -39,7 +44,7 @@ public interface CardController {
   @Operation(summary = "Update card",
       description = "update card by params in dto object")
   @PutMapping("/cards/{id}")
-  void updateCard(
+  CardDto updateCard(
       @Parameter(description = "card id", required = true)
       @RequestBody
       @Validated CardDto cardDto);
@@ -47,7 +52,7 @@ public interface CardController {
   @Operation(summary = "Delete card",
       description = "delete card by id")
   @DeleteMapping("/cards/{id}")
-  void deleteById(@Parameter(description = "card id", required = true)
+  CardDto deleteById(@Parameter(description = "card id", required = true)
   @PathVariable Long id);
 
   @Operation(summary = "Create card",
@@ -55,5 +60,5 @@ public interface CardController {
   @PostMapping("/cards")
   CardDto create(@Parameter(description = "card", required = true)
   @RequestBody
-  @Validated CardDto cardDto);
+  @Validated CardRegistrationDto cardDto);
 }

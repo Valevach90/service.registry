@@ -2,8 +2,10 @@ package com.andersen.banking.service.payment.meeting_impl.controller;
 
 import com.andersen.banking.service.payment.meeting_api.controller.CardController;
 import com.andersen.banking.service.payment.meeting_api.dto.CardDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_impl.mapping.CardMapper;
+import com.andersen.banking.service.payment.meeting_impl.mapping.CardRegistrationDtoMapper;
 import com.andersen.banking.service.payment.meeting_impl.service.impl.CardServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Implementation class for CardController.
+ */
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -19,58 +25,89 @@ public class CardControllerImpl implements CardController {
 
   private final CardServiceImpl cardService;
   private final CardMapper cardMapper;
+  private final CardRegistrationDtoMapper cardRegistrationDtoMapper;
 
+  /**
+   * Controller to find Card entity by ud.
+   *
+   * @param id
+   * @return
+   */
   @Override
   public CardDto findById(@PathVariable Long id) {
-    log.trace("Find card by Id: {}", id);
+    log.trace("Receiving card id: {}", id);
 
-    CardDto result = cardMapper.toCardDto(cardService.findById(id));
+    CardDto cardDto = cardMapper.toCardDto(cardService.findById(id));
 
-    log.trace("Return userDto: {}", result);
-    return result;
+    log.trace("Returning card with id: {}", id);
+    return cardDto;
   }
 
+  /**
+   * Controller to find all Card entities.
+   *
+   * @param pageable
+   * @return
+   */
   @Override
   public Page<CardDto> findAll(Pageable pageable) {
-    log.trace("Find all cards");
+    log.trace("Receiving request for all cards");
 
     Page<CardDto> result = cardService.findAll(pageable)
         .map(cardMapper::toCardDto);
 
-    log.trace("Return list of cardDto: {}", result.getContent());
+    log.trace("Returning list of cards: {}", result.getContent());
     return result;
   }
 
+  /**
+   * Controller to update existing Card.
+   *
+   * @param cardDto
+   * @return
+   */
   @Override
-  public void updateCard(CardDto cardDto) {
-    log.trace("Try to update card: {}", cardDto);
+  public CardDto updateCard(CardDto cardDto) {
+    log.trace("Receiving card: {}", cardDto);
 
-    Card updatedCard = cardMapper.toCard(cardDto);
-    cardService.update(updatedCard);
+    Card cardToUpdate = cardMapper.toCard(cardDto);
+    CardDto updatedCardDto = cardMapper.toCardDto(cardService.update(cardToUpdate));
 
-    log.trace("Updated card successfully");
+    log.trace("Returning updated card: {}", updatedCardDto);
+    return updatedCardDto;
   }
 
+  /**
+   * Controller to delete Card.
+   *
+   * @param id
+   * @return
+   */
   @Override
-  public void deleteById(Long id) {
-    log.trace("Try to delete card with id: {}", id);
+  public CardDto deleteById(Long id) {
+    log.trace("Receiving card id {}", id);
 
-    cardService.deleteById(id);
+    Card deletedCard = cardService.deleteById(id);
 
-    log.trace("Deleted card with id: {}", id);
+    log.trace("Returning deleted card with id: {}", id);
+    return cardMapper.toCardDto(deletedCard);
   }
 
+  /**
+   * Controller to register new Card.
+   *
+   * @param cardDto
+   * @return
+   */
   @Override
-  public CardDto create(CardDto cardDto) {
-    log.debug("Trying to create card: {}", cardDto);
+  public CardDto create(CardRegistrationDto cardDto) {
+    log.trace("Receiving request for creating card card: {}", cardDto);
 
-    Card card = cardMapper.toCard(cardDto);
+    Card cardToCreate = cardRegistrationDtoMapper.toCard(cardDto);
 
-    Card savedCard = cardService.create(card);
+    CardDto savedCard = cardMapper.toCardDto(cardService.create(cardToCreate));
 
-    CardDto savedCardDto = cardMapper.toCardDto(savedCard);
-
-    log.debug("Created card: {}", savedCardDto);
-    return savedCardDto;
+    log.trace("Returning created card: {}", savedCard);
+    return savedCard;
   }
 }
