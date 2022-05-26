@@ -23,6 +23,10 @@ build:
     paths:
       - build
       - .gradle
+  artifacts:
+    when: always
+    reports:
+      junit: '**/build/test-results/test/**/TEST-*.xml'
   only:
     variables:
       - $CI_COMMIT_BRANCH == 'master'
@@ -33,6 +37,10 @@ test:
   stage: test
   image: gradle:jdk17-alpine
   script: gradle check
+  artifacts:
+    when: always
+    reports:
+      junit: '**/build/test-results/test/**/TEST-*.xml'
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
