@@ -23,7 +23,7 @@ build:
     paths:
       - build
       - .gradle
-    only:
+  only:
     variables:
       - $CI_COMMIT_BRANCH == 'master'
 
