@@ -27,9 +27,8 @@ build:
     when: always
     reports:
       junit: '**/build/test-results/test/**/TEST-*.xml'
-  only:
-    variables:
-      - $CI_COMMIT_BRANCH == 'master'
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
 test:
   tags:
@@ -47,3 +46,5 @@ test:
     paths:
       - build
       - .gradle
+  only:
+    - merge_requests
