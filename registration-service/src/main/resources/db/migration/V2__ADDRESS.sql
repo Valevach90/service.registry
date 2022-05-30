@@ -15,7 +15,7 @@ CREATE TABLE address
 );
 
 ALTER TABLE address
-    ADD CONSTRAINT FK_ADDRESS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+    ADD CONSTRAINT FK_ADDRESS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 INSERT INTO address(user_id, zip_code, country, region, location, city, street, house, building, flat)
 VALUES (3,167823,'Russia', 'St.Petersburg', 'Primorsiy', 'St.Petersburg', 'Nevskiy', '22', '1', '51'),
