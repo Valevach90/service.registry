@@ -17,18 +17,13 @@ build:
     - meetingroom
   stage: build
   image: gradle:jdk17-alpine
-  script: gradle --build-cache build
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
+  script: gradle build
   artifacts:
     when: always
     reports:
       junit: 
-        - build/test-results/test/**/TEST-*.xml
+      - '**/**/build/test-results/test/**/TEST-*.xml'
+      - '**/build/test-results/test/**/TEST-*.xml'
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
@@ -44,12 +39,6 @@ test:
     when: always
     reports:
       junit: 
-        - build/test-results/test/**/TEST-*.xml
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
+       - build/test-results/test/**/TEST-*.xml
   only:
     - merge_requests
