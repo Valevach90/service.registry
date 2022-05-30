@@ -1,13 +1,8 @@
 package com.andersen.banking;
 
-import org.junit.jupiter.api.Test;
+import com.andersen.banking.service.registry.Application;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = Application.class)
 class RegistrationServiceApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
 }

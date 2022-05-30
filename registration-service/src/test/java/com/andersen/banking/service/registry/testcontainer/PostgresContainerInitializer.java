@@ -30,14 +30,12 @@ public class PostgresContainerInitializer implements ApplicationContextInitializ
     }
 
     private void instanceContainer() {
-        if (container == null) {
             container = new PostgreSQLContainer<>(IMAGE_VERSION);
             container
                     .withExposedPorts(5432)
                     .withDatabaseName("postgres")
                     .withUsername("postgres")
-                    .withPassword("12345")
+                    .withPassword("postgres")
                     .start();
-        }
     }
 }
