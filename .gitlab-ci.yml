@@ -13,7 +13,8 @@ before_script:
 
 build:
   tags:
-    - "docker"
+    - docker
+    - meetingroom
   stage: build
   image: gradle:jdk17-alpine
   script: gradle --build-cache build
@@ -33,7 +34,8 @@ build:
 
 test:
   tags:
-    - "docker"
+    - docker
+    - meetingroom
   stage: test
   image: gradle:jdk17-alpine
   script: gradle check
