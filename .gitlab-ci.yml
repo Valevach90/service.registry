@@ -7,15 +7,16 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
-before_script:
-  - GRADLE_USER_HOME="$(pwd)/.gradle"
-  - export GRADLE_USER_HOME
+
 
 build:
   tags:
     - docker-meetingroom
   stage: build
   image: gradle:jdk17-alpine
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
   script: gradle --build-cache build
   cache:
     key: "$CI_COMMIT_REF_NAME"
@@ -39,6 +40,9 @@ test:
     - docker-meetingroom
   stage: test
   image: gradle:jdk17-alpine
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
   script: gradle check
   artifacts:
     when: always
