@@ -7,9 +7,9 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
-# before_script:
-#   - GRADLE_USER_HOME="$(pwd)/.gradle"
-#   - export GRADLE_USER_HOME
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
 
 build:
   tags:
@@ -17,13 +17,19 @@ build:
     - meetingroom
   stage: build
   image: gradle:jdk17-alpine
-  script: gradle build
+  script: gradle --build-cache build
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
   artifacts:
     when: always
     reports:
       junit: 
-      - '**/**/build/test-results/test/**/TEST-*.xml'
-      - '**/build/test-results/test/**/TEST-*.xml'
+      - "./**/**/build/test-results/test/**/TEST-*.xml"
+      - "./**/build/test-results/test/**/TEST-*.xml"
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
@@ -39,6 +45,13 @@ test:
     when: always
     reports:
       junit: 
-       - build/test-results/test/**/TEST-*.xml
+      - "./**/**/build/test-results/test/**/TEST-*.xml"
+      - "./**/build/test-results/test/**/TEST-*.xml"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
   only:
     - merge_requests
