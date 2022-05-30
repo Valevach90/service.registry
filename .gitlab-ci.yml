@@ -11,13 +11,12 @@ before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
 
-build-discovery-service:
+build:
   tags:
-    - docker
-    - meetingroom
+    - docker-meetingroom
   stage: build
   image: gradle:jdk17-alpine
-  script: cd api-gateway/discovery-service &&  gradle --build-cache build
+  script: gradle --build-cache build
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -28,15 +27,16 @@ build-discovery-service:
     when: always
     reports:
       junit: 
-      - "api-gateway/discovery-service/build/test-results/test/TEST-*.xml"
+      - "api-gateway/**/build/test-results/test/TEST-*.xml"
+      - "payment-service/build/test-results/test/TEST-*.xml"
+      - "registration-service/build/test-results/test/TEST-*.xml"
   rules:
-    - if: ($CI_COMMIT_BRANCH == "main")
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
 
 test:
   tags:
-    - docker
-    - meetingroom
+    - docker-meetingroom
   stage: test
   image: gradle:jdk17-alpine
   script: gradle check
