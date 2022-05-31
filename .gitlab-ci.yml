@@ -13,7 +13,7 @@ build:
   tags:
     - docker-meetingroom
   stage: build
-  image: gradle:jdk17-alpine
+  image: gradle:jdk17
   before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
@@ -29,9 +29,9 @@ build:
     when: always
     reports:
       junit: 
-      - "${pwd}/api-gateway/**/build/test-results/test/TEST-*.xml"
-      - "${pwd}/payment-service/build/test-results/test/TEST-*.xml"
-      - "${pwd}/registration-service/build/test-results/test/TEST-*.xml"
+      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/api-gateway/**/build/test-results/test/TEST-*.xml"
+      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/payment-service/build/test-results/test/TEST-*.xml"
+      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/registration-service/build/test-results/test/TEST-*.xml"
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
