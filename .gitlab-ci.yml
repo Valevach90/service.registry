@@ -18,7 +18,7 @@ build:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
   script:
-    - gradle --build-cache --no-daemon --debug assemble
+    - gradle --build-cache --no-daemon assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -29,9 +29,9 @@ build:
     when: always
     reports:
       junit: 
-      - "api-gateway/**/build/test-results/test/TEST-*.xml"
-      - "payment-service/build/test-results/test/TEST-*.xml"
-      - "registration-service/build/test-results/test/TEST-*.xml"
+      - "${pwd}/api-gateway/**/build/test-results/test/TEST-*.xml"
+      - "${pwd}/payment-service/build/test-results/test/TEST-*.xml"
+      - "${pwd}/registration-service/build/test-results/test/TEST-*.xml"
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
