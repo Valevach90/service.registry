@@ -1,8 +1,12 @@
+stages:
+  - build jars
+  - build docker
+  - test
 
 build jars:
   tags:
     - docker-meetingroom
-  stage: build
+  stage: build jars
   image: gradle:jdk17
   before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
@@ -25,7 +29,7 @@ build jars:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
 build gateway:
-  stage: build
+  stage: build docker
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -37,8 +41,7 @@ build gateway:
       --context "${CI_PROJECT_DIR}/ci-cd/"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
       --destination "{REGISTRY_URL}/meetingroom-new-apigateway:dev"
-  dependencies:
-    - build jars
+  needs: ["build jars"]
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
