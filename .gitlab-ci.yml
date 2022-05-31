@@ -19,8 +19,8 @@ build:
   - export GRADLE_USER_HOME
   script:
     - gradle --build-cache --no-daemon assemble
-    - ls -l api-gateway/discovery-service/build/test-results/test/
-    - ls -l api-gateway/discovery-service/build/libs/
+    - ls -l ./
+    - find ./ -type f -name 'TEST-*.xml'
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
