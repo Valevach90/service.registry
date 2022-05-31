@@ -1,0 +1,72 @@
+stages:
+  - build jars
+  - build docker
+  - test
+
+build jars:
+  tags:
+    - docker-meetingroom
+  stage: build jars
+  image: gradle:jdk17
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+  script:
+    - gradle --build-cache --no-daemon assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+  artifacts:
+    when: always
+    paths:
+      - api-gateway/**/build/libs/*.jar
+      - '**/build/libs/*.jar'
+    expire_in: 1 week
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
+
+build gateway:
+  stage: build docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_URL}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}/ci-cd/"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
+      --destination "{REGISTRY_NAME}/meetingroom-new-apigateway:dev"
+  needs: ["build jars"]
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
+
+
+test:
+  tags:
+    - docker-meetingroom
+  stage: test
+  image: gradle:jdk17-alpine
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+  script: gradle check
+  artifacts:
+    when: always
+    reports:
+      junit: 
+      - "api-gateway/**/build/test-results/test/TEST-*.xml"
+      - "payment-service/build/test-results/test/TEST-*.xml"
+      - "registration-service/build/test-results/test/TEST-*.xml"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  only:
+    - merge_requests

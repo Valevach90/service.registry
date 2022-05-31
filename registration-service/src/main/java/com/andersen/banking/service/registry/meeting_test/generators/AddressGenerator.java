@@ -8,15 +8,18 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class AddressGenerator {
+
+    private static final AtomicLong counter = new AtomicLong(1L);
     private Faker faker;
     private Random random;
 
     public Address generateAddress(User user) {
         var address = new Address();
-        address.setId(random.nextLong(1_000_000));
+        address.setId(counter.getAndIncrement());
         address.setUser(user);
         address.setZipCode(random.nextInt(999_999));
         address.setCountry(countryWithLimitLenght(faker.address().country()));

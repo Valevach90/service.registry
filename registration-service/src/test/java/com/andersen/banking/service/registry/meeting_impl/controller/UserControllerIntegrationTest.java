@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
 import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
 import org.hamcrest.Matchers;
@@ -13,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,16 +28,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @IntegrationTestWithPostgres
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class UserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private UserController userController;
+    @Autowired
+    private UserService userService;
 
     private final Random random = new Random();
 
@@ -52,23 +54,24 @@ class UserControllerIntegrationTest {
     private static final String PARAM_FIRST = "first";
     private static final String PARAM_LAST = "last";
     private static final String PARAM_CONTENT = "$.content";
-    private static final String PARAM_CONTENT_FIRST_NAME = "$.content[*].firstName";
-    private static final String PARAM_CONTENT_LAST_NAME = "$.content[*].lastName";
+    private static final String PARAM_CONTENT_FIRST_NAME = "$.content[*].first_name";
+    private static final String PARAM_CONTENT_LAST_NAME = "$.content[*].last_name";
 
     @BeforeAll
     static void add(
             @Autowired UserRepository userRepository,
             @Autowired UserGenerator userGenerator) {
-             users = Stream.generate(userGenerator::generateUser)
+        userRepository.deleteAll();
+        users = Stream.generate(() -> userGenerator.generateUser())
                 .limit(100)
-                .collect(Collectors.toList());
-             userRepository.saveAll(users);
+                .toList();
+        users.forEach(userRepository::save);
     }
 
     @AfterAll
     static void clear(
-            @Autowired UserRepository passportRepository) {
-        passportRepository.deleteAll();
+            @Autowired UserRepository userRepository) {
+        userRepository.deleteAll();
     }
 
     @Test
@@ -102,7 +105,7 @@ class UserControllerIntegrationTest {
                         .distinct()
                         .toArray())))
                 .andExpect(jsonPath(PARAM_CONTENT_LAST_NAME, Matchers.hasItems(users.stream()
-                        .filter(passport -> passport.getId() > (long) pageSize * pageNumber && passport.getId() <= pageSize * (pageNumber + 1L))
+                        .filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
                         .map(User::getLastName)
                         .distinct()
                         .toArray())))
@@ -112,9 +115,7 @@ class UserControllerIntegrationTest {
     @Test
     void whenGetByIdAndOk() throws Exception {
 
-        int userId = random.nextInt(0, 100);
-        var user = users.get(userId);
-        user.setId(userId + 1L);
+        User user = userService.findById(random.nextLong(0, users.size())).orElse(null);
 
         mockMvc.perform(
                         get(URL_USERS + user.getId())
