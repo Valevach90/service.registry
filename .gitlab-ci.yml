@@ -1,15 +1,5 @@
 
-
-# Disable the Gradle daemon for Continuous Integration servers as correctness
-# is usually a priority over speed in CI environments. Using a fresh
-# runtime for each build is more reliable since the runtime is completely
-# isolated from any previous builds.
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
-
-
-build:
+build jars:
   tags:
     - docker-meetingroom
   stage: build
@@ -19,7 +9,6 @@ build:
   - export GRADLE_USER_HOME
   script:
     - gradle --build-cache --no-daemon assemble
-    - find ./ -type f -name '*.xml' -exec ls -l {} \;
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -32,11 +21,24 @@ build:
       - api-gateway/**/build/libs/*.jar
       - '**/build/libs/*.jar'
     expire_in: 1 week
-    reports:
-      junit: 
-      - api-gateway/**/build/test-results/test/*.xml
-      - payment-service/build/test-results/test/*.xml
-      - registration-service/build/test-results/test/*.xml
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
+
+build gateway:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"https://${REGISTRY_URL}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}/ci-cd/"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
+      --destination "{REGISTRY_URL}/meetingroom-new-apigateway:dev"
+  dependencies:
+    - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
