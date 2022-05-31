@@ -18,7 +18,7 @@ build:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
   script:
-    - gradle --build-cache assemble
+    - gradle --build-cache --no-daemon --debug assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
