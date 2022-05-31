@@ -9,21 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * This class presents an entity, which will be stored in the database.
  */
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "cards")
 @NoArgsConstructor
-@ToString
 public class Card {
 
   @Id

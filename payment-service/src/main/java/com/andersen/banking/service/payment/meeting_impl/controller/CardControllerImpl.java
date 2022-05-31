@@ -6,7 +6,7 @@ import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_impl.mapping.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.mapping.CardRegistrationDtoMapper;
-import com.andersen.banking.service.payment.meeting_impl.service.impl.CardServiceImpl;
+import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CardControllerImpl implements CardController {
 
-  private final CardServiceImpl cardService;
+  private final CardService cardService;
   private final CardMapper cardMapper;
   private final CardRegistrationDtoMapper cardRegistrationDtoMapper;
 

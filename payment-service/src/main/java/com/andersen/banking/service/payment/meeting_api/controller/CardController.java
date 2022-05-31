@@ -23,27 +23,27 @@ import org.springframework.web.bind.annotation.RestController;
  * Interface that presents basic endpoints for working with Card entity.
  */
 
-@Tag(name = "Card controller", description = "work with cards")
-@RequestMapping(value = "/api/v1/")
+@Tag(name = "Card controllers", description = "Endpoints to work with Card entity.")
+@RequestMapping(value = "/api/v1/cards/")
 @RestController
 public interface CardController {
 
   @Operation(summary = "Get card by card id",
       description = "get card information by id")
-  @GetMapping("/cards/{id}")
+  @GetMapping("/{id}")
   CardDto findById(@Parameter(description = "user id", required = true)
   @PathVariable Long id);
 
   @Operation(summary = "Get all cards",
       description = "get all cards information")
-  @GetMapping("/cards")
+  @GetMapping("/")
   Page<CardDto> findAll(
       @ParameterObject
       @PageableDefault Pageable pageable);
 
   @Operation(summary = "Update card",
       description = "update card by params in dto object")
-  @PutMapping("/cards/{id}")
+  @PutMapping("/{id}")
   CardDto updateCard(
       @Parameter(description = "card id", required = true)
       @RequestBody
@@ -51,7 +51,7 @@ public interface CardController {
 
   @Operation(summary = "Delete card",
       description = "delete card by id")
-  @DeleteMapping("/cards/{id}")
+  @DeleteMapping("/{id}")
   CardDto deleteById(@Parameter(description = "card id", required = true)
   @PathVariable Long id);
 
