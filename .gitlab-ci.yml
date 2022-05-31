@@ -29,6 +29,8 @@ build jars:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
 build gateway:
+  variables:
+    PROJECT_NAME: api-gateway
   stage: build docker
   tags:
     - docker-meetingroom
@@ -41,12 +43,80 @@ build gateway:
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
-      --destination "${REGISTRY_NAME}/meetingroom-new-apigateway:dev"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
   dependencies:
     - build jars
   rules:
-    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+build discovery service:
+  variables:
+    PROJECT_NAME: discovery-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  dependencies:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+
+build payment service:
+  variables:
+    PROJECT_NAME: payment-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  dependencies:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+
+build registration service:
+  variables:
+    PROJECT_NAME: registration-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  dependencies:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
 
 test:
