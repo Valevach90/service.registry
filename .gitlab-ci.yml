@@ -30,6 +30,8 @@ build jars:
 
 build gateway:
   stage: build docker
+  tags:
+    - docker-meetingroom
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -38,7 +40,7 @@ build gateway:
     - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
     - >-
       /kaniko/executor
-      --context "${CI_PROJECT_DIR}/ci-cd/"
+      --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
       --destination "${REGISTRY_NAME}/meetingroom-new-apigateway:dev"
   dependencies:
