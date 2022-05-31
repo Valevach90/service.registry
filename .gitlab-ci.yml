@@ -27,11 +27,15 @@ build:
       - .gradle
   artifacts:
     when: always
+    paths:
+      - api-gateway/**/build/libs/*.jar
+      - '**/build/libs/*.jar'
+    expire_in: 1 week
     reports:
       junit: 
-      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/api-gateway/**/build/test-results/test/TEST-*.xml"
-      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/payment-service/build/test-results/test/TEST-*.xml"
-      - "/builds/Andersen/meetingroom-new/meetingroom-new-backend/registration-service/build/test-results/test/TEST-*.xml"
+      - api-gateway/**/build/test-results/test/TEST-*.xml
+      - payment-service/build/test-results/test/TEST-*.xml
+      - registration-service/build/test-results/test/TEST-*.xml
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
