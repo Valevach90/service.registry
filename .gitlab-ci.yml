@@ -40,8 +40,9 @@ build gateway:
       /kaniko/executor
       --context "${CI_PROJECT_DIR}/ci-cd/"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/api-gateway.Dockerfile"
-      --destination "{REGISTRY_NAME}/meetingroom-new-apigateway:dev"
-  needs: ["build jars"]
+      --destination "${REGISTRY_NAME}/meetingroom-new-apigateway:dev"
+  dependencies:
+    - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
 
