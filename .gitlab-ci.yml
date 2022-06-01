@@ -2,6 +2,7 @@ stages:
   - build jars
   - build docker
   - test
+  - deploy
 
 build jars:
   tags:
@@ -118,6 +119,61 @@ build registration service:
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
+deploy gateway:
+  variables:
+    DEPLOYMENT_NAME: api-gateway-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  dependencies:
+    - build docker
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy discovery service:
+  variables:
+    DEPLOYMENT_NAME: discovery-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  dependencies:
+    - build docker
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy payment service:
+  variables:
+    DEPLOYMENT_NAME: payment-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  dependencies:
+    - build docker
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
+
+deploy registration service:
+  variables:
+    DEPLOYMENT_NAME: registration-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  dependencies:
+    - build docker
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
 
 test:
   tags:
