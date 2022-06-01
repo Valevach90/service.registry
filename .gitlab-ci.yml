@@ -128,7 +128,7 @@ deploy gateway:
     - meetingroom-shell
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
-  dependencies:
+  needs:
     - build gateway
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -142,7 +142,7 @@ deploy discovery service:
     - meetingroom-shell
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
-  dependencies:
+  needs:
     - build discovery service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -156,7 +156,7 @@ deploy payment service:
     - meetingroom-shell
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
-  dependencies:
+  needs:
     - build payment service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
@@ -170,7 +170,7 @@ deploy registration service:
     - meetingroom-shell
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
-  dependencies:
+  needs:
     - build registration service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
