@@ -1,6 +1,7 @@
 package com.andersen.banking.service.payment.meeting_db.entities;
 
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class Card {
   @Column(name = "holder_name", nullable = false)
   private String holderName;
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
 }
