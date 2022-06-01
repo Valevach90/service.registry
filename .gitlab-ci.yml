@@ -129,7 +129,7 @@ deploy gateway:
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
   dependencies:
-    - build docker
+    - build gateway
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
@@ -143,7 +143,7 @@ deploy discovery service:
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
   dependencies:
-    - build docker
+    - build discovery service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
@@ -157,7 +157,7 @@ deploy payment service:
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
   dependencies:
-    - build docker
+    - build payment service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
 
@@ -171,7 +171,7 @@ deploy registration service:
   script:
     -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
   dependencies:
-    - build docker
+    - build registration service
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
 
