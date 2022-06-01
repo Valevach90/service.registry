@@ -1,4 +1,4 @@
-package com.andersen.banking;
+package com.andersen.banking.service.payment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
