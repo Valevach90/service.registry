@@ -46,7 +46,7 @@ build gateway:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
       --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
-  dependencies:
+  needs:
     - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -68,7 +68,7 @@ build discovery service:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
       --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
-  dependencies:
+  needs:
     - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -91,7 +91,7 @@ build payment service:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
       --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
-  dependencies:
+  needs:
     - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -114,7 +114,7 @@ build registration service:
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
       --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
-  dependencies:
+  needs:
     - build jars
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
