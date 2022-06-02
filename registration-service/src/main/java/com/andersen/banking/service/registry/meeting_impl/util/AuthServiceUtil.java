@@ -7,8 +7,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class AuthServiceUtil {
@@ -66,7 +64,7 @@ public class AuthServiceUtil {
 
         Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
 
-        if (resourceAccess.get("gateway") == null) {
+        if (resourceAccess.get("api-gateway") == null) {
             return true;
         }
         return false;

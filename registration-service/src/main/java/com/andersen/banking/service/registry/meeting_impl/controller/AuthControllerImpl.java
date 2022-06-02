@@ -33,7 +33,7 @@ public class AuthControllerImpl implements AuthController {
 
         if (doesUserHaveNoRoles(jwt)) {
 
-            if (false /*userService.findByPhoneNumber(login) | passportService.findByNumber(login)*/) {
+            if (false /*authService.isUserRegisteredInExternalBank(login)*/) {
                 authService.addRoleUser(id);
             } else {
                 authService.addRoleUnauthorized(id);
