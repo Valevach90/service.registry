@@ -3,8 +3,10 @@ package com.andersen.banking.service.payment.meeting_impl.service.impl;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.repositories.CardRepository;
+import com.andersen.banking.service.payment.meeting_impl.date.DateSupportService;
 import com.andersen.banking.service.payment.meeting_impl.exceptions.NotFoundException;
-import com.andersen.banking.service.payment.meeting_impl.exceptions.PaymentServiceException;
+import com.andersen.banking.service.payment.meeting_impl.exceptions.ValidationException;
+import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,8 +40,14 @@ public class CardServiceImplTest {
   @SpyBean
   CardService cardService;
 
+  @SpyBean
+  DateSupportService dateSupportService;
+
   @MockBean
   CardRepository cardRepository;
+
+  @MockBean
+  AccountService accountService;
 
   @BeforeEach
   void initArguments() {
@@ -76,6 +84,8 @@ public class CardServiceImplTest {
     receivedCard = populateCard(receivedCard);
     returnedCard = populateCard(returnedCard);
 
+    Mockito.when(cardRepository.findByCardNumber(receivedCard.getCardNumber())).thenReturn(Optional.empty());
+    Mockito.when(accountService.findById(receivedCard.getAccount().getId())).thenReturn(populateAccount(new Account()));
     Mockito.when(cardRepository.findById(receivedCard.getId())).thenReturn(Optional.of(receivedCard));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
@@ -86,6 +96,7 @@ public class CardServiceImplTest {
   void update_ShouldThrowNotFoundException_WhenReceivedCardHasIncorrectId() {
     receivedCard = populateCard(receivedCard);
 
+    Mockito.when(cardRepository.findByCardNumber(receivedCard.getCardNumber())).thenReturn(Optional.empty());
     Mockito.when(cardRepository.findById(receivedCard.getId()))
         .thenThrow(new NotFoundException(Card.class, receivedCard.getId()));
 
@@ -93,27 +104,27 @@ public class CardServiceImplTest {
   }
 
   @Test
-  void update_ShouldThrowPaymentServiceException_WhenReceivedCardHasPinCodeWithLetters() {
+  void update_ShouldThrowValidationException_WhenReceivedCardHasPinCodeWithLetters() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setPinCode("pin");
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.update(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.update(receivedCard));
   }
 
   @Test
-  void update_ShouldThrowPaymentServiceException_WhenReceivedCardHasCardNumberWithLetters() {
+  void update_ShouldThrowValidationException_WhenReceivedCardHasCardNumberWithLetters() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setCardNumber("adjk1230ash2hh3");
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.update(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.update(receivedCard));
   }
 
   @Test
-  void update_ShouldThrowPaymentServiceException_WhenReceivedCardHasWrongExpirationDate() {
+  void update_ShouldThrowValidationException_WhenReceivedCardHasWrongExpirationDate() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setExpirationDate(LocalDate.parse("2020-01-01"));
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.update(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.update(receivedCard));
   }
 
   @Test
@@ -135,33 +146,35 @@ public class CardServiceImplTest {
     receivedCard = populateCard(receivedCard);
     returnedCard = populateCard(returnedCard);
 
+    Mockito.when(cardRepository.findByCardNumber(receivedCard.getCardNumber())).thenReturn(Optional.empty());
+    Mockito.when(accountService.findById(5L)).thenReturn(populateAccount(new Account()));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
     Assertions.assertEquals(returnedCard, cardService.create(receivedCard));
   }
 
   @Test
-  void create_ShouldThrowPaymentServiceException_WhenReceivedCardHasPinCodeWithLetters() {
+  void create_ShouldThrowValidationException_WhenReceivedCardHasPinCodeWithLetters() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setPinCode("pin");
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.create(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.create(receivedCard));
   }
 
   @Test
-  void create_ShouldThrowPaymentServiceException_WhenReceivedCardHasCardNumberWithLetters() {
+  void create_ShouldThrowValidationException_WhenReceivedCardHasCardNumberWithLetters() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setCardNumber("adjk1230ash2hh3");
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.create(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.create(receivedCard));
   }
 
   @Test
-  void create_ShouldThrowPaymentServiceException_WhenReceivedCardHasWrongExpirationDate() {
+  void create_ShouldThrowValidationException_WhenReceivedCardHasWrongExpirationDate() {
     receivedCard = populateCard(receivedCard);
     receivedCard.setExpirationDate(LocalDate.parse("2020-01-01"));
 
-    Assertions.assertThrows(PaymentServiceException.class, () -> cardService.create(receivedCard));
+    Assertions.assertThrows(ValidationException.class, () -> cardService.create(receivedCard));
   }
 
   private List<Card> generateCards() {
@@ -178,11 +191,17 @@ public class CardServiceImplTest {
 
   private Card populateCard(Card card) {
     card.setId(17L);
-    card.setAccount(new Account());
+    card.setAccount(populateAccount(new Account()));
     card.setCardNumber("9284718371630936");
     card.setPinCode("1234");
     card.setExpirationDate(LocalDate.parse("2099-07-11"));
     card.setHolderName("Ivanov Ivan Ivanovich");
     return card;
+  }
+
+  private Account populateAccount(Account account) {
+    account.setId(5L);
+    account.setAccountNumber("1234567890");
+    return account;
   }
 }

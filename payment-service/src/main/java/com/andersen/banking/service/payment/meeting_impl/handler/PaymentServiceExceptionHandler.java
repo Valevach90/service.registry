@@ -1,7 +1,7 @@
 package com.andersen.banking.service.payment.meeting_impl.handler;
 
 import com.andersen.banking.service.payment.meeting_impl.exceptions.NotFoundException;
-import com.andersen.banking.service.payment.meeting_impl.exceptions.PaymentServiceException;
+import com.andersen.banking.service.payment.meeting_impl.exceptions.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,8 +26,8 @@ public class PaymentServiceExceptionHandler {
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(PaymentServiceException.class)
-  public String handlePaymentServiceException(PaymentServiceException exception) {
+  @ExceptionHandler(ValidationException.class)
+  public String handlePaymentServiceException(ValidationException exception) {
     log.trace("Caught PaymentServiceException: {}", exception.toString());
     return exception.getLocalizedMessage();
   }

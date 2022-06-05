@@ -40,7 +40,7 @@ public class Card {
   @Column(name = "holder_name", nullable = false)
   private String holderName;
 
-  @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
 }
