@@ -63,9 +63,7 @@ public class AccountServiceImpl implements AccountService {
     public Account update(Account account) {
         log.debug("Trying to update account: {}", account);
 
-
-        accountRepository.findById(account.getId())
-                .orElseThrow(() -> new NotFoundException(Account.class, account.getId()));
+        findById(account.getId());
         Account updateAccount = accountRepository.save(account);
 
         log.debug("Return updated account: {}", updateAccount);
@@ -77,8 +75,7 @@ public class AccountServiceImpl implements AccountService {
     public Account deleteById(Long id) {
         log.info("Trying to delete account with id: {}", id);
 
-        Account deletedAccount = accountRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Account.class, id));
+        Account deletedAccount = findById(id);
         accountRepository.deleteById(id);
 
         log.info("Deleted account with id: {}", id);
