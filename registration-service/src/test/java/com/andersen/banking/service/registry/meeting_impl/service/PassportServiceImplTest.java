@@ -4,9 +4,11 @@ import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
+import com.andersen.banking.service.registry.meeting_impl.date.DateSupportService;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.impl.PassportServiceImpl;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,6 +41,8 @@ class PassportServiceImplTest {
 
     @SpyBean
     PassportService passportService;
+    @SpyBean
+    DateSupportService dateSupportService;
     @MockBean
     PassportRepository passportRepository;
     @MockBean
@@ -107,6 +111,9 @@ class PassportServiceImplTest {
         passportOptional.get().setAddress(address);
         passportOptional.get().setUser(user);
         passportToUpdate.setId(ID);
+        passportToUpdate.setBirthday(LocalDate.of(1980, 5, 17));
+        passportToUpdate.setDateIssue(LocalDate.of(2020, 3, 10));
+        passportToUpdate.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportRepository.findById(passportToUpdate.getId()))
@@ -125,6 +132,9 @@ class PassportServiceImplTest {
     @Test
     void whenUpdate_andNotFound_shouldThrowException() {
         passportToUpdate.setId(ID);
+        passportToUpdate.setBirthday(LocalDate.of(1980, 5, 17));
+        passportToUpdate.setDateIssue(LocalDate.of(2020, 3, 10));
+        passportToUpdate.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportRepository.findById(ID))
@@ -159,6 +169,10 @@ class PassportServiceImplTest {
     void whenCreate_andOk() {
         var user = Optional.of(new User());
         var address = Optional.of(new Address());
+        var passport = passportOptional.get();
+        passport.setBirthday(LocalDate.of(1980, 5, 17));
+        passport.setDateIssue(LocalDate.of(2020, 3, 10));
+        passport.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportService.findByAddressId(ID))
@@ -173,19 +187,22 @@ class PassportServiceImplTest {
                 .when(userService.findById(ID))
                 .thenReturn(user);
         Mockito
-                .when(passportRepository.save(passportOptional.get()))
-                .thenReturn(passportOptional.get());
+                .when(passportRepository.save(passport))
+                .thenReturn(passport);
 
-        var result = passportService.create(passportOptional.get(), ID, ID);
+        var result = passportService.create(passport, ID, ID);
 
-        assertEquals(passportOptional.get(), result);
-        assertEquals(user.get(), passportOptional.get().getUser());
-        assertEquals(address.get(), passportOptional.get().getAddress());
+        assertEquals(passport, result);
+        assertEquals(user.get(), passport.getUser());
+        assertEquals(address.get(), passport.getAddress());
     }
 
     @Test
     void whenCreate_andPassportWithAddressFound_shouldThrowException() {
         var pas = passportOptional.get();
+        pas.setBirthday(LocalDate.of(1980, 5, 17));
+        pas.setDateIssue(LocalDate.of(2020, 3, 10));
+        pas.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportService.findByAddressId(ID))
@@ -197,6 +214,9 @@ class PassportServiceImplTest {
     @Test
     void whenCreate_andPassportWithUserFound_shouldThrowException() {
         var pas = passportOptional.get();
+        pas.setBirthday(LocalDate.of(1980, 5, 17));
+        pas.setDateIssue(LocalDate.of(2020, 3, 10));
+        pas.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportService.findByAddressId(ID))
@@ -211,6 +231,9 @@ class PassportServiceImplTest {
     @Test
     void whenCreate_andAddressNotFound_shouldThrowException() {
         var pas = passportOptional.get();
+        pas.setBirthday(LocalDate.of(1980, 5, 17));
+        pas.setDateIssue(LocalDate.of(2020, 3, 10));
+        pas.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportService.findByAddressId(ID))
@@ -229,6 +252,9 @@ class PassportServiceImplTest {
     void whenCreate_andUserNotFound_shouldThrowException() {
         var address = Optional.of(new Address());
         var pas = passportOptional.get();
+        pas.setBirthday(LocalDate.of(1980, 5, 17));
+        pas.setDateIssue(LocalDate.of(2020, 3, 10));
+        pas.setTerminationDate(LocalDate.of(2030, 3, 10));
 
         Mockito
                 .when(passportService.findByAddressId(ID))

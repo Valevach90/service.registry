@@ -46,9 +46,6 @@ public class Passport {
     @Column(name = "passport_code", nullable = false, length = 6)
     private String passportCode;
 
-    @Column(name = "division_code", nullable = false, length = 7)
-    private String divisionCode;
-
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
