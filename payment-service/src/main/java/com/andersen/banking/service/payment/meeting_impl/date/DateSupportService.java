@@ -12,7 +12,7 @@ public class DateSupportService {
    * @param date
    * @return
    */
-  public Boolean checkIfDateIsLaterThanToday(LocalDate date) {
+  public boolean checkIfDateIsLaterThanToday(LocalDate date) {
     return date.isAfter(LocalDate.now());
   }
 }

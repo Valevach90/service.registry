@@ -5,7 +5,7 @@ public class StringUtils {
   private StringUtils() {
   }
 
-  public static Boolean checkIfStringContainsOnlyDigits(final String string) {
+  public static boolean checkIfStringContainsOnlyDigits(final String string) {
     return string.matches("[0-9]+");
   }
 }
