@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/api/v1/passport").hasRole("ADMIN")
                 //.antMatchers("/api/v1/addresses").hasRole("ADMIN")
                 .antMatchers("/api/v1/**").permitAll()
+                .antMatchers("/swagger-ui.html**").permitAll()
                 .anyRequest().authenticated()).oauth2ResourceServer(
                 oauth2ResourceServer -> oauth2ResourceServer.jwt(
                         jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
