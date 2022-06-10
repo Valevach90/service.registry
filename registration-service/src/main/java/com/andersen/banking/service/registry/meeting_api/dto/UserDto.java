@@ -4,6 +4,8 @@ package com.andersen.banking.service.registry.meeting_api.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,26 +45,31 @@ public class UserDto {
     @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
     @JsonProperty("first_name")
     @NotNull
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String firstName;
 
     @Schema(description = DESCRIPTION_LAST_NAME, example = EXAMPLE_LAST_NAME, defaultValue = EXAMPLE_LAST_NAME)
     @JsonProperty("last_name")
     @NotNull
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String lastName;
 
     @Schema(description = DESCRIPTION_PATRONYMIC, example = EXAMPLE_PATRONYMIC, defaultValue = EXAMPLE_PATRONYMIC)
     @JsonProperty("patronymic")
     @NotNull
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String patronymic;
 
     @Schema(description = DESCRIPTION_EMAIL, example = EXAMPLE_EMAIL, defaultValue = EXAMPLE_EMAIL)
     @JsonProperty("email")
     @NotNull
+    @Email
     private String email;
 
     @Schema(description = DESCRIPTION_PHONE, example = EXAMPLE_PHONE, defaultValue = EXAMPLE_PHONE)
     @JsonProperty("phone")
     @NotNull
+    @Pattern(regexp = "[0-9]{10,12}")
     private String phone;
 
 }

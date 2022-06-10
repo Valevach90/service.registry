@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-06-07T07:47:29+0300",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2022-06-08T11:57:50+0300",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.1 (Oracle Corporation)"
 )
 @Component
 public class PassportMapperImpl implements PassportMapper {
@@ -28,7 +28,6 @@ public class PassportMapperImpl implements PassportMapper {
         passportDto.setId( passport.getId() );
         passportDto.setSerialNumber( passport.getSerialNumber() );
         passportDto.setPassportCode( passport.getPassportCode() );
-        passportDto.setDivisionCode( passport.getDivisionCode() );
         passportDto.setBirthday( passport.getBirthday() );
         passportDto.setDateIssue( passport.getDateIssue() );
         passportDto.setTerminationDate( passport.getTerminationDate() );
@@ -52,7 +51,6 @@ public class PassportMapperImpl implements PassportMapper {
         passport.setId( passportDto.getId() );
         passport.setSerialNumber( passportDto.getSerialNumber() );
         passport.setPassportCode( passportDto.getPassportCode() );
-        passport.setDivisionCode( passportDto.getDivisionCode() );
         passport.setBirthday( passportDto.getBirthday() );
         passport.setDateIssue( passportDto.getDateIssue() );
         passport.setTerminationDate( passportDto.getTerminationDate() );

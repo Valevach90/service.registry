@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_impl.handlers;
 import com.andersen.banking.service.registry.meeting_api.error.NotFoundError;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.ErrorMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,5 +48,12 @@ public class RestExceptionHandler {
                 notFoundError.getErrorCode());
 
         return errorMapper.toFoundError(exception);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public String handlePaymentServiceException(ValidationException exception) {
+        log.trace("Caught PaymentServiceException: {}", exception.toString());
+        return exception.getLocalizedMessage();
     }
 }

@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_api.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.Pattern;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -58,18 +59,14 @@ public class PassportDto {
             defaultValue = EXAMPLE_PASSPORT_SERIAL_NUMBER)
     @JsonProperty("serialNumber")
     @NotNull
+    @Pattern(regexp = "[a-zA-z0-9]{2}")
     private String serialNumber;
 
     @Schema(description = DESCRIPTION_PASSPORT_CODE, example = EXAMPLE_PASSPORT_CODE, defaultValue = EXAMPLE_PASSPORT_CODE)
     @JsonProperty("passportCode")
     @NotNull
+    @Pattern(regexp = "[0-9]{7}")
     private String passportCode;
-
-    @Schema(description = DESCRIPTION_PASSPORT_DIVISION_CODE, example = EXAMPLE_PASSPORT_DIVISION_CODE,
-            defaultValue = EXAMPLE_PASSPORT_DIVISION_CODE)
-    @JsonProperty("divisionCode")
-    @NotNull
-    private String divisionCode;
 
     @Schema(description = DESCRIPTION_PASSPORT_BIRTHDAY, example = EXAMPLE_DATE, defaultValue = EXAMPLE_DATE)
     @JsonProperty("birthday")
@@ -89,25 +86,31 @@ public class PassportDto {
     @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
     @JsonProperty("firstName")
     @NotNull
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String firstName;
 
     @Schema(description = DESCRIPTION_LAST_NAME, example = EXAMPLE_LAST_NAME, defaultValue = EXAMPLE_LAST_NAME)
     @JsonProperty("lastName")
     @NotNull
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String lastName;
 
     @Schema(description = DESCRIPTION_PATRONYMIC, example = EXAMPLE_PATRONYMIC, defaultValue = EXAMPLE_PATRONYMIC)
     @JsonProperty("patronymic")
+    @Pattern(regexp = "[a-zA-Z]{1,30}")
     private String patronymic;
 
     @Schema(description = DESCRIPTION_PASSPORT_DEPARTMENT_ISSUED, example = EXAMPLE_PASSPORT_DEPARTMENT_ISSUED,
             defaultValue = EXAMPLE_PASSPORT_DEPARTMENT_ISSUED)
     @JsonProperty("departmentIssued")
+    @Pattern(regexp = "[a-zA-Z]{1,45}")
     @NotNull
     private String departmentIssued;
 
     @Schema(description = DESCRIPTION_PASSPORT_BORN_PLACE, example = EXAMPLE_PASSPORT_BORN_PLACE,
             defaultValue = EXAMPLE_PASSPORT_BORN_PLACE)
     @JsonProperty("bornPlace")
+    @Pattern(regexp = "[a-zA-Z]{1,45}")
+    @NotNull
     private String bornPlace;
 }
