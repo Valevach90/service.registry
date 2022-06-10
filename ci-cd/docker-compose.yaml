@@ -10,7 +10,7 @@ services:
   hotrod:
     image: jaegertracing/example-hotrod:latest
     ports:
-      - "8080:8080"
+      - "8088:8088"
     command: ["all"]
     environment:
       - JAEGER_AGENT_HOST=jaeger

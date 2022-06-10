@@ -2,7 +2,9 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ public class UserControllerImpl implements UserController {
 
         UserDto result = userService.findById(id)
                 .map(userMapper::toUserDto)
-                .orElse(null);
+                .orElseThrow(() -> new NotFoundException(User.class, id));
 
         log.trace("Return userDto: {}", result);
 
