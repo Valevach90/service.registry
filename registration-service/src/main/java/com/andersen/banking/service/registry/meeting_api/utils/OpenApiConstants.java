@@ -15,10 +15,10 @@ public class OpenApiConstants {
     public static final String EXAMPLE_LONG = "10";
 
     public static final String DESCRIPTION_PASSPORT_SERIAL_NUMBER = "Passport serial number";
-    public static final String EXAMPLE_PASSPORT_SERIAL_NUMBER = "12345";
+    public static final String EXAMPLE_PASSPORT_SERIAL_NUMBER = "12";
 
     public static final String DESCRIPTION_PASSPORT_CODE = "Passport code";
-    public static final String EXAMPLE_PASSPORT_CODE = "123456";
+    public static final String EXAMPLE_PASSPORT_CODE = "1234567";
 
     public static final String DESCRIPTION_PASSPORT_DIVISION_CODE = "Passport division code";
     public static final String EXAMPLE_PASSPORT_DIVISION_CODE = "1234567";
@@ -27,6 +27,8 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_PASSPORT_DATE_ISSUE = "Passport date issue";
     public static final String DESCRIPTION_PASSPORT_TERMINATION_DATE = "Passport termination date";
     public static final String EXAMPLE_DATE = "2000-04-13";
+    public static final String EXAMPLE_ISSUE_DATE = "2018-04-13";
+    public static final String EXAMPLE_TERMINATION_DATE = "2028-04-13";
 
     public static final String DESCRIPTION_FIRST_NAME = "First name";
     public static final String DESCRIPTION_LAST_NAME = "Last name";
@@ -52,7 +54,7 @@ public class OpenApiConstants {
     public static final String EXAMPLE_EMAIL = "michail@mail.ru";
 
     public static final String DESCRIPTION_PHONE = "Phone";
-    public static final String EXAMPLE_PHONE = "555-55-55";
+    public static final String EXAMPLE_PHONE = "1234567890";
 
     public static final String HTTP_NOT_FOUND = "404";
     public static final String DESCRIPTION_BUILDING = "Building block number";

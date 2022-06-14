@@ -113,13 +113,13 @@ public class PassportServiceImpl implements PassportService {
 
     validatePassport(passport);
 
-    findByAddressId(userId)
-        .ifPresent(e -> {
-          throw new FoundException(User.class, userId);
-        });
-    findByUserId(addressId)
+    findByAddressId(addressId)
         .ifPresent(e -> {
           throw new FoundException(Address.class, addressId);
+        });
+    findByUserId(userId)
+        .ifPresent(e -> {
+          throw new FoundException(User.class, userId);
         });
 
     Address address = addressService.findById(addressId)

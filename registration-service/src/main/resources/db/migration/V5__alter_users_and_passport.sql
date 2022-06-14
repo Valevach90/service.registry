@@ -1,0 +1,13 @@
+TRUNCATE TABLE passport
+CASCADE;
+TRUNCATE TABLE address
+CASCADE;
+TRUNCATE TABLE users
+CASCADE;
+
+ALTER TABLE users
+ALTER COLUMN patronymic
+DROP NOT NULL;
+
+ALTER TABLE passport
+ADD CONSTRAINT user_id_unique UNIQUE (user_id);
