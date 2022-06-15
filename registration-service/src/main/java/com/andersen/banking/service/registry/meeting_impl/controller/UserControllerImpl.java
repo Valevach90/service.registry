@@ -55,7 +55,7 @@ public class UserControllerImpl implements UserController {
 
         UserDto savedUserDto = userMapper.toUserDto(savedUser);
 
-        log.debug("created Passport: {}", savedUserDto);
+        log.debug("created user: {}", savedUserDto);
         return savedUserDto;
     }
 
