@@ -1,29 +1,7 @@
 package com.andersen.banking.service.registry.meeting_api.dto;
 
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ADDRESS_ID;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_FIRST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_LAST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_BIRTHDAY;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_BORN_PLACE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_DATE_ISSUE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_DEPARTMENT_ISSUED;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_ID;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_SERIAL_NUMBER;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_TERMINATION_DATE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PATRONYMIC;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_USER_ID;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_DATE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_FIRST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_ISSUE_DATE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LAST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LONG;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PASSPORT_BORN_PLACE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PASSPORT_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PASSPORT_DEPARTMENT_ISSUED;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PASSPORT_SERIAL_NUMBER;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PATRONYMIC;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_TERMINATION_DATE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.*;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -110,7 +88,7 @@ public class PassportDto {
   @Schema(description = DESCRIPTION_PASSPORT_BORN_PLACE, example = EXAMPLE_PASSPORT_BORN_PLACE,
       defaultValue = EXAMPLE_PASSPORT_BORN_PLACE)
   @JsonProperty("bornPlace")
-  @Pattern(regexp = "[a-zA-Z]{1,45}", message = "Invalid birth place.")
+  @Pattern(regexp = "[a-zA-Z ]{1,45}", message = "Invalid birth place.")
   @NotNull(message = "Birth place can't be null.")
   private String bornPlace;
 }

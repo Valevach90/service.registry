@@ -1,18 +1,8 @@
 package com.andersen.banking.service.registry.meeting_api.dto;
 
 
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_EMAIL;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_FIRST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_LAST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PATRONYMIC;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PHONE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_USER_ID;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_EMAIL;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_FIRST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LAST_NAME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LONG;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PATRONYMIC;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PHONE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.*;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -27,11 +27,11 @@ public class RestExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NotFoundException.class)
   protected NotFoundError handleNotFoundException(NotFoundException exception) {
-    log.trace("Caught not found exception: {}", exception.toString());
+    log.error("Caught not found exception: {}", exception.toString());
 
     NotFoundError notFoundError = errorMapper.toNotFoundError(exception);
 
-    log.trace("Handled not found error, message: {}, error code: {}",
+    log.error("Handled not found error, message: {}, error code: {}",
         notFoundError.getMessage(),
         notFoundError.getErrorCode());
 
@@ -41,11 +41,11 @@ public class RestExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(FoundException.class)
   protected NotFoundError handleFoundException(FoundException exception) {
-    log.trace("Caught found exception: {}", exception.toString());
+    log.error("Caught found exception: {}", exception.toString());
 
     NotFoundError notFoundError = errorMapper.toFoundError(exception);
 
-    log.trace("Handled found error, message: {}, error code: {}",
+    log.error("Handled found error, message: {}, error code: {}",
         notFoundError.getMessage(),
         notFoundError.getErrorCode());
 
@@ -55,7 +55,7 @@ public class RestExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(ValidationException.class)
   public String handlePaymentServiceException(ValidationException exception) {
-    log.trace("Caught ValidationException: {}", exception.toString());
+    log.error("Caught ValidationException: {}", exception.toString());
     return exception.getLocalizedMessage();
   }
 
@@ -63,7 +63,7 @@ public class RestExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public String handleMethodArgumentNotValidException(
       MethodArgumentNotValidException exception) {
-    log.trace("Caught MethodArgumentNotValidException: {}", exception.toString());
+    log.error("Caught MethodArgumentNotValidException: {}", exception.toString());
     FieldError fieldError = exception.getFieldError();
     if (fieldError != null) {
       return fieldError.getDefaultMessage();
