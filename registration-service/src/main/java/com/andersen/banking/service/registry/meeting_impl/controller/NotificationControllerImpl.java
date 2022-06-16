@@ -35,7 +35,7 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public Boolean confirmEmailNotification(Jwt jwt, Long code) {
+    public Boolean confirmEmailNotification(Jwt jwt, String code) {
 
         String email = extractEmailFromToken(jwt);
 

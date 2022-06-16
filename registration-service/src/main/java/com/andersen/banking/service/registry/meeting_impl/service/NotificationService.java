@@ -23,5 +23,5 @@ public interface NotificationService {
      * @param code
      * @return confirmation
      */
-    Boolean confirmCodeReceivedByEmailNotification(String email, Long code);
+    Boolean confirmCodeReceivedByEmailNotification(String email, String code);
 }

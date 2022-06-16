@@ -32,6 +32,6 @@ public interface NotificationController {
     Boolean confirmEmailNotification(
             @AuthenticationPrincipal Jwt jwt,
             @Parameter(description = "confirmation code", required = true)
-            @RequestBody Long code
+            @RequestBody String code
     );
 }

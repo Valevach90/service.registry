@@ -67,7 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Boolean confirmCodeReceivedByEmailNotification(String email, Long code) {
+    public Boolean confirmCodeReceivedByEmailNotification(String email, String code) {
 
         log.info("Confirmation whether code " + code + "was sent by email " + email);
 
