@@ -2,6 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.PassportGenerator;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @IntegrationTestWithPostgres
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class PassportControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -63,8 +66,9 @@ class PassportControllerIntegrationTest {
             @Autowired PassportGenerator passportGenerator,
             @Autowired AddressGenerator addressGenerator,
             @Autowired UserGenerator userGenerator) {
+
         passports = Stream.generate(() -> {
-            var user = userGenerator.generateUser();
+            User user = userGenerator.generateUser();
             return passportGenerator.generatePassport(user, addressGenerator.generateAddress(user));
         })
                 .limit(100)
@@ -111,7 +115,8 @@ class PassportControllerIntegrationTest {
                 .andExpect(jsonPath(PARAM_CONTENT_LAST_NAME, Matchers.hasItems(passports.stream()
                         .filter(passport -> passport.getId() > (long) pageSize * pageNumber && passport.getId() <= pageSize * (pageNumber + 1L))
                         .map(Passport::getLastName)
-                        .distinct()
+                        .distinct()        //userRepository.deleteAll();
+        //userRepository.flush();
                         .toArray())))
         ;
     }

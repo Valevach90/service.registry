@@ -1,0 +1,201 @@
+stages:
+  - build jars
+  - build docker
+  - test
+  - deploy
+
+build jars:
+  tags:
+    - docker-meetingroom
+  stage: build jars
+  image: gradle:jdk17
+  before_script:
+    - GRADLE_USER_HOME="$(pwd)/.gradle"
+    - export GRADLE_USER_HOME
+  script:
+    - gradle --build-cache --no-daemon assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+  artifacts:
+    when: always
+    paths:
+      - api-gateway/**/build/libs/*.jar
+      - '**/build/libs/*.jar'
+    expire_in: 1 day
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
+
+build gateway:
+  variables:
+    PROJECT_NAME: api-gateway
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  needs:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+build discovery service:
+  variables:
+    PROJECT_NAME: discovery-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  needs:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+
+build payment service:
+  variables:
+    PROJECT_NAME: payment-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  needs:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+
+build registration service:
+  variables:
+    PROJECT_NAME: registration-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  needs:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy gateway:
+  variables:
+    DEPLOYMENT_NAME: api-gateway-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  needs:
+    - build gateway
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy discovery service:
+  variables:
+    DEPLOYMENT_NAME: discovery-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  needs:
+    - build discovery service
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy payment service:
+  variables:
+    DEPLOYMENT_NAME: payment-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  needs:
+    - build payment service
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+deploy registration service:
+  variables:
+    DEPLOYMENT_NAME: registration-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  needs:
+    - build registration service
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+test:
+  tags:
+    - docker-meetingroom
+  stage: test
+  image: gradle:jdk17
+  before_script:
+    - GRADLE_USER_HOME="$(pwd)/.gradle"
+    - export GRADLE_USER_HOME
+  script: gradle check
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - "api-gateway/**/build/test-results/test/TEST-*.xml"
+        - "payment-service/build/test-results/test/TEST-*.xml"
+        - "registration-service/build/test-results/test/TEST-*.xml"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  only:
+    - merge_requests

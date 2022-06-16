@@ -3,6 +3,8 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 import com.andersen.banking.service.registry.meeting_api.controller.AddressController;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +55,7 @@ public class AddressControllerImpl implements AddressController {
 
         AddressDto result = addressService.findById(id)
                 .map(addressMapper::toAddressDto)
-                .orElse(null);
+                .orElseThrow(() -> new NotFoundException(Address.class, id));
 
         log.info("Return addressDto: {}", result);
         return result;
