@@ -26,11 +26,11 @@ public class NotificationControllerImpl implements NotificationController {
 
         String email = extractEmailFromToken(jwt);
 
-        log.trace("Sending email notification: " + email);
+        log.trace("Sending email notification: {}", email);
 
         notificationService.sendEmailNotification(email);
 
-        log.trace("Notification sent by mail: " + email);
+        log.trace("Notification sent by mail: {}", email);
 
     }
 
@@ -39,11 +39,11 @@ public class NotificationControllerImpl implements NotificationController {
 
         String email = extractEmailFromToken(jwt);
 
-        log.trace("Confirmation whether code " + code + " was sent by mail " + email);
+        log.trace("Confirmation whether code {} was sent by mail {}", code, email);
 
         Boolean confirmation = notificationService.confirmCodeReceivedByEmailNotification(email, code);
 
-        log.trace("Code " + code + " was sent by mail " + email + " : " + confirmation);
+        log.trace("Code {} was sent by mail {} : {}", code, email, confirmation);
 
         return confirmation;
     }

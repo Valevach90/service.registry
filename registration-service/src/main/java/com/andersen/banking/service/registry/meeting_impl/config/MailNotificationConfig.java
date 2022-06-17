@@ -12,22 +12,22 @@ import java.util.Properties;
 public class MailNotificationConfig {
 
     @Value("${notification.mail.host}")
-    private String NOTIFICATION_MAIL_HOST;
+    private String notificationMailHost;
     @Value("${notification.mail.port}")
-    private int NOTIFICATION_MAIL_PORT;
+    private int notificationMailPort;
     @Value("${notification.mail.sender.username}")
-    private String NOTIFICATION_MAIL_SENDER_USERNAME;
+    private String notificationMailSenderUsername;
     @Value("${notification.mail.sender.password}")
-    private String NOTIFICATION_MAIL_SENDER_PASSWORD;
+    private String notificationMailSenderPassword;
 
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(NOTIFICATION_MAIL_HOST);
-        mailSender.setPort(NOTIFICATION_MAIL_PORT);
+        mailSender.setHost(notificationMailHost);
+        mailSender.setPort(notificationMailPort);
 
-        mailSender.setUsername(NOTIFICATION_MAIL_SENDER_USERNAME);
-        mailSender.setPassword(NOTIFICATION_MAIL_SENDER_PASSWORD);
+        mailSender.setUsername(notificationMailSenderUsername);
+        mailSender.setPassword(notificationMailSenderPassword);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

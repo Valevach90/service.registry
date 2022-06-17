@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -27,61 +28,48 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Value("${notification.mail.code.length}")
-    private int NOTIFICATION_CODE_LENGTH;
+    private int notificationCodeLength;
     @Value("${notification.mail.code.valid.millis}")
-    private int NOTIFICATION_CODE_VALID_MILLIS;
+    private int notificationCodeValidMillis;
 
     @Override
+    @Transactional
     public void sendEmailNotification(String email) {
 
-
-        String code = generateCode(NOTIFICATION_CODE_LENGTH);
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-
-        Notification notification = new Notification();
-        notification.setEmail(email);
-        notification.setCode(code);
-        notification.setTime(time);
+        Notification notification = createNotification(notificationCodeLength, email);
 
         log.info("Creating notification: {}", notification);
 
-        Optional<Notification> previousNotification = notificationRepository.findByEmail(email);
-        if (previousNotification.isPresent()){
-            notification.setId(previousNotification.get().getId());
-        }
         notificationRepository.save(notification);
 
         log.info("Created notification: {}", notification);
 
-        SimpleMailMessage message = new SimpleMailMessage();
+        SimpleMailMessage message = createMessage(notification);
 
-        message.setTo(email);
-        message.setSubject("Confirmation code");
-        message.setText(code);
+        log.info("Sending notification message: {}", message);
 
-        log.info("Sending notification " + notification);
+        emailSender.send(message);
 
-        this.emailSender.send(message);
-
-        log.info("Sent notification " + notification);
+        log.info("Sent notification message: {} ", message);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean confirmCodeReceivedByEmailNotification(String email, String code) {
 
-        log.info("Confirmation whether code " + code + "was sent by email " + email);
+        log.info("Confirmation whether code {} was sent by email {}", code, email);
 
         Optional<Notification> notification = notificationRepository.findByEmail(email);
 
         if (notification.isPresent()){
             Notification savedNotification = notification.get();
-            Timestamp time = new Timestamp(System.currentTimeMillis() - NOTIFICATION_CODE_VALID_MILLIS);
+            Timestamp time = new Timestamp(System.currentTimeMillis() - notificationCodeValidMillis);
 
             if (savedNotification.getCode().equals(code) && savedNotification.getTime().compareTo(time) > 0){
                 return true;
             }
         }
-        log.info("Code " + code + "was not sent by email " + email + "or time out");
+        log.info("Code {} was not sent by email {} or time out", code, email);
 
         return false;
     }

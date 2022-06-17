@@ -11,14 +11,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "notifications")
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class Notification {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false, name = "email")
     private String email;
 
