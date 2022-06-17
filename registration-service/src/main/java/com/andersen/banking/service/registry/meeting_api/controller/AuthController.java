@@ -29,7 +29,7 @@ public interface AuthController {
     @Operation(summary = "Set up new passport",
             description = "Set up new passport in Keyclaok")
     @PostMapping("/password")
-    void setUpNewPassword(
+    void resetPassword(
             @AuthenticationPrincipal Jwt jwt,
             @Parameter(description = "new password", required = true)
             @RequestBody String newPassword

@@ -44,13 +44,13 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public void setUpNewPassword(Jwt jwt, String newPassword) {
+    public void resetPassword(Jwt jwt, String newPassword) {
 
         String id = extractIdFromToken(jwt);
 
         log.trace("Setting new password, user id {} ", id);
 
-        authService.setUpNewPassword(id, newPassword);
+        authService.resetPassword(id, newPassword);
 
         log.trace("Set new password, user id {} ", id);
     }

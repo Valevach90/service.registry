@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void setUpNewPassword(String id, String newPassword) {
+    public void resetPassword(String id, String newPassword) {
 
         String token = obtainAccessToken();
 

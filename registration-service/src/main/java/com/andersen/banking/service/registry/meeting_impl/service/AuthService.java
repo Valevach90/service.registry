@@ -46,5 +46,5 @@ public interface AuthService {
      * @param id
      * @param newPassword
      */
-    void setUpNewPassword(String id, String newPassword);
+    void resetPassword(String id, String newPassword);
 }
