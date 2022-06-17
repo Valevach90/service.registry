@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,10 +15,10 @@ import java.time.LocalDate;
 public class Notification {
 
     @Id
-    @Column(nullable = false, name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(nullable = false, name = "code")
+    @Column(name = "code", nullable = false)
     private String code;
 
     @Column(name = "time", nullable = false)
