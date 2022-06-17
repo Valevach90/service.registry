@@ -42,4 +42,16 @@ public class AuthControllerImpl implements AuthController {
         }
         log.trace("User authorized: login " + login + ", id " + id);
     }
+
+    @Override
+    public void setUpNewPassword(Jwt jwt, String newPassword) {
+
+        String id = extractIdFromToken(jwt);
+
+        log.trace("Setting new password, user id {} ", id);
+
+        authService.setUpNewPassword(id, newPassword);
+
+        log.trace("Set new password, user id {} ", id);
+    }
 }
