@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_impl.handlers;
 import com.andersen.banking.service.registry.meeting_api.error.NotFoundError;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotificationException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.ErrorMapper;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,13 @@ public class RestExceptionHandler {
     if (fieldError != null) {
       return fieldError.getDefaultMessage();
     }
+    return exception.getLocalizedMessage();
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(NotificationException.class)
+  public String handleNotificationException(NotificationException exception) {
+    log.error("Caught NotificationException: {}", exception.toString());
     return exception.getLocalizedMessage();
   }
 }
