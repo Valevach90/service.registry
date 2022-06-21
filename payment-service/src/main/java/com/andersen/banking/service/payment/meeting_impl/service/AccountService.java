@@ -35,7 +35,6 @@ public interface AccountService {
     Page<Account> findByOwnerId(Long id, Pageable pageable);
 
 
-
     /**
      * Return Account by id.
      *

@@ -5,16 +5,16 @@ package com.andersen.banking.service.payment.meeting_impl.exceptions;
  */
 public class MapperException extends RuntimeException {
 
-  public MapperException() {
-    super();
-  }
+    public MapperException() {
+        super();
+    }
 
-  /**
-   * This constructor need for MapStruct.
-   *
-   * @param message about mapping problem
-   */
-  public MapperException(String message) {
-    super(message);
-  }
+    /**
+     * This constructor need for MapStruct.
+     *
+     * @param message about mapping problem
+     */
+    public MapperException(String message) {
+        super(message);
+    }
 }

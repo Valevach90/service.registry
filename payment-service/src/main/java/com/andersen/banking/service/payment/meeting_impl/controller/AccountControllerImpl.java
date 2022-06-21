@@ -66,7 +66,7 @@ public class AccountControllerImpl implements AccountController {
     /**
      * End-point to find page of accounts with ownerId
      *
-     * @param id - ownerId
+     * @param id       - ownerId
      * @param pageable
      * @return accountPageDto
      */

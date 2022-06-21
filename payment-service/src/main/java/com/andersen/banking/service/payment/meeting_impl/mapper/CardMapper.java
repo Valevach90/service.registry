@@ -12,9 +12,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapperConfig.class)
 public interface CardMapper {
 
-  @Mapping(target = "accountId", source = "account.id")
-  CardDto toCardDto(Card card);
+    @Mapping(target = "accountId", source = "account.id")
+    CardDto toCardDto(Card card);
 
-  @Mapping(target = "account.id", source = "accountId")
-  Card toCard(CardDto cardDto);
+    @Mapping(target = "account.id", source = "accountId")
+    Card toCard(CardDto cardDto);
 }

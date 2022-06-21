@@ -9,52 +9,52 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CardService {
 
-  /**
-   * This method returns Card entity with the given id.
-   *
-   * @param id
-   * @return
-   */
-  Card findById(Long id);
+    /**
+     * This method returns Card entity with the given id.
+     *
+     * @param id
+     * @return
+     */
+    Card findById(Long id);
 
-  /**
-   * This method returns page of Card entities.
-   *
-   * @param pageable
-   * @return
-   */
-  Page<Card> findAll(Pageable pageable);
+    /**
+     * This method returns page of Card entities.
+     *
+     * @param pageable
+     * @return
+     */
+    Page<Card> findAll(Pageable pageable);
 
-  /**
-   * This method updates the given card and returns updated version.
-   *
-   * @param card
-   * @return
-   */
-  Card update(Card card);
+    /**
+     * This method updates the given card and returns updated version.
+     *
+     * @param card
+     * @return
+     */
+    Card update(Card card);
 
-  /**
-   * This method deletes the Card with the given id and the returns deleted entity.
-   *
-   * @param id
-   * @return
-   */
-  Card deleteById(Long id);
+    /**
+     * This method deletes the Card with the given id and the returns deleted entity.
+     *
+     * @param id
+     * @return
+     */
+    Card deleteById(Long id);
 
-  /**
-   * This method registers new Card.
-   *
-   * @param card
-   * @return
-   */
-  Card create(Card card);
+    /**
+     * This method registers new Card.
+     *
+     * @param card
+     * @return
+     */
+    Card create(Card card);
 
 
-  /**
-   * This method returns page of cards by account_id.
-   *
-   * @param id
-   * @return
-   */
-  Page<Card> findByAccountId(Long id, Pageable pageable);
+    /**
+     * This method returns page of cards by account_id.
+     *
+     * @param id
+     * @return
+     */
+    Page<Card> findByAccountId(Long id, Pageable pageable);
 }
