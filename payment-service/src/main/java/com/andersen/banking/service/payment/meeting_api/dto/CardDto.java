@@ -2,7 +2,11 @@ package com.andersen.banking.service.payment.meeting_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.sql.Date;
 import java.time.LocalDate;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,31 +23,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CardDto {
 
-  @NotNull
   @JsonProperty("id")
   private Long id;
 
+  @Min(1L)
   @NotNull
   @JsonProperty("account_id")
   private Long accountId;
 
-  @NotNull
-  @Size(min = 16, max = 16)
+  @NotBlank
+  @JsonProperty("first_twelve_numbers")
+  @Size(min = 12, max = 12, message = "first_twelve_numbers should have exactly 12 characters")
+  private String firstTwelveNumbers;
 
-  @JsonProperty("card_number")
-  private String cardNumber;
-
-  @NotNull
-  @JsonProperty("exp_date")
-  private LocalDate expirationDate;
-
-  @NotNull
-  @Size(min = 4, max = 4)
-  @JsonProperty("pin_code")
-  private String pinCode;
+  @NotBlank
+  @JsonProperty("last_four_numbers")
+  @Size(min = 4, max = 4, message = "last_four_numbers should have exactly 4 characters")
+  private String lastFourNumbers;
 
   @NotNull
-  @Size(min = 6, max = 255)
+  @JsonProperty("valid_from_date")
+  private Date validFromDate;
+
+  @NotNull
+  @JsonProperty("expire_date")
+  private Date expireDate;
+
+  @NotBlank
+  @Size(min = 3, max = 30, message = "holder_name should have at least 3 and at maximum 30 characters")
   @JsonProperty("holder_name")
   private String holderName;
 }

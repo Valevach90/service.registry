@@ -45,7 +45,7 @@ public class AccountControllerImpl implements AccountController {
     }
 
     /**
-     * Controller to find all Accounts entities.
+     * End-point to find all Accounts entities.
      *
      * @param pageable
      * @return accountDtoPage
@@ -64,7 +64,26 @@ public class AccountControllerImpl implements AccountController {
     }
 
     /**
-     * Controller to find Account entity by id.
+     * End-point to find page of accounts with ownerId
+     *
+     * @param id - ownerId
+     * @param pageable
+     * @return accountPageDto
+     */
+
+    @Override
+    public Page<AccountDto> findByOwnerId(Long id, Pageable pageable) {
+        log.trace("Receiving request for account with ownerId: {}", id);
+
+        Page<AccountDto> accountDtoPage = accountService.findByOwnerId(id, pageable)
+                .map(accountMapper::toAccountDto);
+
+        log.trace("Returning page of accounts: {}", accountDtoPage.getContent());
+        return accountDtoPage;
+    }
+
+    /**
+     * End-point to find Account entity by id.
      *
      * @param id - Account id
      * @return accountDto - account with required id
@@ -83,7 +102,7 @@ public class AccountControllerImpl implements AccountController {
     }
 
     /**
-     * Controller to update existing Account entity.
+     * End-point to update existing Account entity.
      *
      * @param accountDto - dto with require updating fields
      * @return updatedAccountDto - updated entity dto
@@ -103,7 +122,7 @@ public class AccountControllerImpl implements AccountController {
     }
 
     /**
-     * Controller to delete Account entity.
+     * End-point to delete Account entity.
      *
      * @param id - Account id
      * @return deletedAccountDto - deleted entity dto
@@ -112,7 +131,7 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     public AccountDto deleteById(Long id) {
-        log.trace("Receiving account id {}", id);
+        log.trace("Receiving account id: {}", id);
 
         Account deletedAccount = accountService.deleteById(id);
         AccountDto deletedAccountDto = accountMapper.toAccountDto(deletedAccount);

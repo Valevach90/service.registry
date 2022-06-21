@@ -1,5 +1,6 @@
 package com.andersen.banking.service.payment.meeting_db.entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,17 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * This class presents an entity, which will be stored in the database.
  */
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "cards")
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Card {
 
   @Id
@@ -28,19 +31,23 @@ public class Card {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "card_number", nullable = false)
-  private String cardNumber;
-
-  @Column(name = "exp_date", nullable = false)
-  private LocalDate expirationDate;
-
-  @Column(name = "pin_code", nullable = false)
-  private String pinCode;
-
-  @Column(name = "holder_name", nullable = false)
-  private String holderName;
-
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "account_id", nullable = false)
   private Account account;
+
+  @Column(name = "valid_from_date", nullable = false)
+  private Date validFromDate;
+
+  @Column(name = "expire_date", nullable = false)
+  private Date expireDate;
+
+  @Column(name = "first_twelve_numbers", nullable = false, length = 64)
+  private String firstTwelveNumbers;
+
+  @Column(name = "last_four_numbers", nullable = false, length = 4)
+  private String lastFourNumbers;
+
+  @Column(name = "holder_name", nullable = false, length = 30)
+  private String holderName;
+
 }

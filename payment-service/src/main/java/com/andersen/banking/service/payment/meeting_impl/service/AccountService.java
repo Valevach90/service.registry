@@ -24,6 +24,18 @@ public interface AccountService {
      */
     Page<Account> findAll(Pageable pageable);
 
+
+    /**
+     * Return accounts by ownerId
+     *
+     * @param id
+     * @param pageable
+     * @return
+     */
+    Page<Account> findByOwnerId(Long id, Pageable pageable);
+
+
+
     /**
      * Return Account by id.
      *

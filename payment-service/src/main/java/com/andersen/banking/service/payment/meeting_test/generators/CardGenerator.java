@@ -18,9 +18,9 @@ public class CardGenerator {
     Card card = new Card();
     card.setId(counter.getAndIncrement());
     card.setAccount(account);
-    card.setCardNumber(faker.regexify("[0-9]{16}"));
-    card.setPinCode(faker.regexify("[0-9]{4}"));
-    card.setExpirationDate(LocalDate.now().plusYears(faker.number().numberBetween(2, 5)));
+//    card.setCardNumber(faker.regexify("[0-9]{16}"));
+//    card.setPinCode(faker.regexify("[0-9]{4}"));
+//    card.setExpirationDate(LocalDate.now().plusYears(faker.number().numberBetween(2, 5)));
     card.setHolderName("[a-z]{5,255}");
 
     return card;

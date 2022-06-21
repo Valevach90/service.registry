@@ -7,43 +7,57 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.sql.Date;
+
+
+//TODO
+// - regex pattern for account number
+// - regex pettern for currency
+// - длина полей для String
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for accounts")
 public class AccountDto {
 
-    @NotNull
     @JsonProperty("id")
     private Long id;
 
-    @NotNull
-    @JsonProperty("user_id")
-    private Long userId;
+    @NotBlank
+    @JsonProperty("account_number")
+    //@Pattern(regexp = "\\d+")
+    private String accountNumber;
 
     @NotNull
-    @JsonProperty("issue_date")
+    @JsonProperty("open_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date issueDate;
+    private Date openDate;
 
     @NotNull
-    @JsonProperty("termination_date")
+    @JsonProperty(value = "close_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date terminationDate;
+    private Date closeDate = null;
 
+
+    @Min(1L)
     @NotNull
+    @JsonProperty("owner_id")
+    private Long ownerId;
+
+    @NotBlank
+    @JsonProperty("currency")
+    @Size(min = 3, max = 3, message = "currency should have exactly 3 characters")
+    private String currency;
+
+    @NotBlank
     @JsonProperty("bank_name")
+    @Size(min = 3, max = 30, message = "bank_name should have at least 3 and at maximum 30 characters")
     private String bankName;
 
     @NotNull
-    @JsonProperty("account_number")
-    @Pattern(regexp = "\\d+")
-    private String accountNumber;
+    @JsonProperty("balance")
+    private long balance;
 
-    @Column(name = "currency", nullable = false)
-    private String currency;
 }

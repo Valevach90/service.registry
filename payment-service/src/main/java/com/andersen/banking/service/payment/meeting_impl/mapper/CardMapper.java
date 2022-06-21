@@ -1,4 +1,4 @@
-package com.andersen.banking.service.payment.meeting_impl.mapping;
+package com.andersen.banking.service.payment.meeting_impl.mapper;
 
 import com.andersen.banking.service.payment.meeting_api.dto.CardDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;

@@ -48,4 +48,13 @@ public interface CardService {
    * @return
    */
   Card create(Card card);
+
+
+  /**
+   * This method returns page of cards by account_id.
+   *
+   * @param id
+   * @return
+   */
+  Page<Card> findByAccountId(Long id, Pageable pageable);
 }

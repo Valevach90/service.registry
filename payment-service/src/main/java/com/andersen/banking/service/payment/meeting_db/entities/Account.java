@@ -1,17 +1,19 @@
 package com.andersen.banking.service.payment.meeting_db.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "accounts")
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Account {
 
     @Id
@@ -19,35 +21,25 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "usr_id", nullable = false)
-    private Long userId;
-
-    @Column(name = "issue_date", nullable = false)
-    private Date issueDate;
-
-
-    @Column(name = "termination_date") //termination date can be null because that field will be set after closing account
-    private Date terminationDate;
-
-    @Column(name = "bank_name", nullable = false)
-    private String bankName;
-
-    @Column(name = "account_number", nullable = false)
+    @Column(name = "account_number", nullable = false, length = 34)
     private String accountNumber;
 
-    @Column(name = "currency", nullable = false)
+    @Column(name = "open_date", nullable = false)
+    private Date openDate;
+
+    @Column(name = "close_date")
+    private Date closeDate;
+
+    @Column(name = "owner_id", nullable = false)
+    private Long ownerId;
+
+    @Column(name = "currency", nullable = false, length = 3)
     private String currency;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Account account = (Account) o;
-        return id != null && Objects.equals(id, account.id);
-    }
+    @Column(name = "bank_name", nullable = false, length = 30)
+    private String bankName;
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    @Column(name = "balance", nullable = false)
+    private long balance;
+
 }

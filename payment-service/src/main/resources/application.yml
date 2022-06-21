@@ -4,14 +4,15 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=payment_service
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/antondzyubak?currentSchema=payment_service
+    username: antondzubak
+    password: 123456
+
 
   flyway:
     schemas: payment_service
-    user: postgres
-    password: postgres
+    user: antondzubak
+    password: 123456
 
 logging:
   level:

@@ -4,6 +4,7 @@ import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.repository.AccountRepository;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
+import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -51,10 +52,21 @@ public class AccountServiceImpl implements AccountService {
     public Page<Account> findAll(Pageable pageable) {
         log.info("Find all accounts for pageable: {}", pageable);
 
-        Page<Account> allAccounts = accountRepository.findAll(pageable);
+        Page<Account> accounts = accountRepository.findAll(pageable);
 
-        log.info("Found {} accounts", allAccounts.getContent().size());
-        return allAccounts;
+        log.info("Found {} accounts", accounts.getContent().size());
+        return accounts;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Account> findByOwnerId(Long id, Pageable pageable) {
+        log.info("Trying to find accounts with ownerId: {}", id);
+
+        Page<Account> accounts = accountRepository.findAccountByOwnerId(id, pageable);
+
+        log.info("Found {} accounts with ownerId {}", accounts.getContent().size(), id);
+        return accounts;
     }
 
 
