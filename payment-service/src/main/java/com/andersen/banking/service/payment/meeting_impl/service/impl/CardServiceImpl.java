@@ -4,7 +4,7 @@ import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.repository.CardRepository;
 import com.andersen.banking.service.payment.meeting_impl.date.DateSupportService;
-import com.andersen.banking.service.payment.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
@@ -23,110 +23,88 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository;
-    private final AccountService accountService;
-    private final DateSupportService dateSupportService;
+  private final CardRepository cardRepository;
+  private final AccountService accountService;
 
-    @Transactional(readOnly = true)
-    @Override
-    public Card findById(Long id) {
-        log.debug("Find card by id: {}", id);
+  @Transactional(readOnly = true)
+  @Override
+  public Card findById(Long id) {
+    log.debug("Find card by id: {}", id);
 
-        Card card = cardRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Card.class, id));
+    Card card = cardRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Card.class, id));
 
-        log.debug("Card with id {} successfully found", id);
-        return card;
-    }
+    log.debug("Card with id {} successfully found", id);
+    return card;
+  }
 
-    @Transactional(readOnly = true)
-    @Override
-    public Page<Card> findAll(Pageable pageable) {
-        log.info("Find all cards for pageable: {}", pageable);
+  @Transactional(readOnly = true)
+  @Override
+  public Page<Card> findAll(Pageable pageable) {
+    log.info("Find all cards for pageable: {}", pageable);
 
-        Page<Card> allCards = cardRepository.findAll(pageable);
+    Page<Card> allCards = cardRepository.findAll(pageable);
 
-        log.info("Found {} cards", allCards.getContent().size());
-        return allCards;
-    }
+    log.info("Found {} cards", allCards.getContent().size());
+    return allCards;
+  }
 
-    @Transactional
-    @Override
-    public Card update(Card card) {
-        log.debug("Trying to update card: {}", card);
+  @Transactional
+  @Override
+  public Card update(Card card) {
+    log.debug("Trying to update card: {}", card);
 
-        //validateCard(card);
-        Long accountId = card.getAccount().getId();
-        findById(card.getId());
-        card.setAccount(accountService.findById(accountId));
+    Long accountId = card.getAccount().getId();
+    findById(card.getId());
+    card.setAccount(accountService.findById(accountId));
 
-        String first_twelve_nums = card.getFirstTwelveNumbers();
-        card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
+    String first_twelve_nums = card.getFirstTwelveNumbers();
+    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
 
-        Card updatedCard = cardRepository.save(card);
+    Card updatedCard = cardRepository.save(card);
 
-        log.debug("Return updated card: {}", updatedCard);
+    log.debug("Return updated card: {}", updatedCard);
 
-        return updatedCard;
-    }
+    return updatedCard;
+  }
 
-    @Transactional
-    @Override
-    public Card deleteById(Long id) {
-        log.info("Trying to delete card with id: {}", id);
+  @Transactional
+  @Override
+  public Card deleteById(Long id) {
+    log.info("Trying to delete card with id: {}", id);
 
-        Card card = findById(id);
+    Card card = findById(id);
 
-        cardRepository.deleteById(id);
+    cardRepository.deleteById(id);
 
-        log.info("Deleted card with id: {}", id);
-        return card;
-    }
+    log.info("Deleted card with id: {}", id);
+    return card;
+  }
 
-    @Transactional
-    @Override
-    public Card create(Card card) {
-        log.info("Creating card: {}", card);
+  @Transactional
+  @Override
+  public Card create(Card card) {
+    log.info("Creating card: {}", card);
 
-        //validateCard(card);
-        Account account = accountService.findById(card.getAccount().getId());
-        card.setAccount(account);
+    Account account = accountService.findById(card.getAccount().getId());
+    card.setAccount(account);
 
-        String first_twelve_nums = card.getFirstTwelveNumbers();
-        card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
+    String first_twelve_nums = card.getFirstTwelveNumbers();
+    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
 
-        Card savedCard = cardRepository.save(card);
+    Card savedCard = cardRepository.save(card);
 
-        log.info("Created card: {}", savedCard);
-        return savedCard;
-    }
+    log.info("Created card: {}", savedCard);
+    return savedCard;
+  }
 
-    @Override
-    public Page<Card> findByAccountId(Long id, Pageable pageable) {
-        log.info("Find all cards by account_id: {}", id);
+  @Override
+  public Page<Card> findByAccountId(Long id, Pageable pageable) {
+    log.info("Find all cards by account_id: {}", id);
 
-        Page<Card> cards = cardRepository.getCardByAccountId(id, pageable);
+    Page<Card> cards = cardRepository.getCardByAccountId(id, pageable);
 
-        log.info("Found {} cards", cards.getContent().size());
-        return cards;
-    }
-
-//  private void validateCard(final Card card) {
-//    final LocalDate expirationDate = card.getExpirationDate();
-//    final String cardNumber = card.getCardNumber();
-//    final String pinCode = card.getPinCode();
-//
-//    if (!StringUtils.checkIfStringContainsOnlyDigits(cardNumber)) {
-//      throw new ValidationException(String.format("Card number should contain only digits: %s", cardNumber));
-//    }
-//    if (!StringUtils.checkIfStringContainsOnlyDigits(pinCode)) {
-//      throw new ValidationException(String.format("Pin code should contain only digits: %s", pinCode));
-//    }
-//    if (!dateSupportService.checkIfDateIsLaterThanToday(expirationDate)) {
-//      throw new ValidationException(String.format("Expiration date is incorrect: %s", expirationDate));
-//    }
-//    if (cardRepository.findByCardNumber(cardNumber).isPresent()) {
-//      throw new ValidationException(String.format("Card with number %s already exists", cardNumber));
-//    }
-//  }
+    log.info("Found {} cards", cards.getContent().size());
+    return cards;
+  }
 }

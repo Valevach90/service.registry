@@ -1,12 +1,16 @@
 package com.andersen.banking.service.payment.meeting_db.entities;
 
+import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -25,10 +29,10 @@ public class Account {
     private String accountNumber;
 
     @Column(name = "open_date", nullable = false)
-    private Date openDate;
+    private LocalDate openDate;
 
     @Column(name = "close_date")
-    private Date closeDate;
+    private LocalDate closeDate;
 
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;

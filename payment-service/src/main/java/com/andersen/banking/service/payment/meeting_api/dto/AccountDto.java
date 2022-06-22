@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Date;
+import lombok.Data;
 
 
 @Data
@@ -30,12 +29,12 @@ public class AccountDto {
     @NotNull
     @JsonProperty("open_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date openDate;
+    private LocalDate openDate;
 
     @NotNull
     @JsonProperty(value = "close_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date closeDate = null;
+    private LocalDate closeDate = null;
 
 
     @Min(1L)

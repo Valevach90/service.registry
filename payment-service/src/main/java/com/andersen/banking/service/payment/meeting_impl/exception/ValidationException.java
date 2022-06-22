@@ -1,4 +1,4 @@
-package com.andersen.banking.service.payment.meeting_impl.exceptions;
+package com.andersen.banking.service.payment.meeting_impl.exception;
 
 /**
  * Custom exception for usage inside Payment service.
