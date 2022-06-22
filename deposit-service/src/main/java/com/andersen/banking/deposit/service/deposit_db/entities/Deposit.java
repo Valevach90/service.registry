@@ -25,8 +25,9 @@ public class Deposit {
     @Column(name = "deposit_number", nullable = false)
     private String depositNumber;
 
-    @Column(name = "deposit_name", nullable = false)
-    private String depositName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deposit_product_id", nullable = false)
+    private DepositProduct depositProduct;
 
     @Column(name = "type", nullable = false)
     private String type;
@@ -34,8 +35,8 @@ public class Deposit {
     @Column(name = "currency", nullable = false)
     private String currency;
 
-    @Column(name = "term")
-    private Integer term;
+    @Column(name = "term_months")
+    private Integer termMonths;
 
     @Column(name = "open_date", nullable = false)
     private Date openDate;
@@ -46,8 +47,8 @@ public class Deposit {
     @Column(name = "amount", nullable = false)
     private Long amount;
 
-    @Column(name = "interest", nullable = false)
-    private Integer interest;
+    @Column(name = "interest_rate", nullable = false)
+    private Integer interestRate;
 
     @Column(name = "fixed_interest", nullable = false)
     private Boolean fixedInterest;
@@ -70,8 +71,8 @@ public class Deposit {
     @Column(name = "capitalization", nullable = false)
     private Boolean capitalization;
 
-    @Column(name = "early_closure", nullable = false)
-    private Boolean earlyClosure;
+    @Column(name = "is_revocable")
+    private Boolean isRevocable;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

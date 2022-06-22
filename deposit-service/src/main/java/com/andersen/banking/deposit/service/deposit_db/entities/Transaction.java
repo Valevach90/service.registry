@@ -22,7 +22,7 @@ public class Transaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deposit_id")
+    @JoinColumn(name = "deposit_id", nullable = false)
     private Deposit deposit;
 
     @Column(name = "from_card_number", nullable = false)
