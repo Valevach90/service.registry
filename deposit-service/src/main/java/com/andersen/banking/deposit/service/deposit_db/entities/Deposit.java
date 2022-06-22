@@ -67,9 +67,6 @@ public class Deposit {
     @Column(name = "interest_withdrawal", nullable = false)
     private Boolean interestWithdrawal;
 
-    @Column(name = "capitalization_card_number")
-    private String capitalizationCardNumber;
-
     @Column(name = "capitalization", nullable = false)
     private Boolean capitalization;
 

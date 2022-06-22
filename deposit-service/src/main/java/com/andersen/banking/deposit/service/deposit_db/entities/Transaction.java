@@ -37,6 +37,6 @@ public class Transaction {
     @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(name = "success", nullable = false)
-    private Boolean success;
+    @Column(name = "success_status", nullable = false)
+    private Boolean successStatus;
 }

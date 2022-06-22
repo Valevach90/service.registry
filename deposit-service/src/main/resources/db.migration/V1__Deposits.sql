@@ -16,7 +16,6 @@ CREATE TABLE deposits
     withdrawal_card_number      VARCHAR(16)                                     ,
     early_withdrawal            Boolean                                 NOT NULL,
     interest_withdrawal         Boolean                                 NOT NULL,
-    capitalization_card_number  VARCHAR(16)                                     ,
     capitalization              Boolean                                 NOT NULL,
     early_closure               Boolean                                 NOT NULL,
     user_id                     BIGINT                                  NOT NULL,
