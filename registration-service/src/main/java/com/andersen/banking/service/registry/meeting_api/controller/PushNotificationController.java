@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Controller for push notifications.
  */
 @Tag(name = "Push Notification Controller", description = "Controller for sending push notifications")
-@RequestMapping("/api/v1/notification/push")
+@RequestMapping("/api/v1/notifications/push")
 public interface PushNotificationController {
 
   @Operation(summary = "Send push notification", description = "Sends push notification based on token in request")

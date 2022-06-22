@@ -25,7 +25,8 @@ public class FCMService {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String jsonOutput = gson.toJson(message);
     String response = sendAndGetResponse(message);
-    log.info("Sent message to token. Device token: " + request.getToken() + ", " + response + " msg " + jsonOutput);
+    log.info("Sent message to token. Device token: {}. Response {}. Message {}", request.getToken(), response,
+        jsonOutput);
   }
 
   private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
