@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://10.10.14.31:30000:5432/database-psql?currentSchema=payment_service
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
     username: psqluser
     password: PoSPa$$woRd
 
