@@ -6,5 +6,7 @@ findProject(':api-gateway:gateway')?.name = 'gateway'
 include 'api-gateway:discovery-service'
 findProject(':api-gateway:discovery-service')?.name = 'discovery-service'
 include 'payment-service'
-
+include 'deposit-service'
+include 'transfer-service'
+include 'notification-service'
 
