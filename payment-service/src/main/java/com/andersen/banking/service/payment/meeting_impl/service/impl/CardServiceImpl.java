@@ -3,7 +3,6 @@ package com.andersen.banking.service.payment.meeting_impl.service.impl;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.repository.CardRepository;
-import com.andersen.banking.service.payment.meeting_impl.date.DateSupportService;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
@@ -58,8 +57,8 @@ public class CardServiceImpl implements CardService {
     findById(card.getId());
     card.setAccount(accountService.findById(accountId));
 
-    String first_twelve_nums = card.getFirstTwelveNumbers();
-    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
+    String firstTwelveNums = card.getFirstTwelveNumbers();
+    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
 
     Card updatedCard = cardRepository.save(card);
 

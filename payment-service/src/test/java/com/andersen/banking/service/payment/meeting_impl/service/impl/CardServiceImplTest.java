@@ -6,7 +6,7 @@ import com.andersen.banking.service.payment.meeting_db.repository.CardRepository
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
-import java.time.LocalDate;
+import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,8 +46,8 @@ public class CardServiceImplTest {
 
   @BeforeEach
   void initArguments() {
-    returnedCard = new Card();
-    receivedCard = new Card();
+    returnedCard = CardUnitTestGenerator.populateCard();
+    receivedCard = CardUnitTestGenerator.populateCard();
   }
 
   @Test
@@ -76,9 +76,6 @@ public class CardServiceImplTest {
 
   @Test
   void update_ShouldReturnCard_WhenReceivedCardIsCorrect() {
-    receivedCard = populateCard(receivedCard);
-    returnedCard = populateCard(returnedCard);
-
     Mockito.when(accountService.findById(receivedCard.getAccount().getId())).thenReturn(populateAccount(new Account()));
     Mockito.when(cardRepository.findById(receivedCard.getId())).thenReturn(Optional.of(receivedCard));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
@@ -88,8 +85,6 @@ public class CardServiceImplTest {
 
   @Test
   void update_ShouldThrowNotFoundException_WhenReceivedCardHasIncorrectId() {
-    receivedCard = populateCard(receivedCard);
-
     Mockito.when(cardRepository.findById(receivedCard.getId()))
         .thenThrow(new NotFoundException(Card.class, receivedCard.getId()));
 
@@ -112,9 +107,6 @@ public class CardServiceImplTest {
 
   @Test
   void create_ShouldReturnCard_WhenReceivedCardIsCorrect() {
-    receivedCard = populateCard(receivedCard);
-    returnedCard = populateCard(returnedCard);
-
     Mockito.when(accountService.findById(5L)).thenReturn(populateAccount(new Account()));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
@@ -132,17 +124,6 @@ public class CardServiceImplTest {
   private Pageable createPageable() {
     Sort sort = Sort.by(Sort.Direction.ASC, SORT_FIELD);
     return PageRequest.of(NUMBER_PAGE, SIZE_PAGE, sort);
-  }
-
-  private Card populateCard(Card card) {
-    card.setId(17L);
-    card.setAccount(populateAccount(new Account()));
-    card.setValidFromDate(LocalDate.of(2021, 10, 23));
-    card.setExpireDate(LocalDate.of(2024, 10, 23));
-    card.setFirstTwelveNumbers("123456789012");
-    card.setLastFourNumbers("4567");
-    card.setHolderName("Ivanov Ivan Ivanovich");
-    return card;
   }
 
   private Account populateAccount(Account account) {

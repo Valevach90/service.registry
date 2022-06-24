@@ -33,7 +33,6 @@ public class AccountControllerImpl implements AccountController {
 
 
     @Override
-    @Transactional
     public AccountDto create(AccountDto accountDto) {
         log.trace("Receiving request for creating account: {}", accountDto);
 

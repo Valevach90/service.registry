@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "cards")
+@Table(name = "card")
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Card {

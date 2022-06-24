@@ -1,6 +1,8 @@
 package com.andersen.banking.service.payment.meeting_impl.mapper;
 
-import com.andersen.banking.service.payment.meeting_api.dto.CardDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
@@ -13,8 +15,12 @@ import org.mapstruct.Mapping;
 public interface CardMapper {
 
     @Mapping(target = "accountId", source = "account.id")
-    CardDto toCardDto(Card card);
+    CardResponseDto toCardResponseDto(Card card);
 
     @Mapping(target = "account.id", source = "accountId")
-    Card toCard(CardDto cardDto);
+    Card toCard(CardUpdateDto cardUpdateDto);
+
+    @Mapping(target = "account.id", source = "accountId")
+    @Mapping(target = "id", ignore = true)
+    Card toCard(CardRegistrationDto cardDto);
 }

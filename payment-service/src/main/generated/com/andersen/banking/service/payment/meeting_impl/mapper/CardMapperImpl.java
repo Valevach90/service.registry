@@ -1,6 +1,8 @@
 package com.andersen.banking.service.payment.meeting_impl.mapper;
 
-import com.andersen.banking.service.payment.meeting_api.dto.CardDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import javax.annotation.processing.Generated;
@@ -8,41 +10,58 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-06-22T09:35:12+0300",
+    date = "2022-06-23T18:26:31+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.1 (Oracle Corporation)"
 )
 @Component
 public class CardMapperImpl implements CardMapper {
 
     @Override
-    public CardDto toCardDto(Card card) {
+    public CardResponseDto toCardResponseDto(Card card) {
         if ( card == null ) {
             return null;
         }
 
-        CardDto cardDto = new CardDto();
+        CardResponseDto cardResponseDto = new CardResponseDto();
 
-        cardDto.setAccountId( cardAccountId( card ) );
-        cardDto.setId( card.getId() );
-        cardDto.setFirstTwelveNumbers( card.getFirstTwelveNumbers() );
-        cardDto.setLastFourNumbers( card.getLastFourNumbers() );
-        cardDto.setValidFromDate( card.getValidFromDate() );
-        cardDto.setExpireDate( card.getExpireDate() );
-        cardDto.setHolderName( card.getHolderName() );
+        cardResponseDto.setAccountId( cardAccountId( card ) );
+        cardResponseDto.setId( card.getId() );
+        cardResponseDto.setLastFourNumbers( card.getLastFourNumbers() );
+        cardResponseDto.setValidFromDate( card.getValidFromDate() );
+        cardResponseDto.setExpireDate( card.getExpireDate() );
+        cardResponseDto.setHolderName( card.getHolderName() );
 
-        return cardDto;
+        return cardResponseDto;
     }
 
     @Override
-    public Card toCard(CardDto cardDto) {
+    public Card toCard(CardUpdateDto cardUpdateDto) {
+        if ( cardUpdateDto == null ) {
+            return null;
+        }
+
+        Card card = new Card();
+
+        card.setAccount( cardUpdateDtoToAccount( cardUpdateDto ) );
+        card.setId( cardUpdateDto.getId() );
+        card.setValidFromDate( cardUpdateDto.getValidFromDate() );
+        card.setExpireDate( cardUpdateDto.getExpireDate() );
+        card.setFirstTwelveNumbers( cardUpdateDto.getFirstTwelveNumbers() );
+        card.setLastFourNumbers( cardUpdateDto.getLastFourNumbers() );
+        card.setHolderName( cardUpdateDto.getHolderName() );
+
+        return card;
+    }
+
+    @Override
+    public Card toCard(CardRegistrationDto cardDto) {
         if ( cardDto == null ) {
             return null;
         }
 
         Card card = new Card();
 
-        card.setAccount( cardDtoToAccount( cardDto ) );
-        card.setId( cardDto.getId() );
+        card.setAccount( cardRegistrationDtoToAccount( cardDto ) );
         card.setValidFromDate( cardDto.getValidFromDate() );
         card.setExpireDate( cardDto.getExpireDate() );
         card.setFirstTwelveNumbers( cardDto.getFirstTwelveNumbers() );
@@ -67,14 +86,26 @@ public class CardMapperImpl implements CardMapper {
         return id;
     }
 
-    protected Account cardDtoToAccount(CardDto cardDto) {
-        if ( cardDto == null ) {
+    protected Account cardUpdateDtoToAccount(CardUpdateDto cardUpdateDto) {
+        if ( cardUpdateDto == null ) {
             return null;
         }
 
         Account account = new Account();
 
-        account.setId( cardDto.getAccountId() );
+        account.setId( cardUpdateDto.getAccountId() );
+
+        return account;
+    }
+
+    protected Account cardRegistrationDtoToAccount(CardRegistrationDto cardRegistrationDto) {
+        if ( cardRegistrationDto == null ) {
+            return null;
+        }
+
+        Account account = new Account();
+
+        account.setId( cardRegistrationDto.getAccountId() );
 
         return account;
     }

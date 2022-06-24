@@ -4,8 +4,10 @@ import com.andersen.banking.service.payment.meeting_api.dto.AccountDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,7 @@ public interface AccountController {
 
     @Operation(summary = "Get all accounts", description = "get page of account's information")
     @GetMapping("/")
-    Page<AccountDto> findAll(Pageable pageable);
+    Page<AccountDto> findAll(@ParameterObject @PageableDefault Pageable pageable);
 
     @Operation(summary = "Get accounts with ownerId", description = "get page of accounts with ownerId")
     @GetMapping("/owners/{id}")

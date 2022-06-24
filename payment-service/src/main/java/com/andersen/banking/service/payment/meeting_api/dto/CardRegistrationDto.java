@@ -11,18 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * This class presents an entity, which is available via CardController endpoints.
- */
-
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardDto {
-
-  @JsonProperty("id")
-  private Long id;
+public class CardRegistrationDto {
 
   @Min(1L)
   @NotNull
