@@ -4,15 +4,22 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
-    username: psqluser
-    password: PoSPa$$woRd
-
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=payment_service
+    username: postgres
+    password: postgres
 
   flyway:
     schemas: payment_service
-    user: psqluser
-    password: PoSPa$$woRd
+    user: postgres
+    password: postgres
+
+  kafka:
+    consumer:
+      group-id: my_group
+    bootstrap-servers: 10.10.14.68:19092, 10.10.14.68:19093, 10.10.14.68:19094
+
+tpd:
+  topic-name: test
 
 logging:
   level:
