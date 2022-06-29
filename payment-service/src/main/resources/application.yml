@@ -14,12 +14,10 @@ spring:
     password: postgres
 
   kafka:
-    consumer:
-      group-id: my_group
-    bootstrap-servers: 10.10.14.68:19092, 10.10.14.68:19093, 10.10.14.68:19094
-
-tpd:
-  topic-name: test
+    groupId: my_group
+    bootstrapAddress: 10.10.14.68:19092
+    topicName: test
+    maxRetryAttempts: 3
 
 logging:
   level:
@@ -59,3 +57,5 @@ openapi:
         scheme: "bearer"
         bearer_Format: "JWT"
         name: "bearerAuth"
+
+
