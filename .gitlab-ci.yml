@@ -24,6 +24,9 @@ build jars:
     when: always
     paths:
       - api-gateway/gateway/build/libs/*.jar
+      - api-gateway/discovery-service/build/libs/*.jar
+      - payment-service/build/libs/*.jar
+      - registration-service/build/libs/*.jar
       # - api-gateway/**/build/libs/*.jar
       # - '**/build/libs/*.jar'
     expire_in: 1 day
