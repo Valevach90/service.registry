@@ -188,7 +188,7 @@ test:
     when: always
     reports:
       junit:
-        - "api-gateway/**/build/test-results/test/TEST-*.xml"
+        - "api-gateway/gateway/build/test-results/test/TEST-*.xml"
         - "payment-service/build/test-results/test/TEST-*.xml"
         - "registration-service/build/test-results/test/TEST-*.xml"
   cache:
