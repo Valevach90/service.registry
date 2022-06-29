@@ -23,8 +23,9 @@ build jars:
   artifacts:
     when: always
     paths:
-      - api-gateway/**/build/libs/*.jar
-      - '**/build/libs/*.jar'
+      - api-gateway/gateway/build/libs/*.jar
+      # - api-gateway/**/build/libs/*.jar
+      # - '**/build/libs/*.jar'
     expire_in: 1 day
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == "develop")
