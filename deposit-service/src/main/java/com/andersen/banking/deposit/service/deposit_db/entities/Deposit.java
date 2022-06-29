@@ -29,11 +29,13 @@ public class Deposit {
     @JoinColumn(name = "deposit_product_id", nullable = false)
     private DepositProduct depositProduct;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deposit_type_id", nullable = false)
+    private DepositType type;
 
-    @Column(name = "currency", nullable = false)
-    private String currency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
 
     @Column(name = "term_months")
     private Integer termMonths;
@@ -77,6 +79,6 @@ public class Deposit {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @OneToMany(mappedBy = "deposit", cascade = CascadeType.ALL)
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "deposit", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Transfer> transfers;
 }

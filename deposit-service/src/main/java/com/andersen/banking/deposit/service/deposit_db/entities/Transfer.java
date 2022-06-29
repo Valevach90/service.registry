@@ -7,14 +7,14 @@ import javax.persistence.*;
 import java.sql.Date;
 
 /**
- * Transaction entity for Deposit service.
+ * Transfer entity for Deposit service.
  */
 
 @Data
 @Entity
-@Table(name = "transactions")
+@Table(name = "transfers")
 @NoArgsConstructor
-public class Transaction {
+public class Transfer {
 
     @Id
     @Column(name = "id")

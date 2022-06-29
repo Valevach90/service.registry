@@ -24,11 +24,13 @@ public class DepositProduct {
     @Column(name = "deposit_name", nullable = false)
     private String depositName;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deposit_type_id", nullable = false)
+    private DepositType type;
 
-    @Column(name = "currency", nullable = false)
-    private String currency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
 
     @Column(name = "min_term_months")
     private Integer minTermMonths;
