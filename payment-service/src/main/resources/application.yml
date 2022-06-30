@@ -4,14 +4,15 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=payment_service
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
+    username: psqluser
+    password: PoSPa$$woRd
+
 
   flyway:
     schemas: payment_service
-    user: postgres
-    password: postgres
+    user: psqluser
+    password: PoSPa$$woRd
 
   kafka:
     groupId: my_group
