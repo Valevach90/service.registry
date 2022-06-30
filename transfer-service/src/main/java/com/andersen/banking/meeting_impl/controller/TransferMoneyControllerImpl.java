@@ -23,7 +23,6 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     @Override
     public List<TransferResponseDto> findAllByUserId(Long userId) {
         log.info("Find all transfers by user_id: {}", userId);
-
         return null;
     }
 
@@ -35,18 +34,19 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
     @Override
     public TransferResponseDto create(TransferRequestDto transferRequestDto) {
-        log.info("Get request on transfer money from : {}",
-                transferRequestDto.getSourceNumber());
+        log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
         return null;
     }
 
     @Override
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
+        log.info("Get request on get list payment types");
         return transferMoneyService.getAllPaymentTypes();
     }
 
     @Override
     public List<CurrencyResponseDto> getAllCurrency() {
+        log.info("Get request on get list currencies");
         return transferMoneyService.getAllCurrencies();
     }
 

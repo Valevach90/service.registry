@@ -28,20 +28,18 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     @Override
     @Cacheable
     public List<CurrencyResponseDto> getAllCurrencies() {
-
+        log.debug("Get currencies");
         List<CurrencyResponseDto> currencyResponseDtoList = currencyRepository.findAll()
                 .stream().map(currencyMapper::currency2CurrencyResponseDto).toList();
-
         return currencyResponseDtoList;
     }
 
     @Override
     @Cacheable
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
-
+        log.debug("Get paymentTypes");
         List<PaymentTypeResponseDto> paymentTypeResponseDtoList = paymentTypeRepository.findAll()
                 .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).toList();
-
         return paymentTypeResponseDtoList;
     }
 }
