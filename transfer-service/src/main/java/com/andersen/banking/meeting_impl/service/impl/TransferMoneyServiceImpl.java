@@ -9,6 +9,7 @@ import com.andersen.banking.meeting_impl.mapper.PaymentTypeMapper;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final PaymentTypeMapper paymentTypeMapper;
 
     @Override
+    @Cacheable
     public List<CurrencyResponseDto> getAllCurrencies() {
 
         List<CurrencyResponseDto> currencyResponseDtoList = currencyRepository.findAll()
@@ -34,6 +36,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     }
 
     @Override
+    @Cacheable
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
 
         List<PaymentTypeResponseDto> paymentTypeResponseDtoList = paymentTypeRepository.findAll()
