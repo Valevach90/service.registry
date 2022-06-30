@@ -1,9 +1,6 @@
 package com.andersen.banking.meeting_db.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,14 +9,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 @MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners({AuditingEntityListener.class})
 public abstract class BaseEntity implements Serializable {
 
@@ -30,7 +28,7 @@ public abstract class BaseEntity implements Serializable {
     @CreatedDate
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp createdDate;
+    private Date createdDate;
 
     @CreatedBy
     @Column(name = "created_by")
@@ -39,7 +37,7 @@ public abstract class BaseEntity implements Serializable {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_modified_date")
-    private Time lastModifiedDate;
+    private Date lastModifiedDate;
 
     @LastModifiedBy
     @Column(name = "last_modified_by")
@@ -47,7 +45,5 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(name = "deleted")
     private boolean deleted = false;
-
-
 
 }

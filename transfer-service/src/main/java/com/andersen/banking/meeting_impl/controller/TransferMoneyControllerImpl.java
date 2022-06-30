@@ -2,7 +2,10 @@ package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.TransferMoneyController;
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
+import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
+import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
+import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class TransferMoneyControllerImpl implements TransferMoneyController {
+
+    private final TransferMoneyService transferMoneyService;
 
 
     @Override
@@ -30,10 +35,19 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
     @Override
     public TransferResponseDto create(TransferRequestDto transferRequestDto) {
-        log.info("Get request on transfer money from : {} {}",
-                transferRequestDto.getSourceType(), transferRequestDto.getSourceNumber());
-
+        log.info("Get request on transfer money from : {}",
+                transferRequestDto.getSourceNumber());
         return null;
+    }
+
+    @Override
+    public List<PaymentTypeResponseDto> getAllPaymentTypes() {
+        return transferMoneyService.getAllPaymentTypes();
+    }
+
+    @Override
+    public List<CurrencyResponseDto> getAllCurrency() {
+        return transferMoneyService.getAllCurrencies();
     }
 
 }

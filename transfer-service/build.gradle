@@ -25,18 +25,10 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-ui:$springdocVersion"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-
-//	implementation 'org.flywaydb:flyway-core'
     implementation "org.mapstruct:mapstruct:$mapStructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
-//	runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//	implementation "com.github.javafaker:javafaker:$javafakerVersion"
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'org.testcontainers:junit-jupiter'
-//	testImplementation 'org.testcontainers:kafka'
-//	testImplementation 'org.testcontainers:postgresql'
-//	testImplementation 'org.testcontainers:testcontainers'
 }
 
 dependencyManagement {
