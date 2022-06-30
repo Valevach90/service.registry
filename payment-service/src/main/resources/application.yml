@@ -4,15 +4,20 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
-    username: psqluser
-    password: PoSPa$$woRd
-
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=payment_service
+    username: postgres
+    password: postgres
 
   flyway:
     schemas: payment_service
-    user: psqluser
-    password: PoSPa$$woRd
+    user: postgres
+    password: postgres
+
+  kafka:
+    groupId: my_group
+    bootstrapAddress: 10.10.14.68:19092
+    topicName: test
+    maxRetryAttempts: 3
 
 logging:
   level:
@@ -52,3 +57,5 @@ openapi:
         scheme: "bearer"
         bearer_Format: "JWT"
         name: "bearerAuth"
+
+
