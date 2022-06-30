@@ -26,7 +26,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final PaymentTypeMapper paymentTypeMapper;
 
     @Override
-    @Cacheable
+    @Cacheable("currencies")
     public List<CurrencyResponseDto> getAllCurrencies() {
         log.debug("Get currencies");
         List<CurrencyResponseDto> currencyResponseDtoList = currencyRepository.findAll()
@@ -35,7 +35,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable("paymentTypes")
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
         log.debug("Get paymentTypes");
         List<PaymentTypeResponseDto> paymentTypeResponseDtoList = paymentTypeRepository.findAll()
