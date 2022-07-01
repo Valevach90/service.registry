@@ -41,5 +41,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
         List<PaymentTypeResponseDto> paymentTypeResponseDtoList = paymentTypeRepository.findAll()
                 .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).toList();
         return paymentTypeResponseDtoList;
+
     }
+
 }

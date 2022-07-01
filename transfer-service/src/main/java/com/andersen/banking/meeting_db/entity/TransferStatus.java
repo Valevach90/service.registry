@@ -16,9 +16,9 @@ import javax.persistence.*;
 @Table (name = "transaction_status")
 public class TransferStatus extends BaseEntity{
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 }

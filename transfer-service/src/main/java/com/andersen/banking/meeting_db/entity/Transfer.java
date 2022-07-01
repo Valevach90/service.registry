@@ -1,11 +1,14 @@
 package com.andersen.banking.meeting_db.entity;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Objects;
+
 
 
 @Entity
@@ -13,7 +16,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tables")
+@Table(name = "transfer")
 public class Transfer extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
@@ -23,17 +26,17 @@ public class Transfer extends BaseEntity {
     @JoinColumn(name = "source_payment_type_id", nullable = false)
     private PaymentType sourcePaymentType;
 
-    @Column(name = "number_to", nullable = false)
-    private String destinationNumber;
+    @Column(name = "source_number", nullable = false)
+    private String sourceNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_payment_type_id", nullable = false)
     private PaymentType destinationPaymentType;
 
-    @Column(name = "destinationType", nullable = false)
-    private String destinationType;
+    @Column(name = "destination_number", nullable = false)
+    private String destinationNumber;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transfer_status_id", nullable = false)
     private TransferStatus transferStatus;
 
@@ -44,17 +47,4 @@ public class Transfer extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Currency currency;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Transfer transfer = (Transfer) o;
-        return userId.equals(transfer.userId) && sourcePaymentType.equals(transfer.sourcePaymentType) && destinationNumber.equals(transfer.destinationNumber) && destinationPaymentType.equals(transfer.destinationPaymentType) && destinationType.equals(transfer.destinationType) && transferStatus.equals(transfer.transferStatus) && amount.equals(transfer.amount) && currency.equals(transfer.currency);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), userId, sourcePaymentType, destinationNumber, destinationPaymentType, destinationType, transferStatus, amount, currency);
-    }
 }

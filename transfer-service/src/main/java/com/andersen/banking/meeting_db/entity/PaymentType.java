@@ -18,9 +18,9 @@ import javax.persistence.Table;
 @Table(name = "payment_type")
 public class PaymentType extends BaseEntity {
 
-    @Column(name = "status")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 }
