@@ -52,6 +52,24 @@ public class AuthServiceUtil {
         return roles;
     }
 
+    public static String preparePasswordInJson(String newPassport){
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode preparedPassport = mapper.createObjectNode();
+        preparedPassport.put("type", "password");
+        preparedPassport.put("value", newPassport);
+        preparedPassport.put("temporary", false);
+
+        String mappedPassport;
+        try {
+            mappedPassport = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(preparedPassport);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return mappedPassport;
+    }
+
     public static String extractIdFromToken(Jwt jwt){
 
         return jwt.getClaim("sub").toString();
