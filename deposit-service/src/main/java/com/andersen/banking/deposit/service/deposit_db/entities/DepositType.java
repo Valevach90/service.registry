@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "types")
+@Table(name = "deposit_types")
 @NoArgsConstructor
 public class DepositType {
 

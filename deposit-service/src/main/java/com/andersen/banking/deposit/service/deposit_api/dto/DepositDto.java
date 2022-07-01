@@ -40,12 +40,12 @@ public class DepositDto {
     @Schema(description = DESCRIPTION_DEPOSIT_TYPE, example = EXAMPLE_DEPOSIT_TYPE, defaultValue = EXAMPLE_DEPOSIT_TYPE)
     @JsonProperty("type")
     @NotNull(message = "Deposit type can't be null.")
-    private DepositType type;
+    private DepositTypeDto type;
 
     @Schema(description = DESCRIPTION_CURRENCY, example = EXAMPLE_CURRENCY_NAME, defaultValue = EXAMPLE_CURRENCY_NAME)
     @JsonProperty("currency")
     @NotNull(message = "Currency can't be null.")
-    private Currency currency;
+    private CurrencyDto currency;
 
     @Schema(description = DESCRIPTION_TERM_MONTHS, example = EXAMPLE_INTEGER, defaultValue = EXAMPLE_INTEGER)
     @JsonProperty("termMonths")
@@ -116,6 +116,6 @@ public class DepositDto {
     private Long userId;
 
     @Schema(description = DESCRIPTION_TRANSFERS, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
-    @JsonProperty("transfers")
-    private List<TransferDto> transfers;
+    @JsonProperty("transfersDto")
+    private List<TransferDto> transfersDto;
 }

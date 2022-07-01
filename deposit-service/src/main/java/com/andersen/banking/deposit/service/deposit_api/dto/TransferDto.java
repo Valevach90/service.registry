@@ -1,5 +1,6 @@
 package com.andersen.banking.deposit.service.deposit_api.dto;
 
+import com.andersen.banking.deposit.service.deposit_db.entities.Deposit;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,8 +23,8 @@ public class TransferDto {
     private Long id;
 
     @Schema(description = DESCRIPTION_DEPOSIT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
-    @JsonProperty("depositId")
-    private Long depositId;
+    @JsonProperty("deposit")
+    private Deposit deposit;
 
     @Schema(description = DESCRIPTION_FROM_CARD_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
     @JsonProperty("fromCardNumber")
