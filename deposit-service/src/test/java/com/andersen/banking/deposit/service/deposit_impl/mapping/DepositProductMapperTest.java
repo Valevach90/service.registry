@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.andersen.banking.deposit.service.deposit_impl.generators.DepositServiceEntitiesGenerator.*;
+import static com.andersen.banking.deposit.service.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = DepositProductMapperImpl.class)

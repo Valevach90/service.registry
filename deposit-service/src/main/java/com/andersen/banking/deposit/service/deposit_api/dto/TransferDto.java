@@ -24,7 +24,7 @@ public class TransferDto {
 
     @Schema(description = DESCRIPTION_DEPOSIT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("deposit")
-    private Deposit deposit;
+    private DepositDto deposit;
 
     @Schema(description = DESCRIPTION_FROM_CARD_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
     @JsonProperty("fromCardNumber")

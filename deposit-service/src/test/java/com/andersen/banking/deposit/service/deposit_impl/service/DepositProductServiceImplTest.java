@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static com.andersen.banking.deposit.service.deposit_impl.generators.DepositServiceEntitiesGenerator.*;
+import static com.andersen.banking.deposit.service.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 
 @SpringBootTest(classes = DepositProductServiceImpl.class)
 public class DepositProductServiceImplTest {
