@@ -24,6 +24,10 @@ public class AuthServiceImpl implements AuthService {
     private String URI_ROLE_ADD_TO_USER;
     @Value("${keycloak.uri.roles.add.to.client}")
     private String URI_ROLE_ADD_TO_CLIENT;
+    @Value("${keycloak.uri.users}")
+    private String uriUsers;
+    @Value("${keycloak.uri.password.reset}")
+    private String uriPasswordReset;
     @Value("${keycloak.role.id.unauthorized}")
     private String roleIdUnauthorized;
     @Value("${keycloak.role.name.unauthorized}")
@@ -121,6 +125,26 @@ public class AuthServiceImpl implements AuthService {
                 .block();
 
         log.debug("Add user success");
+    }
+
+    @Override
+    public void resetPassword(String id, String newPassword) {
+
+        String token = obtainAccessToken();
+
+        log.debug("Setting new password: user id {}, password {}", id, newPassword);
+
+        String response = client.post()
+                .uri(uriUsers + id + uriPasswordReset)
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        log.debug("New password set: user id {}, password {}", id, newPassword);
+
     }
 
     private String obtainAccessToken() {

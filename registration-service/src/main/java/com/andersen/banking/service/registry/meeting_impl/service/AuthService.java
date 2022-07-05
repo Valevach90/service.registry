@@ -39,5 +39,12 @@ public interface AuthService {
      * @param userInJson
      */
     void addUser(String userInJson);
-}
 
+    /**
+     * Set up new password
+     *
+     * @param id
+     * @param newPassword
+     */
+    void resetPassword(String id, String newPassword);
+}
