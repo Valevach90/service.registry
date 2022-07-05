@@ -9,4 +9,5 @@ include 'payment-service'
 include 'deposit-service'
 include 'transfer-service'
 include 'notification-service'
+include 'information-service'
 
