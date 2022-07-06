@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import com.andersen.banking.service.registry.meeting_api.dto.NotificationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/notifications")
 public interface NotificationController {
 
-    @Operation(summary = "send email notification",
+    @Operation(summary = "Send email notification",
             description = "send notification on email"
     )
     @GetMapping("/email")
@@ -25,7 +26,7 @@ public interface NotificationController {
             @AuthenticationPrincipal Jwt jwt
     );
 
-    @Operation(summary = "confirm email notification",
+    @Operation(summary = "Confirm email notification",
             description = "confirm code received by email"
     )
     @PostMapping("/email")
@@ -33,5 +34,29 @@ public interface NotificationController {
             @AuthenticationPrincipal Jwt jwt,
             @Parameter(description = "confirmation code", required = true)
             @RequestBody String code
+    );
+
+    @Operation(summary = "Block email address",
+            description = "block email address"
+    )
+    @GetMapping("/email/block")
+    void blockEmailAddress(
+            @AuthenticationPrincipal Jwt jwt
+    );
+
+    @Operation(summary = "Check email address",
+            description = "check if email address is blocked"
+    )
+    @GetMapping("/email/blocked")
+    Boolean isEmailAddressBlocked(
+            @AuthenticationPrincipal Jwt jwt
+    );
+
+    @Operation(summary = "Get notification",
+            description = "get saved notification"
+    )
+    @GetMapping("/email/notification")
+    NotificationDto getNotification(
+            @AuthenticationPrincipal Jwt jwt
     );
 }

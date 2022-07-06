@@ -11,6 +11,9 @@ import static java.lang.Math.pow;
 
 public class MailNotificationUtil {
 
+    public static final String BLOCKED = "blocked";
+    public static final String SENT = "sent";
+
     private MailNotificationUtil(){
     }
 
@@ -31,7 +34,16 @@ public class MailNotificationUtil {
 
         String code = generateCode(notificationCodeLength);
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        Notification notification = new Notification(email, code, time);
+        Notification notification = new Notification(email, code, time, SENT);
+
+        return notification;
+    }
+
+    public static Notification createBlockingNotification(String email){
+
+        String code = "";
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        Notification notification = new Notification(email, code, time, BLOCKED);
 
         return notification;
     }
