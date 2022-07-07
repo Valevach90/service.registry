@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
-    List<TimeTable> getTimeTableByAddress_Id(Long addressId);
+    List<TimeTable> getTimeTableByAddress_IdAndDeletedIsFalse(Long addressId);
 
 }

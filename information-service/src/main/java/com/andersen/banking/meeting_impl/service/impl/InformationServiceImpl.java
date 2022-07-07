@@ -38,28 +38,28 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public List<CountryDto> getListCountryDto() {
         log.debug("get countries");
-        return countryRepository.findAll()
+        return countryRepository.getCountriesByDeletedIsFalse()
                 .stream().map(countryMapper::country2CountryDto).collect(Collectors.toList());
     }
 
     @Override
     public List<CityDto> getListCityDtoByCountryId(Long countryId) {
         log.debug("get cities by countryId : {}", countryId);
-        return cityRepository.getCitiesByCountry_Id(countryId)
+        return cityRepository.getCitiesByCountry_IdAndDeletedIsFalse(countryId)
                 .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
     }
 
     @Override
     public List<AddressDto> getListAddressDtoByCityId(Long cityId) {
         log.debug("get addresses by cityId : {}", cityId);
-        return addressRepository.getAddressByCity_Id(cityId)
+        return addressRepository.getAddressByCity_IdAndDeletedIsFalse(cityId)
                 .stream().map(addressMapper::address2AddressDto).collect(Collectors.toList());
     }
 
     @Override
     public List<TimeTableDto> getListTimeTableDtoByAddressId(Long addressId) {
         log.debug("get timetables by addressId: {}", addressId);
-        return timeTableRepository.getTimeTableByAddress_Id(addressId)
+        return timeTableRepository.getTimeTableByAddress_IdAndDeletedIsFalse(addressId)
                 .stream().map(timeTableMapper::timeTable2TimeTableDto).collect(Collectors.toList());
     }
 }

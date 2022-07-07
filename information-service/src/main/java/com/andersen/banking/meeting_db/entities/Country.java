@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "country")
 public class Country extends BaseEntity{
 
-    @Column(name = "country_name")
+    @Column(nullable = false, name = "country_name")
     private String name;
 
 }

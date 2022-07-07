@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -17,19 +16,18 @@ import java.util.Date;
 public class TimeTable extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(nullable = false, name = "address_id")
     private Address address;
 
-    @Column(name = "week_day_from", nullable = false)
+    @Column(nullable = false, name = "week_day_from")
     private String dayFrom;
 
-    @Column(name = "week_day_to")
+    @Column(nullable = false, name = "week_day_to")
     private String dayTo;
 
-    @Column(name = "time_from", nullable = false)
+    @Column(nullable = false, name = "time_from")
     private String timeFrom;
 
-    @Column(name = "time_to", nullable = false)
+    @Column(nullable = false, name = "time_to")
     private String timeTo;
-
 }

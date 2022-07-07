@@ -28,23 +28,23 @@ public abstract class BaseEntity implements Serializable {
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", nullable = false)
+    @Column(nullable = false, name = "created_date")
     private Date createdDate;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false)
+    @Column(nullable = false, name = "created_by")
     private String createdBy;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_modified_date", nullable = false)
+    @Column(nullable = false, name = "last_modified_date")
     private Date lastModifiedDate;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by", nullable = false)
+    @Column(nullable = false, name = "last_modified_by")
     private String lastModifiedBy;
 
-    @Column(name = "deleted", nullable = false)
+    @Column(nullable = false, name = "deleted")
     private boolean deleted = false;
 
 }

@@ -5,18 +5,18 @@ spring:
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/aston?currentSchema=information_service
-    username: antondzubak
-    password: 123456
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 
   flyway:
-    schemas: payment_service
-    user: antondzubak
-    password: 123456
-    locations: classpath:db/migration
+    schemas: information_service
+    user: postgres
+    password: postgres
+    baseline-on-migrate: true
 
 logging:
   level:

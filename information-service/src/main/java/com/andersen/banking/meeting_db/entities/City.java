@@ -16,10 +16,10 @@ import javax.persistence.*;
 public class City extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "country_id", nullable = false)
+    @JoinColumn(nullable = false, name = "country_id")
     private Country country;
 
-    @Column(name = "city_name")
+    @Column(nullable = false, name = "city_name")
     private String name;
 
 }

@@ -23,7 +23,4 @@ public class AddressDto {
     @NotBlank
     private String buildingNumber;
 
-    @NotBlank
-    private String zip;
-
 }

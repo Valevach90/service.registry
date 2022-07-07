@@ -16,16 +16,13 @@ import javax.persistence.*;
 public class Address extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(nullable = false, name = "city_id")
     private City city;
 
-    @Column(name = "street_name")
+    @Column(nullable = false, name = "street_name")
     private String streetName;
 
-    @Column(name = "building_number")
+    @Column(nullable = false, name = "building_number")
     private String buildingNumber;
-
-    @Column(name = "zip")
-    private String zip;
 
 }

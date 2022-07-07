@@ -8,10 +8,12 @@ import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 public class InformationControllerImpl implements InformationController {
 
