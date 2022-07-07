@@ -18,9 +18,12 @@ public class Notification {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
 
     @Column(name = "time", nullable = false)
     private Timestamp time;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 }
