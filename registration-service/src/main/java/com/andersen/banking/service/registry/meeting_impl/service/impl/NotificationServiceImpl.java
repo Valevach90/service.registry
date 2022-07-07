@@ -99,22 +99,16 @@ public class NotificationServiceImpl implements NotificationService {
 
         Optional<Notification> notification = notificationRepository.findByEmail(email);
 
-        if (notification.isPresent()){
-            Notification savedNotification = notification.get();
+        if (notification.isPresent() && notification.get().getStatus().equals(BLOCKED)
+            && notification.get().getTime().compareTo(new Timestamp(System.currentTimeMillis() - notificationBlockingTimeMillis)) > 0){
+                log.info("Checked Email address {} is blocked", email);
 
-            if (savedNotification.getStatus().equals(BLOCKED)){
-                Timestamp time = new Timestamp(System.currentTimeMillis() - notificationBlockingTimeMillis);
+                return true;
+        } else {
+            log.info("Checked Email address {} is not blocked", email);
 
-                if (savedNotification.getTime().compareTo(time) > 0){
-                    log.info("Checked Email address {} is blocked", email);
-
-                    return true;
-                }
-            }
+            return false;
         }
-        log.info("Checked Email address {} is not blocked", email);
-
-        return false;
     }
 
     @Override

@@ -41,9 +41,7 @@ public class MailNotificationUtil {
 
     public static Notification createBlockingNotification(String email){
 
-        String code = "";
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-        Notification notification = new Notification(email, code, time, BLOCKED);
+        Notification notification = new Notification(email, "", new Timestamp(System.currentTimeMillis()), BLOCKED);
 
         return notification;
     }
