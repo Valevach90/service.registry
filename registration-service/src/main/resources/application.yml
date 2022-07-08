@@ -6,6 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
     username: postgres
     password: postgres
+    hikari:
+      maximum-pool-size: 5
 
   flyway:
     schemas: public
