@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Tag(name = "TransferMoney controller", description = "work with transfers")
+@Tag(name = "Information controller", description = "work with information")
 @RequestMapping(value = "/api/v1/information")
 public interface InformationController {
 
