@@ -2,18 +2,18 @@
 
 spring:
   datasource:
+    hikari:
+      maximum-pool-size: 5
+      maxLifetime: 300000
+      idleTimeout: 300000
+      minimumIdle: 5
+      data-source-properties:
+        v$session:
+          program: registration-service
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
     username: postgres
     password: postgres
-
-    hikari:
-      maximum-pool-size: 5
-      idleTimeout: 600000
-      minimumIdle: 3
-      data-source-properties:
-        v$session:
-          program: ${spring.application.name}
 
   flyway:
     schemas: public
