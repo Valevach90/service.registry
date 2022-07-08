@@ -12,7 +12,8 @@ spring:
       idleTimeout: 600000
       minimumIdle: 3
       data-source-properties:
-        v$session.program: ${spring.application.name}
+        v$session:
+          program: ${spring.application.name}
 
   flyway:
     schemas: public
