@@ -6,17 +6,11 @@ spring:
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
-      idleTimeout: 300000
       minimumIdle: 5
-      data-source-properties:
-        v$session:
-          program: registration-service
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
     username: psqluser
     password: PoSPa$$woRd
-    max-active: 5
-
 
   flyway:
     schemas: payment_service
