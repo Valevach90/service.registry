@@ -2,15 +2,13 @@ server:
   port: 8182
 
 spring:
-  application:
-    name: payment-service
   datasource:
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
       minimumIdle: 5
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service?ApplicationName=${spring.application.name}
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
     username: psqluser
     password: PoSPa$$woRd
 
