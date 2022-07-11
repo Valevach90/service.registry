@@ -16,7 +16,6 @@ spring:
     schemas: information_service
     user: postgres
     password: postgres
-    baseline-on-migrate: true
 
 logging:
   level:
