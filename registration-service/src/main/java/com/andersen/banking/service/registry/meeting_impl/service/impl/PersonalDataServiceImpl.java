@@ -19,6 +19,7 @@ import com.andersen.banking.service.registry.meeting_impl.service.PersonalDataSe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -36,6 +37,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public PersonalDataDto getPersonalData(String email) {
         log.info("Find user personal data by user email: {}", email);
 
@@ -56,6 +58,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     }
 
     @Override
+    @Transactional
     public void updatePersonalData(PersonalDataDto updatedPersonalDataDto) {
         log.info("Updating user personal data: {}", updatedPersonalDataDto);
 
