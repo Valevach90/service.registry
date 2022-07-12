@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_api.controller;
 
+import com.andersen.banking.meeting_api.dto.FileInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,11 +19,11 @@ import java.util.Optional;
 @RequestMapping(value = "/api/v1/files")
 public interface FileStorageController {
 
-    @Operation(summary = "Get names of all files",
-            description = "get list of names of all files"
+    @Operation(summary = "Get all FileInfoDto",
+            description = "get list of all File Information Dto"
     )
     @GetMapping
-    List<String> getNamesOfAllFiles(
+    List<FileInfoDto> getAllFileInfoDto(
     );
 
     @Operation(summary = "Get file download link",

@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.FileStorageController;
+import com.andersen.banking.meeting_api.dto.FileInfoDto;
 import com.andersen.banking.meeting_impl.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +22,14 @@ public class FileStorageControllerImpl implements FileStorageController {
     private final FileStorageService fileStorageService;
 
     @Override
-    public List<String> getNamesOfAllFiles() {
-        log.trace("Receiving list of names of all files");
+    public List<FileInfoDto> getAllFileInfoDto() {
+        log.trace("Receiving list of all FileInfoDto");
 
-        List<String> names = fileStorageService.getNamesOfAllFiles();
+        List<FileInfoDto> allFileInfoDto = fileStorageService.getAllFileInfoDto();
 
-        log.trace("Returning list of names of files: {}", names);
+        log.trace("Returning list of all FileInfoDto: {}", allFileInfoDto);
 
-        return names;
+        return allFileInfoDto;
     }
 
     @Override

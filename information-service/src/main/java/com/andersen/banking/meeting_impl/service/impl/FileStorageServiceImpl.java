@@ -1,18 +1,17 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.meeting_impl.exception.FileStorageServiceException;
+import com.andersen.banking.meeting_api.dto.FileInfoDto;
+import com.andersen.banking.meeting_db.entities.FileInfo;
+import com.andersen.banking.meeting_db.repository.FileInfoRepository;
+import com.andersen.banking.meeting_impl.mapping.FileInfoMapper;
+import com.andersen.banking.meeting_impl.service.DropboxAccessService;
 import com.andersen.banking.meeting_impl.service.FileStorageService;
-import com.dropbox.core.DbxException;
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.ListFolderResult;
-import com.dropbox.core.v2.sharing.ListSharedLinksResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,61 +20,61 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FileStorageServiceImpl implements FileStorageService {
 
-    private static final String DROPBOX_FOLDER_PATH = "";
-    private static final String DROPBOX_DOWNLOAD_DISABLED = "?dl=0";
-    private static final String DROPBOX_DOWNLOAD_ENABLED = "?dl=1";
+    private final FileInfoRepository fileInfoRepository;
+    private final FileInfoMapper fileInfoMapper;
 
-    @Value("${dropbox.access.token}")
-    private String accessToken;
+    private final DropboxAccessService dropboxAccessService;
 
-    private DbxClientV2 client;
+    @Override
+    @Transactional(readOnly = true)
+    public List<FileInfoDto> getAllFileInfoDto() {
+        log.debug("Find all files information");
 
-    @PostConstruct
-    public void init() {
-        DbxRequestConfig config = DbxRequestConfig.newBuilder("${spring.application.name}").build();
+        List<FileInfoDto> result = fileInfoMapper.toListFileInfoDto(fileInfoRepository.findAll());
 
-        client = new DbxClientV2(config, accessToken);
+        log.info("Return list of all files information {}", result);
+
+        return result;
     }
 
     @Override
-    public List<String> getNamesOfAllFiles() {
-        log.debug("Get list of names of all stored files");
-
-        try {
-            ListFolderResult result = client.files().listFolder(DROPBOX_FOLDER_PATH);
-
-            List<String> listOfNames = result.getEntries().stream().map(metadata -> metadata.getName()).toList();
-
-            log.debug("Return list of names of all stored files: {}", listOfNames);
-
-            return listOfNames;
-
-        } catch (DbxException e) {
-            log.error(e.getMessage());
-            throw new FileStorageServiceException("Problem to get list of all files names");
-        }
-    }
-
-    @Override
+    @Transactional
     public Optional<String> getFileDownloadLink(String name) {
-        log.debug("Get download link for file with name {}", name);
+        log.debug("Find download link for file with name {}", name);
 
-        try {
-            ListSharedLinksResult linksResult = client.sharing().listSharedLinksBuilder()
-                    .withPath("/"+ name)
-                    .withDirectOnly(true)
-                    .start();
+        Optional<String> fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name);
 
-            String receivedLink = linksResult.getLinks().get(0).getUrl();
-            String downloadLink = receivedLink.replace(DROPBOX_DOWNLOAD_DISABLED, DROPBOX_DOWNLOAD_ENABLED);
+        if (fileDownloadLink.isPresent()){
+            updateFileInfo(fileDownloadLink.get(), name);
+        }
 
-            log.debug("Return download link by file name: file name {}, download link {}", name, downloadLink);
+        log.debug("Return download link: file name {}, download link {}", name, fileDownloadLink);
 
-            return Optional.of(downloadLink);
+        return fileDownloadLink;
+    }
 
-        } catch (DbxException e) {
-            log.error(e.getMessage());
-            throw new FileStorageServiceException("Problem to get download link for file "+ name);
+    private void updateFileInfo(String fileDownloadLink, String name){
+
+        Optional<FileInfo> fileInfo = fileInfoRepository.findByFileName(name);
+
+        if (fileInfo.isPresent()){
+            FileInfo updatedFileInfo = fileInfo.get();
+
+            if (!updatedFileInfo.getLink().equals(fileDownloadLink)){
+                updatedFileInfo.setLink(fileDownloadLink);
+            }
+            updatedFileInfo.setDateOfUpdate(new Timestamp(System.currentTimeMillis()));
+
+            fileInfoRepository.save(updatedFileInfo);
+
+        } else {
+            FileInfo createdFileInfo = new FileInfo();
+
+            createdFileInfo.setFileName(name);
+            createdFileInfo.setLink(fileDownloadLink);
+            createdFileInfo.setDateOfCreation(new Timestamp(System.currentTimeMillis()));
+
+            fileInfoRepository.save(createdFileInfo);
         }
     }
 }

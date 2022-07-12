@@ -20,6 +20,8 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
     implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.4.2.Final'
