@@ -79,4 +79,8 @@ public class OpenApiConstants {
     public static final String EXAMPLE_TIME = "2022-07-06 13:33:29,573";
     public static final String DESCRIPTION_NOTIFICATION_STATUS = "Status of notification";
     public static final String EXAMPLE_NOTIFICATION_STATUS = "Sent";
+
+    public static final String DESCRIPTION_ADDRESS = "Address of user";
+    public static final String DESCRIPTION_PASSPORT = "Passport of user";
+    public static final String DESCRIPTION_USER = "User personal data";
 }
