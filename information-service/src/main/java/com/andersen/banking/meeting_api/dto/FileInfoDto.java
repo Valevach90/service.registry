@@ -19,10 +19,10 @@ import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
 @Schema(description = "dto for file info")
 public class FileInfoDto {
 
-    @Schema(description = DESCRIPTION_FILE_INFO_ID, example = EXAMPLE_STRING_ID, defaultValue = EXAMPLE_STRING_ID)
+    @Schema(description = DESCRIPTION_FILE_INFO_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("id")
     @NotNull(message = "Id can't be null.")
-    private String id;
+    private Long id;
 
     @Schema(description = DESCRIPTION_FILE_NAME, example = EXAMPLE_FILE_NAME, defaultValue = EXAMPLE_FILE_NAME)
     @JsonProperty("fileName")

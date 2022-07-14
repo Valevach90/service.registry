@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -51,6 +53,32 @@ public class FileStorageServiceImpl implements FileStorageService {
         log.debug("Return download link: file name {}, download link {}", name, fileDownloadLink);
 
         return fileDownloadLink;
+    }
+
+    @Override
+    @Transactional
+    public Map<String, String> getFilesDownloadLinks(String... names) {
+        log.debug("Find download links for series of files names {}", names);
+
+        Map<String, String> links = new HashMap<>();
+
+        for (String name : names){
+            log.debug("Find download link for file with name {}", name);
+
+            Optional<String> fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name);
+
+            if (fileDownloadLink.isPresent()){
+                updateFileInfo(fileDownloadLink.get(), name);
+
+                links.put(name, fileDownloadLink.get());
+
+            } else {
+                log.debug("Not found download link for file with name {}", name);
+            }
+        }
+        log.debug("Found download links {}", links);
+
+        return links;
     }
 
     private void updateFileInfo(String fileDownloadLink, String name){

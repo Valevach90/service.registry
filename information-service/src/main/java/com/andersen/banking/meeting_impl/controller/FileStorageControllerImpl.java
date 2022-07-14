@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -40,5 +41,16 @@ public class FileStorageControllerImpl implements FileStorageController {
 
         log.trace("Returning download link: file {}, link {}", name, link);
         return link;
+    }
+
+    @Override
+    public Map<String, String> getFilesDownloadLinks(String... names) {
+        log.trace("Receiving download links for series of files names: {}", names);
+
+        Map<String, String> links = fileStorageService.getFilesDownloadLinks(names);
+
+        log.trace("Returning download links for files names: {}", links);
+
+        return links;
     }
 }

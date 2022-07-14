@@ -4,11 +4,10 @@ import com.andersen.banking.meeting_api.dto.FileInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -28,8 +27,15 @@ public interface FileStorageController {
 
     @Operation(summary = "Get file download link",
             description = "get file download link by file name")
-    @GetMapping(value = "/{name}")
+    @GetMapping(value = "/link/{name}")
     Optional<String> getFileDownloadLink(
             @Parameter(description = "file name", required = true)
-            @PathVariable String name);
+            @PathVariable ("name") String name);
+
+    @Operation(summary = "Get files download links",
+            description = "get files download links for series of files names")
+    @GetMapping(value = "/links/{seriesOfFilesNames}")
+    Map<String, String> getFilesDownloadLinks(
+            @Parameter(description = "series of files names", required = true)
+            @PathVariable ("seriesOfFilesNames") String... seriesOfFilesNames);
 }
