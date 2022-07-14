@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -41,47 +38,50 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     @Transactional
-    public Optional<String> getFileDownloadLink(String name) {
-        log.debug("Find download link for file with name {}", name);
+    public FileInfoDto getFileInfoDto(String name) {
+        log.debug("Find file information by file name");
 
-        Optional<String> fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name);
+        FileInfo fileInfo = updateFileInfo(name);
 
-        if (fileDownloadLink.isPresent()){
-            updateFileInfo(fileDownloadLink.get(), name);
-        }
+        FileInfoDto result = fileInfoMapper.toFileInfoDto(fileInfo);
 
-        log.debug("Return download link: file name {}, download link {}", name, fileDownloadLink);
+        log.info("Return file information {}", result);
 
-        return fileDownloadLink;
+        return result;
     }
 
     @Override
     @Transactional
-    public Map<String, String> getFilesDownloadLinks(String... names) {
+    public Optional<String> getFileDownloadLink(String name) {
+
+        log.debug("Find download link for file with name {}", name);
+
+        String fileDownloadLink = updateFileInfo(name).getLink();
+
+        log.debug("Return download link: file name {}, download link {}", name, fileDownloadLink);
+
+        return Optional.of(fileDownloadLink);
+    }
+
+    @Override
+    @Transactional
+    public List<FileInfoDto> getFilesDownloadLinks(String... names) {
         log.debug("Find download links for series of files names {}", names);
 
-        Map<String, String> links = new HashMap<>();
+        List<FileInfoDto> links = new ArrayList<>();
 
         for (String name : names){
-            log.debug("Find download link for file with name {}", name);
-
-            Optional<String> fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name);
-
-            if (fileDownloadLink.isPresent()){
-                updateFileInfo(fileDownloadLink.get(), name);
-
-                links.put(name, fileDownloadLink.get());
-
-            } else {
-                log.debug("Not found download link for file with name {}", name);
-            }
+            links.add(getFileInfoDto(name));
         }
         log.debug("Found download links {}", links);
 
         return links;
     }
 
-    private void updateFileInfo(String fileDownloadLink, String name){
+    @Transactional
+    private FileInfo updateFileInfo(String name){
+
+        String fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name).get();
 
         Optional<FileInfo> fileInfo = fileInfoRepository.findByFileName(name);
 
@@ -93,7 +93,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             }
             updatedFileInfo.setDateOfUpdate(new Timestamp(System.currentTimeMillis()));
 
-            fileInfoRepository.save(updatedFileInfo);
+            return fileInfoRepository.save(updatedFileInfo);
 
         } else {
             FileInfo createdFileInfo = new FileInfo();
@@ -102,7 +102,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             createdFileInfo.setLink(fileDownloadLink);
             createdFileInfo.setDateOfCreation(new Timestamp(System.currentTimeMillis()));
 
-            fileInfoRepository.save(createdFileInfo);
+            return fileInfoRepository.save(createdFileInfo);
         }
     }
 }

@@ -86,10 +86,11 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
         try {
             receivedLink = linksResult.getLinks().get(0).getUrl();
 
+            return receivedLink.replace(DROPBOX_DOWNLOAD_DISABLED, DROPBOX_DOWNLOAD_ENABLED);
+
         } catch (IndexOutOfBoundsException e){
             log.error(e.getMessage());
             throw new FileStorageServiceException("Not found: file download link not exist");
         }
-        return receivedLink.replace(DROPBOX_DOWNLOAD_DISABLED, DROPBOX_DOWNLOAD_ENABLED);
     }
 }

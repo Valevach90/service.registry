@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_impl.service;
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,6 +19,14 @@ public interface FileStorageService {
     List<FileInfoDto> getAllFileInfoDto();
 
     /**
+     * Find FileInfoDto by file name.
+     *
+     * @param name name of file
+     * @return FileInfoDto
+     */
+    FileInfoDto getFileInfoDto(String name);
+
+    /**
      * Get file download link by file name.
      *
      * @param name name of file
@@ -33,5 +40,5 @@ public interface FileStorageService {
      * @param names names of files
      * @return links to download files
      */
-    Map<String, String> getFilesDownloadLinks(String... names);
+    List<FileInfoDto> getFilesDownloadLinks(String... names);
 }

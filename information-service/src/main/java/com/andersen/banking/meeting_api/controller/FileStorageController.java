@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Interface presents endpoints for working with file storage.
@@ -28,14 +26,14 @@ public interface FileStorageController {
     @Operation(summary = "Get file download link",
             description = "get file download link by file name")
     @GetMapping(value = "/link/{name}")
-    Optional<String> getFileDownloadLink(
+    String getFileDownloadLink(
             @Parameter(description = "file name", required = true)
             @PathVariable ("name") String name);
 
     @Operation(summary = "Get files download links",
             description = "get files download links for series of files names")
-    @GetMapping(value = "/links/{seriesOfFilesNames}")
-    Map<String, String> getFilesDownloadLinks(
+    @GetMapping(value = "/info/{seriesOfFilesNames}")
+    List<FileInfoDto> getFilesDownloadLinks(
             @Parameter(description = "series of files names", required = true)
             @PathVariable ("seriesOfFilesNames") String... seriesOfFilesNames);
 }
