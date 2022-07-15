@@ -17,6 +17,9 @@ public class CityDto {
     @NotNull
     private Long id;
 
+    @NotNull
+    private Long countryId;
+
     @NotBlank
     private String name;
 

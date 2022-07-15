@@ -12,18 +12,18 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "city")
-public class City extends BaseEntity {
+@Table(name = "street")
+public class Street extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "country_id")
-    private Country country;
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "city_id")
+    private City city;
 
-    @Column(nullable = false, name = "city_name", length = 20)
+    @Column(nullable = false, name = "street_name", length = 50)
     private String name;
 
 }

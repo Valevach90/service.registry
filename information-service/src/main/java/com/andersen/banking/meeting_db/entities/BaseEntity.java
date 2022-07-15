@@ -22,10 +22,6 @@ import java.util.Date;
 @EntityListeners({AuditingEntityListener.class})
 public abstract class BaseEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "created_date")

@@ -1,10 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.InformationController;
-import com.andersen.banking.meeting_api.dto.AddressDto;
-import com.andersen.banking.meeting_api.dto.CityDto;
-import com.andersen.banking.meeting_api.dto.CountryDto;
-import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +29,21 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
-    public List<AddressDto> getAllAddressesByCityId(Long cityId) {
+    public List<StreetDto> getAllStreetsByCityId(Long cityId) {
+        log.info("get streets");
+        return informationService.getListStreetDtoByCityId(cityId);
+    }
+
+    @Override
+    public List<AddressDto> getAllAddressesByStreetId(Long streetId) {
         log.info("get addresses");
-        return informationService.getListAddressDtoByCityId(cityId);
+        return informationService.getListAddressDtoByStreetId(streetId);
+    }
+
+    @Override
+    public List<BankBranchDto> getAllBankBranchesByAddressId(Long addressId) {
+        log.info("get bank branches");
+        return informationService.getListBankBranchDtoByAddressId(addressId);
     }
 
     @Override

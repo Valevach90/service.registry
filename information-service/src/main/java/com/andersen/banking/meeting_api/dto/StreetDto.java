@@ -12,18 +12,15 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressDto {
+public class StreetDto {
 
     @NotNull
     private Long id;
 
     @NotNull
-    private Long streetId;
+    private Long cityId;
 
     @NotBlank
-    private String house;
-
-    @NotBlank
-    private String building;
+    private String name;
 
 }

@@ -1,12 +1,10 @@
 package com.andersen.banking.meeting_api.dto;
 
-import com.andersen.banking.meeting_db.entities.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +16,9 @@ public class TimeTableDto {
 
     @NotNull
     private Long id;
+
+    @NotNull
+    private Long addressId;
 
     @NotBlank
     private String dayFrom;

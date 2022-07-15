@@ -10,6 +10,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface AddressMapper {
 
+    @Mapping(source = "street.id", target = "streetId")
     AddressDto address2AddressDto(Address address);
 
 }

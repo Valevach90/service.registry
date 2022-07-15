@@ -1,10 +1,7 @@
 package com.andersen.banking.meeting_api.controller;
 
 
-import com.andersen.banking.meeting_api.dto.AddressDto;
-import com.andersen.banking.meeting_api.dto.CityDto;
-import com.andersen.banking.meeting_api.dto.CountryDto;
-import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,15 +24,25 @@ public interface InformationController {
             description = "get list with all cities in a selected country by countryId")
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
-                                          @PathVariable(value = "id") Long countryId
-    );
+                                          @PathVariable(value = "id") Long countryId);
 
-    @Operation(summary = "Get all addresses by city id",
-            description = "get list with all addresses in a selected city by cityId")
-    @GetMapping("/city/{id}/address")
-    List<AddressDto> getAllAddressesByCityId(@Parameter(description = "city id", required = true)
-                                             @PathVariable(value = "id") Long cityId);
+    @Operation(summary = "Get all streets by cityId",
+            description = "get list with all streets in a selected city by cityId")
+    @GetMapping("/city/{id}/street")
+    List<StreetDto> getAllStreetsByCityId(@Parameter(description = "city id", required = true)
+                                          @PathVariable(value = "id") Long cityId);
 
+    @Operation(summary = "Get all addresses by street id",
+            description = "get list with all addresses in a selected street by streetId")
+    @GetMapping("/street/{id}/address")
+    List<AddressDto> getAllAddressesByStreetId(@Parameter(description = "street id", required = true)
+                                             @PathVariable(value = "id") Long streetId);
+
+    @Operation(summary = "Get all bank branches by address id",
+            description = "get list with all bank branches in a selected address by addressId")
+    @GetMapping("/address/{id}/branch")
+    List<BankBranchDto> getAllBankBranchesByAddressId(@Parameter(description = "address id", required = true)
+                                               @PathVariable(value = "id") Long addressId);
 
     @Operation(summary = "Get all timetables by address id",
             description = "get list with all timetables in a selected address by address id")

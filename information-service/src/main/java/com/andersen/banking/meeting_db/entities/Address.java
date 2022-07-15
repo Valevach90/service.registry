@@ -13,16 +13,20 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
-public class Address extends BaseEntity{
+public class Address extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "city_id")
-    private City city;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false, name = "street_name")
-    private String streetName;
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "street_id")
+    private Street street;
 
-    @Column(nullable = false, name = "building_number")
-    private String buildingNumber;
+    @Column(nullable = false, name = "house")
+    private String house;
+
+    @Column(name = "building")
+    private String building;
 
 }
