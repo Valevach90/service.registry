@@ -4,6 +4,7 @@ plugins {
     id 'java'
 }
 
+
 group = 'com.andersen.banking'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -39,8 +40,7 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers'
     implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
-}
+    }
 
-tasks.named('test') {
-    useJUnitPlatform()
+
 }

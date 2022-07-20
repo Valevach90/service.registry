@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: information-service
@@ -18,11 +19,14 @@ dropbox:
   access:
     token:
       sl.BLoIZXjj0lSl6JaCTsVzKyVKMoceaWDkEmOX_dBUCjT9jtN6cfkBAIKKfecmc77xzVoLvZ9lkjLTGXurDB0EXTk6vqzhe1pl9zAXQ2cp0cuEQSy57Dyqpa4SvaRtV36o5oRqPAFVyg8s:
+
 logging:
   level:
     ROOT: INFO
     org.springframework: INFO
     com.andersen: TRACE
+
+
 springdoc:
   api-docs:
     path: '/api-docs'
@@ -53,4 +57,3 @@ openapi:
         description: "If you have an access token, enter it in the value field for authorization, otherwise use the Authorization Controller to get an access token. For example token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         scheme: "bearer"
         bearer_Format: "JWT"
-        name: "bearerAuth"
