@@ -8,7 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
-import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.*;
 
 /**
  * Dto for file info.

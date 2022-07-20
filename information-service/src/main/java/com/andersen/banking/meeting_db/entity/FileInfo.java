@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_db.entities;
+package com.andersen.banking.meeting_db.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

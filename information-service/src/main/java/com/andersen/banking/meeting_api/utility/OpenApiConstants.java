@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_api.utils;
+package com.andersen.banking.meeting_api.utility;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

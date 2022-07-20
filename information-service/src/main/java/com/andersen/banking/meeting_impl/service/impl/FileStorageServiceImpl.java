@@ -1,9 +1,9 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
-import com.andersen.banking.meeting_db.entities.FileInfo;
+import com.andersen.banking.meeting_db.entity.FileInfo;
 import com.andersen.banking.meeting_db.repository.FileInfoRepository;
-import com.andersen.banking.meeting_impl.mapping.FileInfoMapper;
+import com.andersen.banking.meeting_impl.mapper.FileInfoMapper;
 import com.andersen.banking.meeting_impl.service.DropboxAccessService;
 import com.andersen.banking.meeting_impl.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -70,7 +72,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         List<FileInfoDto> links = new ArrayList<>();
 
-        for (String name : names){
+        for (String name : names) {
             links.add(getFileInfoDto(name));
         }
         log.debug("Found download links {}", links);
@@ -79,16 +81,16 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Transactional
-    private FileInfo updateFileInfo(String name){
+    FileInfo updateFileInfo(String name) {
 
         String fileDownloadLink = dropboxAccessService.findDownloadLinkByFileName(name).get();
 
         Optional<FileInfo> fileInfo = fileInfoRepository.findByFileName(name);
 
-        if (fileInfo.isPresent()){
+        if (fileInfo.isPresent()) {
             FileInfo updatedFileInfo = fileInfo.get();
 
-            if (!updatedFileInfo.getLink().equals(fileDownloadLink)){
+            if (!updatedFileInfo.getLink().equals(fileDownloadLink)) {
                 updatedFileInfo.setLink(fileDownloadLink);
             }
             updatedFileInfo.setDateOfUpdate(new Timestamp(System.currentTimeMillis()));

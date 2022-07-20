@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
+import com.andersen.banking.meeting_db.entity.FileInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +42,5 @@ public interface FileStorageService {
      * @return links to download files
      */
     List<FileInfoDto> getFilesDownloadLinks(String... names);
+
 }

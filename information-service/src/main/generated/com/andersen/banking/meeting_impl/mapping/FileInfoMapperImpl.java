@@ -1,10 +1,12 @@
 package com.andersen.banking.meeting_impl.mapping;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
-import com.andersen.banking.meeting_db.entities.FileInfo;
+import com.andersen.banking.meeting_db.entity.FileInfo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
+
+import com.andersen.banking.meeting_impl.mapper.FileInfoMapper;
 import org.springframework.stereotype.Component;
 
 @Generated(
