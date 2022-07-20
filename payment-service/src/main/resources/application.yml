@@ -7,7 +7,10 @@ spring:
     url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
     username: psqluser
     password: PoSPa$$woRd
-
+    hikari:
+      maximum-pool-size: 5
+      maxLifetime: 300000
+      minimumIdle: 5
 
   flyway:
     schemas: payment_service

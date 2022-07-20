@@ -78,6 +78,11 @@ public class AuthServiceUtil {
 
         return jwt.getClaim("preferred_username").toString();
     }
+
+    public static String extractEmailFromToken(Jwt jwt){
+
+        return jwt.getClaim("email").toString();
+    }
     public static boolean doesUserHaveNoRoles(Jwt jwt){
 
         Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
