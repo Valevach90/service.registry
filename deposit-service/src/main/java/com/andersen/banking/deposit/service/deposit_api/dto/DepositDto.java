@@ -24,7 +24,7 @@ public class DepositDto {
 
     @Schema(description = DESCRIPTION_DEPOSIT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("id")
-    @NotNull(message = "Deposit id can't be null.")
+    //@NotNull(message = "Deposit id can't be null.")
     private Long id;
 
     @Schema(description = DESCRIPTION_DEPOSIT_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)

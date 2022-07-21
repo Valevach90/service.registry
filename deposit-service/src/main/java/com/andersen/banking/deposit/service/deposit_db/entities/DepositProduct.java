@@ -24,12 +24,14 @@ public class DepositProduct {
     @Column(name = "deposit_name", nullable = false)
     private String depositName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deposit_type_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    //@JoinColumn(name = "deposit_type_id", nullable = false)
+    @PrimaryKeyJoinColumn
     private DepositType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "currency_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    //@JoinColumn(name = "currency_id", nullable = false)
+    @PrimaryKeyJoinColumn
     private Currency currency;
 
     @Column(name = "min_term_months")
