@@ -1,19 +1,20 @@
 
 spring:
+  application:
+    name: information-service
   datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=information_service
+    username: psqluser
+    password: PoSPa$$woRd
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
       minimumIdle: 5
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
-    username: postgres
-    password: postgres
-
   flyway:
-    schemas: public
-    user: postgres
-    password: postgres
+    schemas: information_service
+    user: psqluser
+    password: PoSPa$$woRd
 
 logging:
   level:
