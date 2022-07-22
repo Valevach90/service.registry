@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.mapper;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
-import com.andersen.banking.meeting_db.entity.FileInfo;
+import com.andersen.banking.meeting_db.entities.FileInfo;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 

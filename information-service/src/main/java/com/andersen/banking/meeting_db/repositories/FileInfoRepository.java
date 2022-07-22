@@ -1,6 +1,6 @@
-package com.andersen.banking.meeting_db.repository;
+package com.andersen.banking.meeting_db.repositories;
 
-import com.andersen.banking.meeting_db.entity.FileInfo;
+import com.andersen.banking.meeting_db.entities.FileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

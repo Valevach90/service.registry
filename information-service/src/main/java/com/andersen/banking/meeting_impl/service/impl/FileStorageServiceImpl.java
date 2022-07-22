@@ -1,8 +1,8 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
-import com.andersen.banking.meeting_db.entity.FileInfo;
-import com.andersen.banking.meeting_db.repository.FileInfoRepository;
+import com.andersen.banking.meeting_db.entities.FileInfo;
+import com.andersen.banking.meeting_db.repositories.FileInfoRepository;
 import com.andersen.banking.meeting_impl.mapper.FileInfoMapper;
 import com.andersen.banking.meeting_impl.service.DropboxAccessService;
 import com.andersen.banking.meeting_impl.service.FileStorageService;
