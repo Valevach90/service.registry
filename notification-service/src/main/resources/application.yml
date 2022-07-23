@@ -1,25 +1,27 @@
 spring:
   application:
-    name: deposit-service
+    name: notification-service
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=notification_service
     username: psqluser
     password: PoSPa$$woRd
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
       minimumIdle: 5
-
   flyway:
-    schemas: deposit_service
+    schemas: notification_service
     user: psqluser
     password: PoSPa$$woRd
+
 logging:
   level:
     ROOT: INFO
     org.springframework: INFO
     com.andersen: TRACE
+
+
 springdoc:
   api-docs:
     path: '/api-docs'
@@ -50,4 +52,3 @@ openapi:
         description: "If you have an access token, enter it in the value field for authorization, otherwise use the Authorization Controller to get an access token. For example token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         scheme: "bearer"
         bearer_Format: "JWT"
-        name: "bearerAuth"
