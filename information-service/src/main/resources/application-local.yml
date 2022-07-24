@@ -1,0 +1,58 @@
+
+spring:
+  application:
+    name: information-service
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://aston:5432/postgres?currentSchema=information_service
+    username: antondzubak
+    password: 123456
+    hikari:
+      maximum-pool-size: 5
+      maxLifetime: 300000
+      minimumIdle: 5
+  flyway:
+    schemas: information_service
+    user: antondzubak
+    password: 123456
+access:
+  token:
+    sl.BLoIZXjj0lSl6JaCTsVzKyVKMoceaWDkEmOX_dBUCjT9jtN6cfkBAIKKfecmc77xzVoLvZ9lkjLTGXurDB0EXTk6vqzhe1pl9zAXQ2cp0cuEQSy57Dyqpa4SvaRtV36o5oRqPAFVyg8s:
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework: INFO
+    com.andersen: TRACE
+
+
+springdoc:
+  api-docs:
+    path: '/api-docs'
+  swagger-ui:
+    groups-order: DESC
+    path: '/swagger-ui'
+    disable-swagger-default-url: true
+    operationsSorter: method
+  default-consumes-media-type: 'application/json'
+  default-produces-media-type: 'application/json'
+  model-converters:
+    pageable-converter:
+      enabled: true
+openapi:
+  info:
+    description: "This is the API for the Betta Bank project. The A-Banking as a project develops mobile application for Betta Bank."
+    version: "1.0"
+    title: "Meeting Room New (A-Banking)"
+    contact:
+      name: "Aliaksandr Tarauski"
+      email: "a.tarauski@andersen.com"
+  security:
+    - bearerAuth: [ ]
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: "HTTP"
+        description: "If you have an access token, enter it in the value field for authorization, otherwise use the Authorization Controller to get an access token. For example token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        scheme: "bearer"
+        bearer_Format: "JWT"

@@ -25,6 +25,7 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
     private static final String DROPBOX_DOWNLOAD_DISABLED = "?dl=0";
     private static final String DROPBOX_DOWNLOAD_ENABLED = "?dl=1";
 
+    //@Value("${dropbox.access.token}")
     @Value("${dropbox.access.token}")
     private String accessToken;
 
