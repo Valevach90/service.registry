@@ -73,4 +73,14 @@ public class OpenApiConstants {
     public static final String EXAMPLE_ERROR_FOUND = "Found";
     public static final String DESCRIPTION_ERROR_CODE = "Error code";
 
+    public static final String DESCRIPTION_NOTIFICATION_CODE = "Code sent in notification";
+    public static final String EXAMPLE_NOTIFICATION_CODE = "0001";
+    public static final String DESCRIPTION_NOTIFICATION_TIME = "Time of notification creation";
+    public static final String EXAMPLE_TIME = "2022-07-06 13:33:29,573";
+    public static final String DESCRIPTION_NOTIFICATION_STATUS = "Status of notification";
+    public static final String EXAMPLE_NOTIFICATION_STATUS = "Sent";
+
+    public static final String DESCRIPTION_ADDRESS = "Address of user";
+    public static final String DESCRIPTION_PASSPORT = "Passport of user";
+    public static final String DESCRIPTION_USER = "User personal data";
 }

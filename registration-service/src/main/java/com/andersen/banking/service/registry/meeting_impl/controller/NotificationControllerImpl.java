@@ -1,12 +1,19 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.NotificationController;
+import com.andersen.banking.service.registry.meeting_api.dto.NotificationDto;
+import com.andersen.banking.service.registry.meeting_db.entities.Notification;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.mapping.NotificationMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+
 import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.*;
 
 /**
@@ -18,8 +25,9 @@ import static com.andersen.banking.service.registry.meeting_impl.util.MailNotifi
 @RequiredArgsConstructor
 public class NotificationControllerImpl implements NotificationController {
 
-    @Autowired
-    NotificationService notificationService;
+    private final NotificationService notificationService;
+
+    private final NotificationMapper notificationMapper;
 
     @Override
     public void sendEmailNotification(Jwt jwt) {
@@ -46,5 +54,45 @@ public class NotificationControllerImpl implements NotificationController {
         log.trace("Code {} was sent by mail {} : {}", code, email, confirmation);
 
         return confirmation;
+    }
+
+    @Override
+    public void blockEmailAddress(Jwt jwt) {
+        String email = extractEmailFromToken(jwt);
+
+        log.trace("Block email {} for notifications", email);
+
+        notificationService.blockEmailAddress(email);
+
+        log.trace("Email {} blocked for notifications", email);
+    }
+
+    @Override
+    public Boolean isEmailAddressBlocked(Jwt jwt) {
+        String email = extractEmailFromToken(jwt);
+
+        log.trace("Checking if email {} is blocked", email);
+
+        Boolean blockingStatus = notificationService.isEmailAddressBlocked(email);
+
+        log.trace("Checked: email {} is blocked: {}", email, blockingStatus);
+
+        return blockingStatus;
+    }
+
+    @Override
+    public NotificationDto getNotification(Jwt jwt) {
+        String email = extractEmailFromToken(jwt);
+
+        log.trace("Find notification by email: {}", email);
+
+        Optional<Notification> notification = notificationService.getNotification(email);
+
+        NotificationDto notificationDto = notificationMapper.toNotificationDto(notification.orElseThrow(
+                () -> new NotFoundException(Notification.class, email)));
+
+        log.trace("Found notification: {}", notificationDto);
+
+        return notificationDto;
     }
 }

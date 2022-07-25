@@ -31,26 +31,30 @@ public class NotificationServiceImpl implements NotificationService {
     private int notificationCodeLength;
     @Value("${notification.mail.code.valid.millis}")
     private int notificationCodeValidMillis;
+    @Value("${notification.mail.blocking.time.millis}")
+    private int notificationBlockingTimeMillis;
 
     @Override
     @Transactional
     public void sendEmailNotification(String email) {
 
-        Notification notification = createNotification(notificationCodeLength, email);
+        if(!isEmailAddressBlocked(email)){
+            Notification notification = createNotification(notificationCodeLength, email);
 
-        log.info("Creating notification: {}", notification);
+            log.info("Creating notification: {}", notification);
 
-        notificationRepository.save(notification);
+            notificationRepository.save(notification);
 
-        log.info("Created notification: {}", notification);
+            log.info("Created notification: {}", notification);
 
-        SimpleMailMessage message = createMessage(notification);
+            SimpleMailMessage message = createMessage(notification);
 
-        log.info("Sending notification message: {}", message);
+            log.info("Sending notification message: {}", message);
 
-        emailSender.send(message);
+            emailSender.send(message);
 
-        log.info("Sent notification message: {} ", message);
+            log.info("Sent notification message: {} ", message);
+        }
     }
 
     @Override
@@ -72,5 +76,51 @@ public class NotificationServiceImpl implements NotificationService {
         log.info("Code {} was not sent by email {} or time out", code, email);
 
         return false;
+    }
+
+    @Override
+    @Transactional
+    public void blockEmailAddress(String email) {
+
+        Notification notification = createBlockingNotification(email);
+
+        log.info("Creating blocking notification: {}", notification);
+
+        notificationRepository.save(notification);
+
+        log.info("Created blocking notification: {}", notification);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean isEmailAddressBlocked(String email) {
+
+        log.info("Checking if email address {} is blocked", email);
+
+        Optional<Notification> notification = notificationRepository.findByEmail(email);
+
+        if (notification.isPresent() && notification.get().getStatus().equals(BLOCKED)
+            && notification.get().getTime().compareTo(new Timestamp(System.currentTimeMillis() - notificationBlockingTimeMillis)) > 0){
+                log.info("Checked Email address {} is blocked", email);
+
+                return true;
+        } else {
+            log.info("Checked Email address {} is not blocked", email);
+
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Notification> getNotification(String email) {
+
+        log.info("Find notification by email: {}", email);
+
+        Optional<Notification> notification = notificationRepository.findByEmail(email);
+
+        log.info("Found notification: {}", notification);
+
+        return notification;
     }
 }

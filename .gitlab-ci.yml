@@ -30,6 +30,7 @@ build jars:
       - transfer-service/build/libs/*.jar
       - deposit-service/build/libs/*.jar
       - notification-service/build/libs/*.jar
+      - information-service/build/libs/*.jar
       # - api-gateway/**/build/libs/*.jar
       # - '**/build/libs/*.jar'
     expire_in: 1 day
@@ -192,6 +193,28 @@ build notification service:
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
 
+build information service:
+  variables:
+    PROJECT_NAME: information-service
+  stage: build docker
+  tags:
+    - docker-meetingroom
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/ci-cd/${PROJECT_NAME}.Dockerfile"
+      --destination "${REGISTRY_NAME}/meetingroom-new-${PROJECT_NAME}:dev"
+  needs:
+    - build jars
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
 deploy gateway:
   variables:
     DEPLOYMENT_NAME: api-gateway-service
@@ -290,6 +313,20 @@ deploy notification service:
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
 
+deploy information service:
+  variables:
+    DEPLOYMENT_NAME: information-service
+  stage: deploy
+  tags:
+    - shell-backend
+    - meetingroom-shell
+  script:
+    -  kubectl patch deployment ${DEPLOYMENT_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"Commit\":\"${CI_COMMIT_SHORT_SHA}\"}}}}}" --record
+  needs:
+    - build information service
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) 
+
 test:
   tags:
     - docker-meetingroom
@@ -310,6 +347,7 @@ test:
         - "transfer-service/build/test-results/test/TEST-*.xml"
         - "deposit-service/build/test-results/test/TEST-*.xml"
         - "notification-service/build/test-results/test/TEST-*.xml"
+        - "information-service/build/test-results/test/TEST-*.xml"
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull

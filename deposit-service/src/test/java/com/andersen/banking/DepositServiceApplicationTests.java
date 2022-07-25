@@ -9,5 +9,4 @@ class DepositServiceApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

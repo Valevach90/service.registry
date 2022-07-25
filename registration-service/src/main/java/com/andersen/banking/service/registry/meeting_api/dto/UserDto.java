@@ -26,7 +26,6 @@ public class UserDto {
 
   @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("id")
-  @NotNull(message = "User id can't be null.")
   private Long id;
 
   @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
