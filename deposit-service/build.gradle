@@ -36,6 +36,7 @@ dependencies {
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:testcontainers'
+	implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
 
 }
 
