@@ -2,7 +2,9 @@ package com.andersen.banking.service.payment.meeting_impl.service.impl;
 
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_db.repository.CardRepository;
+import com.andersen.banking.service.payment.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
@@ -40,6 +42,9 @@ public class CardServiceImplTest {
 
   @MockBean
   CardRepository cardRepository;
+
+  @MockBean
+  TypeCardRepository typeCardRepository;
 
   @MockBean
   AccountService accountService;
@@ -80,6 +85,11 @@ public class CardServiceImplTest {
     Mockito.when(cardRepository.findById(receivedCard.getId())).thenReturn(Optional.of(receivedCard));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
+    TypeCard typeCard = returnedCard.getTypeCard();
+    Mockito
+            .when(typeCardRepository.findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName()))
+            .thenReturn(Optional.of(typeCard));
+
     Assertions.assertEquals(returnedCard, cardService.update(receivedCard));
   }
 
@@ -109,6 +119,11 @@ public class CardServiceImplTest {
   void create_ShouldReturnCard_WhenReceivedCardIsCorrect() {
     Mockito.when(accountService.findById(5L)).thenReturn(populateAccount(new Account()));
     Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
+
+    TypeCard typeCard = returnedCard.getTypeCard();
+    Mockito
+            .when(typeCardRepository.findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName()))
+            .thenReturn(Optional.of(typeCard));
 
     Assertions.assertEquals(returnedCard, cardService.create(receivedCard));
   }

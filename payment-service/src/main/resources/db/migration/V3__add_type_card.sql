@@ -7,7 +7,12 @@ CREATE TABLE payment_service.type_card
 );
 
 INSERT INTO payment_service.type_card (payment_system, type_name)
-VALUES ('VISA', 'SILVER');
+VALUES ('VISA', 'STANDARD'),
+       ('VISA', 'GOLD'),
+       ('VISA', 'PLATINUM'),
+       ('MASTERCARD', 'STANDARD'),
+       ('MASTERCARD', 'GOLD'),
+       ('MASTERCARD', 'PLATINUM');
 
 ALTER TABLE payment_service.card
     ADD COLUMN type_card_id INT;
