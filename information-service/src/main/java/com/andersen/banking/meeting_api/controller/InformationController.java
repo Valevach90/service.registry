@@ -5,6 +5,9 @@ import com.andersen.banking.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +27,8 @@ public interface InformationController {
             description = "get list with all cities in a selected country by countryId")
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
-                                          @PathVariable(value = "id") Long countryId);
+                                          @PathVariable(value = "id") Long countryId,
+                                          @ParameterObject @PageableDefault Pageable pageable);
 
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")

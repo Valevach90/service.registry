@@ -1,14 +1,24 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.utility.HttpMyClass;
+import com.andersen.banking.meeting_db.entities.City;
+import com.andersen.banking.meeting_db.entities.Country;
 import com.andersen.banking.meeting_db.repositories.*;
 import com.andersen.banking.meeting_impl.mapper.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,9 +55,9 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
-    public List<CityDto> getListCityDtoByCountryId(Long countryId) {
+    public List<CityDto> getListCityDtoByCountryId(Long countryId, Pageable pageable) {
         log.debug("get cities by countryId : {}", countryId);
-        return cityRepository.getCitiesByCountry_IdAndDeletedIsFalse(countryId)
+        return cityRepository.getCitiesByCountry_IdAndDeletedIsFalse(countryId, pageable)
                 .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
     }
 
@@ -79,4 +89,9 @@ public class InformationServiceImpl implements InformationService {
         return bankBranchRepository.getBankBranchByAddress_IdAndDeletedIsFalse(addressId)
                 .stream().map(bankBranchMapper::bankBranch2BankBranchDto).collect(Collectors.toList());
     }
+
+
+
+
+
 }

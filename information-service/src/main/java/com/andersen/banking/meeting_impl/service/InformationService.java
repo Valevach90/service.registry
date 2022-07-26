@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_api.dto.*;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
@@ -8,7 +10,7 @@ public interface InformationService {
 
     List<CountryDto> getListCountryDto();
 
-    List<CityDto> getListCityDtoByCountryId(Long countryId);
+    List<CityDto> getListCityDtoByCountryId(Long countryId, Pageable pageable);
 
     List<StreetDto> getListStreetDtoByCityId(Long cityId);
 

@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public class InformationControllerImpl implements InformationController {
         return informationService.getListCountryDto();
     }
 
+
     @Override
-    public List<CityDto> getAllCitiesByCountryId(Long countryId) {
+    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable) {
         log.info("get cities");
-        return informationService.getListCityDtoByCountryId(countryId);
+        return informationService.getListCityDtoByCountryId(countryId, pageable);
     }
 
     @Override

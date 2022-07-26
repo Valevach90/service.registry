@@ -34,7 +34,7 @@ CREATE TABLE city
     last_modified_by   VARCHAR(255)                            NOT NULL,
     deleted            BOOLEAN                                 NOT NULL,
     country_id         BIGINT                                  NOT NULL,
-    city_name          VARCHAR(20)                             NOT NULL,
+    city_name          VARCHAR(80)                             NOT NULL,
     CONSTRAINT pk_city PRIMARY KEY (id)
 );
 
