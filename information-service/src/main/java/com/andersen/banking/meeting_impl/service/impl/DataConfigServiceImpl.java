@@ -8,9 +8,8 @@ import com.andersen.banking.meeting_db.repositories.CountryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -27,9 +26,9 @@ public class DataConfigServiceImpl implements InitializingBean {
 
 
     @Override
+    @Transactional
     public void afterPropertiesSet() {
         RestTemplate restTemplate = new RestTemplate();
-
         cityRepository.deleteAll();
         log.info("delete all cities from repository");
 
@@ -41,15 +40,12 @@ public class DataConfigServiceImpl implements InitializingBean {
             HttpMyClass answer = restTemplate.getForObject(url, HttpMyClass.class);
             log.info("received : {} object from {}", Objects.requireNonNull(answer).getData().size(), url);
             List<City> cities = new ArrayList<>();
+
             for (String datum : answer.getData()) {
-                City city = new City();
-                city.setCountry(country);
-                city.setName(datum);
-                cityRepository.save(city);
                 cities.add(City.builder().name(datum).country(country).build());
             }
             cityRepository.saveAll(cities);
-            log.info("{} cities saved in the database currently", cities.size() );
+            log.info("{} cities saved in the database currently", cities.size());
         }
         log.debug("init cities from open api finished.");
     }

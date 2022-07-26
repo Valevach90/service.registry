@@ -1,24 +1,15 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.*;
-import com.andersen.banking.meeting_api.utility.HttpMyClass;
-import com.andersen.banking.meeting_db.entities.City;
-import com.andersen.banking.meeting_db.entities.Country;
 import com.andersen.banking.meeting_db.repositories.*;
 import com.andersen.banking.meeting_impl.mapper.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,7 +17,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InformationServiceImpl implements InformationService {
 
-    private final AddressRepository addressRepository;
 
     private final BankBranchRepository bankBranchRepository;
     private final CityRepository cityRepository;
@@ -35,8 +25,6 @@ public class InformationServiceImpl implements InformationService {
     private final StreetRepository streetRepository;
     private final TimeTableRepository timeTableRepository;
 
-
-    private final AddressMapper addressMapper;
 
     private final BankBranchMapper bankBranchMapper;
 
@@ -70,28 +58,18 @@ public class InformationServiceImpl implements InformationService {
 
 
     @Override
-    public List<AddressDto> getListAddressDtoByStreetId(Long streetId) {
-        log.debug("get addresses by streetId : {}", streetId);
-        return addressRepository.getAddressByStreet_IdAndDeletedIsFalse(streetId)
-                .stream().map(addressMapper::address2AddressDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<TimeTableDto> getListTimeTableDtoByAddressId(Long addressId) {
-        log.debug("get timetables by addressId: {}", addressId);
-        return timeTableRepository.getTimeTableByAddress_IdAndDeletedIsFalse(addressId)
+    public List<TimeTableDto> getListTimeTableDtoByBranchId(Long branchId) {
+        log.debug("get timetables by addressId: {}", branchId);
+        return timeTableRepository.getTimeTableByBankBranch_IdAndDeletedIsFalse(branchId)
                 .stream().map(timeTableMapper::timeTable2TimeTableDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<BankBranchDto> getListBankBranchDtoByAddressId(Long addressId) {
-        log.debug("get bank branches by addressId: {}", addressId);
-        return bankBranchRepository.getBankBranchByAddress_IdAndDeletedIsFalse(addressId)
+    public List<BankBranchDto> getListBankBranchDtoByCityId(Long cityId) {
+        log.debug("get bank branches by addressId: {}", cityId);
+        return bankBranchRepository.getBankBranchByCity_IdAndDeletedIsFalse(cityId)
                 .stream().map(bankBranchMapper::bankBranch2BankBranchDto).collect(Collectors.toList());
     }
-
-
-
 
 
 }

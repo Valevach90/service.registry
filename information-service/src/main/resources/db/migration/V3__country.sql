@@ -1,0 +1,26 @@
+-- EU countries
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Germany');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'France');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Lithuania');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Austria');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Belgium');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Bulgaria');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Czech Republic');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Denmark');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Estonia');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Finland');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Greece');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Hungary');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Ireland');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Italy');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Luxembourg');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Latvia');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Malta');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Netherlands');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Poland');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Portugal');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Romania');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Slovakia');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Slovenia');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Spain');
+INSERT INTO information_service.country (created_date, created_by, last_modified_date, last_modified_by, deleted, country_name) VALUES (now(), current_user, now(), current_user, false, 'Sweden');

@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface BankBranchMapper {
 
-    @Mapping(source = "address.id", target = "addressId")
+    @Mapping(source = "street.name", target = "streetName")
     BankBranchDto bankBranch2BankBranchDto(BankBranch bankBranch);
 
 }

@@ -18,7 +18,7 @@ public class TimeTableDto {
     private Long id;
 
     @NotNull
-    private Long addressId;
+    private Long branchId;
 
     @NotBlank
     private String dayFrom;

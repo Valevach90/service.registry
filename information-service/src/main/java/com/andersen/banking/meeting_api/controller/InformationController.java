@@ -36,23 +36,18 @@ public interface InformationController {
     List<StreetDto> getAllStreetsByCityId(@Parameter(description = "city id", required = true)
                                           @PathVariable(value = "id") Long cityId);
 
-    @Operation(summary = "Get all addresses by street id",
-            description = "get list with all addresses in a selected street by streetId")
-    @GetMapping("/street/{id}/address")
-    List<AddressDto> getAllAddressesByStreetId(@Parameter(description = "street id", required = true)
-                                             @PathVariable(value = "id") Long streetId);
 
-    @Operation(summary = "Get all bank branches by address id",
-            description = "get list with all bank branches in a selected address by addressId")
-    @GetMapping("/address/{id}/branch")
-    List<BankBranchDto> getAllBankBranchesByAddressId(@Parameter(description = "address id", required = true)
-                                               @PathVariable(value = "id") Long addressId);
+    @Operation(summary = "Get all bank branches by cityId",
+            description = "get list with all bank branches in a selected cityId")
+    @GetMapping("/city/{id}/branch")
+    List<BankBranchDto> getAllBankBranchesByCityId(@Parameter(description = "city id", required = true)
+                                                   @PathVariable(value = "id") Long cityId);
 
-    @Operation(summary = "Get all timetables by address id",
-            description = "get list with all timetables in a selected address by address id")
-    @GetMapping("/address/{id}/timetable")
-    List<TimeTableDto> getAllTimeTablesByAddressId(@Parameter(description = "address id", required = true)
-                                                   @PathVariable(value = "id") Long addressId);
+    @Operation(summary = "Get all timetables by branch id",
+            description = "get list with all timetables in a selected address by branch id")
+    @GetMapping("/branch/{id}/timetable")
+    List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
+                                                   @PathVariable(value = "id") Long branchId);
 
 
 }

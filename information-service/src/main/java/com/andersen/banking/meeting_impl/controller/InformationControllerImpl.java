@@ -36,21 +36,16 @@ public class InformationControllerImpl implements InformationController {
         return informationService.getListStreetDtoByCityId(cityId);
     }
 
-    @Override
-    public List<AddressDto> getAllAddressesByStreetId(Long streetId) {
-        log.info("get addresses");
-        return informationService.getListAddressDtoByStreetId(streetId);
-    }
 
     @Override
-    public List<BankBranchDto> getAllBankBranchesByAddressId(Long addressId) {
+    public List<BankBranchDto> getAllBankBranchesByCityId(Long addressId) {
         log.info("get bank branches");
-        return informationService.getListBankBranchDtoByAddressId(addressId);
+        return informationService.getListBankBranchDtoByCityId(addressId);
     }
 
     @Override
-    public List<TimeTableDto> getAllTimeTablesByAddressId(Long addressId) {
+    public List<TimeTableDto> getAllTimeTablesByBranchId(Long addressId) {
         log.info("get timetables");
-        return informationService.getListTimeTableDtoByAddressId(addressId);
+        return informationService.getListTimeTableDtoByBranchId(addressId);
     }
 }
