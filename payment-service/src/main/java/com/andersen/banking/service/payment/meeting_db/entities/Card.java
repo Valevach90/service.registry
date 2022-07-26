@@ -1,15 +1,8 @@
 package com.andersen.banking.service.payment.meeting_db.entities;
 
 import java.time.LocalDate;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,4 +44,7 @@ public class Card {
   @Column(name = "holder_name", nullable = false, length = 30)
   private String holderName;
 
+  @ManyToOne
+  @JoinColumn(name = "type_card_id", referencedColumnName = "id")
+  private TypeCard typeCard;
 }

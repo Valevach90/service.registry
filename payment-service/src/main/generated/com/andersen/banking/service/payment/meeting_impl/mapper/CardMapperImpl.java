@@ -5,13 +5,14 @@ import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-22T09:11:44+0300",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2022-07-26T13:13:53+0500",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
 public class CardMapperImpl implements CardMapper {
@@ -25,6 +26,8 @@ public class CardMapperImpl implements CardMapper {
         CardResponseDto cardResponseDto = new CardResponseDto();
 
         cardResponseDto.setAccountId( cardAccountId( card ) );
+        cardResponseDto.setPaymentSystem( cardTypeCardPaymentSystem( card ) );
+        cardResponseDto.setTypeName( cardTypeCardTypeName( card ) );
         cardResponseDto.setId( card.getId() );
         cardResponseDto.setLastFourNumbers( card.getLastFourNumbers() );
         cardResponseDto.setValidFromDate( card.getValidFromDate() );
@@ -43,6 +46,7 @@ public class CardMapperImpl implements CardMapper {
         Card card = new Card();
 
         card.setAccount( cardUpdateDtoToAccount( cardUpdateDto ) );
+        card.setTypeCard( cardUpdateDtoToTypeCard( cardUpdateDto ) );
         card.setId( cardUpdateDto.getId() );
         card.setValidFromDate( cardUpdateDto.getValidFromDate() );
         card.setExpireDate( cardUpdateDto.getExpireDate() );
@@ -62,6 +66,7 @@ public class CardMapperImpl implements CardMapper {
         Card card = new Card();
 
         card.setAccount( cardRegistrationDtoToAccount( cardDto ) );
+        card.setTypeCard( cardRegistrationDtoToTypeCard( cardDto ) );
         card.setValidFromDate( cardDto.getValidFromDate() );
         card.setExpireDate( cardDto.getExpireDate() );
         card.setFirstTwelveNumbers( cardDto.getFirstTwelveNumbers() );
@@ -86,6 +91,36 @@ public class CardMapperImpl implements CardMapper {
         return id;
     }
 
+    private String cardTypeCardPaymentSystem(Card card) {
+        if ( card == null ) {
+            return null;
+        }
+        TypeCard typeCard = card.getTypeCard();
+        if ( typeCard == null ) {
+            return null;
+        }
+        String paymentSystem = typeCard.getPaymentSystem();
+        if ( paymentSystem == null ) {
+            return null;
+        }
+        return paymentSystem;
+    }
+
+    private String cardTypeCardTypeName(Card card) {
+        if ( card == null ) {
+            return null;
+        }
+        TypeCard typeCard = card.getTypeCard();
+        if ( typeCard == null ) {
+            return null;
+        }
+        String typeName = typeCard.getTypeName();
+        if ( typeName == null ) {
+            return null;
+        }
+        return typeName;
+    }
+
     protected Account cardUpdateDtoToAccount(CardUpdateDto cardUpdateDto) {
         if ( cardUpdateDto == null ) {
             return null;
@@ -98,6 +133,19 @@ public class CardMapperImpl implements CardMapper {
         return account;
     }
 
+    protected TypeCard cardUpdateDtoToTypeCard(CardUpdateDto cardUpdateDto) {
+        if ( cardUpdateDto == null ) {
+            return null;
+        }
+
+        TypeCard typeCard = new TypeCard();
+
+        typeCard.setPaymentSystem( cardUpdateDto.getPaymentSystem() );
+        typeCard.setTypeName( cardUpdateDto.getTypeName() );
+
+        return typeCard;
+    }
+
     protected Account cardRegistrationDtoToAccount(CardRegistrationDto cardRegistrationDto) {
         if ( cardRegistrationDto == null ) {
             return null;
@@ -108,5 +156,18 @@ public class CardMapperImpl implements CardMapper {
         account.setId( cardRegistrationDto.getAccountId() );
 
         return account;
+    }
+
+    protected TypeCard cardRegistrationDtoToTypeCard(CardRegistrationDto cardRegistrationDto) {
+        if ( cardRegistrationDto == null ) {
+            return null;
+        }
+
+        TypeCard typeCard = new TypeCard();
+
+        typeCard.setPaymentSystem( cardRegistrationDto.getPaymentSystem() );
+        typeCard.setTypeName( cardRegistrationDto.getTypeName() );
+
+        return typeCard;
     }
 }
