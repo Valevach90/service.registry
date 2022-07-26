@@ -2,7 +2,7 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=transfer_service
     username: psqluser
     password: PoSPa$$woRd
     hikari:
@@ -15,7 +15,7 @@ spring:
       ddl-auto: validate
 
   flyway:
-    schemas: payment_service
+    schemas: transfer_service
     user: psqluser
     password: PoSPa$$woRd
 
