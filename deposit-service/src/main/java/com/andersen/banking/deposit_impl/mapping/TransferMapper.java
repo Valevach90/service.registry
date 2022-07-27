@@ -5,6 +5,7 @@ import com.andersen.banking.deposit_db.entities.Transfer;
 import com.andersen.banking.deposit_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
