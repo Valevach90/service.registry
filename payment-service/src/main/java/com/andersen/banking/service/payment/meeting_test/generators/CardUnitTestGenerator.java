@@ -6,6 +6,8 @@ import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import java.time.LocalDate;
+
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +23,7 @@ public class CardUnitTestGenerator {
     card.setFirstTwelveNumbers("123456789012");
     card.setLastFourNumbers("4567");
     card.setHolderName("Ivanov Ivan Ivanovich");
+    card.setTypeCard(populateTypeCard(new TypeCard()));
     return card;
   }
 
@@ -33,6 +36,8 @@ public class CardUnitTestGenerator {
     cardUpdateDto.setValidFromDate(LocalDate.of(2021, 10, 23));
     cardUpdateDto.setExpireDate(LocalDate.of(2024, 10, 23));
     cardUpdateDto.setHolderName("Ivanov Ivan Ivanovich");
+    cardUpdateDto.setPaymentSystem("VISA");
+    cardUpdateDto.setTypeName("SILVER");
     return cardUpdateDto;
   }
 
@@ -44,6 +49,8 @@ public class CardUnitTestGenerator {
     cardRegistrationDto.setValidFromDate(LocalDate.of(2021, 10, 23));
     cardRegistrationDto.setExpireDate(LocalDate.of(2024, 10, 23));
     cardRegistrationDto.setHolderName("Ivanov Ivan Ivanovich");
+    cardRegistrationDto.setPaymentSystem("VISA");
+    cardRegistrationDto.setTypeName("SILVER");
     return cardRegistrationDto;
   }
 
@@ -55,6 +62,8 @@ public class CardUnitTestGenerator {
     cardResponseDto.setValidFromDate(LocalDate.of(2021, 10, 23));
     cardResponseDto.setExpireDate(LocalDate.of(2024, 10, 23));
     cardResponseDto.setHolderName("Ivanov Ivan Ivanovich");
+    cardResponseDto.setPaymentSystem("VISA");
+    cardResponseDto.setTypeName("SILVER");
     return cardResponseDto;
   }
 
@@ -63,5 +72,10 @@ public class CardUnitTestGenerator {
     return account;
   }
 
-
+  private static TypeCard populateTypeCard(TypeCard typeCard) {
+    typeCard.setId(1L);
+    typeCard.setPaymentSystem("VISA");
+    typeCard.setTypeName("SILVER");
+    return typeCard;
+  }
 }
