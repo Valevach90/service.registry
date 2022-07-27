@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
+import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +31,12 @@ public interface TransferMoneyController {
                                  @PathVariable(value = "user_id") Long userId,
                                  @Parameter(description = "transfer_id", required = true)
                                  @PathVariable(value = "transfer_id") Long transferId);
+
+    @Operation(summary = "Get information about transfer status by transfer id",
+            description = "get info about for status by transfer id")
+    @GetMapping("/{transfer_id}")
+    TransferStatusResponseDto findTransferStatusById(@Parameter(description = "transfer_id", required = true)
+                                                     @PathVariable(value = "transfer_id") Long transferId);
 
     @Operation(summary = "Create request on transfer money",
             description = "create request on transfer money with params in dto object")
