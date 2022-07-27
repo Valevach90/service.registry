@@ -47,4 +47,22 @@ public interface DepositProductService {
      * @param id id of deposit product to delete
      */
     void deleteById(Long id);
+
+    /**
+     * Get page of deposit products
+     * filtered by their name and currency
+     *
+     * If one of the parameters is absent, returns
+     * page searched with the specified parameter
+     *
+     * If both parameters are absent, returns all
+     * deposite products
+     *
+     * @param pageable page object
+     * @param depositProductName name of a deposit product
+     * @param currencyName name of currency
+     * */
+    Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
+                                                        String depositProductName,
+                                                        String currencyName);
 }

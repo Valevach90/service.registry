@@ -82,4 +82,17 @@ public class DepositProductControllerImpl implements DepositProductController {
 
         log.debug("Deleted deposit product with id: {}", id);
     }
+
+    @Override
+    public Page<DepositProductDto> findByDepositNameAndCurrency(Pageable pageable, String prodName, String currency) {
+        log.debug("Searching deposit products with name = {}, with currency = {} for pageable = {}",
+                prodName, currency, pageable);
+
+        Page<DepositProductDto> foundProducts = depositProductService
+                .searchByDepositNameAndCurrency(pageable, prodName, currency)
+                .map(depositProductMapper::toDepositProductDto);
+
+        log.debug("Search was successful. Found {} deposit products", foundProducts.getContent().size());
+        return foundProducts;
+    }
 }

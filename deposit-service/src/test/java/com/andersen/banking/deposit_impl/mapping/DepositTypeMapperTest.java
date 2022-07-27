@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(classes = DeposittypeMapperImpl.class)
+@SpringBootTest(classes = DepositTypeMapperTest.class)
 public class DepositTypeMapperTest {
 
     private DepositType depositType;
