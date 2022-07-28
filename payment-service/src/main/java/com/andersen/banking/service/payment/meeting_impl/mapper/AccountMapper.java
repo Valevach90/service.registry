@@ -4,6 +4,8 @@ import com.andersen.banking.service.payment.meeting_api.dto.AccountDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -12,9 +14,21 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AccountMapper {
 
-
+    @Mapping(source = "balance", target = "balance", qualifiedByName = "convertFromCents")
     AccountDto toAccountDto(Account account);
 
+    @Mapping(source = "balance", target = "balance", qualifiedByName = "convertToCents")
     Account toAccount(AccountDto accountDto);
+
+    @Named("convertToCents")
+    static Long convertToCents(Double balance) {
+        Double balanceInCents = balance * 100;
+        return balanceInCents.longValue();
+    }
+
+    @Named("convertFromCents")
+    static Double convertFromCents(Long balance) {
+        return balance.doubleValue() / 100;
+    }
 }
 

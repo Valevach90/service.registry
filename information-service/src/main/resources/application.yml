@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: information-service
@@ -15,10 +14,9 @@ spring:
     schemas: information_service
     user: psqluser
     password: PoSPa$$woRd
-dropbox:
-  access:
-    token:
-      sl.BLoIZXjj0lSl6JaCTsVzKyVKMoceaWDkEmOX_dBUCjT9jtN6cfkBAIKKfecmc77xzVoLvZ9lkjLTGXurDB0EXTk6vqzhe1pl9zAXQ2cp0cuEQSy57Dyqpa4SvaRtV36o5oRqPAFVyg8s:
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 logging:
   level:

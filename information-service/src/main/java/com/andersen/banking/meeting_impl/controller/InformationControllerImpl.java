@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public class InformationControllerImpl implements InformationController {
         return informationService.getListCountryDto();
     }
 
+
     @Override
-    public List<CityDto> getAllCitiesByCountryId(Long countryId) {
+    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable) {
         log.info("get cities");
-        return informationService.getListCityDtoByCountryId(countryId);
+        return informationService.getListCityDtoByCountryId(countryId, pageable);
     }
 
     @Override
@@ -34,21 +36,16 @@ public class InformationControllerImpl implements InformationController {
         return informationService.getListStreetDtoByCityId(cityId);
     }
 
-    @Override
-    public List<AddressDto> getAllAddressesByStreetId(Long streetId) {
-        log.info("get addresses");
-        return informationService.getListAddressDtoByStreetId(streetId);
-    }
 
     @Override
-    public List<BankBranchDto> getAllBankBranchesByAddressId(Long addressId) {
+    public List<BankBranchDto> getAllBankBranchesByCityId(Long addressId) {
         log.info("get bank branches");
-        return informationService.getListBankBranchDtoByAddressId(addressId);
+        return informationService.getListBankBranchDtoByCityId(addressId);
     }
 
     @Override
-    public List<TimeTableDto> getAllTimeTablesByAddressId(Long addressId) {
+    public List<TimeTableDto> getAllTimeTablesByBranchId(Long addressId) {
         log.info("get timetables");
-        return informationService.getListTimeTableDtoByAddressId(addressId);
+        return informationService.getListTimeTableDtoByBranchId(addressId);
     }
 }

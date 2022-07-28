@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.mapper;
 
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
-import com.andersen.banking.meeting_db.entity.FileInfo;
+import com.andersen.banking.meeting_db.entities.FileInfo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-22T01:35:34+0300",
+    date = "2022-07-25T12:24:39+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -17,8 +18,14 @@ public class BankBranchDto {
     @NotNull
     private Long id;
 
-    @NotNull
-    private Long addressId;
+    @NotBlank
+    private String streetName;
+
+    @NotBlank
+    private String house;
+
+    @NotBlank
+    private String building;
 
     @NotBlank
     private String branchNumber;

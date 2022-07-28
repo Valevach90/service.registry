@@ -54,6 +54,6 @@ public class AccountDto {
 
     @NotNull
     @JsonProperty("balance")
-    private long balance;
+    private double balance;
 
 }

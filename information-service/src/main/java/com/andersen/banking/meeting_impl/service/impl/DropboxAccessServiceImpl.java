@@ -6,6 +6,7 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.sharing.ListSharedLinksResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
         try {
             ListFolderResult result = client.files().listFolder(DROPBOX_FOLDER_PATH);
 
-            List<String> listOfNames = result.getEntries().stream().map(metadata -> metadata.getName()).toList();
+            List<String> listOfNames = result.getEntries().stream().map(Metadata::getName).toList();
 
             log.debug("Return list of names of all stored files: {}", listOfNames);
 

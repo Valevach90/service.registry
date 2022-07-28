@@ -44,4 +44,12 @@ public class CardRegistrationDto {
   @Pattern(regexp = "[a-zA-Z- ]{3,30}", message = "message = \"holder_name should have at least 3 and at maximum 30 characters\"")
   @JsonProperty("holder_name")
   private String holderName;
+
+  @NotNull
+  @JsonProperty("payment_system")
+  private String paymentSystem;
+
+  @NotNull
+  @JsonProperty("type_name")
+  private String typeName;
 }

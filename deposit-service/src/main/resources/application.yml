@@ -1,4 +1,7 @@
+
 spring:
+  application:
+    name: deposit-service
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service

@@ -27,17 +27,12 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    //implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core'
     implementation "org.mapstruct:mapstruct:1.4.2.Final"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation "com.github.javafaker:javafaker:1.0.2"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:kafka'
-    testImplementation 'org.testcontainers:postgresql'
-    testImplementation 'org.testcontainers:testcontainers'
     implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
 

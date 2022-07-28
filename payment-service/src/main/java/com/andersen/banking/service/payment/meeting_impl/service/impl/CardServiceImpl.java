@@ -2,7 +2,9 @@ package com.andersen.banking.service.payment.meeting_impl.service.impl;
 
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_db.repository.CardRepository;
+import com.andersen.banking.service.payment.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardServiceImpl implements CardService {
 
   private final CardRepository cardRepository;
+  private final TypeCardRepository typeCardRepository;
   private final AccountService accountService;
 
   @Transactional(readOnly = true)
@@ -57,8 +60,8 @@ public class CardServiceImpl implements CardService {
     findById(card.getId());
     card.setAccount(accountService.findById(accountId));
 
-    String firstTwelveNums = card.getFirstTwelveNumbers();
-    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
+    setTypeCard(card);
+    setCryptFirstNums(card);
 
     Card updatedCard = cardRepository.save(card);
 
@@ -88,8 +91,8 @@ public class CardServiceImpl implements CardService {
     Account account = accountService.findById(card.getAccount().getId());
     card.setAccount(account);
 
-    String first_twelve_nums = card.getFirstTwelveNumbers();
-    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(first_twelve_nums));
+    setTypeCard(card);
+    setCryptFirstNums(card);
 
     Card savedCard = cardRepository.save(card);
 
@@ -105,5 +108,19 @@ public class CardServiceImpl implements CardService {
 
     log.info("Found {} cards", cards.getContent().size());
     return cards;
+  }
+
+  private void setTypeCard(Card card) {
+    TypeCard typeCard = card.getTypeCard();
+    TypeCard existingTypeCard  = typeCardRepository
+            .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
+            .orElseThrow(() -> new NotFoundException(TypeCard.class, -1L));
+    card.setTypeCard(existingTypeCard);
+
+  }
+
+  private void setCryptFirstNums(Card card) {
+    String firstTwelveNums = card.getFirstTwelveNumbers();
+    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
   }
 }

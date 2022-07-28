@@ -1,6 +1,7 @@
 package com.andersen.banking.service.payment.meeting_impl.mapping;
 
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapperImpl;
 import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
@@ -19,19 +20,42 @@ public class CardMapperTest {
   void toCard_ShouldReturnCard_WhenCardRegistrationIsCorrect() {
     Card card = CardUnitTestGenerator.populateCard();
     card.setId(null);
+    card.getTypeCard().setId(null);
     Assertions.assertEquals(card,
         cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()));
   }
 
   @Test
   void toCard_ShouldReturnCard_WhenCardUpdateDtoIsCorrect() {
-    Assertions.assertEquals(CardUnitTestGenerator.populateCard(),
-        cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
+    Card card = CardUnitTestGenerator.populateCard();
+    card.getTypeCard().setId(null);
+    Assertions.assertEquals(card,
+            cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
   }
 
   @Test
   void toCardDto_ShouldReturnCard_WhenCardDtoIsCorrect() {
     Assertions.assertEquals(CardUnitTestGenerator.populateCardResponseDto(),
         cardMapper.toCardResponseDto(CardUnitTestGenerator.populateCard()));
+  }
+
+  @Test
+  void convertCardTypeToDto() {
+    Card card = CardUnitTestGenerator.populateCard();
+    TypeCard typeCard = card.getTypeCard();
+    typeCard.setId(null);
+    Assertions.assertEquals(typeCard,
+            cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()).getTypeCard());
+    Assertions.assertEquals(typeCard,
+            cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()).getTypeCard());
+  }
+
+  @Test
+  void convertDtoToCard() {
+    Card card = CardUnitTestGenerator.populateCard();
+    TypeCard typeCard = card.getTypeCard();
+    typeCard.setId(null);
+    Assertions.assertEquals(card,
+            cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
   }
 }
