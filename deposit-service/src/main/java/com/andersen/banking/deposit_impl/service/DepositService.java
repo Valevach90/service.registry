@@ -1,5 +1,6 @@
 package com.andersen.banking.deposit_impl.service;
 import com.andersen.banking.deposit_db.entities.Deposit;
+import com.andersen.banking.deposit_db.entities.TransferKafkaMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
@@ -47,4 +48,11 @@ public interface DepositService {
      * @param id id of deposit to delete
      */
     void deleteById(Long id);
+
+    /**
+     * Make transfer
+     *
+     * @param message transfer kafka message
+     */
+    void makeTransfer(TransferKafkaMessage message);
 }

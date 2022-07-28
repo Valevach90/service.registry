@@ -36,7 +36,7 @@ dependencies {
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:testcontainers'
-
+	implementation 'org.springframework.kafka:spring-kafka'
 }
 
 dependencyManagement {
