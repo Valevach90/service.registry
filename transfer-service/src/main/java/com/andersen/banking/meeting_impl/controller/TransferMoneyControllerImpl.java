@@ -36,7 +36,7 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     @Override
     public TransferStatusResponseDto findTransferStatusById(Long transferId) {
         log.info("Transfer status by id : {}", transferId);
-        return null;
+        return transferMoneyService.getTransferStatus(transferId);
     }
 
     @Override
