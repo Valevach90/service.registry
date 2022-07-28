@@ -81,13 +81,13 @@ public class RestExceptionHandler {
     return exception.getLocalizedMessage();
   }
 
-
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(IllegalArgumentException.class)
   public String handleIllegalArgumentException(IllegalArgumentException exception) {
     log.error("Caught IllegalArgumentException: {}", exception.toString());
     return exception.getLocalizedMessage();
   }
+
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(SQLException.class)
   public String handleSQLException(SQLException exception) {
