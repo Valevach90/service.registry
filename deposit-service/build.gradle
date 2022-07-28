@@ -36,7 +36,7 @@ dependencies {
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:testcontainers'
-
+	testRuntimeOnly 'com.h2database:h2'
 }
 
 dependencyManagement {
