@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
-    List<TimeTable> getTimeTableByAddress_IdAndDeletedIsFalse(Long addressId);
+    List<TimeTable> getTimeTableByBankBranch_IdAndDeletedIsFalse(Long branchId);
 
 }

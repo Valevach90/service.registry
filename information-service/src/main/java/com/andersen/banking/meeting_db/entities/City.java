@@ -1,18 +1,18 @@
 package com.andersen.banking.meeting_db.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "city")
+@EntityListeners(AuditingEntityListener.class)
 public class City extends BaseEntity {
 
     @Id
@@ -23,7 +23,7 @@ public class City extends BaseEntity {
     @JoinColumn(nullable = false, name = "country_id")
     private Country country;
 
-    @Column(nullable = false, name = "city_name", length = 20)
+    @Column(nullable = false, name = "city_name", length = 80)
     private String name;
 
 }

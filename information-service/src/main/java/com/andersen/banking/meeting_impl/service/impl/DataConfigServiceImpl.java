@@ -1,0 +1,52 @@
+package com.andersen.banking.meeting_impl.service.impl;
+
+import com.andersen.banking.meeting_api.utility.HttpMyClass;
+import com.andersen.banking.meeting_db.entities.City;
+import com.andersen.banking.meeting_db.entities.Country;
+import com.andersen.banking.meeting_db.repositories.CityRepository;
+import com.andersen.banking.meeting_db.repositories.CountryRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Slf4j
+@Service
+@AllArgsConstructor
+public class DataConfigServiceImpl implements InitializingBean {
+
+    private final CityRepository cityRepository;
+    private final CountryRepository countryRepository;
+
+
+    @Override
+    @Transactional
+    public void afterPropertiesSet() {
+        RestTemplate restTemplate = new RestTemplate();
+        cityRepository.deleteAll();
+        log.info("delete all cities from repository");
+
+        List<Country> countries = countryRepository.getCountriesByDeletedIsFalse();
+
+        for (Country country : countries) {
+            log.info("get cities for country with name : {}", country.getName());
+            String url = "https://countriesnow.space/api/v0.1/countries/cities/q?country=" + country.getName();
+            HttpMyClass answer = restTemplate.getForObject(url, HttpMyClass.class);
+            log.info("received : {} object from {}", Objects.requireNonNull(answer).getData().size(), url);
+            List<City> cities = new ArrayList<>();
+
+            for (String datum : answer.getData()) {
+                cities.add(City.builder().name(datum).country(country).build());
+            }
+            cityRepository.saveAll(cities);
+            log.info("{} cities saved in the database currently", cities.size());
+        }
+        log.debug("init cities from open api finished.");
+    }
+}
