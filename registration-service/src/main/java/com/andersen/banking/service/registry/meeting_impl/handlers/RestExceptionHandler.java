@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
+
 /**
  * Exception Handler Controller.
  */
@@ -76,6 +78,19 @@ public class RestExceptionHandler {
   @ExceptionHandler(NotificationException.class)
   public String handleNotificationException(NotificationException exception) {
     log.error("Caught NotificationException: {}", exception.toString());
+    return exception.getLocalizedMessage();
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(IllegalArgumentException.class)
+  public String handleIllegalArgumentException(IllegalArgumentException exception) {
+    log.error("Caught IllegalArgumentException: {}", exception.toString());
+    return exception.getLocalizedMessage();
+  }
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(SQLException.class)
+  public String handleSQLException(SQLException exception) {
+    log.error("Caught SQLException: {}", exception.toString());
     return exception.getLocalizedMessage();
   }
 }
