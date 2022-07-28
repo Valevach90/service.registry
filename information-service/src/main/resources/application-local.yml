@@ -4,7 +4,7 @@ spring:
     name: information-service
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://aston:5432/postgres?currentSchema=information_service
+    url: jdbc:postgresql://localhost:5432/aston?currentSchema=information_service
     username: antondzubak
     password: 123456
     hikari:
@@ -15,9 +15,9 @@ spring:
     schemas: information_service
     user: antondzubak
     password: 123456
-access:
-  token:
-    sl.BLoIZXjj0lSl6JaCTsVzKyVKMoceaWDkEmOX_dBUCjT9jtN6cfkBAIKKfecmc77xzVoLvZ9lkjLTGXurDB0EXTk6vqzhe1pl9zAXQ2cp0cuEQSy57Dyqpa4SvaRtV36o5oRqPAFVyg8s:
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 logging:
   level:
