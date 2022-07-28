@@ -5,7 +5,6 @@ import com.andersen.banking.deposit_db.entities.Transfer;
 import com.andersen.banking.deposit_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
@@ -22,5 +21,6 @@ public interface TransferMapper {
     Transfer toTransfer(TransferDto transferDto);
 
     List<Transfer> toTransfersDto(List<TransferDto> transfersDto);
+
     List<TransferDto> toTransfers(List<Transfer> transfers);
 }
