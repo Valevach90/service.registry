@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class DepositProductControllerIntegrationTest {
+public class DepositProductControllerH2IntegrationTest {
 
     private DepositProduct product;
     private DepositProductDto productDto;
