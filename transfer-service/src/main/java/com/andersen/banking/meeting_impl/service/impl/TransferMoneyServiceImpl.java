@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_impl.service.impl;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
-import com.andersen.banking.meeting_db.entity.TransferStatus;
 import com.andersen.banking.meeting_db.repository.CurrencyRepository;
 import com.andersen.banking.meeting_db.repository.PaymentTypeRepository;
 import com.andersen.banking.meeting_db.repository.TransferStatusRepository;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,7 +37,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     public List<CurrencyResponseDto> getAllCurrencies() {
         log.debug("Get currencies");
         return currencyRepository.findAll()
-                .stream().map(currencyMapper::currency2CurrencyResponseDto).toList();
+                .stream().map(currencyMapper::currency2CurrencyResponseDto).collect(Collectors.toList());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
         log.debug("Get paymentTypes");
         return paymentTypeRepository.findAll()
-                .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).toList();
+                .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).collect(Collectors.toList());
 
     }
 
@@ -54,7 +54,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     public TransferStatusResponseDto getTransferStatus(Long transferId) {
         log.debug("Get transferStatus by id : {}", transferId);
         return transferStatusMapper
-                .transferStatus2TransferStatusResponseDto(transferStatusRepository.findById(transferId));
+                .transferStatus2TransferStatusResponseDto(transferStatusRepository.findById(transferId).get());
     }
 
 }
