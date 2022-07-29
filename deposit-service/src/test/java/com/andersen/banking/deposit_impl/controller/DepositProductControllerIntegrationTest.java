@@ -108,8 +108,9 @@ public class DepositProductControllerIntegrationTest {
         long numberWithCurrencyRUB = allProducts.stream()
                 .filter(x -> x.getCurrency().getName().equals(currency))
                 .count();
-        mvc
-                .perform(get("/api/v1/products/search?page=0&size=10&currency=%s".formatted(currency))
+
+        String requestUrl = "/api/v1/products/search?page=0&size=10&currency=%s".formatted(currency);
+        mvc.perform(get(requestUrl)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -123,8 +124,8 @@ public class DepositProductControllerIntegrationTest {
                 .findAll(createCustomPageable(CUSTOM_PAGE_NUMBER, CUSTOM_PAGE_SIZE))
                 .getTotalElements();
 
-        mvc
-                .perform(get("/api/v1/products/search?page=0&size=10")
+        String requestUrl = "/api/v1/products/search?page=0&size=10";
+        mvc.perform(get(requestUrl)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -144,8 +145,8 @@ public class DepositProductControllerIntegrationTest {
                 .filter(x -> x.getDepositName().equals(searchableName))
                 .count();
 
-        mvc
-                .perform(get("/api/v1/products/search?page=0&size=10&depositName=" + searchableName)
+        String requestUrl = "/api/v1/products/search?page=0&size=10&depositName=" + searchableName;
+        mvc.perform(get(requestUrl)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -171,8 +172,8 @@ public class DepositProductControllerIntegrationTest {
                 .filter(x -> x.getCurrency().getName().equals(currency))
                 .count();
 
-        mvc
-                .perform(get("/api/v1/products/search?page=0&size=10&depositName=%s&currency=%s".formatted(searchableName, currency))
+        String requestUrl = "/api/v1/products/search?page=0&size=10&depositName=%s&currency=%s".formatted(searchableName, currency);
+        mvc.perform(get(requestUrl)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
