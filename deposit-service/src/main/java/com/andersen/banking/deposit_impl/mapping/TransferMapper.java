@@ -21,5 +21,6 @@ public interface TransferMapper {
     Transfer toTransfer(TransferDto transferDto);
 
     List<Transfer> toTransfersDto(List<TransferDto> transfersDto);
+
     List<TransferDto> toTransfers(List<Transfer> transfers);
 }
