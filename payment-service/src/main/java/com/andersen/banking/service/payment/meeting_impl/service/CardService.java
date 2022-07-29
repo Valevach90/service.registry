@@ -3,6 +3,7 @@ package com.andersen.banking.service.payment.meeting_impl.service;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This interface presents the basic contract for service, which works with Card entity.
@@ -57,4 +58,7 @@ public interface CardService {
      * @return
      */
     Page<Card> findByAccountId(Long id, Pageable pageable);
+
+    @Transactional
+    Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable);
 }

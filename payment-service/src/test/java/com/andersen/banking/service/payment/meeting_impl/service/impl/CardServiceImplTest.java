@@ -9,6 +9,9 @@ import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundExcep
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,12 +131,56 @@ public class CardServiceImplTest {
     Assertions.assertEquals(returnedCard, cardService.create(receivedCard));
   }
 
+  @Test
+  void findAllByTypeCard_ShouldReturnPageOfCards() {
+    String checkPayment = "MASTERCARD";
+    String checkType = "STANDARD";
+
+    List<Card> masterCards = generateCardsWithNonDefaultTypeCard();
+
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(masterCards, pageable, SIZE_PAGE);
+
+    Mockito.when(cardRepository.nat(checkPayment, checkType, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findAllByTypeCard(checkPayment, checkType, pageable);
+
+    Assertions.assertEquals(page, result);
+  }
+
+  @Test
+  void findAllByTypeCardAndOnlyType_ShouldReturnPageOfCards() {
+    String checkType = "STANDARD";
+
+    List<Card> cards = generateCards();
+    cards.addAll(generateCardsWithNonDefaultTypeCard());
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(cards, pageable, SIZE_PAGE);
+
+    Mockito.when(cardRepository.nat(null, checkType, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findAllByTypeCard(null, checkType, pageable);
+    Assertions.assertEquals(page, result);
+  }
 
   private List<Card> generateCards() {
     return Stream
-        .generate(Card::new)
-        .limit(27)
-        .collect(Collectors.toList());
+            .generate(Card::new)
+            .limit(27)
+            .collect(Collectors.toList());
+  }
+
+  private List<Card> generateCardsWithNonDefaultTypeCard() {
+    TypeCard typeCard = new TypeCard();
+    typeCard.setId(2L);
+    typeCard.setPaymentSystem("MASTERCARD");
+    typeCard.setTypeName("STANDARD");
+
+    return Stream
+            .generate(Card::new)
+            .limit(27)
+            .peek(c -> c.setTypeCard(typeCard))
+            .collect(Collectors.toList());
   }
 
   private Pageable createPageable() {
