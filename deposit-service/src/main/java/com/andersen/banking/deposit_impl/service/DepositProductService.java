@@ -56,13 +56,13 @@ public interface DepositProductService {
      * page searched with the specified parameter
      *
      * If both parameters are absent, returns all
-     * deposite products
+     * deposit products
      *
      * @param pageable page object
-     * @param depositProductName name of a deposit product
+     * @param depositName name of a deposit product
      * @param currencyName name of currency
      * */
     Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
-                                                        String depositProductName,
+                                                        String depositName,
                                                         String currencyName);
 }

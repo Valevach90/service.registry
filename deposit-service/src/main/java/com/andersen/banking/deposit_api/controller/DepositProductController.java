@@ -69,7 +69,7 @@ public interface DepositProductController {
                                       @PageableDefault Pageable pageable,
 
                                       @Parameter(description = "deposit product name")
-                                      @RequestParam(value = "prodName", required = false) String prodName,
+                                      @RequestParam(value = "depositName", required = false) String depositName,
 
                                       @Parameter(description = "currency name")
                                       @RequestParam(value = "currency", required = false) String currency);

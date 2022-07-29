@@ -78,12 +78,11 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable, String depositProductName, String currencyName) {
-        log.info("Searching deposits with name {} and with currency {}", depositProductName, currencyName);
+    public Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable, String depositName, String currencyName) {
+        log.info("Searching deposits with name {} and with currency {}", depositName, currencyName);
 
         Page<DepositProduct> pageOfProducts = depositProductRepository
-                .findByDepositNameAndCurrencyName(depositProductName, currencyName, pageable);
+                .findByDepositNameAndCurrencyName(depositName, currencyName, pageable);
 
         log.info("Found {} deposit products", pageOfProducts.getContent().size());
         return pageOfProducts;

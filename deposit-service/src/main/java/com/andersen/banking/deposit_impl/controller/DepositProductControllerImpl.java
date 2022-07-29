@@ -84,12 +84,12 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public Page<DepositProductDto> findByDepositNameAndCurrency(Pageable pageable, String prodName, String currency) {
+    public Page<DepositProductDto> findByDepositNameAndCurrency(Pageable pageable, String depositName, String currency) {
         log.debug("Searching deposit products with name = {}, with currency = {} for pageable = {}",
-                prodName, currency, pageable);
+                depositName, currency, pageable);
 
         Page<DepositProductDto> foundProducts = depositProductService
-                .searchByDepositNameAndCurrency(pageable, prodName, currency)
+                .searchByDepositNameAndCurrency(pageable, depositName, currency)
                 .map(depositProductMapper::toDepositProductDto);
 
         log.debug("Search was successful. Found {} deposit products", foundProducts.getContent().size());

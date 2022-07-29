@@ -47,7 +47,7 @@ public class DepositProductControllerIntegrationTest {
     private DepositControllerImpl depositController;
 
     private final Random rand = new Random();
-    private static final List<String> prodNames = List.of("Name1", "Name2", "Name3", "Name4");
+    private static final List<String> depositNames = List.of("Name1", "Name2", "Name3", "Name4");
 
 
 
@@ -61,23 +61,23 @@ public class DepositProductControllerIntegrationTest {
 
         DepositType depositType = new DepositType();
         depositType.setName("default deposit type");
+        depositTypeRepository.save(depositType);
 
         List<Currency> generatedCurrencies = Stream
                 .generate(DepositServiceTestEntitiesGenerator::generateRandomCurrency)
                 .limit(5)
                 .toList();
 
-        final DepositType saved = depositTypeRepository.save(depositType);
 
 
         Stream.generate(DepositServiceTestEntitiesGenerator::generateSemiEmptyDepositProduct)
                 .limit(LIMIT_FOR_INSERTABLE_ELEMENTS)
-                .forEach(x -> {
-                    x.setDepositName(prodNames.get(random.nextInt(prodNames.size())));
-                    x.setType(saved);
-                    x.setCurrency(generatedCurrencies.get(random.nextInt(generatedCurrencies.size())));
-                    currencyRepository.save(x.getCurrency());
-                    depositProductRepository.save(x);
+                .forEach(generatedDepositProduct -> {
+                    generatedDepositProduct.setDepositName(depositNames.get(random.nextInt(depositNames.size())));
+                    generatedDepositProduct.setType(depositType);
+                    generatedDepositProduct.setCurrency(generatedCurrencies.get(random.nextInt(generatedCurrencies.size())));
+                    currencyRepository.save(generatedDepositProduct.getCurrency());
+                    depositProductRepository.save(generatedDepositProduct);
                 });
     }
 
@@ -133,19 +133,19 @@ public class DepositProductControllerIntegrationTest {
     }
 
     @Test
-    void whenSearchWithDepositProductName_andOk() throws Exception {
+    void whenSearchWithDepositName_andOk() throws Exception {
         List<DepositProduct> products = depositProductService
                 .findAll(createCustomPageable(CUSTOM_PAGE_NUMBER, CUSTOM_PAGE_SIZE))
                 .getContent();
 
-        String searchableName = prodNames.get(rand.nextInt(prodNames.size()));
+        String searchableName = depositNames.get(rand.nextInt(depositNames.size()));
 
         long numberOfProductsWithName = products.stream()
                 .filter(x -> x.getDepositName().equals(searchableName))
                 .count();
 
         mvc
-                .perform(get("/api/v1/products/search?page=0&size=10&prodName=" + searchableName)
+                .perform(get("/api/v1/products/search?page=0&size=10&depositName=" + searchableName)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -172,7 +172,7 @@ public class DepositProductControllerIntegrationTest {
                 .count();
 
         mvc
-                .perform(get("/api/v1/products/search?page=0&size=10&prodName=%s&currency=%s".formatted(searchableName, currency))
+                .perform(get("/api/v1/products/search?page=0&size=10&depositName=%s&currency=%s".formatted(searchableName, currency))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
