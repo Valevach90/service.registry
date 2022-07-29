@@ -59,6 +59,14 @@ public interface CardService {
      */
     Page<Card> findByAccountId(Long id, Pageable pageable);
 
-    @Transactional
+    /**
+     * This method returns page of card by payment or type or all together. If type and payment system is null
+     * return all cards
+     *
+     * @param payment
+     * @param type
+     * @param pageable
+     * @return
+     */
     Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable);
 }

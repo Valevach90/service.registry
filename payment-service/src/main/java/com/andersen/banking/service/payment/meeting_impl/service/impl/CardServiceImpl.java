@@ -110,14 +110,13 @@ public class CardServiceImpl implements CardService {
     return cards;
   }
 
-  @Transactional
   @Override
   public Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable) {
     log.info("Find all cards with payment system {} and type {}", payment, type);
 
-    Page<Card> cards = cardRepository.nat(payment, type, pageable);
+    Page<Card> cards = cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
 
-    log.info("Found {} cards", cards.getContent().size());
+//    log.info("Found {} cards", cards.getContent().size());
     return cards;
   }
 

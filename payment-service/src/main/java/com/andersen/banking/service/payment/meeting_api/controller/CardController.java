@@ -67,7 +67,7 @@ public interface CardController {
   @Operation(summary = "Get all cards by type_card ",
           description = "get page cards by type_card"
   )
-  @GetMapping("/typecard/")
+  @GetMapping("/search/")
   Page<CardResponseDto> findAllByTypeCard(
     @RequestParam(required = false) String payment,
     @RequestParam(required = false) String type,
