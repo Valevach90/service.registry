@@ -8,7 +8,6 @@ import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
-import com.andersen.banking.deposit_impl.testcontainer.IntegrationTestWithPostgres;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,8 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@IntegrationTestWithPostgres
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DepositProductControllerIntegrationTest {
 
     private static final int CUSTOM_PAGE_SIZE = 150;
@@ -61,6 +59,7 @@ public class DepositProductControllerIntegrationTest {
 
         DepositType depositType = new DepositType();
         depositType.setName("default deposit type");
+        depositType.setId(1L);
         depositTypeRepository.save(depositType);
 
         List<Currency> generatedCurrencies = Stream
@@ -73,6 +72,7 @@ public class DepositProductControllerIntegrationTest {
         Stream.generate(DepositServiceTestEntitiesGenerator::generateSemiEmptyDepositProduct)
                 .limit(LIMIT_FOR_INSERTABLE_ELEMENTS)
                 .forEach(generatedDepositProduct -> {
+                    generatedDepositProduct.setId(random.nextLong());
                     generatedDepositProduct.setDepositName(depositNames.get(random.nextInt(depositNames.size())));
                     generatedDepositProduct.setType(depositType);
                     generatedDepositProduct.setCurrency(generatedCurrencies.get(random.nextInt(generatedCurrencies.size())));

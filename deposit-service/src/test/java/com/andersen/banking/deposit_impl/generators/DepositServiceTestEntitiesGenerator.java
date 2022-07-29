@@ -46,6 +46,7 @@ public class DepositServiceTestEntitiesGenerator {
 
         Random random = new Random();
 
+        currency.setId(random.nextLong(1_000_000));
         currency.setName(possibleCurrencyNames.get(random.nextInt(3)));
 
         return currency;
