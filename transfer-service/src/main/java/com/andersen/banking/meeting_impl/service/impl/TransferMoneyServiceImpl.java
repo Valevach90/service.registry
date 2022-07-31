@@ -3,9 +3,11 @@ package com.andersen.banking.meeting_impl.service.impl;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
+import com.andersen.banking.meeting_db.entity.TransferStatus;
 import com.andersen.banking.meeting_db.repository.CurrencyRepository;
 import com.andersen.banking.meeting_db.repository.PaymentTypeRepository;
 import com.andersen.banking.meeting_db.repository.TransferStatusRepository;
+import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.mapper.CurrencyMapper;
 import com.andersen.banking.meeting_impl.mapper.PaymentTypeMapper;
 import com.andersen.banking.meeting_impl.mapper.TransferStatusMapper;
@@ -53,8 +55,11 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     @Transactional(readOnly = true)
     public TransferStatusResponseDto getTransferStatus(Long transferId) {
         log.debug("Get transferStatus by id : {}", transferId);
-        return transferStatusMapper
-                .transferStatus2TransferStatusResponseDto(transferStatusRepository.findById(transferId).get());
+
+        TransferStatus transferStatus = transferStatusRepository.findById(transferId)
+                .orElseThrow(() -> new NotFoundException(TransferStatus.class, transferId));
+        
+        return transferStatusMapper.transferStatus2TransferStatusResponseDto(transferStatus);
     }
 
 }
