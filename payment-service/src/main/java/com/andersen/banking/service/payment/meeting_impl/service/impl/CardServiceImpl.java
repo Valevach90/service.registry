@@ -116,7 +116,7 @@ public class CardServiceImpl implements CardService {
 
     Page<Card> cards = cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
 
-//    log.info("Found {} cards", cards.getContent().size());
+    log.info("Found {} cards", cards.getContent().size());
     return cards;
   }
 
