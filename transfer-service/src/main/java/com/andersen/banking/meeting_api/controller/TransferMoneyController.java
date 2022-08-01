@@ -34,7 +34,7 @@ public interface TransferMoneyController {
 
     @Operation(summary = "Get information about transfer status by transfer id",
             description = "get info about for status by transfer id")
-    @GetMapping("/{transfer_id}")
+    @GetMapping("/status/{transfer_id}")
     TransferStatusResponseDto findTransferStatusById(@Parameter(description = "transfer_id", required = true)
                                                      @PathVariable(value = "transfer_id") Long transferId);
 
