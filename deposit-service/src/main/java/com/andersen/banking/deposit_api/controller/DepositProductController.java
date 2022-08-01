@@ -60,4 +60,18 @@ public interface DepositProductController {
             @Parameter(description = "deposit product id", required = true)
             @PathVariable("id") Long id
     );
+
+
+    @Operation(summary = "Search deposit product",
+    description = "search by depositName and currencyName")
+    @GetMapping("/search")
+    Page<DepositProductDto> findByDepositNameAndCurrency(@ParameterObject
+                                      @PageableDefault Pageable pageable,
+
+                                      @Parameter(description = "deposit product name")
+                                      @RequestParam(value = "depositName", required = false) String depositName,
+
+                                      @Parameter(description = "currency name")
+                                      @RequestParam(value = "currency", required = false) String currency);
+
 }

@@ -23,6 +23,6 @@ CREATE TABLE deposit_products
 );
 
 ALTER TABLE deposit_products
-    ADD CONSTRAINT fk_deposits_on_deposit_types FOREIGN KEY (deposit_type_id) REFERENCES deposit_types (id);
+    ADD CONSTRAINT fk_deposit_products_on_deposit_types FOREIGN KEY (deposit_type_id) REFERENCES deposit_types (id);
 ALTER TABLE deposit_products
-    ADD CONSTRAINT fk_deposits_on_currencies FOREIGN KEY (currency_id) REFERENCES currencies (id);
+    ADD CONSTRAINT fk_deposit_products_on_currencies FOREIGN KEY (currency_id) REFERENCES currencies (id);

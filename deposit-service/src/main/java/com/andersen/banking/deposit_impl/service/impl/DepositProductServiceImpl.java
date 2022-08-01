@@ -76,4 +76,15 @@ public class DepositProductServiceImpl implements DepositProductService {
         depositProductRepository.deleteById(id);
         log.info("Deleted deposit product: {}", foundProduct);
     }
+
+    @Override
+    public Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable, String depositName, String currencyName) {
+        log.info("Searching deposits with name {} and with currency {}", depositName, currencyName);
+
+        Page<DepositProduct> pageOfProducts = depositProductRepository
+                .findByDepositNameAndCurrencyName(depositName, currencyName, pageable);
+
+        log.info("Found {} deposit products", pageOfProducts.getContent().size());
+        return pageOfProducts;
+    }
 }
