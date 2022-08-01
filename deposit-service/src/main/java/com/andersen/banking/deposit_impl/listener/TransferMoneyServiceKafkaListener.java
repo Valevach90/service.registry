@@ -1,6 +1,7 @@
 package com.andersen.banking.deposit_impl.listener;
 
 import com.andersen.banking.deposit_api.dto.kafka.TransferKafkaMessageDto;
+import com.andersen.banking.deposit_impl.config.KafkaConfigProperties;
 import com.andersen.banking.deposit_impl.mapping.TransferKafkaMessageMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
 
@@ -19,10 +20,10 @@ import java.util.List;
 @AllArgsConstructor
 public class TransferMoneyServiceKafkaListener {
 
+    private KafkaConfigProperties kafkaProperties;
     private DepositService depositService;
 
     private TransferKafkaMessageMapper messageMapper;
-
 
     @KafkaListener(topics = "${spring.kafka.topicName}", groupId = "${spring.kafka.groupId}")
     public void listenTransferMoneyService(@Payload List<TransferKafkaMessageDto> messages,

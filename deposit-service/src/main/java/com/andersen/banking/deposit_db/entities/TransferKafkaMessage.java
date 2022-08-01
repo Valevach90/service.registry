@@ -8,7 +8,7 @@ import java.sql.Date;
 
 @Data
 @Entity
-@Table(name = "transfer_message")
+@Table(name = "transfer_messages")
 @NoArgsConstructor
 public class TransferKafkaMessage {
 

@@ -26,13 +26,13 @@ public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
 
-    private TransferKafkaMessageRepository messageRepository;
+    private final TransferKafkaMessageRepository messageRepository;
 
     private KafkaConfigProperties kafkaProperties;
 
     private KafkaTemplate<String, TransferKafkaMessageDto> kafkaTemplate;
 
-    private TransferKafkaMessageMapper messageMapper;
+    //private TransferKafkaMessageMapper messageMapper;
 
     @Override
     @Transactional
@@ -113,9 +113,10 @@ public class DepositServiceImpl implements DepositService {
 
         log.info("Saving transfer message: {}", message);
         messageRepository.save(message);
+        messageRepository.deleteAll();
 
         log.info("Sending transfer message to Transfer service: {}", message);
-        kafkaTemplate.send(kafkaProperties.getTopicName(), messageMapper.toTransferKafkaMessageDto(message));
+        //kafkaTemplate.send(kafkaProperties.getTopicName(), messageMapper.toTransferKafkaMessageDto(message));
     }
 
     private String replenishDeposit(TransferKafkaMessage message) {

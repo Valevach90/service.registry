@@ -13,5 +13,5 @@ public interface TransferKafkaMessageMapper {
 
     TransferKafkaMessageDto toTransferKafkaMessageDto(TransferKafkaMessage message);
 
-    TransferKafkaMessage toTransferKafkaMessage(TransferKafkaMessageDto messageDto);
+    TransferKafkaMessage toTransferKafkaMessage(TransferKafkaMessageDto message);
 }
