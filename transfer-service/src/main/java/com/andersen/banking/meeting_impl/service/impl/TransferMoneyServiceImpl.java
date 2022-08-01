@@ -39,7 +39,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     public List<CurrencyResponseDto> getAllCurrencies() {
         log.debug("Get currencies");
         return currencyRepository.findAll()
-                .stream().map(currencyMapper::currency2CurrencyResponseDto).collect(Collectors.toList());
+                .stream().map(currencyMapper::currency2CurrencyResponseDto).toList();
     }
 
     @Override
@@ -47,12 +47,11 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
         log.debug("Get paymentTypes");
         return paymentTypeRepository.findAll()
-                .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).collect(Collectors.toList());
+                .stream().map(paymentTypeMapper::paymentType2PaymentTypeResponseDto).toList();
 
     }
 
     @Override
-    @Transactional(readOnly = true)
     public TransferStatusResponseDto getTransferStatus(Long transferId) {
         log.debug("Get transferStatus by id : {}", transferId);
 
