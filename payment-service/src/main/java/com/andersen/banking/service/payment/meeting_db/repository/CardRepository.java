@@ -4,6 +4,8 @@ import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,5 +21,13 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     Page<Card> getCardByAccountId(Long id, Pageable pageable);
 
-
+    @Query(value = "SELECT c FROM Card c " +
+            "JOIN c.typeCard tc " +
+            "WHERE (:payment IS NULL OR tc.paymentSystem = :payment) " +
+            "   AND (:type IS NULL OR tc.typeName = :type)")
+    Page<Card> findCardByPaymentSystemAndType(
+            @Param("payment") String payment,
+            @Param("type") String type,
+            Pageable pageable
+    );
 }

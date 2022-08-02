@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
+import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,12 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     public TransferResponseDto findById(Long userId, Long transferId) {
         log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
         return null;
+    }
+
+    @Override
+    public TransferStatusResponseDto findTransferStatusById(Long transferId) {
+        log.info("Transfer status by id : {}", transferId);
+        return transferMoneyService.getTransferStatus(transferId);
     }
 
     @Override
