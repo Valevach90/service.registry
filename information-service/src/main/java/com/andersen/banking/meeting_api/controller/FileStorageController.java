@@ -28,10 +28,8 @@ public interface FileStorageController {
     @Operation(summary = "Get file download link",
             description = "get file download link by file name")
     @GetMapping(value = "/link")
-        //{name}
     String getFileDownloadLink(
             @Parameter(description = "file name", required = true)
-            //@PathVariable ("name") String name);
             @RequestParam("name") String name);
 
     @Operation(summary = "Get file(s) info with download link(s)",
