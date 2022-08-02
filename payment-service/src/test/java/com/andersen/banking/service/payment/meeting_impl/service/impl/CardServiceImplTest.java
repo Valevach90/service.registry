@@ -9,6 +9,7 @@ import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundExcep
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,12 +129,65 @@ public class CardServiceImplTest {
     Assertions.assertEquals(returnedCard, cardService.create(receivedCard));
   }
 
+  @Test
+  void findAllByTypeCard_ShouldReturnPageOfCards() {
+    String checkPayment = "MASTERCARD";
+    String checkType = "STANDARD";
+
+    List<Card> filtered = generateCardsWithTypeCard()
+            .stream()
+            .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+            .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
+            .collect(Collectors.toList());
+
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(filtered, pageable, SIZE_PAGE);
+
+    Mockito.when(cardRepository.findCardByPaymentSystemAndType(checkPayment, checkType, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findAllByTypeCard(checkPayment, checkType, pageable);
+
+    Assertions.assertEquals(page, result);
+  }
+
+  @Test
+  void findAllByTypeCardAndOnlyType_ShouldReturnPageOfCards() {
+    String checkType = "STANDARD";
+
+    List<Card> filtered = generateCardsWithTypeCard()
+            .stream()
+            .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+            .collect(Collectors.toList());
+
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(filtered, pageable, SIZE_PAGE);
+
+    Mockito.when(cardRepository.findCardByPaymentSystemAndType(null, checkType, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findAllByTypeCard(null, checkType, pageable);
+    Assertions.assertEquals(page, result);
+  }
 
   private List<Card> generateCards() {
     return Stream
-        .generate(Card::new)
-        .limit(27)
-        .collect(Collectors.toList());
+            .generate(Card::new)
+            .limit(27)
+            .collect(Collectors.toList());
+  }
+
+  private List<Card> generateCardsWithTypeCard() {
+    List<Card> collect = Stream
+            .generate(Card::new)
+            .limit(5)
+            .peek(c -> c.setTypeCard(createTypeCard("MASTERCARDS")))
+            .collect(Collectors.toList());
+    List<Card> addOtherType = Stream
+            .generate(Card::new)
+            .limit(5)
+            .peek(c -> c.setTypeCard(createTypeCard("VISAS")))
+            .collect(Collectors.toList());
+    collect.addAll(addOtherType);
+    return collect;
   }
 
   private Pageable createPageable() {
@@ -145,5 +199,22 @@ public class CardServiceImplTest {
     account.setId(5L);
     account.setAccountNumber("1234567890");
     return account;
+  }
+
+  private TypeCard createTypeCard(String type) {
+    TypeCard typeCard = new TypeCard();
+    switch (type) {
+      case "VISAS" : {
+        typeCard.setId(1L);
+        typeCard.setPaymentSystem("VISA");
+        typeCard.setTypeName("STANDARD");
+      };
+      case "MASTERCARDS" : {
+        typeCard.setId(4L);
+        typeCard.setPaymentSystem("MASTERCARD");
+        typeCard.setTypeName("STANDARD");
+      };
+    }
+    return typeCard;
   }
 }
