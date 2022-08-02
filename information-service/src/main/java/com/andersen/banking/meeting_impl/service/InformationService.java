@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_impl.service;
 import com.andersen.banking.meeting_api.dto.*;
 import org.springframework.data.domain.Pageable;
 
-
 import java.util.List;
 
 public interface InformationService {
@@ -17,6 +16,7 @@ public interface InformationService {
 
     /**
      * Find cities with bank branches by country id.
+     *
      * @param countryId - country id.
      * @return list of CityDto
      */
@@ -26,6 +26,7 @@ public interface InformationService {
 
     /**
      * Find all CityDto.
+     *
      * @param countryId - country id.
      * @return list of CityDto by country Id
      */
@@ -33,6 +34,7 @@ public interface InformationService {
 
     /**
      * Find all CityDto.
+     *
      * @param cityId - city id.
      * @return list of CityDto by Country Id
      */

@@ -64,7 +64,7 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
 
         try {
             ListSharedLinksResult linksResult = client.sharing().listSharedLinksBuilder()
-                    .withPath("/"+ name)
+                    .withPath("/" + name)
                     .withDirectOnly(true)
                     .start();
 
@@ -76,11 +76,11 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
 
         } catch (DbxException e) {
             log.error(e.getMessage());
-            throw new FileStorageServiceException("Problem to get download link for file "+ name);
+            throw new FileStorageServiceException("Problem to get download link for file " + name);
         }
     }
 
-    private String extractLink(ListSharedLinksResult linksResult){
+    private String extractLink(ListSharedLinksResult linksResult) {
 
         String receivedLink;
 
@@ -89,7 +89,7 @@ public class DropboxAccessServiceImpl implements DropboxAccessService {
 
             return receivedLink.replace(DROPBOX_DOWNLOAD_DISABLED, DROPBOX_DOWNLOAD_ENABLED);
 
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             log.error(e.getMessage());
             throw new FileStorageServiceException("Not found: file download link not exist");
         }

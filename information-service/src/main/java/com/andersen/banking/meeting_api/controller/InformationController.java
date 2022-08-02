@@ -49,7 +49,7 @@ public interface InformationController {
             description = "get list with all timetables in a selected address by branch id")
     @GetMapping("/branch/{id}/timetable")
     List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
-                                                   @PathVariable(value = "id") Long branchId);
+                                                  @PathVariable(value = "id") Long branchId);
 
 
 }
