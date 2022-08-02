@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +28,9 @@ public interface InformationController {
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
                                           @PathVariable(value = "id") Long countryId,
-                                          @ParameterObject @PageableDefault Pageable pageable,
-                                          @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches);
+                                          @ParameterObject Pageable pageable,
+                                          @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
+                                          @RequestParam(defaultValue = "false", required = false) boolean all);
 
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")

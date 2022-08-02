@@ -5,6 +5,8 @@ import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InformationControllerImpl implements InformationController {
 
+    private static final Integer NULL_VALUE = null;
     private final InformationService informationService;
 
     @Override
@@ -25,7 +28,8 @@ public class InformationControllerImpl implements InformationController {
 
 
     @Override
-    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable, boolean onlyWithBranches) {
+    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable, boolean onlyWithBranches, boolean all) {
+        if (all) pageable = null;
         if (onlyWithBranches) {
             log.info("get only cities with bank branches");
             return informationService.getListCityDtoWithBankBranchesByCountryId(countryId);
