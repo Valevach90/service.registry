@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -24,11 +25,12 @@ public interface InformationController {
     List<CountryDto> getAllCountries();
 
     @Operation(summary = "Get all cities by countryId",
-            description = "get list with all cities in a selected country by countryId")
+            description = "get list with all cities in a selected country by countryId.")
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
                                           @PathVariable(value = "id") Long countryId,
-                                          @ParameterObject @PageableDefault Pageable pageable);
+                                          @ParameterObject @PageableDefault Pageable pageable,
+                                          @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches);
 
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")

@@ -43,6 +43,13 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
+    public List<CityDto> getListCityDtoWithBankBranchesByCountryId(Long countryId) {
+        log.debug("get only cities with bank branches by countryId : {}", countryId);
+        return cityRepository.getOnlyCitiesWithBankBranches(countryId)
+                .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
+    }
+
+    @Override
     public List<CityDto> getListCityDtoByCountryId(Long countryId, Pageable pageable) {
         log.debug("get cities by countryId : {}", countryId);
         return cityRepository.getCitiesByCountry_IdAndDeletedIsFalse(countryId, pageable)
