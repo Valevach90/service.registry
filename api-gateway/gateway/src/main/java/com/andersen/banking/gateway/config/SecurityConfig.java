@@ -17,7 +17,7 @@ public class SecurityConfig {
         serverHttpSecurity.cors().and()
                 .securityMatcher(new NegatedServerWebExchangeMatcher(
                       ServerWebExchangeMatchers.pathMatchers(AUTH_WHITELIST)))
-                .authorizeExchange(exchange -> exchange.anyExchange().permitAll())//.authenticated())
+                .authorizeExchange(exchange -> exchange.anyExchange().permitAll())
                 .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
 
         serverHttpSecurity.csrf().disable();
