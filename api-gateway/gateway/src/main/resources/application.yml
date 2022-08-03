@@ -21,6 +21,10 @@ spring:
           uri: lb://registration-service
           predicates:
           - Path=/api/v1/**
+        - id: deposit-service
+          uri: lb://deposit-service
+          predicates:
+          - Path=/api/v1/**
   security:
     oauth2:
       resourceserver:
@@ -43,6 +47,8 @@ springdoc:
         url: /transfer-service/api-docs
       - name: registration-service
         url: /registration-service/api-docs
+      - name: deposit-service
+        url: /deposit-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
