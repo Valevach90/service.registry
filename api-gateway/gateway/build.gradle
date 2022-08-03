@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+
 }
 
 group = 'com.andersen.banking.gateway'
@@ -25,8 +26,10 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
+	implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
+	compileOnly 'org.projectlombok:lombok'
 }
 
 dependencyManagement {
