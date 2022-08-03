@@ -16,7 +16,11 @@ spring:
         - id: transfer-service
           uri: lb://transfer-service
           predicates:
-            - Path=/api/v1/transfers/**
+          - Path=/api/v1/transfers/**
+        - id: registration-service
+          uri: lb://registration-service
+          predicates:
+          - Path=/api/v1/**
   security:
     oauth2:
       resourceserver:
@@ -37,6 +41,8 @@ springdoc:
     urls:
       - name: transfer service
         url: /transfer-service/api-docs
+      - name: registration-service
+        url: /registration-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
