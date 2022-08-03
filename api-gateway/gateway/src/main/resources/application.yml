@@ -45,10 +45,6 @@ springdoc:
     urls:
       - name: transfer service
         url: /transfer-service/api-docs
-      - name: registration service
-        url: /registration-service/api-docs
-      - name: notification service
-        url: /notification-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM

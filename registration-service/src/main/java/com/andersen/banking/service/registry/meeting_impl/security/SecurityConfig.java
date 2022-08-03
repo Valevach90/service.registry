@@ -14,10 +14,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-
-/**
- * Configuration of Security.
- */
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -28,11 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorizeRequests -> authorizeRequests
-                //.antMatchers("/api/v1/auth").authenticated()
-                //.antMatchers("/api/v1/users").hasRole("ADMIN")
-                //.antMatchers("/api/v1/passport").hasRole("ADMIN")
-                //.antMatchers("/api/v1/addresses").hasRole("ADMIN")
+        http.cors().and()
+                .authorizeRequests(authorizeRequests -> authorizeRequests
                 .antMatchers("/api/v1/**").permitAll()
                 .anyRequest().authenticated()).oauth2ResourceServer(
                 oauth2ResourceServer -> oauth2ResourceServer.jwt(
@@ -54,6 +50,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**");
+        web.ignoring().antMatchers(AUTH_WHITELIST);
     }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }
+
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api-docs/**",
+            "/v2/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/configuration/**",
+            "/webjars/**"
+    };
 }
