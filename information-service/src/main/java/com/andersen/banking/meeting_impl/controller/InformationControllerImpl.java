@@ -25,8 +25,8 @@ public class InformationControllerImpl implements InformationController {
 
 
     @Override
-    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable, boolean onlyWithBranches, boolean all) {
-        if (all) pageable = null;
+    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable, boolean onlyWithBranches, boolean singlePage) {
+        if (singlePage) pageable = null;
         if (onlyWithBranches) {
             log.info("get only cities with bank branches");
             return informationService.getListCityDtoWithBankBranchesByCountryId(countryId);

@@ -30,7 +30,7 @@ public interface InformationController {
                                           @PathVariable(value = "id") Long countryId,
                                           @ParameterObject Pageable pageable,
                                           @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
-                                          @RequestParam(defaultValue = "false", required = false) boolean all);
+                                          @RequestParam(defaultValue = "false", required = false) boolean singlePage);
 
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")
