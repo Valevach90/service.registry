@@ -1,8 +1,6 @@
 package com.andersen.banking.service.payment.meeting_api.controller;
 
-import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.service.payment.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,4 +68,15 @@ public interface CardController {
   CardResponseDto create(@Parameter(description = "card", required = true)
   @RequestBody
   @Validated CardRegistrationDto cardDto);
+
+  @Operation(summary = "Get type card by card id", description = "get type card information by id")
+  @GetMapping("/types/{id}")
+  TypeCardResponseDto findTypeCardById(@Parameter(description = "card id", required = true)
+                               @PathVariable Long id);
+
+  @Operation(summary = "Update type card", description = "update type card by params in dto object")
+  @PutMapping("/types/{id}")
+  TypeCardResponseDto updateTypeCard(@Parameter(description = "card id", required = true)
+                                 @RequestBody
+                                 @Validated TypeCardUpdateDto typeCardUpdateDto);
 }
