@@ -125,7 +125,36 @@ public class CardServiceImpl implements CardService {
     return cards;
   }
 
-  private void setTypeCard(Card card) {
+  @Override
+  public TypeCardResponseDto getTypeCard(Long id) {
+    log.debug("Get card type by id : {}", id);
+
+    TypeCard typeCard = findTypeCardById(id);
+
+    return typeCardMapper.typeCard2TypeCardResponseDto(typeCard);
+  }
+
+  @Override
+  public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
+    TypeCard typeCard = typeCardMapper.typeCardUpdateDto2TypeCard(typeCardUpdateDto);
+
+    log.debug("Trying to update card type: {}", typeCard);
+
+    TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
+    updatedTypeCard.setTypeName(typeCard.getTypeName());
+    updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
+    typeCardRepository.save(updatedTypeCard);
+
+    log.debug("Return update card type : {}", updatedTypeCard);
+
+    return typeCardMapper.typeCard2TypeCardResponseDto(updatedTypeCard);
+  }
+
+  private TypeCard findTypeCardById(Long id) {
+    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+  }
+
+    private void setTypeCard(Card card) {
     TypeCard typeCard = card.getTypeCard();
     TypeCard existingTypeCard  = typeCardRepository
             .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())

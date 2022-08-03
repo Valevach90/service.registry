@@ -71,4 +71,15 @@ public interface CardController {
     @RequestParam(required = false) String type,
     @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable
   );
+
+  @Operation(summary = "Get type card by card id", description = "get type card information by id")
+  @GetMapping("/types/{id}")
+  TypeCardResponseDto findTypeCardById(@Parameter(description = "card id", required = true)
+                                       @PathVariable Long id);
+
+  @Operation(summary = "Update type card", description = "update type card by params in dto object")
+  @PutMapping("/types/{id}")
+  TypeCardResponseDto updateTypeCard(@Parameter(description = "card id", required = true)
+                                     @RequestBody
+                                     @Validated TypeCardUpdateDto typeCardUpdateDto);
 }

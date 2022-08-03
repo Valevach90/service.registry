@@ -71,4 +71,20 @@ public interface CardService {
      * @return
      */
     Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable);
+
+    /**
+     * This method returns TypeCardResponseDto entity with the given id.
+     *
+     * @param id
+     * @return
+             */
+    TypeCardResponseDto getTypeCard(Long id);
+
+    /**
+     * This method updates the given card type and returns updated version.
+     *
+     * @param typeCardUpdateDto
+     * @return
+     */
+    TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto);
 }
