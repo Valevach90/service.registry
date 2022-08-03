@@ -5,6 +5,7 @@ import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_impl.exception.MapperException;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
@@ -13,6 +14,8 @@ import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTest
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,18 +143,70 @@ public class CardControllerImplTest {
     Assertions.assertThrows(MapperException.class, () -> cardController.create(cardRegistrationDto));
   }
 
+  @Test
+  void findAllByTypeCard_ShouldReturnPageOfCards() {
+    List<CardResponseDto> cardUpdateDtos = generateListOfCardDtoWithTypeCard();
+    List<Card> cards = generateCardsWithNonDefaultTypeCard();
+    Pageable pageable = createPageable();
+    Page<CardResponseDto> pageOfDto = new PageImpl<>(cardUpdateDtos, pageable, SIZE_PAGE);
+    Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
+
+    CardResponseDto cardResponseDto = new CardResponseDto();
+    addTypeCardInDto(cardResponseDto);
+
+    Mockito.when(cardService.findAll(pageable)).thenReturn(pageOfCards);
+    Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(cardResponseDto);
+
+    Page<CardResponseDto> result = cardController.findAll(pageable);
+
+    Assertions.assertEquals(pageOfDto, result);
+  }
+
   private List<CardResponseDto> generateListOfCardDto() {
     return Stream
-        .generate(CardResponseDto::new)
-        .limit(27)
-        .collect(Collectors.toList());
+            .generate(CardResponseDto::new)
+            .limit(27)
+            .collect(Collectors.toList());
+  }
+
+  private List<CardResponseDto> generateListOfCardDtoWithTypeCard() {
+
+
+    return Stream
+            .generate(CardResponseDto::new)
+            .limit(27)
+            .peek(this::addTypeCardInDto)
+            .collect(Collectors.toList());
+  }
+
+  private void addTypeCardInDto(CardResponseDto c) {
+    TypeCard typeCard = populateTypeCard(new TypeCard());
+
+    c.setTypeName(typeCard.getTypeName());
+    c.setPaymentSystem(typeCard.getPaymentSystem());
   }
 
   private List<Card> generateCards() {
     return Stream
-        .generate(Card::new)
-        .limit(27)
-        .collect(Collectors.toList());
+            .generate(Card::new)
+            .limit(27)
+            .collect(Collectors.toList());
+  }
+
+  private List<Card> generateCardsWithNonDefaultTypeCard() {
+    return Stream
+            .generate(Card::new)
+            .limit(27)
+            .peek(c -> c.setTypeCard(populateTypeCard(new TypeCard())))
+            .collect(Collectors.toList());
+  }
+
+  @NotNull
+  private TypeCard populateTypeCard(TypeCard typeCard) {
+    typeCard.setId(2L);
+    typeCard.setPaymentSystem("MASTERCARD");
+    typeCard.setTypeName("STANDARD");
+    return typeCard;
   }
 
   private Pageable createPageable() {

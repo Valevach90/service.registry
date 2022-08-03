@@ -120,5 +120,15 @@ public class CardControllerImpl implements CardController {
     return cardResponseDto;
   }
 
+  @Override
+  public Page<CardResponseDto> findAllByTypeCard(String payment, String type, Pageable pageable) {
+    log.trace("Receiving request for getting all cards by type card");
 
+    Page<CardResponseDto> result = cardService
+            .findAllByTypeCard(payment, type, pageable)
+            .map(cardMapper::toCardResponseDto);
+
+    log.trace("Returning page of cards: {}", result.getContent());
+    return result;
+  }
 }

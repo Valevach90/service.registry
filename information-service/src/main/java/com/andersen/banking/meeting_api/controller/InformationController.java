@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -24,11 +24,13 @@ public interface InformationController {
     List<CountryDto> getAllCountries();
 
     @Operation(summary = "Get all cities by countryId",
-            description = "get list with all cities in a selected country by countryId")
+            description = "get list with all cities in a selected country by countryId.")
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
                                           @PathVariable(value = "id") Long countryId,
-                                          @ParameterObject @PageableDefault Pageable pageable);
+                                          @ParameterObject Pageable pageable,
+                                          @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
+                                          @RequestParam(defaultValue = "false", required = false) boolean singlePage);
 
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")
@@ -47,7 +49,7 @@ public interface InformationController {
             description = "get list with all timetables in a selected address by branch id")
     @GetMapping("/branch/{id}/timetable")
     List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
-                                                   @PathVariable(value = "id") Long branchId);
+                                                  @PathVariable(value = "id") Long branchId);
 
 
 }
