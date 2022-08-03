@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface TimeTableMapper {
 
-    @Mapping(source = "address.id", target = "addressId")
+    @Mapping(source = "bankBranch.id", target = "branchId")
     TimeTableDto timeTable2TimeTableDto(TimeTable timeTable);
 
 }

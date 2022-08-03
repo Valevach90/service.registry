@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: information-service
@@ -15,6 +14,9 @@ spring:
     schemas: information_service
     user: psqluser
     password: PoSPa$$woRd
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 logging:
   level:

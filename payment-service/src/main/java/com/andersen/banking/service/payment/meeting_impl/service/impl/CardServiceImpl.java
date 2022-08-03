@@ -116,32 +116,13 @@ public class CardServiceImpl implements CardService {
   }
 
   @Override
-  public TypeCardResponseDto getTypeCard(Long id) {
-    log.debug("Get card type by id : {}", id);
+  public Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable) {
+    log.info("Find all cards with payment system {} and type {}", payment, type);
 
-    TypeCard typeCard = findTypeCardById(id);
+    Page<Card> cards = cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
 
-    return typeCardMapper.typeCard2TypeCardResponseDto(typeCard);
-  }
-
-  @Override
-  public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
-    TypeCard typeCard = typeCardMapper.typeCardUpdateDto2TypeCard(typeCardUpdateDto);
-
-    log.debug("Trying to update card type: {}", typeCard);
-
-    TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
-    updatedTypeCard.setTypeName(typeCard.getTypeName());
-    updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
-    typeCardRepository.save(updatedTypeCard);
-
-    log.debug("Return update card type : {}", updatedTypeCard);
-
-    return typeCardMapper.typeCard2TypeCardResponseDto(updatedTypeCard);
-  }
-
-  private TypeCard findTypeCardById(Long id) {
-    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+    log.info("Found {} cards", cards.getContent().size());
+    return cards;
   }
 
   private void setTypeCard(Card card) {

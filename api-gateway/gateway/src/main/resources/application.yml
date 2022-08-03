@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    discovery:
+      enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: transfer-service
+          uri: lb://transfer-service
+          predicates:
+          - Path=/api/v1/transfers/**
+        - id: registration-service
+          uri: lb://registration-service
+          predicates:
+          - Path=/api/v1/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
+          jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    preferIpAddress: true
+
+springdoc:
+  api-docs:
+    path: '/api-docs'
+  swagger-ui:
+    path: '/swagger-ui'
+    urls:
+      - name: transfer service
+        url: /transfer-service/api-docs
+      - name: registration-service
+        url: /registration-service/api-docs
+    oauth:
+      clientId: api-gateway
+      clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
+  oAuthFlow:
+    authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
+    tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
+    use-pkce-with-authorization-code-grant: true

@@ -5,6 +5,7 @@ import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This interface presents the basic contract for service, which works with Card entity.
@@ -61,18 +62,13 @@ public interface CardService {
     Page<Card> findByAccountId(Long id, Pageable pageable);
 
     /**
-     * This method returns TypeCardResponseDto entity with the given id.
+     * This method returns page of card by payment or type or all together. If type and payment system is null
+     * return all cards
      *
-     * @param id
+     * @param payment
+     * @param type
+     * @param pageable
      * @return
      */
-    TypeCardResponseDto getTypeCard(Long id);
-
-    /**
-     * This method updates the given card type and returns updated version.
-     *
-     * @param typeCardUpdateDto
-     * @return
-     */
-    TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto);
+    Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable);
 }

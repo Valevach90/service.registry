@@ -19,10 +19,9 @@ public class TimeTable extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "address_id")
-    private Address address;
+    @JoinColumn(nullable = false, name = "branch_id")
+    private BankBranch bankBranch;
 
     @Column(nullable = false, name = "week_day_from")
     private String dayFrom;

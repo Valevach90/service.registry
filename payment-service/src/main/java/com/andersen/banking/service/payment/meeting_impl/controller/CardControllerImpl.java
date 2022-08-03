@@ -119,29 +119,15 @@ public class CardControllerImpl implements CardController {
     return cardResponseDto;
   }
 
-  /**
-   * End-point to find TypeCard entity by id.
-   *
-   * @param id
-   * @return
-   */
   @Override
-  public TypeCardResponseDto findTypeCardById(Long id) {
-    log.info("Find card type by id : {}", id);
-    return cardService.getTypeCard(id);
+  public Page<CardResponseDto> findAllByTypeCard(String payment, String type, Pageable pageable) {
+    log.trace("Receiving request for getting all cards by type card");
+
+    Page<CardResponseDto> result = cardService
+            .findAllByTypeCard(payment, type, pageable)
+            .map(cardMapper::toCardResponseDto);
+
+    log.trace("Returning page of cards: {}", result.getContent());
+    return result;
   }
-
-  /**
-   * End-point to update existing TypeCard.
-   *
-   * @param typeCardUpdateDto
-   * @return
-   */
-  @Override
-  public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
-    log.info("Receiving card type : {}", typeCardUpdateDto);
-    return cardService.updateTypeCard(typeCardUpdateDto);
-  }
-
-
 }

@@ -17,8 +17,14 @@ public class BankBranchDto {
     @NotNull
     private Long id;
 
-    @NotNull
-    private Long addressId;
+    @NotBlank
+    private String streetName;
+
+    @NotBlank
+    private String house;
+
+    @NotBlank
+    private String building;
 
     @NotBlank
     private String branchNumber;

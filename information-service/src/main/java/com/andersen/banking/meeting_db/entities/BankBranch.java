@@ -20,9 +20,19 @@ public class BankBranch extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, name = "address_id", referencedColumnName = "id")
-    private Address address;
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "city_id")
+    private City city;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "street_id")
+    private Street street;
+
+    @Column(nullable = false, name = "house")
+    private String house;
+
+    @Column(name = "building")
+    private String building;
 
     @Column(nullable = false, name = "branch_number", length = 5)
     private String branchNumber;

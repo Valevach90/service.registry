@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface BankBranchRepository extends JpaRepository<BankBranch, Long> {
 
-    List<BankBranch> getBankBranchByAddress_IdAndDeletedIsFalse(Long addressId);
+    List<BankBranch> getBankBranchByCity_IdAndDeletedIsFalse(Long cityId);
 }

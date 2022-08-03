@@ -17,19 +17,33 @@ public class AccountMapperTest {
   AccountMapper accountMapper;
 
   @Test
-  void toCard_ShouldReturnCardDto_WhenCardIsCorrect() {
+  void toAccount_ShouldReturnAccountDto_WhenAccountIsCorrect() {
     Assertions.assertEquals(populateAccount(), accountMapper.toAccount(populateAccountDto()));
   }
 
   @Test
-  void toCardDto_ShouldReturnCard_WhenCardDtoIsCorrect() {
+  void toAccountDto_ShouldReturnAccount_WhenAccountDtoIsCorrect() {
     Assertions.assertEquals(populateAccountDto(), accountMapper.toAccountDto(populateAccount()));
+  }
+
+  @Test
+  void toAccount_ShouldReturnLongBalance_WhenAccountDtoDoubleBalance() {
+    AccountDto accountDto = populateAccountDto();
+    accountDto.setBalance(100.95);
+    Assertions.assertEquals(10095, accountMapper.toAccount(accountDto).getBalance());
+  }
+
+  @Test
+  void toAccountDto_ShouldReturnDoubleBalance_WhenAccountLongBalance() {
+    Account account = populateAccount();
+    account.setBalance(10095);
+    Assertions.assertEquals(100.95, accountMapper.toAccountDto(account).getBalance());
   }
 
   private Account populateAccount() {
     Account account = new Account();
     account.setId(9L);
-    account.setBalance(10000L);
+    account.setBalance(1_000_000);
     account.setBankName("Bank");
     account.setAccountNumber("1234567890");
     account.setCurrency("USD");
@@ -42,7 +56,7 @@ public class AccountMapperTest {
   private AccountDto populateAccountDto() {
     AccountDto accountDto = new AccountDto();
     accountDto.setId(9L);
-    accountDto.setBalance(10000L);
+    accountDto.setBalance(10000);
     accountDto.setBankName("Bank");
     accountDto.setAccountNumber("1234567890");
     accountDto.setCurrency("USD");
