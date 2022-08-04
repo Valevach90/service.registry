@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
 
-        String response = client.post()
+        String response = client.put()
                 .uri(uriUsers + id + uriPasswordReset)
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
