@@ -17,16 +17,20 @@ spring:
           uri: lb://transfer-service
           predicates:
             - Path=/api/v1/transfers/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/accounts/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/cards/**
         - id: registration-service
           uri: lb://registration-service
           predicates:
             - Path=/api/v1/**
         - id: notification-service
           uri: lb://notification-service
-          predicates:
-            - Path=/api/v1/**
-        - id: payment-service
-          uri: lb://payment-service
           predicates:
             - Path=/api/v1/**
   security:
@@ -46,6 +50,7 @@ springdoc:
     path: '/api-docs'
   swagger-ui:
     path: '/swagger-ui'
+    operationsSorter: method
     urls:
       - name: transfer service
         url: /transfer-service/api-docs
