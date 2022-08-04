@@ -16,7 +16,7 @@ spring:
         - id: transfer-service
           uri: lb://transfer-service
           predicates:
-          - Path=/api/v1/transfers/**
+            - Path=/api/v1/transfers/**
         - id: registration-service
           uri: lb://registration-service
           predicates:
@@ -25,7 +25,6 @@ spring:
           uri: lb://notification-service
           predicates:
             - Path=/api/v1/**
-          - Path=/api/v1/**
         - id: payment-service
           uri: lb://payment-service
           predicates:
@@ -50,8 +49,12 @@ springdoc:
     urls:
       - name: transfer service
         url: /transfer-service/api-docs
-      - name: registration-service
+      - name: registration service
         url: /registration-service/api-docs
+      - name: notification service
+        url: /notification-service/api-docs
+      - name: payment service
+        url: /payment-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM

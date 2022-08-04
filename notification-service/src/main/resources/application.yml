@@ -25,6 +25,9 @@ eureka:
   instance:
     instance-id: ${spring.application.name}-${random.uuid}
     preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://10.10.14.31:30100/eureka
 
 springdoc:
   show-actuator: true
