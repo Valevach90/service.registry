@@ -16,11 +16,15 @@ spring:
         - id: transfer-service
           uri: lb://transfer-service
           predicates:
-          - Path=/api/v1/transfers/**
+            - Path=/api/v1/transfers/**
         - id: registration-service
           uri: lb://registration-service
           predicates:
-          - Path=/api/v1/**
+            - Path=/api/v1/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/v1/**
         - id: payment-service
           uri: lb://payment-service
           predicates:
@@ -42,13 +46,14 @@ springdoc:
     path: '/api-docs'
   swagger-ui:
     path: '/swagger-ui'
-    operationsSorter: method
     urls:
-      - name: transfer-service
+      - name: transfer service
         url: /transfer-service/api-docs
-      - name: registration-service
+      - name: registration service
         url: /registration-service/api-docs
-      - name: payment-service
+      - name: notification service
+        url: /notification-service/api-docs
+      - name: payment service
         url: /payment-service/api-docs
     oauth:
       clientId: api-gateway
