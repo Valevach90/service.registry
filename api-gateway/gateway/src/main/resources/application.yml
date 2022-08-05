@@ -21,16 +21,16 @@ spring:
           uri: lb://registration-service
           predicates:
             - Path=/api/v1/**
+        - id: information-service
+          uri: lb://information-service
+          predicates:
+            - Path=/api/v1/**
         - id: notification-service
           uri: lb://notification-service
           predicates:
             - Path=/api/v1/**
         - id: payment-service
           uri: lb://payment-service
-          predicates:
-            - Path=/api/v1/**
-        - id: information-service
-          uri: lb://information-service
           predicates:
             - Path=/api/v1/**
   security:
@@ -59,6 +59,8 @@ springdoc:
         url: /notification-service/api-docs
       - name: payment service
         url: /payment-service/api-docs
+      - name: information service
+        url: /information-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
@@ -66,3 +68,5 @@ springdoc:
     authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
     tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
     use-pkce-with-authorization-code-grant: true
+
+
