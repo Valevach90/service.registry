@@ -27,9 +27,14 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	implementation 'org.springframework.data:spring-data-commons:2.7.2'
+
+
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
 	implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
+	implementation 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE'
+
 	compileOnly 'org.projectlombok:lombok'
 }
 
