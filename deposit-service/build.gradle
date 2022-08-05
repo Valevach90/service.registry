@@ -37,11 +37,14 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:testcontainers'
 	testRuntimeOnly 'com.h2database:h2'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 
 dependencyManagement {
 	imports {
 		mavenBom "org.testcontainers:testcontainers-bom:$testcontainersVersion"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
 
