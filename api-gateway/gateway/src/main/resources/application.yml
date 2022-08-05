@@ -24,7 +24,8 @@ spring:
         - id: information-service
           uri: lb://information-service
           predicates:
-            - Path=/api/v1/**
+            - Path=/api/v1/files/**
+            - Path=/api/v1/information/**
         - id: notification-service
           uri: lb://notification-service
           predicates:
