@@ -35,5 +35,6 @@ dependencies {
     implementation "com.github.javafaker:javafaker:1.0.2"
     implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 }

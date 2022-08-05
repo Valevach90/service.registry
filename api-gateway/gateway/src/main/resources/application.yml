@@ -29,6 +29,10 @@ spring:
           uri: lb://payment-service
           predicates:
             - Path=/api/v1/**
+        - id: information-service
+          uri: lb://information-service
+          predicates:
+            - Path=/api/v1/**
   security:
     oauth2:
       resourceserver:
