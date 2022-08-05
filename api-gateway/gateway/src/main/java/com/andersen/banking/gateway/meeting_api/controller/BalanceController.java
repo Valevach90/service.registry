@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_api.controller;
+package com.andersen.banking.gateway.meeting_api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface BalanceController {
     @Operation(summary = "Get sum money", description = "get total balance from deposits and accounts")
     @GetMapping("/{id}")
-    Long getAllMoneyOwner(@PathVariable Long id);
+    Double getAllMoneyOwner(@PathVariable("id") Long id);
 }

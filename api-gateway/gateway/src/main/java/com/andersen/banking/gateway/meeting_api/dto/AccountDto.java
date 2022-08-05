@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_api.dto;
+package com.andersen.banking.gateway.meeting_api.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
