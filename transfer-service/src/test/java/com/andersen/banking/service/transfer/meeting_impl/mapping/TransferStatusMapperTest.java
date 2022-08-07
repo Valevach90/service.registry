@@ -37,6 +37,13 @@ public class TransferStatusMapperTest {
         checkForEquals(transferStatus, result);
     }
 
+    @Test
+    void whenTransferStatusResponseDto2TransferStatus_andOk() {
+        var result = transferStatusMapper
+                .TransferStatusResponseDto2transferStatus(transferStatusResponseDto);
+        checkForEquals(result, transferStatusResponseDto);
+    }
+
     private void checkForEquals(TransferStatus transferStatus, TransferStatusResponseDto result) {
         assertEquals(transferStatus.getName(), transferStatusResponseDto.getName());
         assertEquals(transferStatus.getDescription(), transferStatusResponseDto.getDescription());
