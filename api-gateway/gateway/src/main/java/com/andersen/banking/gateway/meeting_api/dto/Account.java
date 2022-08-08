@@ -16,15 +16,13 @@ import java.time.LocalDate;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Schema(description = "dto for accounts")
-public class AccountDto {
+public class Account {
 
     @JsonProperty("id")
     private Long id;
 
     @NotBlank
     @JsonProperty("account_number")
-    //@Pattern(regexp = "\\d+")
     private String accountNumber;
 
     @NotNull
@@ -32,14 +30,11 @@ public class AccountDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate openDate;
 
-    @NotNull
     @JsonProperty(value = "close_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate closeDate = null;
-
+    private LocalDate closeDate;
 
     @Min(1L)
-    @NotNull
     @JsonProperty("owner_id")
     private Long ownerId;
 
@@ -56,5 +51,4 @@ public class AccountDto {
     @NotNull
     @JsonProperty("balance")
     private double balance;
-
 }

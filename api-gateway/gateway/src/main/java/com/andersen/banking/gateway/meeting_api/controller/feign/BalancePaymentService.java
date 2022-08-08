@@ -1,17 +1,18 @@
 package com.andersen.banking.gateway.meeting_api.controller.feign;
 
-import com.andersen.banking.gateway.meeting_api.dto.AccountDto;
+import com.andersen.banking.gateway.meeting_api.dto.Account;
+import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import reactivefeign.spring.config.ReactiveFeignClient;
+import reactor.core.publisher.Mono;
 
-@FeignClient(name = "payment-service")
+@ReactiveFeignClient(name = "payment-service")
 public interface BalancePaymentService {
     @GetMapping("/api/v1/accounts/owners/{id}")
-    Page<AccountDto> findByOwnerId(@Parameter(description = "ownerId", required = true)
-                                   @PathVariable("id") Long id,
-                                   Pageable pageable);
+    Mono<RestResponsePage<Account>> findByOwnerId(@Parameter(description = "ownerId", required = true)
+                                                  @PathVariable("id") Long id,
+                                                  Pageable pageable);
 }
