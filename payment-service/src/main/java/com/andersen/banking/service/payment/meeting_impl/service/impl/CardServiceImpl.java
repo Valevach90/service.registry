@@ -1,11 +1,14 @@
 package com.andersen.banking.service.payment.meeting_impl.service.impl;
 
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_db.repository.CardRepository;
 import com.andersen.banking.service.payment.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
+import com.andersen.banking.service.payment.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
@@ -27,6 +30,8 @@ public class CardServiceImpl implements CardService {
   private final CardRepository cardRepository;
   private final TypeCardRepository typeCardRepository;
   private final AccountService accountService;
+
+  private final TypeCardMapper typeCardMapper;
 
   @Transactional(readOnly = true)
   @Override
@@ -120,7 +125,36 @@ public class CardServiceImpl implements CardService {
     return cards;
   }
 
-  private void setTypeCard(Card card) {
+  @Override
+  public TypeCardResponseDto getTypeCard(Long id) {
+    log.debug("Get card type by id : {}", id);
+
+    TypeCard typeCard = findTypeCardById(id);
+
+    return typeCardMapper.typeCard2TypeCardResponseDto(typeCard);
+  }
+
+  @Override
+  public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
+    TypeCard typeCard = typeCardMapper.typeCardUpdateDto2TypeCard(typeCardUpdateDto);
+
+    log.debug("Trying to update card type: {}", typeCard);
+
+    TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
+    updatedTypeCard.setTypeName(typeCard.getTypeName());
+    updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
+    typeCardRepository.save(updatedTypeCard);
+
+    log.debug("Return update card type : {}", updatedTypeCard);
+
+    return typeCardMapper.typeCard2TypeCardResponseDto(updatedTypeCard);
+  }
+
+  private TypeCard findTypeCardById(Long id) {
+    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+  }
+
+    private void setTypeCard(Card card) {
     TypeCard typeCard = card.getTypeCard();
     TypeCard existingTypeCard  = typeCardRepository
             .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())

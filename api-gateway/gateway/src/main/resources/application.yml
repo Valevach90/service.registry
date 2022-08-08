@@ -17,21 +17,30 @@ spring:
           uri: lb://transfer-service
           predicates:
             - Path=/api/v1/transfers/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/accounts/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/cards/**
         - id: registration-service
           uri: lb://registration-service
           predicates:
             - Path=/api/v1/**
+            - Path=/api/v1/users/**, /api/v1/passport/**, /api/v1/addresses**, /api/v1/auth/**, /api/v1/notifications/**
         - id: information-service
           uri: lb://information-service
           predicates:
             - Path=/api/v1/files/**
             - Path=/api/v1/information/**
+        - id: deposit-service
+          uri: lb://deposit-service
+          predicates:
+            - Path=/api/v1/products/**, /api/v1/deposits/**
         - id: notification-service
           uri: lb://notification-service
-          predicates:
-            - Path=/api/v1/**
-        - id: payment-service
-          uri: lb://payment-service
           predicates:
             - Path=/api/v1/**
   security:
@@ -51,6 +60,7 @@ springdoc:
     path: '/api-docs'
   swagger-ui:
     path: '/swagger-ui'
+    operationsSorter: method
     urls:
       - name: transfer service
         url: /transfer-service/api-docs
@@ -62,6 +72,8 @@ springdoc:
         url: /payment-service/api-docs
       - name: information service
         url: /information-service/api-docs
+      - name: deposit-service
+        url: /deposit-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
