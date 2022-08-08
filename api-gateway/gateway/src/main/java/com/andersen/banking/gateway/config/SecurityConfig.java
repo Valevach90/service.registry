@@ -19,7 +19,6 @@ public class SecurityConfig {
                       ServerWebExchangeMatchers.pathMatchers(AUTH_WHITELIST)))
                 .authorizeExchange(exchange -> exchange.anyExchange().permitAll())
                 .oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt);
-
         serverHttpSecurity.csrf().disable();
         return serverHttpSecurity.build();
     }
