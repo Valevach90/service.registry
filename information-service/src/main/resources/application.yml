@@ -43,7 +43,7 @@ springdoc:
     disable-swagger-default-url: true
     operationsSorter: method
     oauth:
-      clientId: information-service
+      clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
     groups-order: desc
   default-consumes-media-type: 'application/json'
