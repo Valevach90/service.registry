@@ -21,19 +21,6 @@ public class Account {
     @JsonProperty("id")
     private Long id;
 
-    @NotBlank
-    @JsonProperty("account_number")
-    private String accountNumber;
-
-    @NotNull
-    @JsonProperty("open_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate openDate;
-
-    @JsonProperty(value = "close_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate closeDate;
-
     @Min(1L)
     @JsonProperty("owner_id")
     private Long ownerId;
@@ -43,12 +30,8 @@ public class Account {
     @Size(min = 3, max = 3, message = "currency should have exactly 3 characters")
     private String currency;
 
-    @NotBlank
-    @JsonProperty("bank_name")
-    @Size(min = 3, max = 30, message = "bank_name should have at least 3 and at maximum 30 characters")
-    private String bankName;
-
     @NotNull
     @JsonProperty("balance")
     private double balance;
+
 }
