@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingDouble;
 
 @Slf4j
 @Service
@@ -49,13 +50,13 @@ public class BalanceServiceImpl implements BalanceService {
                     .stream()
                     .collect(groupingBy(Account::getCurrency, summingDouble(Account::getBalance)));
 
-            Map<String, Double> combinedMap = Stream.concat(mapDeposit.entrySet().stream(), mapAccount.entrySet().stream())
+            List<Currency> currencies = Stream.concat(mapDeposit.entrySet().stream(), mapAccount.entrySet().stream())
                     .collect(groupingBy(Map.Entry::getKey,
-                            summingDouble(Map.Entry::getValue)));
+                            summingDouble(Map.Entry::getValue)))
+                    .entrySet().stream()
+                    .map(e -> new Currency(e.getKey(), e.getValue())).toList();
 
-            List<Currency> collect = combinedMap.entrySet().stream()
-                    .map(e -> new Currency(e.getKey(), e.getValue())).collect(toList());
-            return new User(id, collect);
+            return new User(id, currencies);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
