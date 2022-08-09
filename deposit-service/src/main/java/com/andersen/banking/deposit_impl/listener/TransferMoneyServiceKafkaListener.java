@@ -32,11 +32,8 @@ public class TransferMoneyServiceKafkaListener {
 
     @KafkaListener(groupId = "${spring.kafka.groupId}", topicPartitions =
                                                         { @TopicPartition(topic = "${spring.kafka.topicName}", partitions = PARTITION_OF_REQUEST)})
-    public void listenTransferMoneyService(@Payload RequestTransferKafkaMessage message,
-                                           @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions) {
+    public void listenTransferMoneyService(@Payload RequestTransferKafkaMessage message) {
 
-        System.out.println(partitions);
-        System.out.println("Received message: " + message);
-        //depositService.makeTransfer(transferMapper.toTransfer(message));
+        depositService.makeTransfer(transferMapper.toTransfer(message));
     }
 }

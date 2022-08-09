@@ -24,6 +24,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DepositServiceImpl implements DepositService {
 
+    private static final String DEPOSIT_TYPE = "Deposit";
+
+    private static final String KEY_OF_KAFKA_MESSAGE_RESPONSE = "response";
+    private static final Integer PARTITION_OF_RESPONSE = 2;
     private final DepositRepository depositRepository;
 
     private final TransferRepository transferRepository;
@@ -113,11 +117,9 @@ public class DepositServiceImpl implements DepositService {
 
         log.info("Saving transfer: {}", transfer);
         transferRepository.save(transfer);
-        //transferRepository.deleteAll();
 
-        //create response message
-        log.info("Sending response message with transfer result to Transfer service: {}", transfer);
-        //kafkaTemplate.send(kafkaProperties.getTopicName(), messageMapper.toTransferKafkaMessageDto(message));
+        log.info("Sending response message: {}", transfer);
+        sendResponse(transfer);
     }
 
     private Boolean replenishDeposit(Transfer transfer) {
@@ -154,5 +156,17 @@ public class DepositServiceImpl implements DepositService {
         }
         log.info("Withdrawal failed (deposit not found or not enough money) for transfer: {}", transfer);
         return false;
+    }
+
+    private void sendResponse(Transfer transfer){
+        log.info("Creating response message based on transfer: {}", transfer);
+
+        ResponseKafkaTransferMessage response = new ResponseKafkaTransferMessage();
+        response.setTransferId(transfer.getTransferId());
+        response.setResult(transfer.getResult());
+        response.setStatusDescription(transfer.getStatusDescription());
+
+        log.info("Sending response message with transfer result to Transfer service: {}", response);
+        kafkaTemplate.send(kafkaProperties.getTopicName(), PARTITION_OF_RESPONSE, KEY_OF_KAFKA_MESSAGE_RESPONSE, response);
     }
 }
