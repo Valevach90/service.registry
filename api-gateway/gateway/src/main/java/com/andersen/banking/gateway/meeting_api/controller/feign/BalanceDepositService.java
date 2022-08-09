@@ -1,7 +1,7 @@
 package com.andersen.banking.gateway.meeting_api.controller.feign;
 
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
-import com.andersen.banking.gateway.meeting_api.dto.Deposit;
+import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactivefeign.spring.config.ReactiveFeignClient;

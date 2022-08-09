@@ -1,6 +1,6 @@
 package com.andersen.banking.gateway.meeting_api.controller.feign;
 
-import com.andersen.banking.gateway.meeting_api.dto.Account;
+import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Pageable;

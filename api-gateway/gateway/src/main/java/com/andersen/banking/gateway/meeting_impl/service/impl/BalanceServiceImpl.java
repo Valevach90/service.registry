@@ -2,7 +2,11 @@ package com.andersen.banking.gateway.meeting_impl.service.impl;
 
 import com.andersen.banking.gateway.meeting_api.controller.feign.BalanceDepositService;
 import com.andersen.banking.gateway.meeting_api.controller.feign.BalancePaymentService;
-import com.andersen.banking.gateway.meeting_api.dto.*;
+import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
+import com.andersen.banking.gateway.meeting_api.dto.gateway.Currency;
+import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
+import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
+import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
 import com.andersen.banking.gateway.meeting_impl.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

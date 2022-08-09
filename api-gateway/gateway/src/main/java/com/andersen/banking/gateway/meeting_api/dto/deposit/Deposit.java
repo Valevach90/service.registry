@@ -1,4 +1,4 @@
-package com.andersen.banking.gateway.meeting_api.dto;
+package com.andersen.banking.gateway.meeting_api.dto.deposit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

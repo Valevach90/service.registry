@@ -1,6 +1,6 @@
 package com.andersen.banking.gateway.meeting_api.controller;
 
-import com.andersen.banking.gateway.meeting_api.dto.User;
+import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;

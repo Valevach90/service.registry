@@ -30,12 +30,16 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
 	implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
 
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.2'
+
 	implementation 'com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:3.2.4'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.2'
 
 	compileOnly 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.2'
+
 }
 
 dependencyManagement {
