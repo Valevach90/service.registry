@@ -1,13 +1,13 @@
 package com.andersen.banking.deposit_impl.service.impl;
 
-import com.andersen.banking.deposit_api.dto.kafka.TransferKafkaMessageDto;
+import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.Deposit;
-import com.andersen.banking.deposit_db.entities.TransferKafkaMessage;
+import com.andersen.banking.deposit_db.entities.Transfer;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
-import com.andersen.banking.deposit_db.repositories.TransferKafkaMessageRepository;
+import com.andersen.banking.deposit_db.repositories.TransferRepository;
 import com.andersen.banking.deposit_impl.config.KafkaConfigProperties;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
-import com.andersen.banking.deposit_impl.mapping.TransferKafkaMessageMapper;
+import com.andersen.banking.deposit_impl.mapping.TransferMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
 
-    private final TransferKafkaMessageRepository messageRepository;
+    private final TransferRepository transferRepository;
 
     private KafkaConfigProperties kafkaProperties;
 
-    private KafkaTemplate<String, TransferKafkaMessageDto> kafkaTemplate;
+    private KafkaTemplate<String, ResponseKafkaTransferMessage> kafkaTemplate;
 
-    //private TransferKafkaMessageMapper messageMapper;
+    private TransferMapper transferMapper;
 
     @Override
     @Transactional
@@ -96,62 +96,63 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional
-    public void makeTransfer(TransferKafkaMessage message) {
-        log.info("Trying make transfer for transfer message: {}", message);
+    public void makeTransfer(Transfer transfer) {
+        log.info("Trying make transfer: {}", transfer);
 
-        if (message.getDestinationType().equals("Deposit")) {
+        if (transfer.getDestinationType().equals("Deposit")) {
 
-            String transferStatus = replenishDeposit(message);
-            message.setStatusName(transferStatus);
+            Boolean replenishResult = replenishDeposit(transfer);
+            transfer.setResult(replenishResult);
         }
 
-        if (message.getSourceType().equals("Deposit") && message.getStatusName().equals("Success")) {
+        if (transfer.getSourceType().equals("Deposit") && transfer.getResult()) {
 
-            String transferStatus = withdrawalDeposit(message);
-            message.setStatusName(transferStatus);
+            Boolean withdrawalResult = withdrawalDeposit(transfer);
+            transfer.setResult(withdrawalResult);
         }
 
-        log.info("Saving transfer message: {}", message);
-        messageRepository.save(message);
-        messageRepository.deleteAll();
+        log.info("Saving transfer: {}", transfer);
+        transferRepository.save(transfer);
+        //transferRepository.deleteAll();
 
-        log.info("Sending transfer message to Transfer service: {}", message);
+        //create response message
+        log.info("Sending response message with transfer result to Transfer service: {}", transfer);
         //kafkaTemplate.send(kafkaProperties.getTopicName(), messageMapper.toTransferKafkaMessageDto(message));
     }
 
-    private String replenishDeposit(TransferKafkaMessage message) {
-        log.info("Trying replenish deposit using transfer message: {}", message);
+    private Boolean replenishDeposit(Transfer transfer) {
+        log.info("Trying replenish deposit using transfer: {}", transfer);
 
-        Optional<Deposit> destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber());
+        Optional<Deposit> destinationDeposit = depositRepository.findByDepositNumber(transfer.getDestinationNumber());
 
         if (destinationDeposit.isPresent()) {
 
-            destinationDeposit.get().setAmount(destinationDeposit.get().getAmount() + message.getAmount());
+            destinationDeposit.get().setAmount(destinationDeposit.get().getAmount() + transfer.getAmount());
 
             depositRepository.save(destinationDeposit.get());
 
-            log.info("Replenishment successful for transfer message: {}", message);
-           return "Success";
+            log.info("Replenishment successful for transfer: {}", transfer);
+           return true;
         }
-        log.info("Withdrawal failed (deposit not found) for transfer message: {}", message);
-        return "Fail";
+        log.info("Withdrawal failed (deposit not found) for transfer: {}", transfer);
+        return false;
     }
 
-    private String withdrawalDeposit(TransferKafkaMessage message) {
-        log.info("Trying withdrawal deposit using transfer message: {}", message);
+    private Boolean withdrawalDeposit(Transfer transfer) {
+        log.info("Trying withdrawal deposit using transfer: {}", transfer);
 
-        Optional<Deposit> sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber());
+        Optional<Deposit> sourceDeposit = depositRepository.findByDepositNumber(transfer.getSourceNumber());
 
-        if (sourceDeposit.isPresent() && sourceDeposit.get().getAmount() >= message.getAmount()) {
+        if (sourceDeposit.isPresent() && sourceDeposit.get().getAmount() >= transfer.getAmount()) {
 
-            sourceDeposit.get().setAmount(sourceDeposit.get().getAmount() - message.getAmount());
+            sourceDeposit.get().setAmount(sourceDeposit.get().getAmount() - transfer.getAmount());
 
             depositRepository.save(sourceDeposit.get());
 
-            log.info("Withdrawal successful for transfer message: {}", message);
-            return "Success";
+            log.info("Withdrawal successful for transfer: {}", transfer);
+            return true;
         }
-        log.info("Withdrawal failed (deposit not found or not enough money) for transfer message: {}", message);
-        return "Fail";
+        log.info("Withdrawal failed (deposit not found or not enough money) for transfer: {}", transfer);
+        return false;
     }
 }

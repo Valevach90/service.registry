@@ -1,6 +1,6 @@
 package com.andersen.banking.deposit_impl.config;
 
-import com.andersen.banking.deposit_api.dto.kafka.TransferKafkaMessageDto;
+import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -29,11 +30,13 @@ public class KafkaConsumerConfig {
     private KafkaConfigProperties kafkaConfigProperties;
 
     @Bean
-    public ConsumerFactory<String, TransferKafkaMessageDto> consumerFactory() {
+    public ConsumerFactory<String, RequestTransferKafkaMessage> consumerFactory() {
 
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigProperties.getBootstrapAddress());
         config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConfigProperties.getGroupId());
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
@@ -41,8 +44,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TransferKafkaMessageDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TransferKafkaMessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, RequestTransferKafkaMessage> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, RequestTransferKafkaMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setRetryTemplate(retryTemplate());
         factory.setErrorHandler(new SeekToCurrentErrorHandler());

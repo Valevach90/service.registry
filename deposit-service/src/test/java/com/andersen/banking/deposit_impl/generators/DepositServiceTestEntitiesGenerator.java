@@ -5,6 +5,7 @@ import com.andersen.banking.deposit_db.entities.*;
 import org.springframework.data.domain.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,13 @@ public class DepositServiceTestEntitiesGenerator {
     public static final Long MAX_AMOUNT = 1_000_000L;
     public static final Integer MIN_INTEREST_RATE = 3;
     public static final Integer MAX_INTEREST_RATE = 6;
+
+    public static final String REPLENISHMENT_SOURCE_TYPE = "Card";
+    public static final String WITHDRAWAL_DESTINATION_TYPE = "Card";
     public static final String FROM_CARD_NUMBER = "0000_0000_0000_0001";
     public static final String TO_CARD_NUMBER = "0000_0000_0000_0002";
 
+    public static final String TRANSFER_STATUS_DESCRIPTION = "Transfer successful";
     private static final Integer PAGE_NUMBER = 1;
     private static final Integer PAGE_SIZE = 10;
     private static final String PAGE_SORT_FIELD = "id";
@@ -130,9 +135,9 @@ public class DepositServiceTestEntitiesGenerator {
         deposit.setAmount(MIN_AMOUNT);
         deposit.setInterestRate(MIN_INTEREST_RATE);
         deposit.setFixedInterest(true);
-        deposit.setReplenishmentCardNumber(FROM_CARD_NUMBER);
+        deposit.setReplenishmentSourceNumber(FROM_CARD_NUMBER);
         deposit.setSubsequentReplenishment(true);
-        deposit.setWithdrawalCardNumber(TO_CARD_NUMBER);
+        deposit.setWithdrawalDestinationNumber(TO_CARD_NUMBER);
         deposit.setEarlyWithdrawal(true);
         deposit.setInterestWithdrawal(true);
         deposit.setCapitalization(true);
@@ -156,9 +161,9 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setAmount(                   deposit.getAmount());
         depositDto.setInterestRate(             deposit.getInterestRate());
         depositDto.setFixedInterest(            deposit.getFixedInterest());
-        depositDto.setReplenishmentCardNumber(  deposit.getReplenishmentCardNumber());
+        depositDto.setReplenishmentSourceNumber(deposit.getReplenishmentSourceNumber());
         depositDto.setSubsequentReplenishment(  deposit.getSubsequentReplenishment());
-        depositDto.setWithdrawalCardNumber(     deposit.getWithdrawalCardNumber());
+        depositDto.setWithdrawalDestinationNumber(deposit.getWithdrawalDestinationNumber());
         depositDto.setEarlyWithdrawal(          deposit.getEarlyWithdrawal());
         depositDto.setInterestWithdrawal(       deposit.getInterestWithdrawal());
         depositDto.setCapitalization(           deposit.getCapitalization());
@@ -176,13 +181,18 @@ public class DepositServiceTestEntitiesGenerator {
     public static Transfer generateTransfer(){
         Transfer transfer = new Transfer();
 
-        transfer.setId(ID);
+        transfer.setTransferId(ID);
+        transfer.setUserId(ID);
         transfer.setDeposit(generateDeposit());
-        transfer.setFromCardNumber(FROM_CARD_NUMBER);
-        transfer.setToCardNumber(TO_CARD_NUMBER);
+        transfer.setSourceNumber(FROM_CARD_NUMBER);
+        transfer.setSourceType(REPLENISHMENT_SOURCE_TYPE);
+        transfer.setDestinationNumber(TO_CARD_NUMBER);
+        transfer.setDestinationType(WITHDRAWAL_DESTINATION_TYPE);
         transfer.setAmount(MIN_AMOUNT);
-        transfer.setDate(Date.valueOf(LocalDate.now()));
-        transfer.setSuccessStatus(true);
+        transfer.setCurrencyName(CURRENCY_NAME);
+        transfer.setTime(new Timestamp(System.currentTimeMillis()));
+        transfer.setResult(true);
+        transfer.setStatusDescription(TRANSFER_STATUS_DESCRIPTION);
 
         return transfer;
     }
@@ -190,13 +200,17 @@ public class DepositServiceTestEntitiesGenerator {
     public static TransferDto generateTransferDto(Transfer transfer){
         TransferDto transferDto = new TransferDto();
 
-        transferDto.setId(              transfer.getId());
-        transferDto.setDeposit(         generateDepositDto(transfer.getDeposit()));
-        transferDto.setFromCardNumber(  transfer.getFromCardNumber());
-        transferDto.setToCardNumber(    transfer.getToCardNumber());
-        transferDto.setAmount(          transfer.getAmount());
-        transferDto.setDate(            transfer.getDate());
-        transferDto.setSuccessStatus(   transfer.getSuccessStatus());
+        transferDto.setTransferId(transfer.getTransferId());
+        transferDto.setUserId(transfer.getUserId());
+        transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
+        transferDto.setSourceNumber(transfer.getSourceNumber());
+        transferDto.setSourceType(transfer.getSourceType());
+        transferDto.setDestinationNumber(transfer.getDestinationNumber());
+        transferDto.setDestinationType(transfer.getDestinationType());
+        transferDto.setAmount(transfer.getAmount());
+        transferDto.setTime(transfer.getTime());
+        transferDto.setResult(transfer.getResult());
+        transferDto.setStatusDescription(transfer.getStatusDescription());
 
         return transferDto;
     }

@@ -1,6 +1,7 @@
 package com.andersen.banking.deposit_impl.config;
 
-import com.andersen.banking.deposit_api.dto.kafka.TransferKafkaMessageDto;
+import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
+import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -21,7 +22,7 @@ public class KafkaProducerConfig {
     private KafkaConfigProperties kafkaConfigProperties;
 
     @Bean
-    public ProducerFactory<String, TransferKafkaMessageDto> producerFactory() {
+    public ProducerFactory<String, ResponseKafkaTransferMessage> producerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigProperties.getBootstrapAddress());
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -30,7 +31,21 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, TransferKafkaMessageDto> kafkaProducerTemplate() {
+    public KafkaTemplate<String, ResponseKafkaTransferMessage> kafkaProducerTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, RequestTransferKafkaMessage> producerFactory_forRequest() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigProperties.getBootstrapAddress());
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, RequestTransferKafkaMessage> kafkaProducerTemplate_forRequest() {
+        return new KafkaTemplate<>(producerFactory_forRequest());
     }
 }

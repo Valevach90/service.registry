@@ -23,7 +23,7 @@ public class TransferServiceImpl implements TransferService {
     public Transfer create(Transfer transfer) {
         log.info("Creating transfer: {}", transfer);
 
-        transfer.setId(null);
+        transfer.setTransferId(null);
 
         Transfer savedTransfer = transferRepository.save(transfer);
 
@@ -58,8 +58,8 @@ public class TransferServiceImpl implements TransferService {
     public void update(Transfer transfer) {
         log.info("Updating transfer: {}", transfer);
 
-        Transfer foundTransfer = transferRepository.findById(transfer.getId())
-                .orElseThrow(() -> new NotFoundException(Transfer.class, transfer.getId()));
+        Transfer foundTransfer = transferRepository.findById(transfer.getTransferId())
+                .orElseThrow(() -> new NotFoundException(Transfer.class, transfer.getTransferId()));
 
         transferRepository.save(transfer);
 

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Transfer entity for Deposit service.
@@ -17,26 +18,40 @@ import java.sql.Date;
 public class Transfer {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "transfer_id", nullable = false)
+    private Long transferId;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deposit_id", nullable = false)
+    @JoinColumn(name = "deposit_id")
     private Deposit deposit;
 
-    @Column(name = "from_card_number", nullable = false)
-    private String fromCardNumber;
+    @Column(name = "source_number", nullable = false)
+    private String sourceNumber;
 
-    @Column(name = "to_card_number", nullable = false)
-    private String toCardNumber;
+    @Column(name = "source_type", nullable = false)
+    private String sourceType;
+
+    @Column(name = "destination_number", nullable = false)
+    private String destinationNumber;
+
+    @Column(name = "destination_type", nullable = false)
+    private String destinationType;
 
     @Column(name = "amount", nullable = false)
     private Long amount;
 
-    @Column(name = "date", nullable = false)
-    private Date date;
+    @Column(name = "currency_name", nullable = false)
+    private String currencyName;
 
-    @Column(name = "success_status", nullable = false)
-    private Boolean successStatus;
+    @Column(name = "time")
+    private Timestamp time;
+
+    @Column(name = "result")
+    private Boolean result;
+
+    @Column(name = "status_description")
+    private String statusDescription;
 }

@@ -1,6 +1,6 @@
 package com.andersen.banking.deposit_impl.service;
 import com.andersen.banking.deposit_db.entities.Deposit;
-import com.andersen.banking.deposit_db.entities.TransferKafkaMessage;
+import com.andersen.banking.deposit_db.entities.Transfer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
@@ -52,7 +52,7 @@ public interface DepositService {
     /**
      * Make transfer
      *
-     * @param message transfer kafka message
+     * @param transfer transfer to make
      */
-    void makeTransfer(TransferKafkaMessage message);
+    void makeTransfer(Transfer transfer);
 }

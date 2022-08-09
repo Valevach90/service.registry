@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-29T10:37:14+0300",
+    date = "2022-08-09T00:36:37+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -43,9 +43,9 @@ public class DepositMapperImpl implements DepositMapper {
         depositDto.setAmount( deposit.getAmount() );
         depositDto.setInterestRate( deposit.getInterestRate() );
         depositDto.setFixedInterest( deposit.getFixedInterest() );
-        depositDto.setReplenishmentCardNumber( deposit.getReplenishmentCardNumber() );
+        depositDto.setReplenishmentSourceNumber( deposit.getReplenishmentSourceNumber() );
         depositDto.setSubsequentReplenishment( deposit.getSubsequentReplenishment() );
-        depositDto.setWithdrawalCardNumber( deposit.getWithdrawalCardNumber() );
+        depositDto.setWithdrawalDestinationNumber( deposit.getWithdrawalDestinationNumber() );
         depositDto.setEarlyWithdrawal( deposit.getEarlyWithdrawal() );
         depositDto.setInterestWithdrawal( deposit.getInterestWithdrawal() );
         depositDto.setCapitalization( deposit.getCapitalization() );
@@ -75,9 +75,9 @@ public class DepositMapperImpl implements DepositMapper {
         deposit.setAmount( depositDto.getAmount() );
         deposit.setInterestRate( depositDto.getInterestRate() );
         deposit.setFixedInterest( depositDto.getFixedInterest() );
-        deposit.setReplenishmentCardNumber( depositDto.getReplenishmentCardNumber() );
+        deposit.setReplenishmentSourceNumber( depositDto.getReplenishmentSourceNumber() );
         deposit.setSubsequentReplenishment( depositDto.getSubsequentReplenishment() );
-        deposit.setWithdrawalCardNumber( depositDto.getWithdrawalCardNumber() );
+        deposit.setWithdrawalDestinationNumber( depositDto.getWithdrawalDestinationNumber() );
         deposit.setEarlyWithdrawal( depositDto.getEarlyWithdrawal() );
         deposit.setInterestWithdrawal( depositDto.getInterestWithdrawal() );
         deposit.setCapitalization( depositDto.getCapitalization() );
@@ -94,13 +94,18 @@ public class DepositMapperImpl implements DepositMapper {
 
         TransferDto transferDto = new TransferDto();
 
-        transferDto.setId( transfer.getId() );
+        transferDto.setTransferId( transfer.getTransferId() );
+        transferDto.setUserId( transfer.getUserId() );
         transferDto.setDeposit( toDepositDto( transfer.getDeposit() ) );
-        transferDto.setFromCardNumber( transfer.getFromCardNumber() );
-        transferDto.setToCardNumber( transfer.getToCardNumber() );
+        transferDto.setSourceNumber( transfer.getSourceNumber() );
+        transferDto.setSourceType( transfer.getSourceType() );
+        transferDto.setDestinationNumber( transfer.getDestinationNumber() );
+        transferDto.setDestinationType( transfer.getDestinationType() );
         transferDto.setAmount( transfer.getAmount() );
-        transferDto.setDate( transfer.getDate() );
-        transferDto.setSuccessStatus( transfer.getSuccessStatus() );
+        transferDto.setCurrencyName( transfer.getCurrencyName() );
+        transferDto.setTime( transfer.getTime() );
+        transferDto.setResult( transfer.getResult() );
+        transferDto.setStatusDescription( transfer.getStatusDescription() );
 
         return transferDto;
     }
@@ -180,13 +185,18 @@ public class DepositMapperImpl implements DepositMapper {
 
         Transfer transfer = new Transfer();
 
-        transfer.setId( transferDto.getId() );
+        transfer.setTransferId( transferDto.getTransferId() );
+        transfer.setUserId( transferDto.getUserId() );
         transfer.setDeposit( toDeposit( transferDto.getDeposit() ) );
-        transfer.setFromCardNumber( transferDto.getFromCardNumber() );
-        transfer.setToCardNumber( transferDto.getToCardNumber() );
+        transfer.setSourceNumber( transferDto.getSourceNumber() );
+        transfer.setSourceType( transferDto.getSourceType() );
+        transfer.setDestinationNumber( transferDto.getDestinationNumber() );
+        transfer.setDestinationType( transferDto.getDestinationType() );
         transfer.setAmount( transferDto.getAmount() );
-        transfer.setDate( transferDto.getDate() );
-        transfer.setSuccessStatus( transferDto.getSuccessStatus() );
+        transfer.setCurrencyName( transferDto.getCurrencyName() );
+        transfer.setTime( transferDto.getTime() );
+        transfer.setResult( transferDto.getResult() );
+        transfer.setStatusDescription( transferDto.getStatusDescription() );
 
         return transfer;
     }

@@ -1,6 +1,7 @@
 package com.andersen.banking.deposit_impl.mapping;
 
 import com.andersen.banking.deposit_api.dto.TransferDto;
+import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
 import com.andersen.banking.deposit_db.entities.Transfer;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-29T10:37:14+0300",
+    date = "2022-08-09T00:36:37+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -23,12 +24,17 @@ public class TransferMapperImpl implements TransferMapper {
 
         TransferDto transferDto = new TransferDto();
 
-        transferDto.setId( transfer.getId() );
-        transferDto.setFromCardNumber( transfer.getFromCardNumber() );
-        transferDto.setToCardNumber( transfer.getToCardNumber() );
+        transferDto.setTransferId( transfer.getTransferId() );
+        transferDto.setUserId( transfer.getUserId() );
+        transferDto.setSourceNumber( transfer.getSourceNumber() );
+        transferDto.setSourceType( transfer.getSourceType() );
+        transferDto.setDestinationNumber( transfer.getDestinationNumber() );
+        transferDto.setDestinationType( transfer.getDestinationType() );
         transferDto.setAmount( transfer.getAmount() );
-        transferDto.setDate( transfer.getDate() );
-        transferDto.setSuccessStatus( transfer.getSuccessStatus() );
+        transferDto.setCurrencyName( transfer.getCurrencyName() );
+        transferDto.setTime( transfer.getTime() );
+        transferDto.setResult( transfer.getResult() );
+        transferDto.setStatusDescription( transfer.getStatusDescription() );
 
         return transferDto;
     }
@@ -41,12 +47,37 @@ public class TransferMapperImpl implements TransferMapper {
 
         Transfer transfer = new Transfer();
 
-        transfer.setId( transferDto.getId() );
-        transfer.setFromCardNumber( transferDto.getFromCardNumber() );
-        transfer.setToCardNumber( transferDto.getToCardNumber() );
+        transfer.setTransferId( transferDto.getTransferId() );
+        transfer.setUserId( transferDto.getUserId() );
+        transfer.setSourceNumber( transferDto.getSourceNumber() );
+        transfer.setSourceType( transferDto.getSourceType() );
+        transfer.setDestinationNumber( transferDto.getDestinationNumber() );
+        transfer.setDestinationType( transferDto.getDestinationType() );
         transfer.setAmount( transferDto.getAmount() );
-        transfer.setDate( transferDto.getDate() );
-        transfer.setSuccessStatus( transferDto.getSuccessStatus() );
+        transfer.setCurrencyName( transferDto.getCurrencyName() );
+        transfer.setTime( transferDto.getTime() );
+        transfer.setResult( transferDto.getResult() );
+        transfer.setStatusDescription( transferDto.getStatusDescription() );
+
+        return transfer;
+    }
+
+    @Override
+    public Transfer toTransfer(RequestTransferKafkaMessage message) {
+        if ( message == null ) {
+            return null;
+        }
+
+        Transfer transfer = new Transfer();
+
+        transfer.setTransferId( message.getTransferId() );
+        transfer.setUserId( message.getUserId() );
+        transfer.setSourceNumber( message.getSourceNumber() );
+        transfer.setSourceType( message.getSourceType() );
+        transfer.setDestinationNumber( message.getDestinationNumber() );
+        transfer.setDestinationType( message.getDestinationType() );
+        transfer.setAmount( message.getAmount() );
+        transfer.setCurrencyName( message.getCurrencyName() );
 
         return transfer;
     }

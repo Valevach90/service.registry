@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransferKafkaMessageDto {
+public class RequestTransferKafkaMessage {
 
     @NotNull
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("transferId")
+    private Long transferId;
 
     @NotNull
     @JsonProperty("userId")
@@ -43,12 +43,4 @@ public class TransferKafkaMessageDto {
     @NotBlank
     @JsonProperty("currencyName")
     private String currencyName;
-
-    @NotBlank
-    @JsonProperty("statusName")
-    private String statusName;
-
-    @NotBlank
-    @JsonProperty("statusDescription")
-    private String statusDescription;
 }
