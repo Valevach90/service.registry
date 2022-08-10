@@ -5,8 +5,12 @@ import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
@@ -29,16 +33,21 @@ public class AuthControllerImpl implements AuthController {
         String id = extractIdFromToken(jwt);
         String login = extractLoginFromToken(jwt);
 
+        Map<String, Object> resource_access = (Map<String, Object>) jwt.getClaims().get("resource_access");
+        resource_access.remove("api-gateway");
+
         log.trace("User authorization: login " + login + ", id " + id);
 
         if (doesUserHaveNoRoles(jwt)) {
 
-            if (false /*authService.isUserRegisteredInExternalBank(login)*/) {
+            if (authService.isUserRegisteredInExternalBank(login)) {
                 authService.addRoleUser(id);
             } else {
                 authService.addRoleUnauthorized(id);
             }
 
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already authenticated");
         }
         log.trace("User authorized: login " + login + ", id " + id);
     }

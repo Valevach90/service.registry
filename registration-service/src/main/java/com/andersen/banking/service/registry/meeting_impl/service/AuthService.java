@@ -47,4 +47,6 @@ public interface AuthService {
      * @param newPassword
      */
     void resetPassword(String id, String newPassword);
+
+    boolean isUserRegisteredInExternalBank(String login);
 }
