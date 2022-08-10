@@ -1,8 +1,8 @@
 package com.andersen.banking.gateway.meeting_impl.controller;
 
 import com.andersen.banking.gateway.meeting_api.controller.BalanceController;
-import com.andersen.banking.gateway.meeting_api.controller.feign.BalanceDepositService;
-import com.andersen.banking.gateway.meeting_api.controller.feign.BalancePaymentService;
+import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalanceDepositClient;
+import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalancePaymentClient;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
 import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
@@ -39,10 +39,10 @@ class BalanceControllerTest {
     private User expectedUser;
 
     @MockBean
-    BalanceDepositService depositService;
+    BalanceDepositClient depositService;
 
     @MockBean
-    BalancePaymentService paymentService;
+    BalancePaymentClient paymentService;
 
     @Autowired
     private WebApplicationContext context;

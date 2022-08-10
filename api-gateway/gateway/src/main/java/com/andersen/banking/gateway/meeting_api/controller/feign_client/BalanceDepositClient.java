@@ -1,4 +1,4 @@
-package com.andersen.banking.gateway.meeting_api.controller.feign;
+package com.andersen.banking.gateway.meeting_api.controller.feign_client;
 
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
@@ -8,7 +8,7 @@ import reactivefeign.spring.config.ReactiveFeignClient;
 import reactor.core.publisher.Mono;
 
 @ReactiveFeignClient(name = "deposit-service")
-public interface BalanceDepositService {
+public interface BalanceDepositClient {
 
     @GetMapping("/api/v1/deposits")
     Mono<RestResponsePage<Deposit>> findAll(Pageable pageable);

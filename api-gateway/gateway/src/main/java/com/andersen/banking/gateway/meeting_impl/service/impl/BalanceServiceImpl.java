@@ -1,17 +1,20 @@
 package com.andersen.banking.gateway.meeting_impl.service.impl;
 
-import com.andersen.banking.gateway.meeting_api.controller.feign.BalanceDepositService;
-import com.andersen.banking.gateway.meeting_api.controller.feign.BalancePaymentService;
+import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalanceDepositClient;
+import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalancePaymentClient;
 import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
 import com.andersen.banking.gateway.meeting_api.dto.gateway.Currency;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
+import com.andersen.banking.gateway.meeting_api.dto.gateway.EntityAggregate;
 import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
 import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
 import com.andersen.banking.gateway.meeting_impl.service.BalanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -28,31 +31,32 @@ import static java.util.stream.Collectors.summingDouble;
 public class BalanceServiceImpl implements BalanceService {
 
     @Autowired
-    private BalanceDepositService depositService;
+    private BalanceDepositClient depositService;
 
     @Autowired
-    private BalancePaymentService paymentService;
+    private BalancePaymentClient paymentService;
 
     public User getTotalBalance(Long id) {
-        Mono<RestResponsePage<Deposit>> deposit = depositService.findAll(Pageable.unpaged());
-        Mono<RestResponsePage<Account>> payment = paymentService.findByOwnerId(id, Pageable.unpaged());
-        Mono<Tuple2<RestResponsePage<Deposit>, RestResponsePage<Account>>> zip = Mono.zip(deposit, payment);
+        log.info("create request in services for id {}", id);
+        Mono<EntityAggregate> map = Mono.zip(
+                depositService.findAll(Pageable.unpaged()),
+                paymentService.findByOwnerId(id, Pageable.unpaged())
+        ).map(this::combine);
         try {
-            Map<String, Double> mapDeposit = zip.toFuture()
-                    .get()
-                    .getT1()
-                    .getContent()
+            EntityAggregate entityAggregate = map.toFuture().get();
+
+            Map<String, Double> mapDeposit = entityAggregate.getDeposits()
                     .stream()
                     .filter(d -> d.getUserId().equals(id))
                     .collect(
                             groupingBy((d -> d.getCurrency().getName()),
                                     summingDouble(Deposit::getAmount)));
+            log.info("Deposit for {} in quantity {}", id, mapDeposit.size());
 
-            Map<String, Double> mapAccount = zip.toFuture()
-                    .get()
-                    .getT2()
+            Map<String, Double> mapAccount = entityAggregate.getAccounts()
                     .stream()
                     .collect(groupingBy(Account::getCurrency, summingDouble(Account::getBalance)));
+            log.info("Deposit for {} in quantity {}", id, mapAccount.size());
 
             List<Currency> currencies = Stream.concat(mapDeposit.entrySet().stream(), mapAccount.entrySet().stream())
                     .collect(groupingBy(Map.Entry::getKey,
@@ -62,7 +66,15 @@ public class BalanceServiceImpl implements BalanceService {
 
             return new User(id, currencies);
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            log.error("No access to services");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private EntityAggregate combine(Tuple2<RestResponsePage<Deposit>, RestResponsePage<Account>> tuple) {
+        return EntityAggregate.create(
+                tuple.getT1().getContent(),
+                tuple.getT2().getContent()
+        );
     }
 }
