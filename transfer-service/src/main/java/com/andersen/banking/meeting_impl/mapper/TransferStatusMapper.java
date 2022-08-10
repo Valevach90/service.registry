@@ -8,5 +8,8 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TransferStatusMapper {
+
     TransferStatusResponseDto transferStatus2TransferStatusResponseDto(TransferStatus transferStatus);
+
+    TransferStatus TransferStatusResponseDto2transferStatus(TransferStatusResponseDto transferStatusResponseDto);
 }
