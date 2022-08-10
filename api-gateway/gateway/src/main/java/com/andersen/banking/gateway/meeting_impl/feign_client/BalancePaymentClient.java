@@ -1,4 +1,4 @@
-package com.andersen.banking.gateway.meeting_api.controller.feign_client;
+package com.andersen.banking.gateway.meeting_impl.feign_client;
 
 import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;

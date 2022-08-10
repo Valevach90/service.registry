@@ -1,8 +1,8 @@
 package com.andersen.banking.gateway.meeting_impl.controller;
 
 import com.andersen.banking.gateway.meeting_api.controller.BalanceController;
-import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalanceDepositClient;
-import com.andersen.banking.gateway.meeting_api.controller.feign_client.BalancePaymentClient;
+import com.andersen.banking.gateway.meeting_impl.feign_client.BalanceDepositClient;
+import com.andersen.banking.gateway.meeting_impl.feign_client.BalancePaymentClient;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
 import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
