@@ -72,8 +72,6 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
 
         Transfer transfer = new Transfer();
 
-        //TODO: the task of filling in the transfer fields and saving the transfer in the database
-
     }
 
     private ArrayList<String> parsingString(String message) {
