@@ -2,6 +2,7 @@ package com.andersen.banking.deposit_impl.service.impl;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import com.andersen.banking.deposit_impl.kafka.KafkaProducer;
 import com.andersen.banking.deposit_impl.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,4 +78,26 @@ public class DepositServiceImpl implements DepositService {
 
         log.info("Deleted deposit: {}", foundDeposit);
     }
+
+    @Override
+    public void interestCalculation(Deposit deposit) {
+        log.info("Interest on the balance for the user with id : {}", deposit.getUserId());
+
+        Long amount = deposit.getAmount();
+        Long interestRate = deposit.getInterestRate().longValue();
+        Long accruedAmount = (amount*interestRate)/100;
+
+        sendAccrueAmount(deposit.getUserId(), deposit.getCurrency().getName(), accruedAmount);
+
+        log.info("Sending interest on the balance for the user with id : {}", deposit.getUserId());
+    }
+
+    private void sendAccrueAmount(Long userId, String currency, Long accruedAmount) {
+        String msg = userId.toString() + "_" + currency + "_" + accruedAmount.toString();
+        String topicName = "sendAccrueAmount";
+
+        KafkaProducer kafkaProducer = new KafkaProducer();
+        kafkaProducer.sendMessage(topicName, msg);
+    }
+
 }

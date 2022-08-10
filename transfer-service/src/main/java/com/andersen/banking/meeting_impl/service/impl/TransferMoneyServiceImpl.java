@@ -3,6 +3,7 @@ package com.andersen.banking.meeting_impl.service.impl;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
+import com.andersen.banking.meeting_db.entity.Transfer;
 import com.andersen.banking.meeting_db.entity.TransferStatus;
 import com.andersen.banking.meeting_db.repository.CurrencyRepository;
 import com.andersen.banking.meeting_db.repository.PaymentTypeRepository;
@@ -16,10 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -59,6 +59,30 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
                 .orElseThrow(() -> new NotFoundException(TransferStatus.class, transferId));
         
         return transferStatusMapper.transferStatus2TransferStatusResponseDto(transferStatus);
+    }
+
+    @Override
+    public void createTransferForAccruedAmount(String message) {
+
+        ArrayList<String> fromMessage = parsingString(message);
+
+        Long userId = Long.parseLong(fromMessage.get(0));
+        String currency = fromMessage.get(1);
+        Long amount = Long.parseLong(fromMessage.get(2));
+
+        Transfer transfer = new Transfer();
+
+        //TODO: the task of filling in the transfer fields and saving the transfer in the database
+
+    }
+
+    private ArrayList<String> parsingString(String message) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        String[] subStr = message.split("_");
+        for (int i = 0; i < subStr.length; i++) {
+            arrayList.add(subStr[i]);
+        }
+        return arrayList;
     }
 
 }

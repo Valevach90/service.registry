@@ -47,4 +47,11 @@ public interface DepositService {
      * @param id id of deposit to delete
      */
     void deleteById(Long id);
+
+    /**
+     * Method of accruing interest on the balance.
+     *
+     * @param deposit
+     */
+    void interestCalculation(Deposit deposit);
 }
