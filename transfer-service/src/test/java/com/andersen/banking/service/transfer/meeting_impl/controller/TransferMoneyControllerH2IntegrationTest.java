@@ -22,11 +22,10 @@ public class TransferMoneyControllerH2IntegrationTest {
 
     private TransferStatus transferStatus;
     private TransferStatusResponseDto transferStatusResponseDto;
-    private Long id;
 
     @LocalServerPort
     private int port;
-    private String baseUrl = "http://localhost";
+    private static String baseUrl = "http://localhost:";
 
     @Autowired
     private TransferStatusRepository transferStatusRepository;
@@ -47,7 +46,7 @@ public class TransferMoneyControllerH2IntegrationTest {
     void whenFindTransferStatusByIdandOk() {
         transferStatus = generateTransferStatus();
         transferStatusResponseDto = generateTransferStatusResponseDto(transferStatus);
-        id = setId();
+        Long id = setId();
 
         TransferStatusResponseDto response = restTemplate.getForObject(baseUrl + "/{transfer_id}/status", TransferStatusResponseDto.class, id);
 

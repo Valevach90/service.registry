@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TransferMoneyServiceImplTest {
     private static final Long ID = 23L;
 
-    private Optional<TransferStatus> transferStatusOptional;
+    private final static Optional<TransferStatus> transferStatusOptional = Optional.of(new TransferStatus());
 
     @MockBean
     TransferStatusRepository transferStatusRepository;
@@ -28,11 +28,6 @@ public class TransferMoneyServiceImplTest {
     TransferStatusMapper transferStatusMapper;
     @Autowired
     TransferMoneyService transferMoneyService;
-
-    @BeforeEach
-    void initData() {
-        transferStatusOptional = Optional.of(new TransferStatus());
-    }
 
     @Test
     void whenGetTransferStatus_andOk() {
