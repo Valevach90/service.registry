@@ -29,7 +29,6 @@ public class TransferMoneyServiceKafkaListener {
     @KafkaListener(topics = "${spring.kafka.topicTransferRequest}", groupId = "${spring.kafka.groupId}")
     public void listenTransferMoneyService(@Payload RequestTransferKafkaMessage message) {
 
-        System.out.println(message);
         depositService.makeTransfer(message);
     }
 }
