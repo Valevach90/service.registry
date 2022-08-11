@@ -2,16 +2,22 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakAdminProperties;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakRoleProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.function.BiFunction;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
@@ -22,43 +28,57 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     KeycloakUriProperties uri;
+
     @Autowired
     KeycloakRoleProperties role;
-    
+
     @Autowired
     KeycloakAdminProperties admin;
 
-    @Value("${keycloak.client.id.gateway}")
-    private String clientId;
+    @Autowired
+    KeycloakClientProperties clientProp;
 
     WebClient client = WebClient.create();
 
-    public void addRoleUnauthorized(String id){
+    public void addRoleUnauthorized(String id) {
         String token = obtainAccessToken();
 
         log.debug("Add UNAUTHORIZED role to user, user id: " + id);
         
         String response = client.post()
-                .uri(uri.getRoles().getAddToUser() + id + uri.getRoles().getAddToClient() + clientId)
+                .uri(uri.getRealmUsers() +
+                        id + uri.getRoleMapping() + clientProp.getGateway().getId())
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(prepareRoleInJson(role.getUnauthorized().getId(), role.getUnauthorized().getName())))
+                .body(BodyInserters.fromValue(prepareRoleInJson(
+                        role.getUnauthorized().getId(), role.getUnauthorized().getName())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        //http://10.10.14.31:30001/auth/admin/realms/Meetingroom-New/users/53423594-623f-4651-b12e-128048af8ae1/role-mappings/clients/28848ed9-d935-4f4c-97d2-01d2ab9d477c
 
         log.debug("Add UNAUTHORIZED role to user success, user id: " + id);
     }
 
-    public void addRoleUser(String id){
+    public void addRoleUser(String id) {
 
         String token = obtainAccessToken();
 
         log.debug("Add USER role to user, user id: " + id);
 
+        String responseDelete = client.method(HttpMethod.DELETE)
+                .uri(uri.getRealmUsers()
+                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(prepareRoleInJson(
+                        role.getUnauthorized().getId(), role.getUnauthorized().getName())))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
         String response = client.post()
-                .uri(uri.getTokensObtain() + id + uri.getRoles().getAddToClient() + clientId)
+                .uri(uri.getRealmUsers()
+                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(role.getUser().getId(), role.getUser().getName())))
@@ -66,17 +86,20 @@ public class AuthServiceImpl implements AuthService {
                 .bodyToMono(String.class)
                 .block();
 
+
+
         log.debug("Add USER role to user success, user id: " + id);
     }
 
-    public void addRoleAdmin(String id){
+    public void addRoleAdmin(String id) {
 
         String token = obtainAccessToken();
 
         log.debug("Add ADMIN role to user, user id: " + id);
 
         String response = client.post()
-                .uri(uri.getTokensObtain() + id + uri.getRoles().getAddToClient() + clientId)
+                .uri(uri.getRealmUsers()
+                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(role.getAdmin().getId(), role.getAdmin().getName())))
@@ -87,14 +110,14 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add ADMIN role to user success, user id: " + id);
     }
 
-    public void addUser(String userInJson){
+    public void addUser(String userInJson) {
 
         String token = obtainAccessToken();
 
         log.debug("Add user: " + userInJson);
 
         String response = client.post()
-                .uri(uri.getUsers().getAdd())
+                .uri(uri.getAdd())
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(userInJson))
@@ -111,40 +134,17 @@ public class AuthServiceImpl implements AuthService {
         String token = obtainAccessToken();
 
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
-
+        
         String response = client.put()
-                .uri(uri.getRoles().getAddToUser() + id + uri.getPasswordReset())
+                .uri(uri.getRealmUsers() + id + uri.getPasswordReset())
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
         log.debug("New password set: user id {}, password {}", id, newPassword);
 
-    }
-
-    @Override
-    public boolean isUserRegisteredInExternalBank(String login) {
-/*
-        String token = obtainAccessToken();
-
-        log.debug("Add UNAUTHORIZED role to user, user id: " + id);
-
-        String response = client.post()
-                .uri(uri.getTokensObtain() + id + uri.getRoles().getAddToClient() + clientId)
-                .headers(header -> header.setBearerAuth(token))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(prepareRoleInJson(role.getUnauthorized().getId(), role.getUnauthorized().getName())))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        log.debug("Add UNAUTHORIZED role to user success, user id: " + id);
-        */
-
-        return false;
     }
 
     private String obtainAccessToken() {
@@ -153,7 +153,8 @@ public class AuthServiceImpl implements AuthService {
 
         String response = client.post()
                 .uri(uri.getTokensObtain())
-                .body(BodyInserters.fromFormData(prepareBodyToGetAccessToken(admin.getUsername(), admin.getPassword(), admin.getGrantType(),admin.getClientId())))
+                .body(BodyInserters.fromFormData(prepareBodyToGetAccessToken(
+                        admin.getUsername(), admin.getPassword(), admin.getGrantType(), admin.getClientId())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

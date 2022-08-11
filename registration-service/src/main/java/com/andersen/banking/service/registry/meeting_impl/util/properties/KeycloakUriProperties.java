@@ -11,21 +11,9 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("keycloak.uri")
 public class KeycloakUriProperties {
     private String tokensObtain;
-    private Users users;
-    private Roles roles;
+    private String add;
+    private String realmUsers;
+    private String roleMapping;
     private String jwks;
     private String passwordReset;
-
-    @Getter
-    @Setter
-    public static class Users {
-        private String add;
-    }
-
-    @Getter
-    @Setter
-    public static class Roles {
-        private String addToUser;
-        private String addToClient;
-    }
 }

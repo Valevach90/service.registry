@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import com.andersen.banking.service.registry.meeting_api.dto.RegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +24,7 @@ public interface AuthController {
             description = "user authentication in registration service"
     )
     @GetMapping
-    void auth(
+    RegistrationDto auth(
             @AuthenticationPrincipal Jwt jwt
     );
 

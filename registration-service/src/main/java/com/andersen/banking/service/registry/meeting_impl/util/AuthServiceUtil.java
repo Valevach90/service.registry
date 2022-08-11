@@ -7,9 +7,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
 import java.util.Map;
 
 public class AuthServiceUtil {
+
+    private AuthServiceUtil() {}
 
     public static MultiValueMap<String, String> prepareBodyToGetAccessToken(String userName, String password, String grantType, String clientId){
 
@@ -84,12 +87,14 @@ public class AuthServiceUtil {
         return jwt.getClaim("email").toString();
     }
     public static boolean doesUserHaveNoRoles(Jwt jwt){
-
         Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
+        return resourceAccess.get("api-gateway") == null;
+    }
 
-        if (resourceAccess.get("api-gateway") == null) {
-            return true;
-        }
-        return false;
+    public static boolean doesUserHaveUserRoles(Jwt jwt){
+        Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
+        Map<String, List<Object>> stringObjectMap = (Map<String, List<Object>>) resourceAccess.get("api-gateway");
+        List<Object> roles = stringObjectMap.get("roles");
+        return roles.contains("USER");
     }
 }

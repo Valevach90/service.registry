@@ -1,16 +1,13 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.AuthController;
+import com.andersen.banking.service.registry.meeting_api.dto.RegistrationDto;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Map;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
@@ -28,28 +25,21 @@ public class AuthControllerImpl implements AuthController {
     AuthService authService;
 
     @Override
-    public void auth(Jwt jwt) {
+    public RegistrationDto auth(Jwt jwt) {
 
         String id = extractIdFromToken(jwt);
         String login = extractLoginFromToken(jwt);
 
-        Map<String, Object> resource_access = (Map<String, Object>) jwt.getClaims().get("resource_access");
-        resource_access.remove("api-gateway");
-
         log.trace("User authorization: login " + login + ", id " + id);
 
         if (doesUserHaveNoRoles(jwt)) {
-
-            if (authService.isUserRegisteredInExternalBank(login)) {
-                authService.addRoleUser(id);
-            } else {
-                authService.addRoleUnauthorized(id);
-            }
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already authenticated");
+            authService.addRoleUnauthorized(id);
+        }
+        if (doesUserHaveUserRoles(jwt)) {
+            return new RegistrationDto(true);
         }
         log.trace("User authorized: login " + login + ", id " + id);
+        return new RegistrationDto(false);
     }
 
     @Override
@@ -60,6 +50,7 @@ public class AuthControllerImpl implements AuthController {
         log.trace("Setting new password, user id {} ", id);
 
         authService.resetPassword(id, newPassword);
+        authService.addRoleUser(id);
 
         log.trace("Set new password, user id {} ", id);
     }
