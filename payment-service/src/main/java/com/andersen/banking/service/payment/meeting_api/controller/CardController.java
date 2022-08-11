@@ -82,4 +82,30 @@ public interface CardController {
   TypeCardResponseDto updateTypeCard(@Parameter(description = "card id", required = true)
                                      @RequestBody
                                      @Validated TypeCardUpdateDto typeCardUpdateDto);
+
+  @Operation(summary = "Get all cards of owner", description = "get all cards of current user/owner with id")
+  @GetMapping("/owner/{id}")
+  Page<CardResponseDto> findAllByOwner(
+          @Parameter(description = "owner id", required = true) @PathVariable Long id,
+          @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
+
+  @Operation(summary = "Get all cards of owner except already chosen card",
+          description = "get page cards by owner except already chosen card")
+  @GetMapping("/owner/{ownerId}/card/{cardId}")
+  Page<CardResponseDto> findAllExceptChosenByOwnerId(
+          @Parameter(description = "owner id", required = true) @PathVariable Long ownerId,
+          @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
+          @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
+
+  @Operation(summary = "Get all cards of current user", description = "get all cards of current user with id")
+  @GetMapping("/user")
+  Page<CardResponseDto> findAllByCurrentUser(
+          @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
+
+  @Operation(summary = "Get all cards of current user except already chosen card",
+          description = "get page cards by current user except already chosen card")
+  @GetMapping("/user/{cardId}")
+  Page<CardResponseDto> findAllExceptChosenByCurrentUser(
+          @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
+          @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 }

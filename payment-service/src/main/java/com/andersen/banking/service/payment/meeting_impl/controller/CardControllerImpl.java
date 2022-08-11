@@ -4,10 +4,13 @@ import com.andersen.banking.service.payment.meeting_api.controller.CardControlle
 import com.andersen.banking.service.payment.meeting_api.dto.*;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
+import com.andersen.banking.service.payment.meeting_impl.feign.RegistrationClient;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
+import com.andersen.banking.service.payment.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +27,10 @@ public class CardControllerImpl implements CardController {
 
   private final CardService cardService;
   private final CardMapper cardMapper;
+  private final TypeCardMapper typeCardMapper;
+
+  @Autowired
+  RegistrationClient registrationClient;
 
   /**
    * End-point to find Card entity by ud.
@@ -140,7 +147,7 @@ public class CardControllerImpl implements CardController {
   @Override
   public TypeCardResponseDto findTypeCardById(Long id) {
     log.info("Find card type by id : {}", id);
-    return cardService.getTypeCard(id);
+    return typeCardMapper.typeCard2TypeCardResponseDto(cardService.getTypeCard(id));
   }
 
   /**
@@ -152,8 +159,69 @@ public class CardControllerImpl implements CardController {
   @Override
   public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
     log.info("Receiving card type : {}", typeCardUpdateDto);
-    return cardService.updateTypeCard(typeCardUpdateDto);
+    TypeCard typeCard = typeCardMapper.typeCardUpdateDto2TypeCard(typeCardUpdateDto);
+
+    return typeCardMapper.typeCard2TypeCardResponseDto(cardService.updateTypeCard(typeCard));
   }
 
+  /**
+   * End-point to find all Cards for the specific owner.
+   * @param id - owner id
+   * @param pageable
+   * @return
+   */
+  @Override
+  public Page<CardResponseDto> findAllByOwner(Long id, Pageable pageable) {
+    log.trace("Receiving request for getting all cards by owner");
 
+    Page<CardResponseDto> result = cardService.findByOwnerId(id, pageable).map(cardMapper::toCardResponseDto);
+
+    log.trace("Returning page of cards: {}", result.getContent());
+
+    return result;
+  }
+
+  /**
+   * End-point to find all Cards for the specific owner except chosen card and cards who have the same account
+   * @param ownerId - owner id
+   * @param cardId
+   * @param pageable
+   * @return
+   */
+  @Override
+  public Page<CardResponseDto> findAllExceptChosenByOwnerId(Long ownerId, Long cardId, Pageable pageable) {
+    return cardService.findByOwnerIdExceptCard(ownerId, cardId, pageable)
+            .map(cardMapper::toCardResponseDto);
+  }
+
+  /**
+   * End-point to find all Cards for the current user.
+   * @param pageable
+   * @return
+   */
+  @Override
+  public Page<CardResponseDto> findAllByCurrentUser (Pageable pageable) {
+
+    log.trace("Receiving request for getting all cards by owner");
+    Long userId = registrationClient.getUserPersonalData().getUser().getId();
+    Page<CardResponseDto> result = cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
+
+    log.trace("Returning page of cards: {}", result.getContent());
+
+    return result;
+  }
+
+  /**
+   * End-point to find all Cards for the current user except chosen card and cards who have the same account
+   * @param cardId
+   * @param pageable
+   * @return
+   */
+  @Override
+  public Page<CardResponseDto> findAllExceptChosenByCurrentUser(Long cardId, Pageable pageable) {
+    Long userId = registrationClient.getUserPersonalData().getUser().getId();
+    Page<CardResponseDto> result = cardService.findByOwnerIdExceptCard(userId, cardId, pageable)
+            .map(cardMapper::toCardResponseDto);
+    return result;
+  }
 }

@@ -1,11 +1,9 @@
 package com.andersen.banking.service.payment.meeting_impl.service;
 
-import com.andersen.banking.service.payment.meeting_api.dto.TypeCardResponseDto;
-import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This interface presents the basic contract for service, which works with Card entity.
@@ -77,14 +75,30 @@ public interface CardService {
      *
      * @param id
      * @return
-             */
-    TypeCardResponseDto getTypeCard(Long id);
+     */
+    TypeCard getTypeCard(Long id);
 
     /**
      * This method updates the given card type and returns updated version.
      *
-     * @param typeCardUpdateDto
+     * @param typeCard
      * @return
      */
-    TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto);
+    TypeCard updateTypeCard(TypeCard typeCard);
+
+    /**
+     * This method returns page of cards by owner_id.
+     *
+     * @param id
+     * @return
+     */
+    Page<Card> findByOwnerId(Long id, Pageable pageable);
+
+    /**
+     * This method returns page of cards by owner_id except card in use.
+     *
+     * @param id
+     * @return
+     */
+    Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable);
 }
