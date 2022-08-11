@@ -1,10 +1,9 @@
 package com.andersen.banking.service.payment.meeting_impl.controller;
 
 import com.andersen.banking.service.payment.meeting_api.controller.CardController;
-import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.service.payment.meeting_api.dto.*;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
+import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
 import lombok.RequiredArgsConstructor;
@@ -131,4 +130,30 @@ public class CardControllerImpl implements CardController {
     log.trace("Returning page of cards: {}", result.getContent());
     return result;
   }
+
+  /**
+   * End-point to find TypeCard entity by id.
+   *
+   * @param id
+   * @return
+   */
+  @Override
+  public TypeCardResponseDto findTypeCardById(Long id) {
+    log.info("Find card type by id : {}", id);
+    return cardService.getTypeCard(id);
+  }
+
+  /**
+   * End-point to update existing TypeCard.
+   *
+   * @param typeCardUpdateDto
+   * @return
+   */
+  @Override
+  public TypeCardResponseDto updateTypeCard(TypeCardUpdateDto typeCardUpdateDto) {
+    log.info("Receiving card type : {}", typeCardUpdateDto);
+    return cardService.updateTypeCard(typeCardUpdateDto);
+  }
+
+
 }

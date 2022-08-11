@@ -1,5 +1,3 @@
-
-
 spring:
   datasource:
     hikari:
@@ -10,11 +8,16 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public
     username: postgres
     password: postgres
-
   flyway:
     schemas: public
     user: postgres
     password: postgres
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
+          jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
 logging:
   level:
@@ -23,6 +26,8 @@ logging:
     com.andersen: TRACE
 
 springdoc:
+  show-actuator: true
+  use-management-port: false
   api-docs:
     path: '/api-docs'
   swagger-ui:
@@ -30,27 +35,15 @@ springdoc:
     path: '/swagger-ui'
     disable-swagger-default-url: true
     operationsSorter: method
+    oauth:
+      clientId: api-gateway
+      clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
   default-consumes-media-type: 'application/json'
   default-produces-media-type: 'application/json'
   model-converters:
     pageable-converter:
       enabled: true
-
-openapi:
-  info:
-    description: "This is the API for the Betta Bank project. The A-Banking as a project develops mobile application for Betta Bank."
-    version: "1.0"
-    title: "Meeting Room New (A-Banking)"
-    contact:
-      name: "Maksim Masarnovsky"
-      email: "m.masarnovsky@andersen.com"
-  security:
-    - bearerAuth: [ ]
-  components:
-    securitySchemes:
-      bearerAuth:
-        type: "HTTP"
-        description: "If you have an access token, enter it in the value field for authorization, otherwise use the Authorization Controller to get an access token. For example token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-        scheme: "bearer"
-        bearer_Format: "JWT"
-        name: "bearerAuth"
+  oAuthFlow:
+    authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
+    tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
+    use-pkce-with-authorization-code-grant: true
