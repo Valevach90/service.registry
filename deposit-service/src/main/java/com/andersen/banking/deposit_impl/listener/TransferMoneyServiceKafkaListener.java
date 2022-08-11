@@ -23,17 +23,13 @@ import java.util.List;
 @AllArgsConstructor
 public class TransferMoneyServiceKafkaListener {
 
-    private static final String PARTITION_OF_REQUEST = "1";
-
     private KafkaConfigProperties kafkaProperties;
     private DepositService depositService;
 
-    private TransferMapper transferMapper;
-
-    @KafkaListener(groupId = "${spring.kafka.groupId}", topicPartitions =
-                                                        { @TopicPartition(topic = "${spring.kafka.topicName}", partitions = PARTITION_OF_REQUEST)})
+    @KafkaListener(topics = "${spring.kafka.topicTransferRequest}", groupId = "${spring.kafka.groupId}")
     public void listenTransferMoneyService(@Payload RequestTransferKafkaMessage message) {
 
-        depositService.makeTransfer(transferMapper.toTransfer(message));
+        System.out.println(message);
+        depositService.makeTransfer(message);
     }
 }

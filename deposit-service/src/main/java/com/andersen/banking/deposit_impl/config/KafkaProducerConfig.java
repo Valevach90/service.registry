@@ -34,18 +34,4 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, ResponseKafkaTransferMessage> kafkaProducerTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-
-    @Bean
-    public ProducerFactory<String, RequestTransferKafkaMessage> producerFactory_forRequest() {
-        Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfigProperties.getBootstrapAddress());
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(config);
-    }
-
-    @Bean
-    public KafkaTemplate<String, RequestTransferKafkaMessage> kafkaProducerTemplate_forRequest() {
-        return new KafkaTemplate<>(producerFactory_forRequest());
-    }
 }

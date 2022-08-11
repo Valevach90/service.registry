@@ -1,23 +1,24 @@
-
 spring:
+  application:
+    name: deposit-service
   datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service
+    username: psqluser
+    password: PoSPa$$woRd
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
       minimumIdle: 5
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=deposit_kafka_test2
-    username: postgres
-    password: postgres
-
   flyway:
-    schemas: deposit_kafka_test2
-    user: postgres
-    password: postgres
+    schemas: deposit_service
+    user: psqluser
+    password: PoSPa$$woRd
   kafka:
     groupId: my_group
     bootstrapAddress: 10.10.14.68:19092
-    topicName: test
+    topicTransferRequest: transfer_to_deposit_request
+    topicTransferResponse: deposit_to_transfer_response
     maxRetryAttempts: 3
 
 logging:

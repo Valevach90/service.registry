@@ -15,7 +15,9 @@ public class KafkaConfigProperties {
 
     private String groupId;
 
-    private String topicName;
+    private String topicTransferRequest;
+
+    private String topicTransferResponse;
 
     private int maxRetryAttempts;
 }
