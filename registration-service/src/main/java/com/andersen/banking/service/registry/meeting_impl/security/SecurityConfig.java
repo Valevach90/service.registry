@@ -1,6 +1,8 @@
 package com.andersen.banking.service.registry.meeting_impl.security;
 
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakRealmRoleConverter;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${keycloak.uri.jwks}")
-    private String JWKS_URI;
+    @Autowired
+    KeycloakUriProperties uri;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(this.JWKS_URI).build();
+        return NimbusJwtDecoder.withJwkSetUri(uri.getJwks()).build();
     }
 
     @Override
