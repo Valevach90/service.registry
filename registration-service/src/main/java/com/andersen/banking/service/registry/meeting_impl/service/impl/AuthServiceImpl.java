@@ -8,37 +8,31 @@ import com.andersen.banking.service.registry.meeting_impl.util.properties.Keyclo
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.function.BiFunction;
-
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    KeycloakUriProperties uri;
+    private KeycloakUriProperties uri;
 
     @Autowired
-    KeycloakRoleProperties role;
+    private KeycloakRoleProperties role;
 
     @Autowired
-    KeycloakAdminProperties admin;
+    private KeycloakAdminProperties admin;
 
     @Autowired
-    KeycloakClientProperties clientProp;
+    private KeycloakClientProperties clientProp;
 
-    WebClient client = WebClient.create();
+    private WebClient client = WebClient.create();
 
     public void addRoleUnauthorized(String id) {
         String token = obtainAccessToken();

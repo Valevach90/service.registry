@@ -88,7 +88,7 @@ public class AuthServiceUtil {
     }
     public static boolean doesUserHaveNoRoles(Jwt jwt){
         Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
-        return resourceAccess.get("api-gateway") == null;
+        return !resourceAccess.containsKey("api-gateway");
     }
 
     public static boolean doesUserHaveUserRoles(Jwt jwt){

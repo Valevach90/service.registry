@@ -10,29 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("keycloak.role")
 public class KeycloakRoleProperties {
-    private Unauthorized unauthorized;
-    private User user;
-    private Admin admin;
+    private Role unauthorized;
+    private Role user;
+    private Role admin;
 
     @Getter
     @Setter
-    public static class Unauthorized {
+    public static class Role {
         private String id;
         private String name;
     }
-
-    @Getter
-    @Setter
-    public static class User {
-        private String id;
-        private String name;
-    }
-
-    @Getter
-    @Setter
-    public static class Admin {
-        private String id;
-        private String name;
-    }
-
 }

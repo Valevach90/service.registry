@@ -11,19 +11,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("keycloak.client")
 public class KeycloakClientProperties {
 
-    private Gateway gateway;
-    private GatewayUserManager gatewayUserManager;
+    private GatewayProp gateway;
+    private GatewayProp gatewayUserManager;
 
     @Getter
     @Setter
-    public static class Gateway {
-        private String id;
-        private String name;
-    }
-
-    @Getter
-    @Setter
-    public static class GatewayUserManager {
+    public static class GatewayProp {
         private String id;
         private String name;
     }
