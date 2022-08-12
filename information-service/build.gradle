@@ -41,4 +41,12 @@ dependencies {
     implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.2.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:testcontainers'
 }
