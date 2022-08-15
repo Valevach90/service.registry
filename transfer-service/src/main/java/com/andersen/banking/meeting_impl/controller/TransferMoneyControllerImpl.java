@@ -24,7 +24,7 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     @Override
     public List<TransferResponseDto> findAllByUserId(Long userId) {
         log.info("Find all transfers by user_id: {}", userId);
-        return null;
+        return transferMoneyService.findAllByUserId(userId);
     }
 
     @Override
