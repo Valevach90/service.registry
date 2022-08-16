@@ -14,6 +14,7 @@ import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
 import com.andersen.banking.service.payment.meeting_test.generators.AccountUnitTestGenerator;
 import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
+import org.hibernate.sql.Update;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,25 +90,24 @@ public class CardControllerH2IntegrationTest {
         account3 = accountRepository.save(acc3);
 
         cards = generateCards();
+    }
 
     @Test
     void findTypeCardById_AndOk() {
-        typeCardRepository.save(CardUnitTestGenerator.populateTypeCard());
-        typeCardResponseDto = CardUnitTestGenerator.populateTypeCardResponseDto();
+        typeCardResponseDto = generateTypeCardResponseDto();
         final Long typeCardId = 1L;
 
         TypeCardResponseDto response = restTemplate
                 .getForObject(baseUrl + "/types/{id}", TypeCardResponseDto.class, typeCardId);
 
         Assertions.assertEquals(typeCardResponseDto, response);
-        Assertions.assertEquals(1, typeCardRepository.findAll().size());
+        Assertions.assertEquals(3, typeCardRepository.findAll().size());
     }
 
     @Test
     void updateTypeCard_andOk() {
-        typeCard = CardUnitTestGenerator.populateTypeCard();
-        typeCardRepository.save(typeCard);
-        typeCardUpdateDto = CardUnitTestGenerator.populateTypeCardUpdateDto();
+        typeCard = generateTypeCard();
+        typeCardUpdateDto = generateTypeCardUpdateDto();
         final Long typeCardId = 1L;
 
         restTemplate.put(baseUrl + "/types/{id}", typeCardId, typeCardUpdateDto);
@@ -115,12 +115,11 @@ public class CardControllerH2IntegrationTest {
         TypeCard response = typeCardRepository.findById(typeCardId).get();
 
         Assertions.assertEquals(typeCard, response);
-        Assertions.assertEquals(1, typeCardRepository.findAll().size());
+        Assertions.assertEquals(3, typeCardRepository.findAll().size());
     }
 
     @Test
     void findAllByTypeCardWithType_ShouldReturnSizeOfCards() {
-        beforeTestsFindAll();
         String checkType = "STANDARD";
 
         int result = getSizeFromRepository(checkType, null);
@@ -136,7 +135,6 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByTypeCardWithTypeAndPayment_ShouldReturnSizeOfCards() {
-        beforeTestsFindAll();
         String checkType = "STANDARD";
         String checkPayment = "VISA";
 
@@ -154,7 +152,6 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByTypeCardWithoutTypeAndPayment_ShouldReturnSizeOfCards() {
-        beforeTestsFindAll();
         int result = getSizeFromRepository(null, null);
 
         List<CardResponseDto> expected = generateCards()
@@ -252,17 +249,28 @@ public class CardControllerH2IntegrationTest {
         return typeCard;
     }
 
-    private void beforeTestsFindAll() {
-        typeCardRepository.save(createTypeCard("VISAS"));
-        typeCardRepository.save(createTypeCard("MASTERCARDS"));
-        typeCardRepository.save(createTypeCard("MASTERCARDSPLAT"));
-        account = AccountUnitTestGenerator.populateAccount(new Account());
-        account = accountRepository.save(account);
-        cards = generateCardsWithTypeCard();
+    private TypeCard generateTypeCard() {
+        TypeCard typeCard = new TypeCard();
+        typeCard.setId(1L);
+        typeCard.setPaymentSystem("VISA");
+        typeCard.setTypeName("STANDARD");
+        return typeCard;
+    }
 
-        for (Card card : cards) {
-            cardRepository.save(card);
-        }
+    private TypeCardResponseDto generateTypeCardResponseDto() {
+        TypeCardResponseDto typeCardResponseDto = new TypeCardResponseDto();
+        typeCardResponseDto.setId(1L);
+        typeCardResponseDto.setPaymentSystem("VISA");
+        typeCardResponseDto.setTypeName("STANDARD");
+        return typeCardResponseDto;
+    }
+
+    private TypeCardUpdateDto generateTypeCardUpdateDto() {
+        TypeCardUpdateDto typeCardUpdateDto = new TypeCardUpdateDto();
+        typeCardUpdateDto.setId(1L);
+        typeCardUpdateDto.setPaymentSystem("VISA");
+        typeCardUpdateDto.setTypeName("STANDARD");
+        return typeCardUpdateDto;
     }
 
     private void populateCard(Card card) {
