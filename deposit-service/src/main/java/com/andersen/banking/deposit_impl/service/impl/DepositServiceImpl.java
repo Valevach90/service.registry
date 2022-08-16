@@ -114,7 +114,7 @@ public class DepositServiceImpl implements DepositService {
             }
 
             log.info("Saving transfer: {}", transfer);
-            transferRepository.save(transfer);
+            //transferRepository.save(transfer);
 
             log.info("Sending response message: {}", transfer);
             sendResponse(transfer);
@@ -133,6 +133,7 @@ public class DepositServiceImpl implements DepositService {
 
             destinationDeposit.get().setAmount(destinationDeposit.get().getAmount() + message.getAmount());
 
+            log.info("Saving deposit after transfer {}", destinationDeposit.get());
             depositRepository.save(destinationDeposit.get());
 
             log.info("Replenishment successful for message: {}", message);
@@ -152,6 +153,7 @@ public class DepositServiceImpl implements DepositService {
 
             sourceDeposit.get().setAmount(sourceDeposit.get().getAmount() - message.getAmount());
 
+            log.info("Saving deposit after transfer {}", sourceDeposit.get());
             depositRepository.save(sourceDeposit.get());
 
             log.info("Withdrawal successful for message: {}", message);

@@ -1,6 +1,8 @@
 package com.andersen.banking.deposit_impl.generators;
 
 import com.andersen.banking.deposit_api.dto.*;
+import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
+import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.*;
 import org.springframework.data.domain.*;
 
@@ -35,6 +37,8 @@ public class DepositServiceTestEntitiesGenerator {
     private static final Integer PAGE_NUMBER = 1;
     private static final Integer PAGE_SIZE = 10;
     private static final String PAGE_SORT_FIELD = "id";
+
+    private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
 
     public static Currency generateCurrency(){
         Currency currency = new Currency();
@@ -132,6 +136,7 @@ public class DepositServiceTestEntitiesGenerator {
         deposit.setType(generateDepositType());
         deposit.setCurrency(generateCurrency());
         deposit.setTermMonths(MIN_TERM_IN_MONTHS);
+        deposit.setOpenDate(new Date(System.currentTimeMillis()));
         deposit.setAmount(MIN_AMOUNT);
         deposit.setInterestRate(MIN_INTEREST_RATE);
         deposit.setFixedInterest(true);
@@ -213,6 +218,42 @@ public class DepositServiceTestEntitiesGenerator {
         transferDto.setStatusDescription(transfer.getStatusDescription());
 
         return transferDto;
+    }
+
+    public static RequestTransferKafkaMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
+
+        RequestTransferKafkaMessage message = new RequestTransferKafkaMessage();
+
+        message.setTransferId(ID);
+        message.setUserId(ID);
+        message.setSourceNumber(sourceNumber);
+        message.setSourceType(TRANSFER_WITH_DEPOSIT_TYPE);
+        message.setDestinationNumber(destinationNumber);
+        message.setDestinationType(TRANSFER_WITH_DEPOSIT_TYPE);
+        message.setAmount(MIN_AMOUNT);
+        message.setCurrencyName(CURRENCY_NAME);
+
+        return message;
+    }
+
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(RequestTransferKafkaMessage request){
+
+        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+
+        message.setTransferId(request.getTransferId());
+        message.setResult(true);
+
+        return message;
+    }
+
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(){
+
+        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+
+        message.setTransferId(ID);
+        message.setResult(false);
+
+        return message;
     }
 
     public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable){
