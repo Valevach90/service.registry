@@ -2,26 +2,23 @@ package com.andersen.banking.meeting_impl.kafka.listener;
 
 import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@Slf4j
 public class KafkaListenerDeposit {
 
     private TransferMoneyService transferMoneyService;
+    private static final String TOPIC = "sendAccrueAmount";
 
-    @KafkaListener(topicPartitions = @TopicPartition(topic = "sendAccrueAmount"))
-    public void listenGroupFooForTransferFromDeposit(@Payload List<TransferKafkaDeposit> messages,
-                               @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
-                               @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
-        messages.forEach(x -> transferMoneyService.createTransferForAccruedAmount(x.getMessage()));
+    @KafkaListener(topics = TOPIC, containerFactory = "kafkaListenerContainerFactory")
+    public void receive(@Payload List<TransferKafkaDeposit> messages) {
+        messages.forEach(transfer -> transferMoneyService.createTransferForAccruedAmount(transfer));
     }
 }
+

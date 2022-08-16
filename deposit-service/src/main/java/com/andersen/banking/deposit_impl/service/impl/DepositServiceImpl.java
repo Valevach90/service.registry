@@ -1,4 +1,5 @@
 package com.andersen.banking.deposit_impl.service.impl;
+import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
+    private KafkaProducer kafkaProducer;
 
     @Override
     @Transactional
@@ -87,19 +89,19 @@ public class DepositServiceImpl implements DepositService {
 
         Long amount = deposit.getAmount();
         Long interestRate = deposit.getInterestRate().longValue();
-        Long accruedAmount = (amount*interestRate)/100;
+        Long accrued = (amount*interestRate)/100;
 
-        sendAccrueAmount(deposit.getUserId(), deposit.getCurrency().getName(), accruedAmount);
+        AccruedAmount forTransfer = new AccruedAmount();
+
+        forTransfer.setUserId(deposit.getUserId());
+        forTransfer.setAmount(amount);
+        forTransfer.setInterestRate(interestRate);
+        forTransfer.setAccrued(accrued);
+        forTransfer.setCurrency(deposit.getCurrency().getName());
+
+        kafkaProducer.sendMessage("sendAccrueAmount", forTransfer);
 
         log.info("Sending interest on the balance for the user with id : {}", deposit.getUserId());
-    }
-
-    private void sendAccrueAmount(Long userId, String currency, Long accruedAmount) {
-        String msg = userId.toString() + "_" + currency + "_" + accruedAmount.toString();
-        String topicName = "sendAccrueAmount";
-
-        KafkaProducer kafkaProducer = new KafkaProducer();
-        kafkaProducer.sendMessage(topicName, msg);
     }
 
 }

@@ -7,7 +7,18 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferKafkaDeposit {
 
-    @JsonProperty("message")
-    private String message;
+    @JsonProperty("userId")
+    private Long userId;
 
+    @JsonProperty("amount")
+    private Long amount;
+
+    @JsonProperty("interestRate")
+    private Long interestRate;
+
+    @JsonProperty("accrued")
+    private Long accrued;
+
+    @JsonProperty("currency")
+    private String currency;
 }

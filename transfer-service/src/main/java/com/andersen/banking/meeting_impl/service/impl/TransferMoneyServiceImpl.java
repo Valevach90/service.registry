@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
@@ -62,15 +63,10 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     }
 
     @Override
-    public void createTransferForAccruedAmount(String message) {
-
-        ArrayList<String> fromMessage = parsingString(message);
-
-        Long userId = Long.parseLong(fromMessage.get(0));
-        String currency = fromMessage.get(1);
-        Long amount = Long.parseLong(fromMessage.get(2));
-
+    public void createTransferForAccruedAmount(TransferKafkaDeposit transferFromDeposit) {
         Transfer transfer = new Transfer();
+        transfer.setUserId(transferFromDeposit.getUserId());
+        transfer.setAmount(transferFromDeposit.getAmount());
 
     }
 
