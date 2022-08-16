@@ -1,8 +1,6 @@
 package com.andersen.banking.service.payment.meeting_test.generators;
 
-import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
-import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.service.payment.meeting_api.dto.*;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import java.time.LocalDate;
@@ -23,7 +21,7 @@ public class CardUnitTestGenerator {
     card.setFirstTwelveNumbers("123456789012");
     card.setLastFourNumbers("4567");
     card.setHolderName("Ivanov Ivan Ivanovich");
-    card.setTypeCard(populateTypeCard(new TypeCard()));
+    card.setTypeCard(populateTypeCard());
     return card;
   }
 
@@ -72,10 +70,28 @@ public class CardUnitTestGenerator {
     return account;
   }
 
-  private static TypeCard populateTypeCard(TypeCard typeCard) {
+  public static TypeCard populateTypeCard() {
+    TypeCard typeCard = new TypeCard();
     typeCard.setId(1L);
     typeCard.setPaymentSystem("VISA");
     typeCard.setTypeName("SILVER");
     return typeCard;
   }
+
+  public static TypeCardResponseDto populateTypeCardResponseDto () {
+    TypeCardResponseDto typeCardResponseDto = new TypeCardResponseDto();
+    typeCardResponseDto.setId(1L);
+    typeCardResponseDto.setPaymentSystem("VISA");
+    typeCardResponseDto.setTypeName("SILVER");
+    return typeCardResponseDto;
+  }
+
+  public static TypeCardUpdateDto populateTypeCardUpdateDto () {
+    TypeCardUpdateDto typeCardUpdateDto = new TypeCardUpdateDto();
+    typeCardUpdateDto.setId(1L);
+    typeCardUpdateDto.setPaymentSystem("VISA");
+    typeCardUpdateDto.setTypeName("SILVER");
+    return typeCardUpdateDto;
+  }
+
 }

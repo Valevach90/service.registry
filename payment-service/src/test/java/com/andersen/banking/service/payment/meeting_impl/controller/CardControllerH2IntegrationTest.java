@@ -1,6 +1,8 @@
 package com.andersen.banking.service.payment.meeting_impl.controller;
 
 import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
@@ -11,6 +13,7 @@ import com.andersen.banking.service.payment.meeting_impl.controller.util.RestRes
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
 import com.andersen.banking.service.payment.meeting_test.generators.AccountUnitTestGenerator;
+import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +39,9 @@ import java.util.stream.Stream;
 public class CardControllerH2IntegrationTest {
     private Account account;
     private List<Card> cards;
+    private TypeCard typeCard;
+    private TypeCardResponseDto typeCardResponseDto;
+    private TypeCardUpdateDto typeCardUpdateDto;
 
     @Autowired
     private CardRepository cardRepository;
@@ -62,22 +68,40 @@ public class CardControllerH2IntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        typeCardRepository.save(createTypeCard("VISAS"));
-        typeCardRepository.save(createTypeCard("MASTERCARDS"));
-        typeCardRepository.save(createTypeCard("MASTERCARDSPLAT"));
-        account = AccountUnitTestGenerator.populateAccount(new Account());
-        account = accountRepository.save(account);
-        cards = generateCardsWithTypeCard();
-
-        for (Card card : cards) {
-            cardRepository.save(card);
-        }
-
         baseUrl = baseUrl.concat(":").concat(String.valueOf(port)).concat("/api/v1/cards");
     }
 
     @Test
+    void findTypeCardById_AndOk() {
+        typeCardRepository.save(CardUnitTestGenerator.populateTypeCard());
+        typeCardResponseDto = CardUnitTestGenerator.populateTypeCardResponseDto();
+        final Long typeCardId = 1L;
+
+        TypeCardResponseDto response = restTemplate
+                .getForObject(baseUrl + "/types/{id}", TypeCardResponseDto.class, typeCardId);
+
+        Assertions.assertEquals(typeCardResponseDto, response);
+        Assertions.assertEquals(1, typeCardRepository.findAll().size());
+    }
+
+    @Test
+    void updateTypeCard_andOk() {
+        typeCard = CardUnitTestGenerator.populateTypeCard();
+        typeCardRepository.save(typeCard);
+        typeCardUpdateDto = CardUnitTestGenerator.populateTypeCardUpdateDto();
+        final Long typeCardId = 1L;
+
+        restTemplate.put(baseUrl + "/types/{id}", typeCardId, typeCardUpdateDto);
+
+        TypeCard response = typeCardRepository.findById(typeCardId).get();
+
+        Assertions.assertEquals(typeCard, response);
+        Assertions.assertEquals(1, typeCardRepository.findAll().size());
+    }
+
+    @Test
     void findAllByTypeCardWithType_ShouldReturnSizeOfCards() {
+        beforeTestsFindAll();
         String checkType = "STANDARD";
 
         int result = getSizeFromRepository(checkType, null);
@@ -93,6 +117,7 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByTypeCardWithTypeAndPayment_ShouldReturnSizeOfCards() {
+        beforeTestsFindAll();
         String checkType = "STANDARD";
         String checkPayment = "VISA";
 
@@ -110,7 +135,7 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByTypeCardWithoutTypeAndPayment_ShouldReturnSizeOfCards() {
-
+        beforeTestsFindAll();
         int result = getSizeFromRepository(null, null);
 
         List<CardResponseDto> expected = generateCardsWithTypeCard()
@@ -191,6 +216,19 @@ public class CardControllerH2IntegrationTest {
             }
         }
         return typeCard;
+    }
+
+    private void beforeTestsFindAll() {
+        typeCardRepository.save(createTypeCard("VISAS"));
+        typeCardRepository.save(createTypeCard("MASTERCARDS"));
+        typeCardRepository.save(createTypeCard("MASTERCARDSPLAT"));
+        account = AccountUnitTestGenerator.populateAccount(new Account());
+        account = accountRepository.save(account);
+        cards = generateCardsWithTypeCard();
+
+        for (Card card : cards) {
+            cardRepository.save(card);
+        }
     }
 
     private void populateCard(Card card) {
