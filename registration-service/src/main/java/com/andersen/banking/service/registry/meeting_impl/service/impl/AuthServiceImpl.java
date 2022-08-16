@@ -144,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.debug("New password set: user id {}, password {}", id, newPassword);
         } else {
-            throw new ValidationException(String.format("Password does not meet policy requirements: password: {}", newPassword));
+            throw new ValidationException(String.format("New password does not meet policy requirements: password " + newPassword));
         }
     }
 
