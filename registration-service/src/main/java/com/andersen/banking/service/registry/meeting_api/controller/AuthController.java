@@ -1,8 +1,10 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import com.andersen.banking.service.registry.meeting_api.dto.RegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,7 @@ public interface AuthController {
             description = "user authentication in registration service"
     )
     @GetMapping
-    void auth(
+    RegistrationDto auth(
             @AuthenticationPrincipal Jwt jwt
     );
 

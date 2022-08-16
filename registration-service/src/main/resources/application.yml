@@ -1,4 +1,10 @@
+server:
+  port: 8181
+
+
 spring:
+  application:
+    name: registration-service
   datasource:
     hikari:
       maximum-pool-size: 5
@@ -47,3 +53,13 @@ springdoc:
     authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
     tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
     use-pkce-with-authorization-code-grant: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://10.10.14.31:30100/eureka

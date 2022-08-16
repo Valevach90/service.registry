@@ -60,3 +60,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
+
+keycloak:
+  uri:
+    jwks: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs

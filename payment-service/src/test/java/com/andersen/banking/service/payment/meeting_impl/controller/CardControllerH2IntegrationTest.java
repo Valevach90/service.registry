@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -34,7 +36,9 @@ import java.util.stream.Stream;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CardControllerH2IntegrationTest {
-    private Account account;
+    private Account account1;
+    private Account account2;
+    private Account account3;
     private List<Card> cards;
 
     @Autowired
@@ -65,9 +69,20 @@ public class CardControllerH2IntegrationTest {
         typeCardRepository.save(createTypeCard("VISAS"));
         typeCardRepository.save(createTypeCard("MASTERCARDS"));
         typeCardRepository.save(createTypeCard("MASTERCARDSPLAT"));
-        account = AccountUnitTestGenerator.populateAccount(new Account());
-        account = accountRepository.save(account);
-        cards = generateCardsWithTypeCard();
+
+        Account acc1 = AccountUnitTestGenerator.populateAccount(new Account());
+        acc1.setOwnerId(1L);
+        account1 = accountRepository.save(acc1);
+
+        Account acc2 = AccountUnitTestGenerator.populateAccount(new Account());
+        acc2.setOwnerId(1L);
+        account2 = accountRepository.save(acc2);
+
+        Account acc3 = AccountUnitTestGenerator.populateAccount(new Account());
+        acc3.setOwnerId(2L);
+        account3 = accountRepository.save(acc3);
+
+        cards = generateCards();
 
         for (Card card : cards) {
             cardRepository.save(card);
@@ -82,7 +97,7 @@ public class CardControllerH2IntegrationTest {
 
         int result = getSizeFromRepository(checkType, null);
 
-        List<CardResponseDto> expected = generateCardsWithTypeCard()
+        List<CardResponseDto> expected = generateCards()
                 .stream()
                 .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
                 .map(c -> cardMapper.toCardResponseDto(c))
@@ -98,7 +113,7 @@ public class CardControllerH2IntegrationTest {
 
         int result = getSizeFromRepository(checkType, checkPayment);
 
-        List<CardResponseDto> expected = generateCardsWithTypeCard()
+        List<CardResponseDto> expected = generateCards()
                 .stream()
                 .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
                 .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
@@ -113,12 +128,24 @@ public class CardControllerH2IntegrationTest {
 
         int result = getSizeFromRepository(null, null);
 
-        List<CardResponseDto> expected = generateCardsWithTypeCard()
+        List<CardResponseDto> expected = generateCards()
                 .stream()
                 .map(c -> cardMapper.toCardResponseDto(c))
                 .collect(Collectors.toList());
 
         Assertions.assertEquals(expected.size(), result);
+    }
+
+    @Test
+    void findAllByOwner_ShouldReturnSizeOfCards() {
+        Page<Card> cardByAccount_ownerId = cardRepository.findCardByAccount_OwnerId(1L, Pageable.unpaged());
+        Assertions.assertEquals(5, cardByAccount_ownerId.getSize());
+    }
+
+    @Test
+    void findByOwnerIdAndAccountIdIsNot_ShouldReturnSizeOfCards() {
+        Page<Card> cardByAccount_ownerId = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L,2L, Pageable.unpaged());
+        Assertions.assertEquals(2, cardByAccount_ownerId.getSize());
     }
 
     private int getSizeFromRepository(String type, String payment) {
@@ -138,33 +165,36 @@ public class CardControllerH2IntegrationTest {
         return response.getBody().getContent().size();
     }
 
-    private List<Card> generateCardsWithTypeCard() {
+    private List<Card> generateCards() {
         List<Card> collect = Stream.generate(Card::new)
                 .limit(2)
                 .peek(c -> {
                     populateCard(c);
+                    c.setAccount(account1);
                     c.setTypeCard(createTypeCard("MASTERCARDS"));
                 })
                 .collect(Collectors.toList());
-        List<Card> addOtherType = Stream
+        List<Card> addOtherAccountAndType = Stream
                 .generate(Card::new)
-                .limit(2)
+                .limit(3)
                 .peek(c -> {
                     populateCard(c);
+                    c.setAccount(account2);
                     c.setTypeCard(createTypeCard("VISAS"));
                 })
                 .collect(Collectors.toList());
-        List<Card> addOtherTypeMore = Stream
+        List<Card> addOtherAccountAndTypeMore = Stream
                 .generate(Card::new)
-                .limit(2)
+                .limit(3)
                 .peek(c -> {
                     populateCard(c);
+                    c.setAccount(account3);
                     c.setTypeCard(createTypeCard("MASTERCARDSPLAT"));
                 })
                 .collect(Collectors.toList());
 
-        collect.addAll(addOtherType);
-        collect.addAll(addOtherTypeMore);
+        collect.addAll(addOtherAccountAndType);
+        collect.addAll(addOtherAccountAndTypeMore);
         return collect;
     }
 
@@ -194,7 +224,6 @@ public class CardControllerH2IntegrationTest {
     }
 
     private void populateCard(Card card) {
-        card.setAccount(accountRepository.findById(account.getId()).get());
         card.setValidFromDate(LocalDate.of(2021, 10, 23));
         card.setExpireDate(LocalDate.of(2024, 10, 23));
         card.setLastFourNumbers("1234");
