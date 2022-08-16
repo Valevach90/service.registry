@@ -20,13 +20,9 @@ public class ValidationUtil {
         Matcher passwordMatcher = passwordPattern.matcher(password);
         Matcher cyrillicCharacterMatcher = cyrillicCharacterPattern.matcher(password);
 
-        if (cyrillicCharacterMatcher.matches()){
-            throw new ValidationException(String.format("Password contains not allowed cyrillic characters: password: {}", password));
+        if (!cyrillicCharacterMatcher.matches() && passwordMatcher.matches()) {
+            return true;
         }
-        if (!passwordMatcher.matches()) {
-            throw new ValidationException(String.format("Password does not meet policy requirements: password: {}", password));
-        }
-
-        return true;
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakAdminProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
@@ -128,8 +129,8 @@ public class AuthServiceImpl implements AuthService {
         String token = obtainAccessToken();
 
         log.debug("Validating new password: password {}", newPassword);
-
         if (isPasswordValid(newPassword)){
+
             log.debug("Setting new password: user id {}, password {}", id, newPassword);
 
             String response = client.put()
@@ -143,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.debug("New password set: user id {}, password {}", id, newPassword);
         } else {
-            log.debug("New password does not meet policy requirements: password: {}", newPassword);
+            throw new ValidationException(String.format("Password does not meet policy requirements: password: {}", newPassword));
         }
     }
 
