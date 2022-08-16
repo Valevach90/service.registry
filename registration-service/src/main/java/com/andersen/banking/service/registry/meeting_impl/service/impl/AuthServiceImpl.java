@@ -129,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.debug("Validating new password: password {}", newPassword);
 
-        if (validatePassword(newPassword)){
+        if (isPasswordValid(newPassword)){
             log.debug("Setting new password: user id {}, password {}", id, newPassword);
 
             String response = client.put()
