@@ -5,12 +5,14 @@ import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.service.payment.meeting_impl.mapper.TypeCardMapperImpl;
-import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.populateTypeCardResponseDto;
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.populateTypeCardUpdateDto;
 
 @SpringBootTest(classes = TypeCardMapperImpl.class)
 public class TypeCardMapperTest {
@@ -24,9 +26,9 @@ public class TypeCardMapperTest {
 
     @BeforeEach
     void initData() {
-        typeCard = CardUnitTestGenerator.populateTypeCard();
-        typeCardResponseDto = CardUnitTestGenerator.populateTypeCardResponseDto();
-        typeCardUpdateDto = CardUnitTestGenerator.populateTypeCardUpdateDto();
+        typeCard = populateTypeCard();
+        typeCardResponseDto = populateTypeCardResponseDto();
+        typeCardUpdateDto = populateTypeCardUpdateDto();
     }
 
     @Test
