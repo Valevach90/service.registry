@@ -5,7 +5,6 @@ import com.andersen.banking.service.registry.meeting_impl.util.properties.Keyclo
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakRoleProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -15,6 +14,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
+import static com.andersen.banking.service.registry.meeting_impl.util.ValidationUtil.*;
 
 @Slf4j
 @Service
@@ -127,18 +127,24 @@ public class AuthServiceImpl implements AuthService {
 
         String token = obtainAccessToken();
 
-        log.debug("Setting new password: user id {}, password {}", id, newPassword);
-        
-        String response = client.put()
-                .uri(uri.getRealmUsers() + id + uri.getPasswordReset())
-                .headers(header -> header.setBearerAuth(token))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        log.debug("New password set: user id {}, password {}", id, newPassword);
+        log.debug("Validating new password: password {}", newPassword);
 
+        if (validatePassword(newPassword)){
+            log.debug("Setting new password: user id {}, password {}", id, newPassword);
+
+            String response = client.put()
+                    .uri(uri.getRealmUsers() + id + uri.getPasswordReset())
+                    .headers(header -> header.setBearerAuth(token))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            log.debug("New password set: user id {}, password {}", id, newPassword);
+        } else {
+            log.debug("New password does not meet policy requirements: password: {}", newPassword);
+        }
     }
 
     private String obtainAccessToken() {
