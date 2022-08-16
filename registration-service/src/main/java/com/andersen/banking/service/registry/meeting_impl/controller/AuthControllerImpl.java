@@ -1,6 +1,7 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.AuthController;
+import com.andersen.banking.service.registry.meeting_api.dto.RegistrationDto;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class AuthControllerImpl implements AuthController {
     AuthService authService;
 
     @Override
-    public void auth(Jwt jwt) {
+    public RegistrationDto auth(Jwt jwt) {
 
         String id = extractIdFromToken(jwt);
         String login = extractLoginFromToken(jwt);
@@ -32,15 +33,13 @@ public class AuthControllerImpl implements AuthController {
         log.trace("User authorization: login " + login + ", id " + id);
 
         if (doesUserHaveNoRoles(jwt)) {
-
-            if (false /*authService.isUserRegisteredInExternalBank(login)*/) {
-                authService.addRoleUser(id);
-            } else {
-                authService.addRoleUnauthorized(id);
-            }
-
+            authService.addRoleUnauthorized(id);
+        }
+        if (doesUserHaveUserRoles(jwt)) {
+            return new RegistrationDto(true);
         }
         log.trace("User authorized: login " + login + ", id " + id);
+        return new RegistrationDto(false);
     }
 
     @Override
@@ -51,6 +50,7 @@ public class AuthControllerImpl implements AuthController {
         log.trace("Setting new password, user id {} ", id);
 
         authService.resetPassword(id, newPassword);
+        authService.addRoleUser(id);
 
         log.trace("Set new password, user id {} ", id);
     }

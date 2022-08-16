@@ -209,6 +209,49 @@ public class CardServiceImplTest {
     Assertions.assertEquals(page, result);
   }
 
+  @Test
+  void findByOwnerId_ShouldReturnPageOfCards() {
+    List<Card> cards = generateCards();
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(cards, pageable, SIZE_PAGE);
+
+    Mockito.when(cardRepository.findCardByAccount_OwnerId(3L, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findByOwnerId(3L, pageable);
+
+    Assertions.assertEquals(page, result);
+  }
+
+  @Test
+  void findByOwnerIdExceptCard_ShouldReturnPageOfCards() {
+    List<Card> cards = generateCards();
+    Pageable pageable = createPageable();
+    Page<Card> page = new PageImpl<>(cards, pageable, SIZE_PAGE);
+
+    Account account = new Account();
+    account.setId(1L);
+
+    Card card = new Card();
+    card.setId(1L);
+    card.setAccount(account);
+
+    Mockito.when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
+    Mockito.when(cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L, 1L, pageable)).thenReturn(page);
+
+    Page<Card> result = cardService.findByOwnerIdExceptCard(1L, 1L, pageable);
+
+    Assertions.assertEquals(page, result);
+  }
+
+  @Test
+  void findByOwnerIdExceptCard_ShouldThrowNotFoundException_WhenCardIdIsIncorrect() {
+    Pageable pageable = createPageable();
+
+    Mockito.when(cardRepository.findById(1L)).thenReturn(Optional.empty());
+
+    Assertions.assertThrows(NotFoundException.class, () -> cardService.findByOwnerIdExceptCard(1L, 1L, pageable));
+  }
+
   private List<Card> generateCards() {
     return Stream
             .generate(Card::new)
@@ -249,12 +292,12 @@ public class CardServiceImplTest {
         typeCard.setId(1L);
         typeCard.setPaymentSystem("VISA");
         typeCard.setTypeName("STANDARD");
-      };
+      }
       case "MASTERCARDS" : {
         typeCard.setId(4L);
         typeCard.setPaymentSystem("MASTERCARD");
         typeCard.setTypeName("STANDARD");
-      };
+      }
     }
     return typeCard;
   }

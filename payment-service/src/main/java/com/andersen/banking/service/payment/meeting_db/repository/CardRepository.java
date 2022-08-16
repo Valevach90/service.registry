@@ -30,4 +30,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             @Param("type") String type,
             Pageable pageable
     );
+
+    Page<Card> findCardByAccount_OwnerId(Long ownerId, Pageable pageable);
+
+    Page<Card> findByAccount_OwnerIdAndAccount_IdNot(Long ownerId, Long id, Pageable pageable);
 }
