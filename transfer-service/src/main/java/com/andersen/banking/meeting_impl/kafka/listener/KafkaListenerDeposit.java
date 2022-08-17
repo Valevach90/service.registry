@@ -16,7 +16,7 @@ import java.util.List;
 public class KafkaListenerDeposit {
 
     private final TransferMoneyService transferMoneyService;
-    private static final String TOPIC = "sendAccrueAmount";
+    private static final String TOPIC = "topic_accrued_amount";
 
     @KafkaListener(topics = TOPIC, containerFactory = "kafkaListenerContainerFactory")
     public void receive(@Payload List<TransferKafkaDeposit> messages) {
