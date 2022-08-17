@@ -7,10 +7,11 @@ import com.andersen.banking.service.registry.meeting_db.repositories.PassportRep
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.PassportGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
+//import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@IntegrationTestWithPostgres
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+//@IntegrationTestWithPostgres
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class PassportControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -60,8 +61,8 @@ class PassportControllerIntegrationTest {
     private static final String PARAM_CONTENT_FIRST_NAME = "$.content[*].firstName";
     private static final String PARAM_CONTENT_LAST_NAME = "$.content[*].lastName";
 
-    @BeforeAll
-    static void add(
+    @BeforeEach
+    void add(
             @Autowired PassportRepository passportRepository,
             @Autowired PassportGenerator passportGenerator,
             @Autowired AddressGenerator addressGenerator,

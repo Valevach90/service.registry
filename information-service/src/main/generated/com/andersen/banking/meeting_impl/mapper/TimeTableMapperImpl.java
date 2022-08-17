@@ -2,14 +2,14 @@ package com.andersen.banking.meeting_impl.mapper;
 
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto.TimeTableDtoBuilder;
-import com.andersen.banking.meeting_db.entities.Address;
+import com.andersen.banking.meeting_db.entities.BankBranch;
 import com.andersen.banking.meeting_db.entities.TimeTable;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-25T12:24:39+0300",
+    date = "2022-08-17T15:16:13+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -23,7 +23,7 @@ public class TimeTableMapperImpl implements TimeTableMapper {
 
         TimeTableDtoBuilder timeTableDto = TimeTableDto.builder();
 
-        timeTableDto.addressId( timeTableAddressId( timeTable ) );
+        timeTableDto.branchId( timeTableBankBranchId( timeTable ) );
         timeTableDto.id( timeTable.getId() );
         timeTableDto.dayFrom( timeTable.getDayFrom() );
         timeTableDto.dayTo( timeTable.getDayTo() );
@@ -33,15 +33,15 @@ public class TimeTableMapperImpl implements TimeTableMapper {
         return timeTableDto.build();
     }
 
-    private Long timeTableAddressId(TimeTable timeTable) {
+    private Long timeTableBankBranchId(TimeTable timeTable) {
         if ( timeTable == null ) {
             return null;
         }
-        Address address = timeTable.getAddress();
-        if ( address == null ) {
+        BankBranch bankBranch = timeTable.getBankBranch();
+        if ( bankBranch == null ) {
             return null;
         }
-        Long id = address.getId();
+        Long id = bankBranch.getId();
         if ( id == null ) {
             return null;
         }

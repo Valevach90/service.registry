@@ -8,8 +8,3 @@ CREATE TABLE users
     phone      VARCHAR(255)                            NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
-INSERT INTO users(first_name, last_name, patronymic, email, phone)
-VALUES
-    ('Lebron', 'James', 'Strong', 'jack@mail.com', '555-55-55'),
-	('Mickael', 'Jackson', 'Strong', 'jack@mail.com', '555-55-55'),
-	('Jack', 'Nicholson', 'Strong', 'jack@mail.com', '555-55-55');

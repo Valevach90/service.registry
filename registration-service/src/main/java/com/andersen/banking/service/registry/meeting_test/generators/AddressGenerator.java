@@ -2,7 +2,6 @@ package com.andersen.banking.service.registry.meeting_test.generators;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
-import com.andersen.banking.service.registry.meeting_db.entities.Users;
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
 

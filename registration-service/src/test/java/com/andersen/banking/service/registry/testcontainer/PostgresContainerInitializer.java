@@ -1,3 +1,4 @@
+/*
 package com.andersen.banking.service.registry.testcontainer;
 
 import org.springframework.boot.test.util.TestPropertyValues;
@@ -38,4 +39,4 @@ public class PostgresContainerInitializer implements ApplicationContextInitializ
                     .withPassword("postgres")
                     .start();
     }
-}
+}*/

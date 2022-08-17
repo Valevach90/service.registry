@@ -1,3 +1,4 @@
+/*
 package com.andersen.banking.service.registry.testcontainer;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,3 +21,4 @@ import java.lang.annotation.Target;
 public @interface IntegrationTestWithPostgres {
 }
 
+*/

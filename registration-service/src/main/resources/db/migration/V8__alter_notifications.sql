@@ -1,6 +1,3 @@
-TRUNCATE TABLE notifications
-CASCADE;
-
 ALTER TABLE notifications
 ALTER COLUMN code DROP NOT NULL;
 
