@@ -12,6 +12,7 @@ import com.andersen.banking.meeting_db.repository.TransferStatusRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.mapper.CurrencyMapper;
 import com.andersen.banking.meeting_impl.mapper.PaymentTypeMapper;
+import com.andersen.banking.meeting_impl.mapper.TransferMapper;
 import com.andersen.banking.meeting_impl.mapper.TransferStatusMapper;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +34,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final CurrencyMapper currencyMapper;
     private final PaymentTypeMapper paymentTypeMapper;
     private final TransferStatusMapper transferStatusMapper;
+    private final TransferMapper transferMapper;
 
     @Override
     @Cacheable("currencies")
@@ -65,18 +66,6 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     @Override
     public void createTransferForAccruedAmount(TransferKafkaDeposit transferFromDeposit) {
         Transfer transfer = new Transfer();
-        transfer.setUserId(transferFromDeposit.getUserId());
-        transfer.setAmount(transferFromDeposit.getAmount());
-
+        transfer = transferMapper.transferKafkaDeposit2Transfer(transferFromDeposit);
     }
-
-    private ArrayList<String> parsingString(String message) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        String[] subStr = message.split("_");
-        for (int i = 0; i < subStr.length; i++) {
-            arrayList.add(subStr[i]);
-        }
-        return arrayList;
-    }
-
 }

@@ -2,12 +2,13 @@ package com.andersen.banking.deposit_impl.kafka;
 
 import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class KafkaProducer {
 

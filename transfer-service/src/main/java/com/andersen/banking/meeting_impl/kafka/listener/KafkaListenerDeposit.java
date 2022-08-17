@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.kafka.listener;
 
 import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,14 +12,15 @@ import java.util.List;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class KafkaListenerDeposit {
 
-    private TransferMoneyService transferMoneyService;
+    private final TransferMoneyService transferMoneyService;
     private static final String TOPIC = "sendAccrueAmount";
 
     @KafkaListener(topics = TOPIC, containerFactory = "kafkaListenerContainerFactory")
     public void receive(@Payload List<TransferKafkaDeposit> messages) {
-        messages.forEach(transfer -> transferMoneyService.createTransferForAccruedAmount(transfer));
+        messages.forEach(transferMoneyService::createTransferForAccruedAmount);
     }
 }
 

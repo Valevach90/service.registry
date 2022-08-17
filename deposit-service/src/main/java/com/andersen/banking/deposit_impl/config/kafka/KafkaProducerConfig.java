@@ -2,6 +2,7 @@ package com.andersen.banking.deposit_impl.config.kafka;
 
 import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaProducerConfig {
 
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
 
     @Bean
     public ProducerFactory<String, AccruedAmount> accruedAmountProducerFactory() {

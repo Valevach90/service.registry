@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.config.kafka;
 
 import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +16,10 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
+@RequiredArgsConstructor
 public class KafkaConsumerConfig {
 
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
 
     @Bean
     public ConsumerFactory<String, TransferKafkaDeposit> consumerFactory() {

@@ -20,7 +20,7 @@ import java.util.Optional;
 public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
-    private KafkaProducer kafkaProducer;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     @Transactional
