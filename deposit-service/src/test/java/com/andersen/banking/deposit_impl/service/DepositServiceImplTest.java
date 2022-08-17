@@ -143,10 +143,10 @@ public class DepositServiceImplTest {
 
     @Test
     void interestCalculation_whenSendingOk() {
-        kafkaProducer.sendMessage("topicName", accruedAmount);
+        kafkaProducer.sendMessage("key", accruedAmount);
 
         Mockito
                 .verify(kafkaProducer, Mockito.times(1))
-                .sendMessage("topicName", accruedAmount);
+                .sendMessage("key", accruedAmount);
     }
 }
