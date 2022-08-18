@@ -43,7 +43,6 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<Deposit> findDepositByUserId(Long userId, Pageable pageable) {
         log.info("Find all deposits for user {} and pageable: {}",userId , pageable);
 
