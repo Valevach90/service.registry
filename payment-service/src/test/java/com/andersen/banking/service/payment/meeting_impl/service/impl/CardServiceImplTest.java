@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -39,8 +38,8 @@ public class CardServiceImplTest {
 
   private Card returnedCard;
   private Card receivedCard;
-  private TypeCard returnedTypeCard;
-  private TypeCard receivedTypeCard;
+  private final TypeCard returnedTypeCard = populateTypeCard();
+  private final TypeCard receivedTypeCard = populateTypeCard();
 
   @SpyBean
   CardService cardService;
@@ -58,8 +57,6 @@ public class CardServiceImplTest {
   void initArguments() {
     returnedCard = populateCard();
     receivedCard = populateCard();
-    returnedTypeCard = populateTypeCard();
-    receivedTypeCard = populateTypeCard();
   }
 
   @Test

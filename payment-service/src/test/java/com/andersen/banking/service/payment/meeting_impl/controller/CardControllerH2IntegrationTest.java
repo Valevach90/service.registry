@@ -13,8 +13,6 @@ import com.andersen.banking.service.payment.meeting_impl.controller.util.RestRes
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.service.payment.meeting_impl.util.CryptWithSHA;
 import com.andersen.banking.service.payment.meeting_test.generators.AccountUnitTestGenerator;
-import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
-import org.hibernate.sql.Update;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +29,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.*;
+
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,9 +44,9 @@ public class CardControllerH2IntegrationTest {
     private Account account2;
     private Account account3;
     private List<Card> cards;
-    private TypeCard typeCard;
-    private TypeCardResponseDto typeCardResponseDto;
-    private TypeCardUpdateDto typeCardUpdateDto;
+    private final TypeCard typeCard = populateTypeCard();
+    private final TypeCardResponseDto typeCardResponseDto = populateTypeCardResponseDto();
+    private final TypeCardUpdateDto typeCardUpdateDto = populateTypeCardUpdateDto();
 
     @Autowired
     private CardRepository cardRepository;
@@ -94,7 +94,6 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findTypeCardById_AndOk() {
-        typeCardResponseDto = generateTypeCardResponseDto();
         final Long typeCardId = 1L;
 
         TypeCardResponseDto response = restTemplate
@@ -106,8 +105,6 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void updateTypeCard_andOk() {
-        typeCard = generateTypeCard();
-        typeCardUpdateDto = generateTypeCardUpdateDto();
         final Long typeCardId = 1L;
 
         restTemplate.put(baseUrl + "/types/{id}", typeCardId, typeCardUpdateDto);
@@ -230,13 +227,13 @@ public class CardControllerH2IntegrationTest {
             case "VISAS": {
                 typeCard.setId(1L);
                 typeCard.setPaymentSystem("VISA");
-                typeCard.setTypeName("STANDARD");
+                typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDS": {
                 typeCard.setId(2L);
                 typeCard.setPaymentSystem("MASTERCARD");
-                typeCard.setTypeName("STANDARD");
+                typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDSPLAT": {
@@ -247,30 +244,6 @@ public class CardControllerH2IntegrationTest {
             }
         }
         return typeCard;
-    }
-
-    private TypeCard generateTypeCard() {
-        TypeCard typeCard = new TypeCard();
-        typeCard.setId(1L);
-        typeCard.setPaymentSystem("VISA");
-        typeCard.setTypeName("STANDARD");
-        return typeCard;
-    }
-
-    private TypeCardResponseDto generateTypeCardResponseDto() {
-        TypeCardResponseDto typeCardResponseDto = new TypeCardResponseDto();
-        typeCardResponseDto.setId(1L);
-        typeCardResponseDto.setPaymentSystem("VISA");
-        typeCardResponseDto.setTypeName("STANDARD");
-        return typeCardResponseDto;
-    }
-
-    private TypeCardUpdateDto generateTypeCardUpdateDto() {
-        TypeCardUpdateDto typeCardUpdateDto = new TypeCardUpdateDto();
-        typeCardUpdateDto.setId(1L);
-        typeCardUpdateDto.setPaymentSystem("VISA");
-        typeCardUpdateDto.setTypeName("STANDARD");
-        return typeCardUpdateDto;
     }
 
     private void populateCard(Card card) {
