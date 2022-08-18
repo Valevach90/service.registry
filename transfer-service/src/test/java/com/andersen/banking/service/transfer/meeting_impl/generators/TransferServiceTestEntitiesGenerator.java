@@ -1,8 +1,10 @@
 package com.andersen.banking.service.transfer.meeting_impl.generators;
 
+import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.TransferStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,5 +36,29 @@ public class TransferServiceTestEntitiesGenerator {
     public static Long setId() {
         Long id = ID;
         return id;
+    }
+
+    public static List<TransferKafkaDeposit> generateListOfTransferKafkaDeposit() {
+        List<TransferKafkaDeposit> list = new ArrayList<>();
+
+        list.add(generateTransferKafkaDeposit(11L));
+        list.add(generateTransferKafkaDeposit(2L));
+        list.add(generateTransferKafkaDeposit(3L));
+        list.add(generateTransferKafkaDeposit(10L));
+        list.add(generateTransferKafkaDeposit(25L));
+
+        return list;
+    }
+
+    public static TransferKafkaDeposit generateTransferKafkaDeposit(Long userId) {
+        TransferKafkaDeposit transfer = new TransferKafkaDeposit();
+
+        transfer.setUserId(userId);
+        transfer.setAmount(1000L);
+        transfer.setInterestRate(55L);
+        transfer.setAccrued(550L);
+        transfer.setCurrency("EUR");
+
+        return transfer;
     }
 }

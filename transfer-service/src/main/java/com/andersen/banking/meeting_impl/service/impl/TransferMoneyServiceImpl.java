@@ -4,7 +4,6 @@ import com.andersen.banking.meeting_api.dto.message.TransferKafkaDeposit;
 import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
-import com.andersen.banking.meeting_db.entity.Transfer;
 import com.andersen.banking.meeting_db.entity.TransferStatus;
 import com.andersen.banking.meeting_db.repository.CurrencyRepository;
 import com.andersen.banking.meeting_db.repository.PaymentTypeRepository;
@@ -12,7 +11,6 @@ import com.andersen.banking.meeting_db.repository.TransferStatusRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.mapper.CurrencyMapper;
 import com.andersen.banking.meeting_impl.mapper.PaymentTypeMapper;
-import com.andersen.banking.meeting_impl.mapper.TransferMapper;
 import com.andersen.banking.meeting_impl.mapper.TransferStatusMapper;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,6 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final CurrencyMapper currencyMapper;
     private final PaymentTypeMapper paymentTypeMapper;
     private final TransferStatusMapper transferStatusMapper;
-    private final TransferMapper transferMapper;
 
     @Override
     @Cacheable("currencies")
@@ -65,7 +62,5 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
 
     @Override
     public void createTransferForAccruedAmount(TransferKafkaDeposit transferFromDeposit) {
-        Transfer transfer = new Transfer();
-        transfer = transferMapper.transferKafkaDeposit2Transfer(transferFromDeposit);
     }
 }
