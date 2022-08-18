@@ -39,7 +39,7 @@ public class BalanceServiceImpl implements BalanceService {
     public User getTotalBalance(Long id) {
         log.info("create request in services for id {}", id);
         Mono<EntityAggregate> map = Mono.zip(
-                depositService.findAll(Pageable.unpaged()),
+                depositService.findDepositsByUserId(id, Pageable.unpaged()),
                 paymentService.findByOwnerId(id, Pageable.unpaged())
         ).map(this::combine);
         try {
@@ -47,7 +47,6 @@ public class BalanceServiceImpl implements BalanceService {
 
             Map<String, Double> mapDeposit = entityAggregate.getDeposits()
                     .stream()
-                    .filter(d -> d.getUserId().equals(id))
                     .collect(
                             groupingBy((d -> d.getCurrency().getName()),
                                     summingDouble(Deposit::getAmount)));
