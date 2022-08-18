@@ -3,6 +3,7 @@ package com.andersen.banking.service.payment.meeting_impl.mapping;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapper;
+import com.andersen.banking.service.payment.meeting_impl.mapper.CardMapperImpl;
 import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

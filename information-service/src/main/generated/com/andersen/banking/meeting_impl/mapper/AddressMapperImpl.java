@@ -8,9 +8,10 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
-        value = "org.mapstruct.ap.MappingProcessor",
-        date = "2022-07-25T12:24:39+0300",
-        comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    value = "org.mapstruct.ap.MappingProcessor",
+    date = "2022-07-25T12:24:39+0300",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+
 )
 @Component
 public class AddressMapperImpl implements AddressMapper {

@@ -33,7 +33,7 @@ public class PassportGenerator {
         passport.setBornPlace(StringUtils.substring(faker.address().fullAddress(), 0, 44));
         passport.setId(counter.getAndIncrement());
         passport.setDateIssue(now.minusYears(faker.number().numberBetween(0, 5)));
-        System.out.println(passport);
+
         return passport;
     }
 

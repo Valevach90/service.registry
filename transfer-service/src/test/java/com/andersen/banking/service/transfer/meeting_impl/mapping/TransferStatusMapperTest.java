@@ -3,6 +3,7 @@ package com.andersen.banking.service.transfer.meeting_impl.mapping;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.TransferStatus;
 import com.andersen.banking.meeting_impl.mapper.TransferStatusMapper;
+import com.andersen.banking.meeting_impl.mapper.TransferStatusMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
