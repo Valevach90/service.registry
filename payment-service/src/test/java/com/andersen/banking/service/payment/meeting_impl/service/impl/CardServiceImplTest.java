@@ -8,7 +8,6 @@ import com.andersen.banking.service.payment.meeting_db.repository.TypeCardReposi
 import com.andersen.banking.service.payment.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.service.payment.meeting_impl.service.AccountService;
 import com.andersen.banking.service.payment.meeting_impl.service.CardService;
-import com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +25,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.*;
 
 @SpringBootTest(classes = CardServiceImpl.class)
 public class CardServiceImplTest {
 
   private static final Long ID = 17L;
+  private static final Long TYPE_CARD_ID = 1L;
   private static final Integer NUMBER_PAGE = 0;
   private static final Integer SIZE_PAGE = 10;
   private static final String SORT_FIELD = "accountId";
 
   private Card returnedCard;
   private Card receivedCard;
+  private final TypeCard returnedTypeCard = populateTypeCard();
+  private final TypeCard receivedTypeCard = populateTypeCard();
 
   @SpyBean
   CardService cardService;
@@ -52,8 +55,37 @@ public class CardServiceImplTest {
 
   @BeforeEach
   void initArguments() {
-    returnedCard = CardUnitTestGenerator.populateCard();
-    receivedCard = CardUnitTestGenerator.populateCard();
+    returnedCard = populateCard();
+    receivedCard = populateCard();
+  }
+
+  @Test
+  void update_ShouldReturnTypeCardResponseDto_WhenReceivedTypeCardIsCorrect() {
+    Mockito.when(typeCardRepository.findById(receivedTypeCard.getId())).thenReturn(Optional.of(receivedTypeCard));
+    Mockito.when(typeCardRepository.save(receivedTypeCard)).thenReturn(returnedTypeCard);
+    var result = cardService.updateTypeCard(receivedTypeCard);
+    Assertions.assertEquals(returnedTypeCard, result);
+  }
+
+  @Test
+  void update_ShouldThrowNotFoundException_WhenReceivedTypeCardHasIncorrectId () {
+    Mockito
+            .when(typeCardRepository.findById(receivedTypeCard.getId()))
+            .thenThrow(new NotFoundException(Card.class, receivedTypeCard.getId()));
+    Assertions.assertThrows(NotFoundException.class,
+            () -> cardService.updateTypeCard(receivedTypeCard));
+  }
+
+  @Test
+  void getTypeCard_ShouldReturnTypeCardResponseDto_WhenIdIsCorrect() {
+    Mockito.when(typeCardRepository.findById(TYPE_CARD_ID)).thenReturn(Optional.of(returnedTypeCard));
+    var result = cardService.getTypeCard(TYPE_CARD_ID);
+    Assertions.assertEquals(returnedTypeCard, result);
+  }
+
+  @Test
+  void getTypeCard_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
+    Assertions.assertThrows(NotFoundException.class, () -> cardService.getTypeCard(TYPE_CARD_ID));
   }
 
   @Test

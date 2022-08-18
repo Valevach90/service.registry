@@ -18,6 +18,22 @@ public interface TypeCardMapper {
     TypeCardResponseDto typeCard2TypeCardResponseDto(TypeCard typeCard);
 
     /**
+     * This method converts entity TypeCardResponseDto to TypeCard
+     *
+     * @param typeCardResponseDto
+     * @return
+     */
+    TypeCard typeCardResponseDto2TypeCard(TypeCardResponseDto typeCardResponseDto);
+
+    /**
+     * This method converts entity TypeCard to TypeCardUpdateDto
+     *
+     * @param typeCard
+     * @return
+     */
+    TypeCardUpdateDto typeCard2TypeCardUpdateDto (TypeCard typeCard);
+
+    /**
      * This method converts entity TypeCardUpdateDto to TypeCard
      *
      * @param typeCardUpdateDto
