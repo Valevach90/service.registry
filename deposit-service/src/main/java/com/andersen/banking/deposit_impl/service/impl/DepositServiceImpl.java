@@ -44,6 +44,17 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<Deposit> findDepositByUserId(Long userId, Pageable pageable) {
+        log.info("Find all deposits for user {} and pageable: {}",userId , pageable);
+
+        Page<Deposit> pageOfDeposits = depositRepository.findDepositByUserId(userId, pageable);
+
+        log.info("Found {} deposits", pageOfDeposits.getContent().size());
+        return pageOfDeposits;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<Deposit> findAll(Pageable pageable) {
         log.info("Find all deposits for pageable: {}", pageable);
 

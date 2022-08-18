@@ -6,12 +6,17 @@ import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,6 +68,16 @@ public class DepositControllerImpl implements DepositController {
 
         log.debug("Found {} deposits", allDepositDto.getContent().size());
         return allDepositDto;
+    }
+
+    public Page<DepositDto> findDepositsByUserId(Long userId, Pageable pageable) {
+        log.debug("Find all deposits for user {} and pageable: {}", userId, pageable);
+
+        Page<DepositDto> depositDtos = depositService.findDepositByUserId(userId, pageable)
+                .map(depositMapper::toDepositDto);
+
+        log.debug("Found {} deposits", depositDtos.getContent().size());
+        return depositDtos;
     }
 
     @Override
