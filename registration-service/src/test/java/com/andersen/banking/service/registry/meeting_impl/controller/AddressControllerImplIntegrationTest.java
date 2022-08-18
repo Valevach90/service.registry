@@ -5,11 +5,8 @@ import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepo
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-//import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
-import org.junit.jupiter.api.AfterAll;
-//import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-//@IntegrationTestWithPostgres
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AddressControllerImplIntegrationTest {
 
@@ -108,13 +104,11 @@ class AddressControllerImplIntegrationTest {
                 .andExpect(jsonPath("$.building").value(address.getBuilding()))
                 .andExpect(jsonPath("$.flat").value(address.getFlat()))
                 .andDo(print());
-
     }
 
     @Test
     void whenFindByUserId_andOk() throws Exception {
 
-        //address = addressService.findById(1L).orElse(null);
         address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
 
         mvc.perform(
@@ -140,7 +134,7 @@ class AddressControllerImplIntegrationTest {
     void whenUpdateAddress_andOk() throws Exception {
 
         address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
-        //address = addressService.findById(1L).orElse(null);
+
         address.setZipCode(999_999);
         address.setCountry("Belarus");
         address.setRegion("Vitebsk");

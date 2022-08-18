@@ -5,16 +5,11 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-//import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-//@IntegrationTestWithPostgres
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerIntegrationTest {
     @Autowired
@@ -63,7 +57,6 @@ class UserControllerIntegrationTest {
     void add(
             @Autowired UserRepository userRepository,
             @Autowired UserGenerator userGenerator) {
-        userRepository.deleteAll();
         users = Stream.generate(() -> userGenerator.generateUser())
                 .limit(100)
                 .toList();
@@ -110,8 +103,7 @@ class UserControllerIntegrationTest {
                         .filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
                         .map(User::getLastName)
                         .distinct()
-                        .toArray())))
-        ;
+                        .toArray())));
     }
 
     @Test

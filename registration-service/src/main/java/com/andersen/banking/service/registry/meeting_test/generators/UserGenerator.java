@@ -2,14 +2,10 @@ package com.andersen.banking.service.registry.meeting_test.generators;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.github.javafaker.Faker;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
 
 @Component
 public class UserGenerator {
@@ -25,7 +21,7 @@ public class UserGenerator {
         user.setEmail(faker.internet().emailAddress());
         user.setPatronymic(faker.elderScrolls().region());
         user.setPhone(faker.phoneNumber().phoneNumber());
-
+        System.out.println(user);
         return user;
     }
 

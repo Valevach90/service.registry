@@ -10,11 +10,11 @@ spring:
       maxLifetime: 300000
       minimumIdle: 5
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public21
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public23
     username: postgres
     password: postgres
   flyway:
-    schemas: public21
+    schemas: public23
     user: postgres
     password: postgres
   security:
