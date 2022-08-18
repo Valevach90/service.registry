@@ -3,7 +3,7 @@ package com.andersen.banking.service.payment.meeting_impl.mapping;
 import com.andersen.banking.service.payment.meeting_api.dto.AccountDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_impl.mapper.AccountMapper;
-import com.andersen.banking.service.payment.meeting_impl.mapper.AccountMapperImpl;
+
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

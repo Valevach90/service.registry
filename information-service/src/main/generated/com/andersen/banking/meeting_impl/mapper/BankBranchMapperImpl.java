@@ -2,14 +2,14 @@ package com.andersen.banking.meeting_impl.mapper;
 
 import com.andersen.banking.meeting_api.dto.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.BankBranchDto.BankBranchDtoBuilder;
+import com.andersen.banking.meeting_db.entities.Address;
 import com.andersen.banking.meeting_db.entities.BankBranch;
-import com.andersen.banking.meeting_db.entities.Street;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-17T15:16:13+0300",
+    date = "2022-07-25T12:24:39+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -23,10 +23,8 @@ public class BankBranchMapperImpl implements BankBranchMapper {
 
         BankBranchDtoBuilder bankBranchDto = BankBranchDto.builder();
 
-        bankBranchDto.streetName( bankBranchStreetName( bankBranch ) );
+        bankBranchDto.addressId( bankBranchAddressId( bankBranch ) );
         bankBranchDto.id( bankBranch.getId() );
-        bankBranchDto.house( bankBranch.getHouse() );
-        bankBranchDto.building( bankBranch.getBuilding() );
         bankBranchDto.branchNumber( bankBranch.getBranchNumber() );
         bankBranchDto.branchCoordinates( bankBranch.getBranchCoordinates() );
         bankBranchDto.workAtWeekend( bankBranch.isWorkAtWeekend() );
@@ -45,18 +43,18 @@ public class BankBranchMapperImpl implements BankBranchMapper {
         return bankBranchDto.build();
     }
 
-    private String bankBranchStreetName(BankBranch bankBranch) {
+    private Long bankBranchAddressId(BankBranch bankBranch) {
         if ( bankBranch == null ) {
             return null;
         }
-        Street street = bankBranch.getStreet();
-        if ( street == null ) {
+        Address address = bankBranch.getAddress();
+        if ( address == null ) {
             return null;
         }
-        String name = street.getName();
-        if ( name == null ) {
+        Long id = address.getId();
+        if ( id == null ) {
             return null;
         }
-        return name;
+        return id;
     }
 }
