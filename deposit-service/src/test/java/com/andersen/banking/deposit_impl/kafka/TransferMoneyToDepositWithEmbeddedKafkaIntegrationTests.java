@@ -4,8 +4,8 @@ import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
 import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.*;
-import com.andersen.banking.deposit_impl.kafka.utils.TransferServiceKafkaConsumerImitation;
-import com.andersen.banking.deposit_impl.kafka.utils.TransferServiceKafkaProducerImitation;
+import com.andersen.banking.deposit_impl.kafka.utils.TransferServiceKafkaResponseConsumerImitation;
+import com.andersen.banking.deposit_impl.kafka.utils.TransferServiceKafkaRequestProducerImitation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
 
     @Autowired
-    private TransferServiceKafkaConsumerImitation consumer;
+    private TransferServiceKafkaResponseConsumerImitation consumer;
     @Autowired
-    private TransferServiceKafkaProducerImitation producer;
+    private TransferServiceKafkaRequestProducerImitation producer;
 
     @Value("${spring.kafka.topicTransferRequest}")
     private String requestTopic;
@@ -75,7 +75,7 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
 
         producer.send(requestTopic, request);
 
-        boolean messageConsumed = consumer.getLatch().await(30, TimeUnit.SECONDS);
+        boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
 
         ResponseKafkaTransferMessage receivedResponse = consumer.getMessage();
@@ -92,9 +92,12 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
 
         producer.send(requestTopic, request);
 
-        boolean messageConsumed = consumer.getLatch().await(30, TimeUnit.SECONDS);
+        boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
 
+        System.out.println();
+        System.out.println(depositRepository.findAll());
+        System.out.println();
         ResponseKafkaTransferMessage receivedResponse = consumer.getMessage();
 
         assertEquals(request.getTransferId(), receivedResponse.getTransferId());
@@ -109,7 +112,7 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
 
         producer.send(requestTopic, request);
 
-        boolean messageConsumed = consumer.getLatch().await(30, TimeUnit.SECONDS);
+        boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
 
         ResponseKafkaTransferMessage receivedResponse = consumer.getMessage();
@@ -130,7 +133,7 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
 
         producer.send(requestTopic, request);
 
-        boolean messageConsumed = consumer.getLatch().await(30, TimeUnit.SECONDS);
+        boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
 
         ResponseKafkaTransferMessage receivedResponse = consumer.getMessage();

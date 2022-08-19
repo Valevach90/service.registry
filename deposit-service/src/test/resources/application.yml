@@ -6,6 +6,6 @@ spring:
     consumer:
       auto-offset-reset: earliest
       group-id: my_group
+      enable-auto-commit: false
     topicTransferRequest: transfer_to_deposit_request
     topicTransferResponse: to_transfer_response
-

@@ -6,15 +6,16 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransferServiceKafkaProducerImitation {
+public class TransferServiceKafkaRequestProducerImitation {
 
     @Autowired
     private KafkaTemplate<String, RequestTransferKafkaMessage> kafkaTemplate;
 
-    public TransferServiceKafkaProducerImitation() {
+    public TransferServiceKafkaRequestProducerImitation() {
     }
 
     public void send(String topic, RequestTransferKafkaMessage message) {
-        kafkaTemplate.send(topic, message);
+
+        kafkaTemplate.send(topic, message).completable().join();
     }
 }

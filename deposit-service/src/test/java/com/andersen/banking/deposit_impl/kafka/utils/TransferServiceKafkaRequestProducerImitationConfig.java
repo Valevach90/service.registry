@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class TransferServiceKafkaProducerImitationConfig {
+public class TransferServiceKafkaRequestProducerImitationConfig {
 
     @Bean
     public ProducerFactory<String, RequestTransferKafkaMessage> producerFactoryForTransferServiceProducerImitation() {

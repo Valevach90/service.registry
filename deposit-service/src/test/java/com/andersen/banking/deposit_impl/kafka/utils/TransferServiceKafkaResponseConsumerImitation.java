@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.CountDownLatch;
 
 @Component
-public class TransferServiceKafkaConsumerImitation {
+public class TransferServiceKafkaResponseConsumerImitation {
 
     private CountDownLatch latch = new CountDownLatch(1);
     private ResponseKafkaTransferMessage message;

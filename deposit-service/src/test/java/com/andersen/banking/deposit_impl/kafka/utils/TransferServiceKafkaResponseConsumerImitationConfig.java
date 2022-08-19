@@ -1,6 +1,5 @@
 package com.andersen.banking.deposit_impl.kafka.utils;
 
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
 import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_impl.config.KafkaConfigProperties;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 @AllArgsConstructor
-public class TransferServiceKafkaConsumerImitationConfig {
+public class TransferServiceKafkaResponseConsumerImitationConfig {
 
     private KafkaConfigProperties kafkaConfigProperties;
 
