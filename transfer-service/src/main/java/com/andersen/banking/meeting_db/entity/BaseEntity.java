@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_db.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -10,16 +11,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners({AuditingEntityListener.class})
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +49,15 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseEntity that)) return false;
+        return deleted == that.deleted && id.equals(that.id) && createdDate.equals(that.createdDate) && createdBy.equals(that.createdBy) && lastModifiedDate.equals(that.lastModifiedDate) && lastModifiedBy.equals(that.lastModifiedBy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy, deleted);
+    }
 }

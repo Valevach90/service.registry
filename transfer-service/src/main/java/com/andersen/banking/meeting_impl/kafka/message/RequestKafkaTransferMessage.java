@@ -1,16 +1,23 @@
-package com.andersen.banking.meeting_api.dto.request;
+package com.andersen.banking.meeting_impl.kafka.message;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransferRequestDto {
+public class RequestKafkaTransferMessage {
+
+    @NotNull
+    private Long transferId;
 
     @NotNull
     private Long userId;
@@ -18,21 +25,19 @@ public class TransferRequestDto {
     @NotBlank
     private String sourceNumber;
 
-    @NotNull
-    private Long sourcePaymentTypeId;
+    @NotBlank
+    private String sourceType;
 
     @NotBlank
     private String destinationNumber;
 
-    @NotNull
-    private Long destinationPaymentTypeId;
+    @NotBlank
+    private String destinationType;
 
     @NotNull
     private Long amount;
 
-    @NotNull
-    private Long currencyId;
-
-    private String comment;
+    @NotBlank
+    private String currencyName;
 
 }

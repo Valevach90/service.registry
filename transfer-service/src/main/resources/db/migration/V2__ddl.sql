@@ -51,9 +51,9 @@ CREATE TABLE transfer
     source_number               VARCHAR(255)                            NOT NULL,
     destination_payment_type_id BIGINT                                  NOT NULL,
     destination_number          VARCHAR(255)                            NOT NULL,
-    transfer_status_id          BIGINT                                  NOT NULL,
     amount                      BIGINT                                  NOT NULL,
     currency_id                 BIGINT                                  NOT NULL,
+    status                      INTEGER                                 NOT NULL,
     CONSTRAINT pk_transfer PRIMARY KEY (id)
 );
 
@@ -66,5 +66,8 @@ ALTER TABLE transfer
 ALTER TABLE transfer
     ADD CONSTRAINT FK_TRANSFER_ON_SOURCE_PAYMENT_TYPE FOREIGN KEY (source_payment_type_id) REFERENCES payment_type (id);
 
-ALTER TABLE transfer
-    ADD CONSTRAINT FK_TRANSFER_ON_TRANSFER_STATUS FOREIGN KEY (transfer_status_id) REFERENCES transaction_status (id);
+INSERT INTO currency (created_by, created_date, deleted, last_modified_by, last_modified_date, description, name) VALUES (current_user, now(), false, current_user, now(), 'United States Dollar', 'USD');
+INSERT INTO currency (created_by, created_date, deleted, last_modified_by, last_modified_date, description, name) VALUES (current_user, now(), false, current_user, now(), 'European Union', 'EURO');
+
+INSERT INTO payment_type (created_by, created_date, deleted, last_modified_by, last_modified_date, description, name) VALUES (current_user, now(), false, current_user, now(), 'A payment card issued by a bank.', 'CARD');
+INSERT INTO payment_type (created_by, created_date, deleted, last_modified_by, last_modified_date, description, name) VALUES (current_user, now(), false, current_user, now(), 'A deposit is money held by a bank', 'DEPOSIT');
