@@ -1,15 +1,20 @@
 package com.andersen.banking.deposit_impl.service.impl;
+import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import com.andersen.banking.deposit_impl.kafka.KafkaProducer;
 import com.andersen.banking.deposit_impl.service.DepositService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 @Slf4j
 @Service
@@ -17,6 +22,7 @@ import java.util.Optional;
 public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     @Transactional
@@ -87,4 +93,27 @@ public class DepositServiceImpl implements DepositService {
 
         log.info("Deleted deposit: {}", foundDeposit);
     }
+
+    @Override
+    @Scheduled(cron = "0 1 10 00 * ?", zone = "Europe/Moscow")
+    public void interestCalculation(Deposit deposit) {
+        log.info("Interest on the balance for the user with id : {}", deposit.getUserId());
+
+        Long amount = deposit.getAmount();
+        Long interestRate = deposit.getInterestRate().longValue();
+        Long accrued = (amount*interestRate)/100;
+
+        AccruedAmount forTransfer = new AccruedAmount();
+
+        forTransfer.setUserId(deposit.getUserId());
+        forTransfer.setAmount(amount);
+        forTransfer.setInterestRate(interestRate);
+        forTransfer.setAccrued(accrued);
+        forTransfer.setCurrency(deposit.getCurrency().getName());
+        Future<RecordMetadata> future =
+                kafkaProducer.sendMessage("interest_calculation", forTransfer);
+
+        log.info("Sending interest on the balance for the user with id : {}", deposit.getUserId());
+    }
+
 }
