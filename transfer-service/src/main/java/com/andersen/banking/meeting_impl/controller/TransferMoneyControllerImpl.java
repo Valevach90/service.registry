@@ -12,6 +12,8 @@ import com.andersen.banking.meeting_impl.service.TransferManager;
 import com.andersen.banking.meeting_impl.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,15 +34,15 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
 
     @Override
-    public List<TransferResponseDto> findAllByUserId(Long userId) {
+    public List<TransferResponseDto> findAllByUserId(Long userId, Pageable pageable) {
         log.info("Find all transfers by user_id: {}", userId);
-        return null;
+        return transferService.findByUserId(userId, pageable);
     }
 
     @Override
-    public TransferResponseDto findById(Long userId, UUID transferId) {
+    public TransferResponseDto findById(UUID transferId, Long userId) {
         log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
-        return null;
+        return transferService.findById(transferId);
     }
 
     @Override

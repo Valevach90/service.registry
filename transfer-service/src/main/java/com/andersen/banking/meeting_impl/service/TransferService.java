@@ -4,7 +4,10 @@ import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.Transfer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TransferService {
@@ -36,5 +39,13 @@ public interface TransferService {
      * @return
      */
     TransferStatusResponseDto getTransferStatus(UUID transferId);
+
+
+    /**
+     * @param id
+     * @param pageable
+     * @return
+     */
+    List<TransferResponseDto> findByUserId(Long id, Pageable pageable);
 
 }

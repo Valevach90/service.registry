@@ -9,6 +9,10 @@ import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +25,17 @@ public interface TransferMoneyController {
 
     @Operation(summary = "Get all transfers",
             description = "get all transfers for user")
-    @GetMapping("/{user_id}")
-    List<TransferResponseDto> findAllByUserId(@Parameter(description = "user id", required = true)
-                                              @PathVariable(value = "user_id") Long userId);
+    @GetMapping("")
+    List<TransferResponseDto> findAllByUserId(@RequestParam(required = true) Long userId,
+                                              @ParameterObject @PageableDefault Pageable pageable);
 
 
     @Operation(summary = "Get information about transfer by transfer id and user id",
             description = "get info about for user by transfer id")
-    @GetMapping("{transfer_id}/{user_id}")
-    TransferResponseDto findById(@Parameter(description = "user id", required = true)
-                                 @PathVariable(value = "user_id") Long userId,
-                                 @Parameter(description = "transfer_id", required = true)
-                                 @PathVariable(value = "transfer_id") UUID transferId);
+    @GetMapping("/{transfer_id}")
+    TransferResponseDto findById(@Parameter(description = "transfer_id", required = true)
+                                 @PathVariable(value = "transfer_id") UUID transferId,
+                                 @RequestParam(required = true) Long userId);
 
 
     @Operation(summary = "Get information about transfer status by transfer id",

@@ -24,11 +24,6 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private UUID id = ;
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

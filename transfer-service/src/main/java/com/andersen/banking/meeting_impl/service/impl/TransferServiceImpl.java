@@ -14,10 +14,14 @@ import com.andersen.banking.meeting_impl.service.PaymentTypeService;
 import com.andersen.banking.meeting_impl.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -102,6 +106,20 @@ public class TransferServiceImpl implements TransferService {
 
         return null;
     }
+
+    @Override
+    public List<TransferResponseDto> findByUserId(Long id, Pageable pageable) {
+
+        log.info("Finding transfers for userId: {}", id);
+
+        Page<Transfer> transfers = transferRepository.findByUserId(id, pageable);
+
+        log.info("Found transfers : {}", transfers);
+
+        return transfers.stream().map(transferMapper::transfer2transferResponseDto).collect(Collectors.toList());
+    }
+
+
 
 
 }
