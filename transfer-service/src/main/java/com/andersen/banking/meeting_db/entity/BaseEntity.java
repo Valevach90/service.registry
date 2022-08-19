@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_db.entity;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,9 +25,17 @@ import java.util.UUID;
 public abstract class BaseEntity implements Serializable {
 
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private UUID id = ;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

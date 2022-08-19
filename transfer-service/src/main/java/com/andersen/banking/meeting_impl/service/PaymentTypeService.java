@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_db.entity.PaymentType;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PaymentTypeService {
 
@@ -17,6 +18,6 @@ public interface PaymentTypeService {
      * @param id
      * @return
      */
-    PaymentType getPaymentTypeById(Long id);
+    PaymentType getPaymentTypeById(UUID id);
 
 }

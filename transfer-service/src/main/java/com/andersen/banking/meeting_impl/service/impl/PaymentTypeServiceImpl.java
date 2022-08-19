@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Slf4j
@@ -34,7 +35,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
     }
 
     @Override
-    public PaymentType getPaymentTypeById(Long id) {
+    public PaymentType getPaymentTypeById(UUID id) {
         return paymentTypeRepository.findById(id).orElseThrow(() -> new NotFoundException(PaymentType.class, id));
     }
 }

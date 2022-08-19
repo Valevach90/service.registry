@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Slf4j
@@ -36,7 +37,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    public Currency getCurrencyById(Long id) {
+    public Currency getCurrencyById(UUID id) {
         return currencyRepository.findById(id).orElseThrow(() -> new NotFoundException(Currency.class, id));
     }
 }

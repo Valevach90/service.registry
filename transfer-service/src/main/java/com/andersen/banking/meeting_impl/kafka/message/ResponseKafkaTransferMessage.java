@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ public class ResponseKafkaTransferMessage {
 
 
     @NotNull
-    private Long transferId;
+    private UUID transferId;
 
     @NotNull
     private boolean result;

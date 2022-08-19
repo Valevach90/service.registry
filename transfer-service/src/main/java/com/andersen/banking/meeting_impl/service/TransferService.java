@@ -5,6 +5,8 @@ import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.Transfer;
 
+import java.util.UUID;
+
 public interface TransferService {
 
     /**
@@ -13,14 +15,14 @@ public interface TransferService {
      * @param id of the transferLog
      * @return transferLog
      */
-    TransferResponseDto findById(Long id);
+    TransferResponseDto findById(UUID id);
 
 
     /**
      * @param id
      * @param status
      */
-    void changeTransferStatus(long id, int status);
+    void changeTransferStatus(UUID id, int status);
 
     /**
      * @param transferRequestDto
@@ -33,6 +35,6 @@ public interface TransferService {
      * @param transferId
      * @return
      */
-    TransferStatusResponseDto getTransferStatus(Long transferId);
+    TransferStatusResponseDto getTransferStatus(UUID transferId);
 
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,19 +20,19 @@ public class TransferRequestDto {
     private String sourceNumber;
 
     @NotNull
-    private Long sourcePaymentTypeId;
+    private UUID sourcePaymentTypeId;
 
     @NotBlank
     private String destinationNumber;
 
     @NotNull
-    private Long destinationPaymentTypeId;
+    private UUID destinationPaymentTypeId;
 
     @NotNull
     private Long amount;
 
     @NotNull
-    private Long currencyId;
+    private UUID currencyId;
 
     private String comment;
 

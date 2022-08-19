@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "TransferMoney controller", description = "work with transfers")
 @RequestMapping(value = "/api/v1/transfer")
@@ -31,14 +32,14 @@ public interface TransferMoneyController {
     TransferResponseDto findById(@Parameter(description = "user id", required = true)
                                  @PathVariable(value = "user_id") Long userId,
                                  @Parameter(description = "transfer_id", required = true)
-                                 @PathVariable(value = "transfer_id") Long transferId);
+                                 @PathVariable(value = "transfer_id") UUID transferId);
 
 
     @Operation(summary = "Get information about transfer status by transfer id",
             description = "get info about for status by transfer id")
     @GetMapping("/{transfer_id}/status")
     TransferStatusResponseDto findTransferStatusById(@Parameter(description = "transfer_id", required = true)
-                                                     @PathVariable(value = "transfer_id") Long transferId);
+                                                     @PathVariable(value = "transfer_id") UUID transferId);
 
 
     @Operation(summary = "Create request on transfer money",

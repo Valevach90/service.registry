@@ -9,11 +9,15 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransferResponseDto {
+
+    @NotNull
+    private UUID id;
 
     @NotBlank
     private String sourceNumber;

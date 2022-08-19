@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_db.entity.Currency;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CurrencyService {
 
@@ -16,6 +17,6 @@ public interface CurrencyService {
      * @param id
      * @return
      */
-    Currency getCurrencyById(Long id);
+    Currency getCurrencyById(UUID id);
 
 }

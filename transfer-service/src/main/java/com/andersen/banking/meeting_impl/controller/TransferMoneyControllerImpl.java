@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -37,13 +38,13 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     }
 
     @Override
-    public TransferResponseDto findById(Long userId, Long transferId) {
+    public TransferResponseDto findById(Long userId, UUID transferId) {
         log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
         return null;
     }
 
     @Override
-    public TransferStatusResponseDto findTransferStatusById(Long transferId) {
+    public TransferStatusResponseDto findTransferStatusById(UUID transferId) {
         log.info("Transfer status by id : {}", transferId);
         return transferService.getTransferStatus(transferId);
     }

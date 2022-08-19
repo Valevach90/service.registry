@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional(readOnly = true)
-    public TransferResponseDto findById(Long id) {
+    public TransferResponseDto findById(UUID id) {
         log.debug("Finding transfer by id: {}", id);
 
         Transfer transfer = transferRepository.findById(id)
@@ -56,7 +58,7 @@ public class TransferServiceImpl implements TransferService {
      * @param status
      */
     @Override
-    public void changeTransferStatus(long id, int status) {
+    public void changeTransferStatus(UUID id, int status) {
         log.info("Changing status for transferLog : {} to {}", id, status);
 
         Transfer transfer = transferRepository.getById(id);
@@ -96,7 +98,7 @@ public class TransferServiceImpl implements TransferService {
             Not supported now.
          */
     @Override
-    public TransferStatusResponseDto getTransferStatus(Long transferId) {
+    public TransferStatusResponseDto getTransferStatus(UUID transferId) {
 
         return null;
     }

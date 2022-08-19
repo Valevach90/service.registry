@@ -1,6 +1,5 @@
 package com.andersen.banking.meeting_impl.kafka.config;
 
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
@@ -51,6 +49,7 @@ public class KafkaConsumerConfig {
         factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(1000L, 2L)));
         return factory;
     }
+
 
     private SimpleRetryPolicy getSimpleRetryPolicy() {
         Map<Class<? extends Throwable>, Boolean> exceptionMap = new HashMap<>();

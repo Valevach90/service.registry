@@ -14,6 +14,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.transaction.Status;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -28,7 +29,7 @@ public class TransferMoneyTopicSenderImpl implements TransferMoneyTopicSender {
     @Transactional
     public void sendRequestMessage(String topicName, RequestKafkaTransferMessage requestKafkaTransferMessage) {
 
-        final long transferId = requestKafkaTransferMessage.getTransferId();
+        final UUID transferId = requestKafkaTransferMessage.getTransferId();
 
         ListenableFuture<SendResult<String, RequestKafkaTransferMessage>> listenableFuture =
                 kafkaTemplate.send(topicName, requestKafkaTransferMessage);
