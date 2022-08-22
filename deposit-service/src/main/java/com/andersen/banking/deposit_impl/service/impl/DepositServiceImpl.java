@@ -6,19 +6,22 @@ import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.entities.Transfer;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
 import com.andersen.banking.deposit_db.repositories.TransferRepository;
-import com.andersen.banking.deposit_impl.config.KafkaConfigProperties;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import com.andersen.banking.deposit_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
 import com.andersen.banking.deposit_impl.mapping.TransferMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -31,11 +34,9 @@ public class DepositServiceImpl implements DepositService {
 
     private final TransferRepository transferRepository;
 
-    private final KafkaConfigProperties kafkaProperties;
-
-    private final KafkaTemplate<String, ResponseKafkaTransferMessage> kafkaTemplate;
-
     private final TransferMapper transferMapper;
+
+    private final TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
     @Override
     @Transactional
@@ -98,80 +99,113 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    @Transactional
+    @Transactional (rollbackFor = NotFoundException.class)
     public void makeTransfer(RequestTransferKafkaMessage message) {
         log.info("Trying make transfer using message: {}", message);
 
         if (isFirstTransferAttempt(message.getTransferId())) {
+
             Transfer transfer = transferMapper.toTransfer(message);
 
-            if (message.getDestinationType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
-                transfer.setResult(replenishDeposit(message));
-            }
+            try {
+                if (message.getSourceType().equals(TRANSFER_WITH_DEPOSIT_TYPE) && message.getDestinationType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                    transfer.setResult(transferBetweenDeposits(message));
 
-            if (transfer.getResult() && message.getSourceType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
-                transfer.setResult(withdrawalDeposit(message));
+                } else if (message.getDestinationType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                    transfer.setResult(replenishDeposit(message));
+
+                } else if (message.getSourceType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                    transfer.setResult(withdrawalDeposit(message));
+                }
+            } catch (NotFoundException exception){
+                transfer.setResult(false);
+                transfer.setStatusDescription(exception.getMessage());
             }
 
             log.info("Saving transfer: {}", transfer);
             //transferRepository.save(transfer);
 
             log.info("Sending response message: {}", transfer);
-            sendResponse(transfer);
+            createAndSendResponse(transfer);
 
         } else {
             log.info("Transfer with id equal to transfer id from request message {} already exists", message);
         }
     }
 
-    private Boolean replenishDeposit(RequestTransferKafkaMessage message) {
-        log.info("Trying replenish deposit using message: {}", message);
+    @Transactional
+    public Boolean transferBetweenDeposits(RequestTransferKafkaMessage message) {
+        log.info("Trying make transfer between deposits, transfer request message: {}", message);
 
-        Optional<Deposit> destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber());
+        Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
+        Deposit sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getSourceNumber()));
 
-        if (destinationDeposit.isPresent()) {
+        if (sourceDeposit.getAmount() >= message.getAmount()) {
 
-            destinationDeposit.get().setAmount(destinationDeposit.get().getAmount() + message.getAmount());
+            sourceDeposit.setAmount(sourceDeposit.getAmount() - message.getAmount());
+            destinationDeposit.setAmount(destinationDeposit.getAmount() + message.getAmount());
 
-            log.info("Saving deposit after transfer {}", destinationDeposit.get());
-            depositRepository.save(destinationDeposit.get());
+            log.info("Saving deposit after transfer {}", destinationDeposit);
+            depositRepository.save(destinationDeposit);
+            log.info("Saving deposit after transfer {}", sourceDeposit);
+            depositRepository.save(sourceDeposit);
 
-            log.info("Replenishment successful for message: {}", message);
+            log.info("Withdrawal successful for transfer request message: {}", message);
             return true;
         } else {
-            log.info("Withdrawal failed (deposit not found) for message: {}", message);
+            log.error("Withdrawal failed (source deposit has not enough money), transfer request message: {}", message);
             return false;
         }
     }
 
-    private Boolean withdrawalDeposit(RequestTransferKafkaMessage message) {
+    @Transactional
+    public Boolean replenishDeposit(RequestTransferKafkaMessage message) {
+        log.info("Trying replenish deposit using message: {}", message);
+
+        Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
+
+        destinationDeposit.setAmount(destinationDeposit.getAmount() + message.getAmount());
+
+        log.info("Saving deposit after transfer {}", destinationDeposit);
+        depositRepository.save(destinationDeposit);
+
+        log.info("Replenishment successful for message: {}", message);
+        return true;
+    }
+
+    @Transactional
+    public Boolean withdrawalDeposit(RequestTransferKafkaMessage message) {
         log.info("Trying withdrawal deposit using message: {}", message);
 
-        Optional<Deposit> sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber());
+        Deposit sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getSourceNumber()));
 
-        if (sourceDeposit.isPresent() && sourceDeposit.get().getAmount() >= message.getAmount()) {
+        if (sourceDeposit.getAmount() >= message.getAmount()) {
 
-            sourceDeposit.get().setAmount(sourceDeposit.get().getAmount() - message.getAmount());
+            sourceDeposit.setAmount(sourceDeposit.getAmount() - message.getAmount());
 
-            log.info("Saving deposit after transfer {}", sourceDeposit.get());
-            depositRepository.save(sourceDeposit.get());
+            log.info("Saving deposit after transfer {}", sourceDeposit);
+            depositRepository.save(sourceDeposit);
 
             log.info("Withdrawal successful for message: {}", message);
             return true;
         } else {
-            log.info("Withdrawal failed (deposit not found or not enough money) for message: {}", message);
+            log.error("Withdrawal failed (source deposit has not enough money), transfer request message: {}", message);
             return false;
         }
     }
 
-    private Boolean isFirstTransferAttempt(Long transferId) {
+    private Boolean isFirstTransferAttempt(UUID transferId) {
         if (transferRepository.findById(transferId).isPresent()) {
             return false;
         }
         return true;
     }
 
-    private void sendResponse(Transfer transfer) {
+    private ResponseKafkaTransferMessage createAndSendResponse(Transfer transfer) {
         log.info("Creating response message based on result of transfer: {}", transfer);
 
         ResponseKafkaTransferMessage response = new ResponseKafkaTransferMessage();
@@ -181,6 +215,8 @@ public class DepositServiceImpl implements DepositService {
         response.setStatusDescription(transfer.getStatusDescription());
 
         log.info("Sending response message with transfer result to Transfer service: {}", response);
-        kafkaTemplate.send(kafkaProperties.getTopicTransferResponse(), response);
+        transferMoneyServiceKafkaResponseProducer.sendResponse(response);
+
+        return response;
     }
 }

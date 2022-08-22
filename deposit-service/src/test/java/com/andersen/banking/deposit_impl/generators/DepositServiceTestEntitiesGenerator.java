@@ -246,11 +246,11 @@ public class DepositServiceTestEntitiesGenerator {
         return message;
     }
 
-    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(){
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(RequestTransferKafkaMessage request){
 
         ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
 
-        message.setTransferId(ID);
+        message.setTransferId(request.getTransferId());
         message.setResult(false);
 
         return message;

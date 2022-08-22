@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
  * Transfer entity for Deposit service.
@@ -19,7 +20,7 @@ public class Transfer {
 
     @Id
     @Column(name = "transfer_id", nullable = false)
-    private Long transferId;
+    private UUID transferId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

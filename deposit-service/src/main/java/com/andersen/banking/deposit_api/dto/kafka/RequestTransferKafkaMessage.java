@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,25 +14,25 @@ public class RequestTransferKafkaMessage {
 
     @NotNull
     @JsonProperty("transferId")
-    private Long transferId;
+    private UUID transferId;
 
     @NotNull
     @JsonProperty("userId")
     private Long userId;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("sourceNumber")
     private String sourceNumber;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("sourceType")
     private String sourceType;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("destinationNumber")
     private String destinationNumber;
 
-    @NotEmpty
+    @NotBlank
     @JsonProperty("destinationType")
     private String destinationType;
 
