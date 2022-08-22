@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class TransferRequestDto2RequestKafkaTransferMessageConverter implements Converter<RequestKafkaTransferMessage, Transfer> {
+public class Transfer2RequestKafkaTransferMessageConverter implements Converter<RequestKafkaTransferMessage, Transfer> {
 
     /**
      * @param transfer
@@ -16,7 +16,7 @@ public class TransferRequestDto2RequestKafkaTransferMessageConverter implements 
      */
 
     @Override
-    public RequestKafkaTransferMessage convert(Transfer transfer) {
+    public RequestKafkaTransferMessage convert(Transfer transfer) throws RuntimeException{
 
         log.info("Converting to RequestKafkaTransferMessage transfer : {}", transfer);
 

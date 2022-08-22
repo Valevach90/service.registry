@@ -12,7 +12,6 @@ import com.andersen.banking.meeting_impl.service.TransferManager;
 import com.andersen.banking.meeting_impl.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +53,7 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     @Override
     public TransferResponseDto create(TransferRequestDto transferRequestDto) {
         log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
-        return transferManager.execute(transferRequestDto);
+        return transferManager.run(transferRequestDto);
     }
 
     @Override

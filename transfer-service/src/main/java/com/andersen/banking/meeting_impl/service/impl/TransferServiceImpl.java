@@ -44,7 +44,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional(readOnly = true)
-    public TransferResponseDto findById(UUID id) {
+    public TransferResponseDto findById(UUID id) throws NotFoundException {
         log.debug("Finding transfer by id: {}", id);
 
         Transfer transfer = transferRepository.findById(id)
@@ -80,7 +80,7 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    public Transfer create(TransferRequestDto transferRequestDto) {
+    public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException{
         log.info("Creating transfer: {}", transferRequestDto);
 
         PaymentType source = paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());

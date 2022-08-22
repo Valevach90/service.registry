@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.util.impl;
 
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
+import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.PaymentTypeService;
 import com.andersen.banking.meeting_impl.util.TransferRequestValidator;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class TransferRequestPaymentTypeValidator implements TransferRequestValid
      */
     @Override
     @Transactional(readOnly = true)
-    public void validate(TransferRequestDto transferRequestDto) {
+    public void validate(TransferRequestDto transferRequestDto) throws NotFoundException {
         log.info("Validating on payment type for : {}", transferRequestDto);
 
         paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());

@@ -37,7 +37,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    public Currency getCurrencyById(UUID id) {
+    public Currency getCurrencyById(UUID id) throws NotFoundException {
         return currencyRepository.findById(id).orElseThrow(() -> new NotFoundException(Currency.class, id));
     }
 }

@@ -11,6 +11,6 @@ public interface TransferExecutor {
      * @param transferRequestDto
      * @return
      */
-    TransferResponseDto run(TransferRequestDto transferRequestDto);
+    TransferResponseDto execute(TransferRequestDto transferRequestDto);
 
 }

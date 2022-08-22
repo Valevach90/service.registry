@@ -24,13 +24,13 @@ public class TransferManagerImpl implements TransferManager {
 
     @Override
     @Transactional(rollbackFor = NotFoundException.class)
-    public TransferResponseDto execute(TransferRequestDto transferRequestDto) {
+    public TransferResponseDto run(TransferRequestDto transferRequestDto) {
         log.info("Execute for : {}", transferRequestDto);
 
-        validators.forEach(x -> x.validate(transferRequestDto));
+        validateRequest(transferRequestDto);
 
         TransferExecutor executor = getExecutor(transferRequestDto);
-        TransferResponseDto transferResponseDto = executor.run(transferRequestDto);
+        TransferResponseDto transferResponseDto = executor.execute(transferRequestDto);
 
         log.info("Return response : {}", transferResponseDto);
         return transferResponseDto;
@@ -48,5 +48,10 @@ public class TransferManagerImpl implements TransferManager {
             throw new RuntimeException("An operation is not support for request : "
                     .concat(transferRequestDto.toString()));
         }
+    }
+
+
+    private void validateRequest(TransferRequestDto transferRequestDto) throws NotFoundException{
+        validators.forEach(x -> x.validate(transferRequestDto));
     }
 }

@@ -40,7 +40,7 @@ public class TransferExecutorInternalService implements TransferExecutor {
 
     @Override
     @Transactional
-    public TransferResponseDto run(TransferRequestDto transferRequestDto) {
+    public TransferResponseDto execute(TransferRequestDto transferRequestDto) {
 
         log.info("Running internal transfer for transfer request : {}", transferRequestDto);
 

@@ -10,7 +10,7 @@ public interface TransferManager {
      * @param transferRequestDto
      * @return
      */
-    TransferResponseDto execute(TransferRequestDto transferRequestDto);
+    TransferResponseDto run(TransferRequestDto transferRequestDto);
 
     /**
      * @param transferRequestDto
