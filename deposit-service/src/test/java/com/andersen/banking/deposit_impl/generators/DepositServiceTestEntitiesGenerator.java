@@ -1,7 +1,6 @@
 package com.andersen.banking.deposit_impl.generators;
 
 import com.andersen.banking.deposit_api.dto.*;
-import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import com.andersen.banking.deposit_db.entities.*;
 import com.andersen.banking.deposit_db.entities.Currency;
 import org.springframework.data.domain.*;
@@ -32,22 +31,6 @@ public class DepositServiceTestEntitiesGenerator {
     private static final Integer PAGE_NUMBER = 1;
     private static final Integer PAGE_SIZE = 10;
     private static final String PAGE_SORT_FIELD = "id";
-
-    private static final Long AMOUNT = 1_000L;
-    private static final Long INTEREST_RATE = 55L;
-    private static final Long ACCRUED = 550L;
-
-    public static AccruedAmount generateAccruedAmount() {
-        AccruedAmount accruedAmount = new AccruedAmount();
-
-        accruedAmount.setUserId(ID);
-        accruedAmount.setAmount(AMOUNT);
-        accruedAmount.setInterestRate(INTEREST_RATE);
-        accruedAmount.setAccrued(ACCRUED);
-        accruedAmount.setCurrency(CURRENCY_NAME);
-
-        return accruedAmount;
-    }
 
     public static Currency generateCurrency() {
         Currency currency = new Currency();

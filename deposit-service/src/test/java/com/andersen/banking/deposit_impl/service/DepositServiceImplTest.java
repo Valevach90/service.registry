@@ -1,11 +1,10 @@
 package com.andersen.banking.deposit_impl.service;
 
-import com.andersen.banking.deposit_api.dto.messages.AccruedAmount;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
-import com.andersen.banking.deposit_impl.kafka.KafkaProducer;
 import com.andersen.banking.deposit_impl.service.impl.DepositServiceImpl;
+import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +18,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 
 @SpringBootTest(classes = DepositServiceImpl.class)
 public class DepositServiceImplTest {
@@ -27,7 +25,6 @@ public class DepositServiceImplTest {
     private Deposit deposit;
     private Long id;
     private Optional<Deposit> depositOptional;
-    private AccruedAmount accruedAmount;
 
     @SpyBean
     DepositService depositService;
@@ -35,15 +32,11 @@ public class DepositServiceImplTest {
     @MockBean
     DepositRepository depositRepository;
 
-    @MockBean
-    KafkaProducer kafkaProducer;
-
     @BeforeEach
     void initialize(){
-        deposit = generateDeposit();
+        deposit = DepositServiceTestEntitiesGenerator.generateDeposit();
         id = deposit.getId();
         depositOptional = Optional.of(deposit);
-        accruedAmount = generateAccruedAmount();
     }
 
     @Test
@@ -78,8 +71,8 @@ public class DepositServiceImplTest {
 
     @Test
     void findAll_whenOk_shouldReturnPageOfDeposit(){
-        Pageable pageable = createPageable();
-        Page<Deposit> pageOfDeposits = generatePageOfDeposits(pageable);
+        Pageable pageable = DepositServiceTestEntitiesGenerator.createPageable();
+        Page<Deposit> pageOfDeposits = DepositServiceTestEntitiesGenerator.generatePageOfDeposits(pageable);
 
         Mockito
                 .when(depositRepository.findAll(pageable))
@@ -139,14 +132,5 @@ public class DepositServiceImplTest {
         Mockito
                 .verify(depositRepository, Mockito.never())
                 .deleteById(id);
-    }
-
-    @Test
-    void interestCalculation_whenSendingOk() {
-        kafkaProducer.sendMessage("key", accruedAmount);
-
-        Mockito
-                .verify(kafkaProducer, Mockito.times(1))
-                .sendMessage("key", accruedAmount);
     }
 }
