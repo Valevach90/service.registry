@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -103,7 +105,7 @@ public class DepositServiceImpl implements DepositService {
     public void makeTransfer(RequestTransferKafkaMessage message) {
         log.info("Trying make transfer using message: {}", message);
 
-        if (isFirstTransferAttempt(message.getTransferId())) {
+        if (Objects.nonNull(message) && isFirstTransferAttempt(message.getTransferId())) {
 
             Transfer transfer = transferMapper.toTransfer(message);
 
@@ -123,7 +125,7 @@ public class DepositServiceImpl implements DepositService {
             }
 
             log.info("Saving transfer: {}", transfer);
-            //transferRepository.save(transfer);
+            transferRepository.save(transfer);
 
             log.info("Sending response message: {}", transfer);
             createAndSendResponse(transfer);
