@@ -6,55 +6,65 @@ import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
-import com.andersen.banking.meeting_impl.service.TransferMoneyService;
+import com.andersen.banking.meeting_impl.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TransferMoneyControllerImpl implements TransferMoneyController {
 
-    private final TransferMoneyService transferMoneyService;
+    private final TransferService transferService;
+
+    private final TransferManager transferManager;
+
+    private final PaymentTypeService paymentTypeService;
+
+    private final CurrencyService currencyService;
+
+    private final TransferMoneyValidator transferMoneyValidator;
 
 
     @Override
-    public List<TransferResponseDto> findAllByUserId(Long userId) {
+    public List<TransferResponseDto> findAllByUserId(Long userId, Pageable pageable) {
         log.info("Find all transfers by user_id: {}", userId);
-        return null;
+        return transferService.findByUserId(userId, pageable);
     }
 
     @Override
-    public TransferResponseDto findById(Long userId, Long transferId) {
+    public TransferResponseDto findById(UUID transferId, Long userId) {
         log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
-        return null;
+        return transferService.findById(transferId);
     }
 
     @Override
-    public TransferStatusResponseDto findTransferStatusById(Long transferId) {
+    public TransferStatusResponseDto findTransferStatusById(UUID transferId) {
         log.info("Transfer status by id : {}", transferId);
-        return transferMoneyService.getTransferStatus(transferId);
+        return transferService.getTransferStatus(transferId);
     }
 
     @Override
     public TransferResponseDto create(TransferRequestDto transferRequestDto) {
         log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
-        return null;
+        return transferManager.run(transferRequestDto);
     }
 
     @Override
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
         log.info("Get request on get list payment types");
-        return transferMoneyService.getAllPaymentTypes();
+        return paymentTypeService.getAllPaymentTypes();
     }
 
     @Override
     public List<CurrencyResponseDto> getAllCurrency() {
         log.info("Get request on get list currencies");
-        return transferMoneyService.getAllCurrencies();
+        return currencyService.getAllCurrencies();
     }
 
 }
