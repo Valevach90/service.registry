@@ -2,7 +2,9 @@ package com.andersen.banking.deposit_impl.controller;
 
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
+import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
+import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.generators.CustomPageImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +40,12 @@ public class DepositProductControllerH2IntegrationTest {
     @Autowired
     private DepositProductRepository productRepository;
 
+    @Autowired
+    private DepositTypeRepository depositTypeRepository;
+
+    @Autowired
+    private CurrencyRepository currencyRepository;
+
     private static RestTemplate restTemplate = null;
 
     @BeforeAll
@@ -47,6 +55,9 @@ public class DepositProductControllerH2IntegrationTest {
 
     @BeforeEach
     public void setUp() {
+        depositTypeRepository.save(generateDepositType());
+        currencyRepository.save(generateCurrency());
+
         product = generateDepositProduct();
         productDto = generateDepositProductDto(product);
         id = product.getId();
