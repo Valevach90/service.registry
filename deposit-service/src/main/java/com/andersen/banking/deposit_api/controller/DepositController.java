@@ -28,13 +28,22 @@ public interface DepositController {
             @Validated DepositDto depositDto
     );
 
-     @Operation(summary = "Get deposit",
+    @Operation(summary = "Get deposit",
             description = "get deposit by id"
     )
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     DepositDto findById(
             @Parameter(description = "deposit id", required = true)
             @PathVariable("id") Long id
+    );
+
+    @Operation(summary = "Get all deposit for user",
+            description = "Get all deposits by user id"
+    )
+    @GetMapping("/users/{id}")
+    Page<DepositDto> findDepositsByUserId(
+            @Parameter(description = "user id", required = true) @PathVariable("id") Long userId,
+            @ParameterObject @PageableDefault Pageable pageable
     );
 
     @Operation(summary = "Get all deposits",

@@ -1,6 +1,8 @@
 package com.andersen.banking.service.payment.meeting_impl.controller;
 
 import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.service.payment.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
@@ -27,6 +29,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static com.andersen.banking.service.payment.meeting_test.generators.CardUnitTestGenerator.*;
+
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,6 +44,9 @@ public class CardControllerH2IntegrationTest {
     private Account account2;
     private Account account3;
     private List<Card> cards;
+    private final TypeCard typeCard = populateTypeCard();
+    private final TypeCardResponseDto typeCardResponseDto = populateTypeCardResponseDto();
+    private final TypeCardUpdateDto typeCardUpdateDto = populateTypeCardUpdateDto();
 
     @Autowired
     private CardRepository cardRepository;
@@ -83,12 +90,29 @@ public class CardControllerH2IntegrationTest {
         account3 = accountRepository.save(acc3);
 
         cards = generateCards();
+    }
 
-        for (Card card : cards) {
-            cardRepository.save(card);
-        }
+    @Test
+    void findTypeCardById_AndOk() {
+        final Long typeCardId = 1L;
 
-        baseUrl = baseUrl.concat(":").concat(String.valueOf(port)).concat("/api/v1/cards");
+        TypeCardResponseDto response = restTemplate
+                .getForObject(baseUrl + "/types/{id}", TypeCardResponseDto.class, typeCardId);
+
+        Assertions.assertEquals(typeCardResponseDto, response);
+        Assertions.assertEquals(3, typeCardRepository.findAll().size());
+    }
+
+    @Test
+    void updateTypeCard_andOk() {
+        final Long typeCardId = 1L;
+
+        restTemplate.put(baseUrl + "/types/{id}", typeCardId, typeCardUpdateDto);
+
+        TypeCard response = typeCardRepository.findById(typeCardId).get();
+
+        Assertions.assertEquals(typeCard, response);
+        Assertions.assertEquals(3, typeCardRepository.findAll().size());
     }
 
     @Test
@@ -125,7 +149,6 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByTypeCardWithoutTypeAndPayment_ShouldReturnSizeOfCards() {
-
         int result = getSizeFromRepository(null, null);
 
         List<CardResponseDto> expected = generateCards()
@@ -205,13 +228,13 @@ public class CardControllerH2IntegrationTest {
             case "VISAS": {
                 typeCard.setId(1L);
                 typeCard.setPaymentSystem("VISA");
-                typeCard.setTypeName("STANDARD");
+                typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDS": {
                 typeCard.setId(2L);
                 typeCard.setPaymentSystem("MASTERCARD");
-                typeCard.setTypeName("STANDARD");
+                typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDSPLAT": {
