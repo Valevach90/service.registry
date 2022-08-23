@@ -21,12 +21,21 @@ public class TransferRequestPaymentTypeValidator implements TransferRequestValid
      */
     @Override
     @Transactional(readOnly = true)
-    public void validate(TransferRequestDto transferRequestDto) throws NotFoundException {
-        log.info("Validating on payment type for : {}", transferRequestDto);
+    public boolean validate(TransferRequestDto transferRequestDto) {
+        try {
+            log.info("Validating on payment type for : {}", transferRequestDto);
 
-        paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());
-        paymentTypeService.getPaymentTypeById(transferRequestDto.getDestinationPaymentTypeId());
+            paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());
+            paymentTypeService.getPaymentTypeById(transferRequestDto.getDestinationPaymentTypeId());
 
-        log.info("Validated on payment type for : {}", transferRequestDto);
+            log.info("Validated on payment type for : {}", transferRequestDto);
+
+            return true;
+        } catch (NotFoundException e) {
+            log.info("Validation finished with exception :{}", e.getMessage());
+
+            return false;
+        }
+
     }
 }

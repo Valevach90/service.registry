@@ -4,6 +4,6 @@ import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 
 public interface TransferRequestValidator {
 
-    void validate(TransferRequestDto transferRequestDto);
+    boolean validate(TransferRequestDto transferRequestDto);
 
 }

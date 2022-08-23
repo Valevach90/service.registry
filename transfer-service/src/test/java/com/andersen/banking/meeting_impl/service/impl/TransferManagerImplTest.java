@@ -1,13 +1,9 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
-import com.andersen.banking.meeting_db.repository.CurrencyRepository;
-import com.andersen.banking.meeting_db.repository.PaymentTypeRepository;
-import com.andersen.banking.meeting_impl.exception.NotFoundException;
+import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_impl.service.TransferExecutor;
 import com.andersen.banking.meeting_impl.util.TransferRequestValidator;
-import com.andersen.banking.meeting_impl.util.impl.TransferRequestCurrencyValidator;
-import com.andersen.banking.meeting_impl.util.impl.TransferRequestPaymentTypeValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,19 +21,18 @@ import static org.mockito.Mockito.when;
 class TransferManagerImplTest {
 
     private final static UUID paymentTypeId = UUID.randomUUID();
-    private final static UUID currencyId = UUID.randomUUID();
 
     @Mock
     List<TransferRequestValidator> validators;
 
     @Mock
-    TransferRequestCurrencyValidator transferRequestCurrencyValidator;
-
-    @Mock
-    TransferRequestPaymentTypeValidator transferRequestPaymentTypeValidator;
+    TransferMoneyValidatorImpl transferMoneyValidator;
 
     @Mock
     TransferRequestDto transferRequestDto;
+
+    @Mock
+    TransferResponseDto transferResponseDto;
 
     @InjectMocks
     TransferManagerImpl transferManager;
@@ -47,23 +42,27 @@ class TransferManagerImplTest {
     TransferExecutorInternalService transferExecutorInternalService;
 
     @Test
-    void run_ShouldReturnNotFoundException_WhenExecuteMethodThrowNotFoundException() {
-        when(transferExecutorInternalService.execute(transferRequestDto)).thenThrow(NotFoundException.class);
+    void run_ShouldReturnResponseDto_WhenMessageSent() {
         when(transferRequestDto.getSourcePaymentTypeId()).thenReturn(paymentTypeId);
         when(transferRequestDto.getDestinationPaymentTypeId()).thenReturn(paymentTypeId);
+        when(transferMoneyValidator.validate(transferRequestDto, validators)).thenReturn(true);
+        when(transferExecutorInternalService.execute(transferRequestDto)).thenReturn(transferResponseDto);
 
-        assertThrows(NotFoundException.class, () -> transferManager.run(transferRequestDto));
+        TransferResponseDto actual = transferManager.run(transferRequestDto);
+
+        assertNotNull(actual);
+        assertEquals(transferResponseDto, actual);
     }
 
-
     @Test
-    void run_ShouldReturnTransferResponseDto_WhenGetExecutorMethodThrowNotFoundException() {
+    void run_ShouldThrowRuntimeException_WhenGetExecutorMethodThrowRuntimeException() {
         when(transferRequestDto.getSourcePaymentTypeId()).thenReturn(paymentTypeId);
-        when(transferRequestDto.getDestinationPaymentTypeId()).thenReturn(paymentTypeId);
-        when(transferManager.getExecutor(transferRequestDto)).thenThrow(RuntimeException.class);
+        when(transferRequestDto.getDestinationPaymentTypeId()).thenReturn(UUID.randomUUID());
+        when(transferMoneyValidator.validate(transferRequestDto, validators)).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> transferManager.run(transferRequestDto));
     }
+
 
     @Test
     void getExecutor_ShouldReturnInternalTransferExecutor_WhenSourceAndDestinationPaymentTypeIdIsEquals() {

@@ -6,10 +6,7 @@ import com.andersen.banking.meeting_api.dto.responce.CurrencyResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.PaymentTypeResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
-import com.andersen.banking.meeting_impl.service.CurrencyService;
-import com.andersen.banking.meeting_impl.service.PaymentTypeService;
-import com.andersen.banking.meeting_impl.service.TransferManager;
-import com.andersen.banking.meeting_impl.service.TransferService;
+import com.andersen.banking.meeting_impl.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +27,8 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     private final PaymentTypeService paymentTypeService;
 
     private final CurrencyService currencyService;
+
+    private final TransferMoneyValidator transferMoneyValidator;
 
 
     @Override

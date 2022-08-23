@@ -14,6 +14,9 @@ import com.andersen.banking.meeting_impl.service.PaymentTypeService;
 import com.andersen.banking.meeting_impl.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@CacheConfig(cacheNames = {"transfer"})
 @RequiredArgsConstructor
 public class TransferServiceImpl implements TransferService {
 
@@ -43,6 +47,7 @@ public class TransferServiceImpl implements TransferService {
 
 
     @Override
+    @Cacheable
     @Transactional(readOnly = true)
     public TransferResponseDto findById(UUID id) throws NotFoundException {
         log.debug("Finding transfer by id: {}", id);
@@ -62,6 +67,7 @@ public class TransferServiceImpl implements TransferService {
      * @param status
      */
     @Override
+    @Transactional
     public void changeTransferStatus(UUID id, int status) {
         log.info("Changing status for transferLog : {} to {}", id, status);
 
@@ -80,7 +86,9 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException{
+    @CachePut
+    @Transactional
+    public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Creating transfer: {}", transferRequestDto);
 
         PaymentType source = paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());
@@ -97,29 +105,29 @@ public class TransferServiceImpl implements TransferService {
     }
 
 
-
     /*
             Not supported now.
          */
     @Override
+    @Transactional(readOnly = true)
     public TransferStatusResponseDto getTransferStatus(UUID transferId) {
 
         return null;
     }
 
     @Override
-    public List<TransferResponseDto> findByUserId(Long id, Pageable pageable) {
+    @Cacheable
+    @Transactional(readOnly = true)
+    public List<TransferResponseDto> findByUserId(Long userId, Pageable pageable) {
 
-        log.info("Finding transfers for userId: {}", id);
+        log.info("Finding transfers for userId: {}", userId);
 
-        Page<Transfer> transfers = transferRepository.findByUserId(id, pageable);
+        Page<Transfer> transfers = transferRepository.findByUserId(userId, pageable);
 
         log.info("Found transfers : {}", transfers);
 
         return transfers.stream().map(transferMapper::transfer2transferResponseDto).collect(Collectors.toList());
     }
-
-
 
 
 }

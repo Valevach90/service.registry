@@ -27,13 +27,14 @@ public class Currency extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Currency currency)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        return name.equals(currency.name) && description.equals(currency.description);
+        Currency currency = (Currency) o;
+        return name.equals(currency.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description);
+        return Objects.hash(super.getId(), name);
     }
 }

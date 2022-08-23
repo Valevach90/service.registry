@@ -20,11 +20,20 @@ public class TransferRequestCurrencyValidator implements TransferRequestValidato
      * @param transferRequestDto
      */
     @Override
-    public void validate(TransferRequestDto transferRequestDto) throws NotFoundException {
-        log.info("Validating on currency for : {}", transferRequestDto);
+    public boolean validate(TransferRequestDto transferRequestDto) {
+        try {
+            log.info("Validating on currency for : {}", transferRequestDto);
 
-        currencyService.getCurrencyById(transferRequestDto.getCurrencyId());
+            currencyService.getCurrencyById(transferRequestDto.getCurrencyId());
 
-        log.info("Validated on currency for : {}", transferRequestDto);
+            log.info("Validated on currency for : {}", transferRequestDto);
+
+            return true;
+        } catch (NotFoundException e) {
+            log.info("Validation finished with exception :{}", e.getMessage());
+
+            return false;
+        }
+
     }
 }

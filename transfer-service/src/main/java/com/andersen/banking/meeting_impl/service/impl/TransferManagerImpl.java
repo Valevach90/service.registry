@@ -3,8 +3,10 @@ package com.andersen.banking.meeting_impl.service.impl;
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
+import com.andersen.banking.meeting_impl.exception.RequestValidationException;
 import com.andersen.banking.meeting_impl.service.TransferExecutor;
 import com.andersen.banking.meeting_impl.service.TransferManager;
+import com.andersen.banking.meeting_impl.service.TransferMoneyValidator;
 import com.andersen.banking.meeting_impl.util.TransferRequestValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,22 +20,27 @@ import java.util.List;
 @AllArgsConstructor
 public class TransferManagerImpl implements TransferManager {
 
-    private final List<TransferRequestValidator> validators;
+    private final TransferMoneyValidator transferMoneyValidator;
+    private List<TransferRequestValidator> requestValidators;
 
     private final TransferExecutorInternalService transferExecutorInternalService;
 
     @Override
     @Transactional(rollbackFor = NotFoundException.class)
-    public TransferResponseDto run(TransferRequestDto transferRequestDto) {
+    public TransferResponseDto run(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Execute for : {}", transferRequestDto);
 
-        validateRequest(transferRequestDto);
+        if (transferMoneyValidator.validate(transferRequestDto, requestValidators)) {
+            TransferExecutor executor = getExecutor(transferRequestDto);
+            TransferResponseDto transferResponseDto = executor.execute(transferRequestDto);
 
-        TransferExecutor executor = getExecutor(transferRequestDto);
-        TransferResponseDto transferResponseDto = executor.execute(transferRequestDto);
+            log.info("Return response : {}", transferResponseDto);
+            return transferResponseDto;
+        } else {
+            log.error("Failed verification for payment and currency fields for : {}", transferRequestDto);
+            throw new RequestValidationException(transferRequestDto.getClass());
+        }
 
-        log.info("Return response : {}", transferResponseDto);
-        return transferResponseDto;
     }
 
 
@@ -48,10 +55,5 @@ public class TransferManagerImpl implements TransferManager {
             throw new RuntimeException("An operation is not support for request : "
                     .concat(transferRequestDto.toString()));
         }
-    }
-
-
-    private void validateRequest(TransferRequestDto transferRequestDto) throws NotFoundException{
-        validators.forEach(x -> x.validate(transferRequestDto));
     }
 }

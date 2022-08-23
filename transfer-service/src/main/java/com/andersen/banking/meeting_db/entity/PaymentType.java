@@ -28,13 +28,14 @@ public class PaymentType extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PaymentType that)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        return name.equals(that.name) && description.equals(that.description);
+        PaymentType that = (PaymentType) o;
+        return name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description);
+        return Objects.hash(super.getId(), name);
     }
 }
