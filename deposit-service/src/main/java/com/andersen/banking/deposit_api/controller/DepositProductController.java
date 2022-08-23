@@ -84,8 +84,8 @@ public interface DepositProductController {
             description = "get filtered deposit products")
     @PostMapping("/filter")
     Page<DepositProductDto> getFilteredDepositProducts(@ParameterObject
-                                       @PageableDefault Pageable pageable,
+                                                       @PageableDefault Pageable pageable,
 
-                                       @Parameter(description = "deposit product filter")
-                                       @RequestParam(value = "filter", required = true) DepositProductFilterDto depositProductFilterDto);
+                                                       @RequestBody
+                                                       @Validated  DepositProductFilterDto depositProductFilterDto);
 }
