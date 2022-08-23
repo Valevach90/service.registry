@@ -17,6 +17,7 @@ public class AccountUnitTestGenerator {
         account.setCurrency("BEL");
         account.setBankName("Tinkoff");
         account.setBalance(0);
+
         return account;
     }
 }
