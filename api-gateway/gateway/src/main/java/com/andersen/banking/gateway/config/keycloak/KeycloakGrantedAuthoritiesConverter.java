@@ -45,14 +45,12 @@ public class KeycloakGrantedAuthoritiesConverter implements Converter<Jwt, Colle
                 .orElse(emptySet());
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> realmRoles(Jwt jwt) {
         return Optional.ofNullable(jwt.getClaimAsMap(REALM_ACCESS))
                 .map(realmAccess -> (List<String>) realmAccess.get(ROLES))
                 .orElse(emptyList());
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> clientRoles(Jwt jwt, String clientId) {
         return ObjectUtils.isEmpty(clientId) ? emptyList() :
                 Optional.ofNullable(jwt.getClaimAsMap(RESOURCE_ACCESS))
