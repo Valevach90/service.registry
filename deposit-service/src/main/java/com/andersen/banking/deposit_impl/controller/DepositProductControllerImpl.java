@@ -2,6 +2,7 @@ package com.andersen.banking.deposit_impl.controller;
 
 import com.andersen.banking.deposit_api.controller.DepositProductController;
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositProductMapper;
@@ -93,6 +94,26 @@ public class DepositProductControllerImpl implements DepositProductController {
                 .map(depositProductMapper::toDepositProductDto);
 
         log.debug("Search was successful. Found {} deposit products", foundProducts.getContent().size());
+        return foundProducts;
+    }
+
+    @Override
+    public DepositProductFilterDto getDepositProductFilter() {
+        log.debug("Trying to getting deposit product filter");
+
+        DepositProductFilterDto depositProductFilterDto = depositProductService.getDepositProductFilter();
+
+        log.debug("Getting deposit product filter: {}", depositProductFilterDto);
+        return depositProductFilterDto;
+    }
+
+    @Override
+    public Page<DepositProductDto> getFilteredDepositProducts(Pageable pageable, DepositProductFilterDto depositProductFilterDto) {
+        log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
+        Page<DepositProductDto> foundProducts = depositProductService
+                .getFilteredDepositProductFilter(depositProductFilterDto, pageable)
+                .map(depositProductMapper::toDepositProductDto);
+        log.info("Getting filtered deposit products: {}", foundProducts);
         return foundProducts;
     }
 }

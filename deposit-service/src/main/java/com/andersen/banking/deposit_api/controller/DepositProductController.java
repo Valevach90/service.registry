@@ -1,6 +1,7 @@
 package com.andersen.banking.deposit_api.controller;
 
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -74,4 +75,17 @@ public interface DepositProductController {
                                       @Parameter(description = "currency name")
                                       @RequestParam(value = "currency", required = false) String currency);
 
+    @Operation(summary = "Get deposit product filter",
+            description = "get deposit product filter")
+    @GetMapping("/filter")
+    DepositProductFilterDto getDepositProductFilter();
+
+    @Operation(summary = "Get filtered deposit products",
+            description = "get filtered deposit products")
+    @PostMapping("/filter")
+    Page<DepositProductDto> getFilteredDepositProducts(@ParameterObject
+                                       @PageableDefault Pageable pageable,
+
+                                       @Parameter(description = "deposit product filter")
+                                       @RequestParam(value = "filter", required = true) DepositProductFilterDto depositProductFilterDto);
 }
