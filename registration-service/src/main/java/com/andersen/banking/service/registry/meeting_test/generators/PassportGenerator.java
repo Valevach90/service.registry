@@ -20,11 +20,11 @@ public class PassportGenerator {
     public Passport generatePassport(User user, Address address) {
         var passport = new Passport();
         var now = LocalDate.now();
-        passport.setAddress(address);
         passport.setUser(user);
-        passport.setPassportCode(String.valueOf(faker.number().numberBetween(100000, 999999)));
+        passport.setAddress(address);
+        passport.setSerialNumber(String.valueOf(faker.number().numberBetween(10, 99)));
+        passport.setPassportCode(String.valueOf(faker.number().numberBetween(1000000, 9999999)));
         passport.setPatronymic(StringUtils.substring(faker.elderScrolls().region(), 0, 29));
-        passport.setSerialNumber(String.valueOf(faker.number().numberBetween(10000, 99999)));
         passport.setTerminationDate(now.plusYears(faker.number().randomDigitNotZero()));
         passport.setLastName(StringUtils.substring(faker.elderScrolls().lastName(), 0, 29));
         passport.setFirstName(StringUtils.substring(faker.elderScrolls().firstName(), 0, 29));

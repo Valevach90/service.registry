@@ -167,7 +167,7 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findByOwnerIdAndAccountIdIsNot_ShouldReturnSizeOfCards() {
-        Page<Card> cardByAccount_ownerId = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L,2L, Pageable.unpaged());
+        Page<Card> cardByAccount_ownerId = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L, 2L, Pageable.unpaged());
         Assertions.assertEquals(2, cardByAccount_ownerId.getSize());
     }
 
@@ -182,7 +182,8 @@ public class CardControllerH2IntegrationTest {
             uriComponentsBuilder.queryParam("payment", payment);
         }
         URI uri = uriComponentsBuilder.build().toUri();
-        ParameterizedTypeReference<RestResponsePage<CardResponseDto>> typeRef = new ParameterizedTypeReference<>() {};
+        ParameterizedTypeReference<RestResponsePage<CardResponseDto>> typeRef = new ParameterizedTypeReference<>() {
+        };
         ResponseEntity<RestResponsePage<CardResponseDto>> response = restTemplate.exchange(
                 uri, HttpMethod.GET, null, typeRef);
         return response.getBody().getContent().size();

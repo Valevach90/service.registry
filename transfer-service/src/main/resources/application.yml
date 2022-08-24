@@ -20,6 +20,33 @@ spring:
     user: psqluser
     password: PoSPa$$woRd
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
+          jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
+
+
+  kafka:
+    groupId: payment-service
+    bootstrapAddress: 10.10.14.68:19092
+    payment_transfer_request_topic_name: transfer_to_payment_request
+    deposit_transfer_request_topic_name: transfer_to_deposit_request
+    transfer_response_topic_name: to_transfer_response
+    maxRetryAttempts: 3
+
+
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}-${random.uuid}
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://10.10.14.31:30100/eureka
+
+
 logging:
   level:
     ROOT: INFO
@@ -32,6 +59,7 @@ springdoc:
   api-docs:
     path: '/api-docs'
   swagger-ui:
+    groups-order: DESC
     path: '/swagger-ui'
     disable-swagger-default-url: true
     operationsSorter: method
@@ -48,10 +76,4 @@ springdoc:
     tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
     use-pkce-with-authorization-code-grant: true
 
-eureka:
-  instance:
-    instance-id: ${spring.application.name}-${random.uuid}
-    preferIpAddress: true
-  client:
-    serviceUrl:
-      defaultZone: http://10.10.14.31:30100/eureka
+

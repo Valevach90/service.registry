@@ -7,11 +7,8 @@ import com.andersen.banking.service.registry.meeting_db.repositories.PassportRep
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.PassportGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,8 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@IntegrationTestWithPostgres
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class PassportControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -60,8 +56,8 @@ class PassportControllerIntegrationTest {
     private static final String PARAM_CONTENT_FIRST_NAME = "$.content[*].firstName";
     private static final String PARAM_CONTENT_LAST_NAME = "$.content[*].lastName";
 
-    @BeforeAll
-    static void add(
+    @BeforeEach
+    void add(
             @Autowired PassportRepository passportRepository,
             @Autowired PassportGenerator passportGenerator,
             @Autowired AddressGenerator addressGenerator,
@@ -115,10 +111,8 @@ class PassportControllerIntegrationTest {
                 .andExpect(jsonPath(PARAM_CONTENT_LAST_NAME, Matchers.hasItems(passports.stream()
                         .filter(passport -> passport.getId() > (long) pageSize * pageNumber && passport.getId() <= pageSize * (pageNumber + 1L))
                         .map(Passport::getLastName)
-                        .distinct()        //userRepository.deleteAll();
-        //userRepository.flush();
-                        .toArray())))
-        ;
+                        .distinct()
+                        .toArray())));
     }
 
     @Test
@@ -139,7 +133,6 @@ class PassportControllerIntegrationTest {
                 .andExpect(jsonPath("$.departmentIssued").value(passport.getDepartmentIssued()))
                 .andExpect(jsonPath("$.terminationDate").value(passport.getTerminationDate().toString()))
                 .andExpect(jsonPath("$.patronymic").value(passport.getPatronymic()))
-                .andExpect(jsonPath("$.serialNumber").value(passport.getSerialNumber()))
-        ;
+                .andExpect(jsonPath("$.serialNumber").value(passport.getSerialNumber()));
     }
 }

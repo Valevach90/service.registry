@@ -5,11 +5,8 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@IntegrationTestWithPostgres
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -57,11 +53,10 @@ class UserControllerIntegrationTest {
     private static final String PARAM_CONTENT_FIRST_NAME = "$.content[*].first_name";
     private static final String PARAM_CONTENT_LAST_NAME = "$.content[*].last_name";
 
-    @BeforeAll
-    static void add(
+    @BeforeEach
+    void add(
             @Autowired UserRepository userRepository,
             @Autowired UserGenerator userGenerator) {
-        userRepository.deleteAll();
         users = Stream.generate(() -> userGenerator.generateUser())
                 .limit(100)
                 .toList();
@@ -108,8 +103,7 @@ class UserControllerIntegrationTest {
                         .filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
                         .map(User::getLastName)
                         .distinct()
-                        .toArray())))
-        ;
+                        .toArray())));
     }
 
     @Test

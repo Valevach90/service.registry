@@ -17,6 +17,9 @@ public interface CardMapper {
     @Mapping(target = "accountId", source = "account.id")
     @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
     @Mapping(target = "typeName", source = "typeCard.typeName")
+    @Mapping(target = "currency", source = "account.currency")
+    @Mapping(target = "balance", source = "account.balance")
+    @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
     CardResponseDto toCardResponseDto(Card card);
 
     @Mapping(target = "account.id", source = "accountId")
