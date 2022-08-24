@@ -20,7 +20,6 @@ public class TypeCardMapperTest {
     private TypeCard typeCard;
     private TypeCardResponseDto typeCardResponseDto;
     private TypeCardUpdateDto typeCardUpdateDto;
-
     @Autowired
     TypeCardMapper typeCardMapper;
 
