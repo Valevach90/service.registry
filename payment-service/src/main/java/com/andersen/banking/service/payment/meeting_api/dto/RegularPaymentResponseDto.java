@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,13 +31,13 @@ public class RegularPaymentResponseDto {
             defaultValue = "2022-09-21")
     @JsonProperty("first_date")
     @NotNull
-    private Date firstDate;
+    private LocalDate firstDate;
 
     @Schema(description = "Regular payment last date", example = "2023-09-21",
             defaultValue = "2023-09-21")
     @JsonProperty("last_date")
     @NotNull
-    private Date lastDate;
+    private LocalDate lastDate;
 
     @JsonProperty("source_card_id")
     @NotNull

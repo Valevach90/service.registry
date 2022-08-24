@@ -3,7 +3,7 @@ package com.andersen.banking.service.payment.meeting_db.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -23,18 +23,18 @@ public class RegularPayment {
     private String description;
 
     @Column(name = "first_date", nullable = false)
-    private Date firstDate;
+    private LocalDate firstDate;
 
     @Column(name = "last_date", nullable = false)
-    private Date lastDate;
+    private LocalDate lastDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private Card sourceCardId;
+    private Card sourceCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private Card recipientCardId;
+    private Card recipientCard;
 
     @Column(name = "amount", nullable = false)
     private Long amount;
