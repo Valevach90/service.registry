@@ -64,14 +64,19 @@ public class CardUnitTestGenerator {
         CardResponseDto cardResponseDto = new CardResponseDto();
         cardResponseDto.setId(17L);
         cardResponseDto.setAccountId(5L);
+        cardResponseDto.setFirstTwelveNumbersHash("123456789012");
         cardResponseDto.setLastFourNumbers("4567");
         cardResponseDto.setValidFromDate(LocalDate.of(2021, 10, 23));
         cardResponseDto.setExpireDate(LocalDate.of(2024, 10, 23));
         cardResponseDto.setHolderName("Ivanov Ivan Ivanovich");
         cardResponseDto.setPaymentSystem("VISA");
         cardResponseDto.setTypeName("SILVER");
+        cardResponseDto.setBalance(0);
+        cardResponseDto.setCurrency("BEL");
+
         return cardResponseDto;
     }
+
 
     public static Account populateAccount(Account account) {
         account.setId(5L);
