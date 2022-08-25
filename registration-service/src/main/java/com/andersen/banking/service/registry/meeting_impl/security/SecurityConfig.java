@@ -90,28 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/configuration/**",
             "/webjars/**",
-            "/api/v1/refresh"
+            "/api/v1/auth/**"
     };
-
-    // -------------------------------------------add my
-    /*@Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistration,
-            OAuth2AuthorizedClientRepository authorizedClient
-    ) {
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .authorizationCode()
-                        .refreshToken()
-                        .clientCredentials()
-                        .password()
-                        .build();
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager(clientRegistration, authorizedClient);
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-        return authorizedClientManager;
-    }
-    @Bean
-    public RequestInterceptor requestInterceptor(OAuth2AuthorizedClientManager clientManager) {
-        return new OAuthRequestInterceptor(clientManager);
-    }*/
 }

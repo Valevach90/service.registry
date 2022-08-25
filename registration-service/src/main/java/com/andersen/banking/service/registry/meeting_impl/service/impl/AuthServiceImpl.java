@@ -1,18 +1,25 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakAdminProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakRoleProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
@@ -20,6 +27,12 @@ import static com.andersen.banking.service.registry.meeting_impl.util.AuthServic
 @Service
 public class AuthServiceImpl implements AuthService {
 
+
+    @Value("${keycloak.auth-server-url}")
+    String keyCloakUrl;
+
+    @Value("${keycloak.realm}")
+    String realm;
     @Autowired
     private KeycloakUriProperties uri;
 
@@ -38,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         String token = obtainAccessToken();
 
         log.debug("Add UNAUTHORIZED role to user, user id: " + id);
-        
+
         String response = client.post()
                 .uri(uri.getRealmUsers() +
                         id + uri.getRoleMapping() + clientProp.getGateway().getId())
@@ -79,7 +92,6 @@ public class AuthServiceImpl implements AuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
 
 
         log.debug("Add USER role to user success, user id: " + id);
@@ -128,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
         String token = obtainAccessToken();
 
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
-        
+
         String response = client.put()
                 .uri(uri.getRealmUsers() + id + uri.getPasswordReset())
                 .headers(header -> header.setBearerAuth(token))
@@ -139,6 +151,61 @@ public class AuthServiceImpl implements AuthService {
                 .block();
         log.debug("New password set: user id {}, password {}", id, newPassword);
 
+    }
+
+    @Override
+    public TokenDto refreshToken(String refreshToken) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("grant_type", "refresh_token");
+        parameters.add("client_id", "api-gateway");
+        parameters.add("client_secret", "1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM");
+        parameters.add("refresh_token", refreshToken);
+
+        return client.post()
+                .uri(getAuthUrl())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(parameters))
+                .retrieve()
+                .bodyToMono(TokenDto.class)
+                .block();
+    }
+
+    @Override
+    public void logoutUser(String refreshToken) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("client_id","api-gateway");
+        parameters.add("client_secret","1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM");
+        parameters.add("refresh_token",refreshToken);
+
+        String s = client.post()
+                .uri(keycloakLogout())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(parameters))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    private String getAuthUrl() {
+        return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
+                .pathSegment("auth")
+                .pathSegment("realms")
+                .pathSegment(realm)
+                .pathSegment("protocol")
+                .pathSegment("openid-connect")
+                .pathSegment("token")
+                .toUriString();
+    }
+
+    private String keycloakLogout() {
+        return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
+                .pathSegment("auth")
+                .pathSegment("realms")
+                .pathSegment(realm)
+                .pathSegment("protocol")
+                .pathSegment("openid-connect")
+                .pathSegment("logout")
+                .toUriString();
     }
 
     private String obtainAccessToken() {
