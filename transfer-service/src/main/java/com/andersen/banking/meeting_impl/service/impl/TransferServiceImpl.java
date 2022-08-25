@@ -15,8 +15,9 @@ import com.andersen.banking.meeting_impl.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -86,7 +87,7 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    @CachePut(value = "transfers", key = "#transferRequestDto.userId")
+    @Caching(evict = @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()"))
     @Transactional
     public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Creating transfer: {}", transferRequestDto);
@@ -104,7 +105,6 @@ public class TransferServiceImpl implements TransferService {
         return savedTransfer;
     }
 
-
     /*
             Not supported now.
          */
@@ -116,7 +116,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    @Cacheable(value = "transfers",  key = "#userId")
+    @Cacheable(value = "transfers", key = "#userId")
     @Transactional(readOnly = true)
     public List<TransferResponseDto> findByUserId(Long userId, Pageable pageable) {
 
