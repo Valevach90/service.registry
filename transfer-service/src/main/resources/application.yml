@@ -27,16 +27,13 @@ spring:
           issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
-
   kafka:
     groupId: payment-service
     bootstrapAddress: 10.10.14.68:19092
     payment_transfer_request_topic_name: transfer_to_payment_request
     deposit_transfer_request_topic_name: transfer_to_deposit_request
-    transfer_response_topic_name: to_transfer_response
+    transfer_response_topic_name: transfer_response
     maxRetryAttempts: 3
-
-
 
 eureka:
   instance:
@@ -75,5 +72,3 @@ springdoc:
     authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
     tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
     use-pkce-with-authorization-code-grant: true
-
-

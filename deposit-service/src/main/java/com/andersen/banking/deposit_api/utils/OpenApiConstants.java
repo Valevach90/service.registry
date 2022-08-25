@@ -52,14 +52,21 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_IS_REVOCABLE = "Revocation option";
     public static final String DESCRIPTION_IS_CUSTOMIZABLE = "Customization option";
     public static final String DESCRIPTION_IS_ACTIVE = "Activation option";
-    public static final String DESCRIPTION_STATUS_OF_TRANSFER = "Status of transfer";
-
-    public static final String DESCRIPTION_FROM_CARD_NUMBER = "Card NUmber for Replenishment";
-    public static final String DESCRIPTION_TO_CARD_NUMBER = "Card NUmber for Withdrawal";
+    public static final String DESCRIPTION_RESULT_OF_TRANSFER = "Result of transfer";
+    public static final String DESCRIPTION_SOURCE_NUMBER = "Source Number for Replenishment";
+    public static final String DESCRIPTION_SOURCE_TYPE = "Type of Source for Replenishment";
+    public static final String DESCRIPTION_DESTINATION_NUMBER = "Destination Number for Withdrawal";
+    public static final String DESCRIPTION_DESTINATION_TYPE = "Type of Destination for Withdrawal";
+    public static final String DESCRIPTION_STATUS_OF_TRANSFER = "Description of transfer status";
+    public static final String EXAMPLE_TRANSFER_STATUS_DESCRIPTION = "Transfer is successful";
+    public static final String DESCRIPTION_TIME = "Time of an event";
+    public static final String EXAMPLE_TIME = "2022-07-06 13:33:29,573";
     public static final String EXAMPLE_LONG = "10";
     public static final String EXAMPLE_INTEGER = "10";
     public static final String EXAMPLE_BOOLEAN = "true";
     public static final String EXAMPLE_STRING_NUMBER = "1234567890123456";
+
+    public static final String EXAMPLE_UUID = "123e4567-e89b-12d3-a456-426655440000";
 
     public static final String DESCRIPTION_ERROR = "Error description";
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";

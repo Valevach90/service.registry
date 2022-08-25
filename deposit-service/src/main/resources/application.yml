@@ -2,18 +2,20 @@ spring:
   application:
     name: deposit-service
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service
-    username: psqluser
-    password: PoSPa$$woRd
     hikari:
       maximum-pool-size: 5
       maxLifetime: 300000
       minimumIdle: 5
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service
+    username: psqluser
+    password: PoSPa$$woRd
+
   flyway:
     schemas: deposit_service
     user: psqluser
     password: PoSPa$$woRd
+
   security:
     oauth2:
       resourceserver:
@@ -28,6 +30,21 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
+
+kafka:
+  groupId: my_group
+  bootstrapAddress: 10.10.14.68:19092
+  topicTransferRequest: transfer_to_deposit_request
+  topicTransferResponse: transfer_response
+  maxRetryAttempts: 3
+  consumer:
+    value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    properties:
+      spring:
+        deserializer:
+          value:
+            delegate:
+              class: org.springframework.kafka.support.serializer.JsonDeserializer
 
 logging:
   level:

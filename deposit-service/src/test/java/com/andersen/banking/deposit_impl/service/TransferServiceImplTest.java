@@ -35,7 +35,7 @@ public class TransferServiceImplTest {
     @BeforeEach
     void initialize(){
         transfer = generateTransfer();
-        id = transfer.getId();
+        id = transfer.getTransferId();
         transferOptional = Optional.of(transfer);
     }
 
