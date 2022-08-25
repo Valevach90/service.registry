@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
-@SpringBootApplication
-@EnableEurekaClient
+
 @EnableCaching
+@EnableEurekaClient
+@SpringBootApplication
 public class TransferServiceApplication {
 
 	public static void main(String[] args) {

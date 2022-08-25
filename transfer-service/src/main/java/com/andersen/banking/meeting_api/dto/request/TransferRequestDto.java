@@ -1,26 +1,39 @@
 package com.andersen.banking.meeting_api.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransferRequestDto {
+
+    @NotNull
+    private Long userId;
 
     @NotBlank
     private String sourceNumber;
 
     @NotNull
-    private Long sourcePaymentTypeId;
+    private UUID sourcePaymentTypeId;
 
     @NotBlank
     private String destinationNumber;
 
     @NotNull
-    private Long destinationPaymentTypeId;
+    private UUID destinationPaymentTypeId;
 
     @NotNull
     private Long amount;
+
+    @NotNull
+    private UUID currencyId;
+
+    private String comment;
 
 }

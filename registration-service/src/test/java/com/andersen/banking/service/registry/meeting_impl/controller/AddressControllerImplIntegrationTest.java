@@ -5,10 +5,8 @@ import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepo
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-import com.andersen.banking.service.registry.testcontainer.IntegrationTestWithPostgres;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@IntegrationTestWithPostgres
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AddressControllerImplIntegrationTest {
 
     private Address address;
@@ -44,8 +42,10 @@ class AddressControllerImplIntegrationTest {
     @Autowired
     private AddressControllerImpl addressController;
 
-    @BeforeAll
-    static void add(
+    private final Random random = new Random();
+
+    @BeforeEach
+    void add(
             @Autowired AddressRepository addressRepository,
             @Autowired AddressGenerator addressGenerator,
             @Autowired UserGenerator userGenerator)
@@ -85,7 +85,7 @@ class AddressControllerImplIntegrationTest {
     @Test
     void whenFindById_andOk() throws Exception {
 
-        address = addressService.findById(1L).orElse(null);
+        address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
 
         mvc.perform(
                         get("/api/v1/addresses/" + address.getId())
@@ -104,13 +104,12 @@ class AddressControllerImplIntegrationTest {
                 .andExpect(jsonPath("$.building").value(address.getBuilding()))
                 .andExpect(jsonPath("$.flat").value(address.getFlat()))
                 .andDo(print());
-
     }
 
     @Test
     void whenFindByUserId_andOk() throws Exception {
 
-        address = addressService.findById(1L).orElse(null);
+        address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
 
         mvc.perform(
                         get("/api/v1/addresses/user/" + address.getUser().getId())
@@ -134,7 +133,8 @@ class AddressControllerImplIntegrationTest {
     @Test
     void whenUpdateAddress_andOk() throws Exception {
 
-        address = addressService.findById(1L).orElse(null);
+        address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
+
         address.setZipCode(999_999);
         address.setCountry("Belarus");
         address.setRegion("Vitebsk");

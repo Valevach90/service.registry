@@ -40,10 +40,10 @@ public class Passport {
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
-    @Column(name = "serial_number", nullable = false, length = 5)
+    @Column(name = "serial_number", nullable = false, length = 2)
     private String serialNumber;
 
-    @Column(name = "passport_code", nullable = false, length = 6)
+    @Column(name = "passport_code", nullable = false, length = 7)
     private String passportCode;
 
     @Column(name = "birthday", nullable = false)
