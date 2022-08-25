@@ -55,14 +55,14 @@ public class Deposit {
     @Column(name = "fixed_interest", nullable = false)
     private Boolean fixedInterest;
 
-    @Column(name = "replenishment_card_number", nullable = false)
-    private String replenishmentCardNumber;
+    @Column(name = "replenishment_source_number", nullable = false)
+    private String replenishmentSourceNumber;
 
     @Column(name = "subsequent_replenishment", nullable = false)
     private Boolean subsequentReplenishment;
 
-    @Column(name = "withdrawal_card_number")
-    private String withdrawalCardNumber;
+    @Column(name = "withdrawal_destination_number")
+    private String withdrawalDestinationNumber;
 
     @Column(name = "early_withdrawal", nullable = false)
     private Boolean earlyWithdrawal;

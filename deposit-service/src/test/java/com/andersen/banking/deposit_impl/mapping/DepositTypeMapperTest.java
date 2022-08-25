@@ -9,6 +9,10 @@ import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEnt
 import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositTypeDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+<<<<<<< HEAD
+=======
+@SpringBootTest(classes = DepositTypeMapperImpl.class)
+>>>>>>> add_money_transfers_to_deposit_service
 public class DepositTypeMapperTest {
 
     private DepositType depositType;

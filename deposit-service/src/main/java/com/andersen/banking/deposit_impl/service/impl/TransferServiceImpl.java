@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,7 +24,7 @@ public class TransferServiceImpl implements TransferService {
     public Transfer create(Transfer transfer) {
         log.info("Creating transfer: {}", transfer);
 
-        transfer.setId(null);
+        transfer.setTransferId(null);
 
         Transfer savedTransfer = transferRepository.save(transfer);
 
@@ -33,7 +34,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Transfer> findById(Long id) {
+    public Optional<Transfer> findById(UUID id) {
         log.info("Find transfer by id: {}", id);
 
         Optional<Transfer> transfer = transferRepository.findById(id);
@@ -58,8 +59,8 @@ public class TransferServiceImpl implements TransferService {
     public void update(Transfer transfer) {
         log.info("Updating transfer: {}", transfer);
 
-        Transfer foundTransfer = transferRepository.findById(transfer.getId())
-                .orElseThrow(() -> new NotFoundException(Transfer.class, transfer.getId()));
+        Transfer foundTransfer = transferRepository.findById(transfer.getTransferId())
+                .orElseThrow(() -> new NotFoundException(Transfer.class, transfer.getTransferId()));
 
         transferRepository.save(transfer);
 
@@ -68,7 +69,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.info("Deleting transfer with id: {}", id);
 
         Transfer foundTransfer = transferRepository.findById(id)
