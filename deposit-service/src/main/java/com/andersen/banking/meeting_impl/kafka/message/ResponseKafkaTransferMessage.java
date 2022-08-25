@@ -1,4 +1,4 @@
-package com.andersen.banking.deposit_api.dto.kafka;
+package com.andersen.banking.meeting_impl.kafka.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

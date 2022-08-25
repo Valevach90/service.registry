@@ -15,11 +15,12 @@ spring:
     schemas: deposit_service
     user: psqluser
     password: PoSPa$$woRd
+
   kafka:
     groupId: my_group
     bootstrapAddress: 10.10.14.68:19092
     topicTransferRequest: transfer_to_deposit_request
-    topicTransferResponse: deposit_to_transfer_response
+    topicTransferResponse: transfer_response
     maxRetryAttempts: 3
     consumer:
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer

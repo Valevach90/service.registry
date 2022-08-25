@@ -1,6 +1,6 @@
 package com.andersen.banking.deposit_impl.kafka;
 
-import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_impl.config.KafkaConfigProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

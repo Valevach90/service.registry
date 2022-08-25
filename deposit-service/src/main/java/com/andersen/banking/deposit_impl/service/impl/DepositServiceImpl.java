@@ -1,7 +1,7 @@
 package com.andersen.banking.deposit_impl.service.impl;
 
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
-import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.entities.Transfer;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
@@ -13,12 +13,9 @@ import com.andersen.banking.deposit_impl.service.DepositService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -102,7 +99,7 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional (rollbackFor = NotFoundException.class)
-    public void makeTransfer(RequestTransferKafkaMessage message) {
+    public void makeTransfer(RequestKafkaTransferMessage message) {
         log.info("Trying make transfer using message: {}", message);
 
         if (Objects.nonNull(message) && isFirstTransferAttempt(message.getTransferId())) {
@@ -110,13 +107,13 @@ public class DepositServiceImpl implements DepositService {
             Transfer transfer = transferMapper.toTransfer(message);
 
             try {
-                if (message.getSourceType().equals(TRANSFER_WITH_DEPOSIT_TYPE) && message.getDestinationType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE) && message.getDestinationType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
                     transfer.setResult(transferBetweenDeposits(message));
 
-                } else if (message.getDestinationType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                } else if (message.getDestinationType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
                     transfer.setResult(replenishDeposit(message));
 
-                } else if (message.getSourceType().equals(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                } else if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
                     transfer.setResult(withdrawalDeposit(message));
                 }
             } catch (NotFoundException exception){
@@ -125,7 +122,7 @@ public class DepositServiceImpl implements DepositService {
             }
 
             log.info("Saving transfer: {}", transfer);
-            transferRepository.save(transfer);
+            //transferRepository.save(transfer);
 
             log.info("Sending response message: {}", transfer);
             createAndSendResponse(transfer);
@@ -136,7 +133,7 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional
-    public Boolean transferBetweenDeposits(RequestTransferKafkaMessage message) {
+    public Boolean transferBetweenDeposits(RequestKafkaTransferMessage message) {
         log.info("Trying make transfer between deposits, transfer request message: {}", message);
 
         Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
@@ -163,7 +160,7 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional
-    public Boolean replenishDeposit(RequestTransferKafkaMessage message) {
+    public Boolean replenishDeposit(RequestKafkaTransferMessage message) {
         log.info("Trying replenish deposit using message: {}", message);
 
         Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
@@ -179,7 +176,7 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional
-    public Boolean withdrawalDeposit(RequestTransferKafkaMessage message) {
+    public Boolean withdrawalDeposit(RequestKafkaTransferMessage message) {
         log.info("Trying withdrawal deposit using message: {}", message);
 
         Deposit sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber())

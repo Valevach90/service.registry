@@ -1,14 +1,13 @@
 package com.andersen.banking.deposit_impl.generators;
 
 import com.andersen.banking.deposit_api.dto.*;
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
-import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.*;
 import org.springframework.data.domain.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -220,9 +219,9 @@ public class DepositServiceTestEntitiesGenerator {
         return transferDto;
     }
 
-    public static RequestTransferKafkaMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
+    public static RequestKafkaTransferMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
 
-        RequestTransferKafkaMessage message = new RequestTransferKafkaMessage();
+        RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
 
         message.setTransferId(ID);
         message.setUserId(ID);
@@ -236,7 +235,7 @@ public class DepositServiceTestEntitiesGenerator {
         return message;
     }
 
-    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(RequestTransferKafkaMessage request){
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(RequestKafkaTransferMessage request){
 
         ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
 
@@ -246,7 +245,7 @@ public class DepositServiceTestEntitiesGenerator {
         return message;
     }
 
-    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(RequestTransferKafkaMessage request){
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(RequestKafkaTransferMessage request){
 
         ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
 

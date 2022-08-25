@@ -1,7 +1,7 @@
 package com.andersen.banking.deposit_impl.service;
 
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
-import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.*;
 import com.andersen.banking.deposit_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
@@ -64,7 +64,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     @Test
     public void transferTest_whenTransferBetweenDepositsAndOk() {
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
 
         Long startedSourceAmount = depositRepository.findByDepositNumber(SOURCE_DEPOSIT_NUMBER).get().getAmount();
@@ -89,7 +89,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     public void transferTest_whenTransferBetweenDepositsAndSourceDepositNotFound() {
 
         String wrongSourceDepositNumber = "9999";
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(wrongSourceDepositNumber, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(wrongSourceDepositNumber, DESTINATION_DEPOSIT_NUMBER);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);
         response.setStatusDescription("Not found Deposit with number " + wrongSourceDepositNumber);
 
@@ -113,7 +113,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     public void transferTest_whenTransferBetweenDepositsAndDestinationDepositNotFound() {
 
         String wrongDestinationDepositNumber = "9999";
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, wrongDestinationDepositNumber);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, wrongDestinationDepositNumber);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);
         response.setStatusDescription("Not found Deposit with number " + wrongDestinationDepositNumber);
 
@@ -136,7 +136,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     @Test
     public void transferTest_whenTransferBetweenDepositsAndNotEnoughMoneyInSourceDeposit() {
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);
 
         sourceDepositWithNotEnoughMoney = depositRepository.findByDepositNumber(SOURCE_DEPOSIT_NUMBER).get();
@@ -163,7 +163,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     @Test
     public void transferToDepositTest_whenTransferFromDepositAndOk() {
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
         String destinationType = "Account";
         request.setDestinationType(destinationType);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
@@ -185,7 +185,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     @Test
     public void transferToDepositTest_whenTransferFromDepositAndNotEnoughMoneyInSourceDeposit() {
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
         String destinationType = "Account";
         request.setDestinationType(destinationType);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);
@@ -212,7 +212,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     public void transferTest_whenTransferFromDepositsAndSourceDepositNotFound() {
 
         String wrongSourceDepositNumber = "9999";
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(wrongSourceDepositNumber, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(wrongSourceDepositNumber, DESTINATION_DEPOSIT_NUMBER);
         String destinationType = "Account";
         request.setDestinationType(destinationType);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);
@@ -234,7 +234,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     @Test
     public void transferToDepositTest_whenTransferToDepositAndOk() {
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, DESTINATION_DEPOSIT_NUMBER);
         String sourceType = "Account";
         request.setSourceType(sourceType);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
@@ -257,7 +257,7 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     public void transferTest_whenTransferToDepositsAndDestinationDepositNotFound() {
 
         String wrongDestinationDepositNumber = "9999";
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, wrongDestinationDepositNumber);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(SOURCE_DEPOSIT_NUMBER, wrongDestinationDepositNumber);
         String sourceType = "Account";
         request.setSourceType(sourceType);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithUnsuccessfulResult(request);

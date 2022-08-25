@@ -9,16 +9,17 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for transfer")
 public class TransferDto {
 
-    @Schema(description = DESCRIPTION_TRANSFER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    @Schema(description = DESCRIPTION_TRANSFER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     @JsonProperty("transferId")
     @NotNull(message = "Transfer id can't be null.")
-    private Long transferId;
+    private UUID transferId;
 
     @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("userId")

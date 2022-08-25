@@ -1,8 +1,8 @@
 package com.andersen.banking.deposit_impl.mapping;
 
 import com.andersen.banking.deposit_api.dto.TransferDto;
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
 import com.andersen.banking.deposit_db.entities.Transfer;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-22T09:11:46+0300",
+    date = "2022-08-25T11:49:25+0300",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -63,7 +63,7 @@ public class TransferMapperImpl implements TransferMapper {
     }
 
     @Override
-    public Transfer toTransfer(RequestTransferKafkaMessage message) {
+    public Transfer toTransfer(RequestKafkaTransferMessage message) {
         if ( message == null ) {
             return null;
         }

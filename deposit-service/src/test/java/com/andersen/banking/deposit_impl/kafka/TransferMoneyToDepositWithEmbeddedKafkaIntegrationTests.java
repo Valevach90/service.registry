@@ -1,7 +1,7 @@
 package com.andersen.banking.deposit_impl.kafka;
 
-import com.andersen.banking.deposit_api.dto.kafka.RequestTransferKafkaMessage;
-import com.andersen.banking.deposit_api.dto.kafka.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
         String sourceDepositNumber = "0001";
         String destinationDepositNumber = "0002";
 
-        RequestTransferKafkaMessage request = generateRequestTransferKafkaMessage(sourceDepositNumber, destinationDepositNumber);
+        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(sourceDepositNumber, destinationDepositNumber);
         ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
 
         ListenableFuture<SendResult<String, ResponseKafkaTransferMessage>> future = kafkaTemplate.send(responseTopic, response);
