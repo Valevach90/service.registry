@@ -24,6 +24,30 @@ spring:
         jwt:
           issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak: # <--- It's your custom client. I am using keycloak
+            client-id: api-gateway
+            client-secret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
+            authorization-grant-type: client_credentials
+            scope: openid # your scopes
+        provider:
+          keycloak: # <--- Here Registered my custom provider
+            authorization-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/authorize
+            token-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
+
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types: application/json
+    response:
+      enabled: true
+  client.config.default:
+    connectTimeout: 1000
+    readTimeout: 60000
+    decode404: false
+    loggerLevel: INFO
 
 logging:
   level:

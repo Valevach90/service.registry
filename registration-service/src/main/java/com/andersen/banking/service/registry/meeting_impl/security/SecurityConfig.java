@@ -2,16 +2,23 @@ package com.andersen.banking.service.registry.meeting_impl.security;
 
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakRealmRoleConverter;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
+import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -22,6 +29,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -30,13 +38,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
-                .authorizeRequests(authorizeRequests -> authorizeRequests
-                .antMatchers("/api/v1/**").permitAll()
-                .anyRequest().authenticated()).oauth2ResourceServer(
-                oauth2ResourceServer -> oauth2ResourceServer.jwt(
-                        jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-        );
+                .authorizeRequests()
+                        .antMatchers("/api/v1/**").permitAll()
+                        .anyRequest().authenticated()
+                .and()
+                //@formatter:off
+                /*.csrf().disable()
+                .cors().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
+                .logout().disable()*/
+                //@formatter:on
+
+
+                .oauth2ResourceServer(
+                        oauth2ResourceServer -> oauth2ResourceServer.jwt(
+                                jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                );
     }
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
@@ -70,6 +89,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/configuration/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/api/v1/refresh"
     };
+
+    // -------------------------------------------add my
+    /*@Bean
+    public OAuth2AuthorizedClientManager authorizedClientManager(
+            ClientRegistrationRepository clientRegistration,
+            OAuth2AuthorizedClientRepository authorizedClient
+    ) {
+        OAuth2AuthorizedClientProvider authorizedClientProvider =
+                OAuth2AuthorizedClientProviderBuilder.builder()
+                        .authorizationCode()
+                        .refreshToken()
+                        .clientCredentials()
+                        .password()
+                        .build();
+        DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager(clientRegistration, authorizedClient);
+        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+        return authorizedClientManager;
+    }
+    @Bean
+    public RequestInterceptor requestInterceptor(OAuth2AuthorizedClientManager clientManager) {
+        return new OAuthRequestInterceptor(clientManager);
+    }*/
 }

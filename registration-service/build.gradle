@@ -52,6 +52,8 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:testcontainers'
 
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.3'
+
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
@@ -59,6 +61,9 @@ dependencies {
 
 	implementation 'com.google.firebase:firebase-admin:6.11.0'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE'
+
 }
 
 dependencyManagement {
