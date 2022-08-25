@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = RegularPaymentMapperImpl.class)
 public class RegularPaymentMapperTest {
 
-    private static final RegularPayment regularPayment = populateRegularPayment();
-    private static final RegularPaymentRequestDto regularPaymentRequestDto = populateRegularPaymentRequestDto();
+    private final RegularPayment regularPayment = populateRegularPayment();
+    private final RegularPaymentRequestDto regularPaymentRequestDto = populateRegularPaymentRequestDto();
 
     @Autowired
     RegularPaymentMapper regularPaymentMapper;
