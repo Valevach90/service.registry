@@ -5,4 +5,8 @@ import org.mapstruct.Mapper;
 
 @Mapper(config = MapperConfig.class)
 public interface TransferKafkaMessageMapper {
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> add_money_transfers_to_deposit_service

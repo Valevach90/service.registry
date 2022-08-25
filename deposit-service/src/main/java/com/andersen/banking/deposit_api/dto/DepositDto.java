@@ -29,17 +29,14 @@ public class DepositDto {
     @NotNull(message = "Deposit Number can't be null.")
     private String depositNumber;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_PRODUCT, example = OpenApiConstants.EXAMPLE_DEPOSIT_NAME, defaultValue = OpenApiConstants.EXAMPLE_DEPOSIT_NAME)
     @JsonProperty("depositProduct")
     @NotNull(message = "Deposit product can't be null.")
     private DepositProductDto depositProduct;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_TYPE, example = OpenApiConstants.EXAMPLE_DEPOSIT_TYPE, defaultValue = OpenApiConstants.EXAMPLE_DEPOSIT_TYPE)
     @JsonProperty("type")
     @NotNull(message = "Deposit type can't be null.")
     private DepositTypeDto type;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_CURRENCY, example = OpenApiConstants.EXAMPLE_CURRENCY_NAME, defaultValue = OpenApiConstants.EXAMPLE_CURRENCY_NAME)
     @JsonProperty("currency")
     @NotNull(message = "Currency can't be null.")
     private CurrencyDto currency;
@@ -73,19 +70,18 @@ public class DepositDto {
     @NotNull(message = "Fixed Interest Option can't be null.")
     private Boolean fixedInterest;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_FROM_CARD_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
-    @JsonProperty("replenishmentCardNumber")
-    @NotNull(message = "Replenishment Card Number can't be null.")
-    private String replenishmentCardNumber;
+    @Schema(description = OpenApiConstants.DESCRIPTION_SOURCE_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
+    @JsonProperty("replenishmentSourceNumber")
+    private String replenishmentSourceNumber;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_SUBSEQUENT_REPLENISHMENT, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("subsequentReplenishment")
     @NotNull(message = "Subsequent Replenishment Option can't be null.")
     private Boolean subsequentReplenishment;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_TO_CARD_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
-    @JsonProperty("withdrawalCardNumber")
-    private String withdrawalCardNumber;
+    @Schema(description = OpenApiConstants.DESCRIPTION_DESTINATION_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
+    @JsonProperty("withdrawalDestinationNumber")
+    private String withdrawalDestinationNumber;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_EARLY_WITHDRAWAL, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("earlyWithdrawal")
@@ -112,7 +108,6 @@ public class DepositDto {
     @NotNull(message = "User id can't be null.")
     private Long userId;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_TRANSFERS, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
-    @JsonProperty("transfersDto")
+    @JsonProperty(value = "transfersDto", access = JsonProperty.Access.READ_ONLY)
     private List<TransferDto> transfersDto;
 }
