@@ -86,7 +86,7 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    @CachePut
+    @CachePut(value = "transfers", key = "#transferRequestDto.userId")
     @Transactional
     public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Creating transfer: {}", transferRequestDto);
@@ -116,7 +116,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    @Cacheable
+    @Cacheable(value = "transfers",  key = "#userId")
     @Transactional(readOnly = true)
     public List<TransferResponseDto> findByUserId(Long userId, Pageable pageable) {
 
@@ -128,6 +128,4 @@ public class TransferServiceImpl implements TransferService {
 
         return transfers.stream().map(transferMapper::transfer2transferResponseDto).collect(Collectors.toList());
     }
-
-
 }
