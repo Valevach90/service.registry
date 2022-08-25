@@ -3,10 +3,14 @@ package com.andersen.banking.deposit_db.repositories.impl;
 import com.andersen.banking.deposit_api.dto.CurrencyDto;
 import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_api.dto.DepositTypeDto;
+import com.andersen.banking.deposit_db.entities.Currency;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
+import com.andersen.banking.deposit_db.entities.DepositType;
 import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductFilterRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
+import com.andersen.banking.deposit_impl.mapping.CurrencyMapper;
+import com.andersen.banking.deposit_impl.mapping.DepositTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +23,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class DepositProductRepositoryImpl implements DepositProductFilterRepository {
@@ -29,6 +34,12 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
     DepositTypeRepository depositTypeRepository;
     @Autowired//added
     CurrencyRepository currencyRepository;
+
+    @Autowired
+    DepositTypeMapper depositTypeMapper;
+
+    @Autowired
+    CurrencyMapper currencyMapper;
 
     @Override
     public DepositProductFilterDto getDepositProductFilter() throws IllegalAccessException {
@@ -101,9 +112,9 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
     public Page<DepositProduct> getDepositProductsByFilter(DepositProductFilterDto depositProductFilterDto, Pageable pageable) throws IllegalAccessException {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery cq = cb.createQuery();
+        CriteriaQuery<DepositProduct> cq = cb.createQuery(DepositProduct.class);
 
-        Root root = cq.from(DepositProduct.class);
+        Root<DepositProduct> root = cq.from(DepositProduct.class);
         List<Predicate> predicates = new ArrayList<>();
 
         Field[] declaredFields = depositProductFilterDto.getClass().getDeclaredFields();
@@ -114,7 +125,12 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
 
             if (Collection.class.isAssignableFrom(field.getType())) {
                 if (field.getName().equals("type")) {
-                    List<DepositTypeDto> elements = (List<DepositTypeDto>) field.get(depositProductFilterDto);
+                    List<DepositTypeDto> elementsDto = (List<DepositTypeDto>) field.get(depositProductFilterDto);
+
+                    List<DepositType> elements = elementsDto.stream()
+                            .map(depositTypeMapper::toDepositType)
+                            .collect(Collectors.toList());
+
                     System.out.println(elements);
                     for (var element : elements) {
                         predicates.add(cb.equal(root.get(field.getName()), element));
@@ -122,7 +138,12 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
                     }
                 }
                 if (field.getName().equals("currency")) {
-                    List<CurrencyDto> elements = (List<CurrencyDto>) field.get(depositProductFilterDto);
+                    List<CurrencyDto> elementsDto = (List<CurrencyDto>) field.get(depositProductFilterDto);
+
+                    List<Currency> elements = elementsDto.stream()
+                            .map(currencyMapper::toCurrency)
+                            .collect(Collectors.toList());
+
                     System.out.println(elements);
                     for (var element : elements) {
                         predicates.add(cb.equal(root.get(field.getName()), element));
@@ -170,10 +191,16 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
         }
         predicates.add(cb.equal(root.get("isActive"), true));
         System.out.println(predicates.toString());
-        //cq.where(predicates.);
-        cq.select(root)
-                .where(predicates.toArray(new Predicate[]{}));
+
+        Predicate[] array = new Predicate[predicates.size()];
+        //list.toArray(array); // fill the array
+        Predicate predicate
+                = cb.and(predicates.toArray(array));
+        //cq.where(predicate);
+        /*cq.select(root)
+                .where(predicates.toArray(new Predicate[]{}));*/
         List<DepositProduct> list = (List<DepositProduct>) em.createQuery(cq).getResultList();
+        System.out.println(list);
         Page<DepositProduct> pages = new PageImpl<>(list, pageable, list.size());
         return pages;
     }
