@@ -24,19 +24,6 @@ spring:
           issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
-feign:
-  compression:
-    request:
-      enabled: true
-      mime-types: application/json
-    response:
-      enabled: true
-  client.config.default:
-    connectTimeout: 1000
-    readTimeout: 60000
-    decode404: false
-    loggerLevel: INFO
-
 logging:
   level:
     ROOT: INFO
@@ -77,6 +64,10 @@ eureka:
       defaultZone: http://10.10.14.31:30100/eureka
 
 keycloak:
+  auth-server-url: http://10.10.14.31:30001
+  realm: Meetingroom-New
+  client-id: api-gateway
+  client-secret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
   role:
     unauthorized:
       id: 2c2bb0cd-a1b2-4fcf-8ce7-17220c2bef37
@@ -102,6 +93,20 @@ keycloak:
     grant_type: password
     client_id: gateway-user-management
 
+app:
+  firebase-configuration-file: meetingroom-notification-firebase-adminsdk-dyfbb-b4f0e42672.json
 
-  auth-server-url: http://10.10.14.31:30001
-  realm: Meetingroom-New
+notification:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    sender:
+      username: sergei.yurevich@gmail.com
+      password: ozfbcmmrgpxwlbdm
+    code:
+      length: 4
+      valid:
+        millis: 60000
+    blocking:
+      time:
+        millis: 2700000

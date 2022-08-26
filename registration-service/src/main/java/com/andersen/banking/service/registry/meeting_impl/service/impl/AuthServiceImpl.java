@@ -2,24 +2,20 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
+import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakAdminProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakRoleProperties;
-import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
@@ -27,14 +23,8 @@ import static com.andersen.banking.service.registry.meeting_impl.util.AuthServic
 @Service
 public class AuthServiceImpl implements AuthService {
 
-
-    @Value("${keycloak.auth-server-url}")
-    String keyCloakUrl;
-
-    @Value("${keycloak.realm}")
-    String realm;
     @Autowired
-    private KeycloakUriProperties uri;
+    private KeycloakProperties keycloak;
 
     @Autowired
     private KeycloakRoleProperties role;
@@ -53,8 +43,12 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add UNAUTHORIZED role to user, user id: " + id);
 
         String response = client.post()
-                .uri(uri.getRealmUsers() +
-                        id + uri.getRoleMapping() + clientProp.getGateway().getId())
+                .uri(KeycloakUrlUtil.getUrlForChangeRole(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id,
+                        clientProp.getGateway().getId()
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(
@@ -73,8 +67,12 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add USER role to user, user id: " + id);
 
         String responseDelete = client.method(HttpMethod.DELETE)
-                .uri(uri.getRealmUsers()
-                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
+                .uri(KeycloakUrlUtil.getUrlForChangeRole(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id,
+                        clientProp.getGateway().getId()
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(
@@ -84,15 +82,18 @@ public class AuthServiceImpl implements AuthService {
                 .block();
 
         String response = client.post()
-                .uri(uri.getRealmUsers()
-                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
+                .uri(KeycloakUrlUtil.getUrlForChangeRole(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id,
+                        clientProp.getGateway().getId()
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(role.getUser().getId(), role.getUser().getName())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
 
         log.debug("Add USER role to user success, user id: " + id);
     }
@@ -104,8 +105,12 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add ADMIN role to user, user id: " + id);
 
         String response = client.post()
-                .uri(uri.getRealmUsers()
-                        + id + uri.getRoleMapping() + clientProp.getGateway().getId())
+                .uri(KeycloakUrlUtil.getUrlForChangeRole(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id,
+                        clientProp.getGateway().getId()
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(prepareRoleInJson(role.getAdmin().getId(), role.getAdmin().getName())))
@@ -123,7 +128,10 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add user: " + userInJson);
 
         String response = client.post()
-                .uri(uri.getAdd())
+                .uri(KeycloakUrlUtil.getUrlForAddUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(userInJson))
@@ -142,7 +150,11 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
 
         String response = client.put()
-                .uri(uri.getRealmUsers() + id + uri.getPasswordReset())
+                .uri(KeycloakUrlUtil.getUrlForResetPassword(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id
+                ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
@@ -150,19 +162,21 @@ public class AuthServiceImpl implements AuthService {
                 .bodyToMono(String.class)
                 .block();
         log.debug("New password set: user id {}, password {}", id, newPassword);
-
     }
 
     @Override
     public TokenDto refreshToken(String refreshToken) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("grant_type", "refresh_token");
-        parameters.add("client_id", "api-gateway");
-        parameters.add("client_secret", "1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM");
+        parameters.add("client_id", keycloak.getClientId());
+        parameters.add("client_secret", keycloak.getClientSecret());
         parameters.add("refresh_token", refreshToken);
 
         return client.post()
-                .uri(getAuthUrl())
+                .uri(KeycloakUrlUtil.getUrlForToken(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(parameters))
                 .retrieve()
@@ -173,12 +187,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logoutUser(String refreshToken) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("client_id","api-gateway");
-        parameters.add("client_secret","1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM");
-        parameters.add("refresh_token",refreshToken);
+        parameters.add("client_id", keycloak.getClientId());
+        parameters.add("client_secret", keycloak.getClientSecret());
+        parameters.add("refresh_token", refreshToken);
 
-        String s = client.post()
-                .uri(keycloakLogout())
+        String response = client.post()
+                .uri(KeycloakUrlUtil.getUriForLogout(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(parameters))
                 .retrieve()
@@ -186,34 +203,15 @@ public class AuthServiceImpl implements AuthService {
                 .block();
     }
 
-    private String getAuthUrl() {
-        return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
-                .pathSegment("auth")
-                .pathSegment("realms")
-                .pathSegment(realm)
-                .pathSegment("protocol")
-                .pathSegment("openid-connect")
-                .pathSegment("token")
-                .toUriString();
-    }
-
-    private String keycloakLogout() {
-        return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
-                .pathSegment("auth")
-                .pathSegment("realms")
-                .pathSegment(realm)
-                .pathSegment("protocol")
-                .pathSegment("openid-connect")
-                .pathSegment("logout")
-                .toUriString();
-    }
-
     private String obtainAccessToken() {
 
         log.debug("Get access token, admin username" + admin.getUsername());
 
         String response = client.post()
-                .uri(uri.getTokensObtain())
+                .uri(KeycloakUrlUtil.getUrlForToken(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
                 .body(BodyInserters.fromFormData(prepareBodyToGetAccessToken(
                         admin.getUsername(), admin.getPassword(), admin.getGrantType(), admin.getClientId())))
                 .retrieve()

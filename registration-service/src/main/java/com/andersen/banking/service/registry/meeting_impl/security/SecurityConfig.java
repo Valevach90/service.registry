@@ -1,8 +1,8 @@
 package com.andersen.banking.service.registry.meeting_impl.security;
 
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakRealmRoleConverter;
-import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
-import feign.RequestInterceptor;
+import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -33,24 +27,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    KeycloakUriProperties uri;
+    KeycloakProperties keycloak;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                        .antMatchers("/api/v1/**").permitAll()
-                        .anyRequest().authenticated()
+                .antMatchers("/api/v1/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                //@formatter:off
-                /*.csrf().disable()
-                .cors().disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .logout().disable()*/
-                //@formatter:on
-
-
                 .oauth2ResourceServer(
                         oauth2ResourceServer -> oauth2ResourceServer.jwt(
                                 jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
@@ -66,7 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(uri.getJwks()).build();
+        return NimbusJwtDecoder.withJwkSetUri(
+                KeycloakUrlUtil.getUriJwks(keycloak.getAuthServerUrl(), keycloak.getRealm())
+        ).build();
     }
 
     @Override
@@ -90,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/configuration/**",
             "/webjars/**",
-            "/api/v1/auth/**"
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/logout"
     };
 }
