@@ -87,7 +87,7 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    @Caching(evict = @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()"))
+    @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()")
     @Transactional
     public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Creating transfer: {}", transferRequestDto);
