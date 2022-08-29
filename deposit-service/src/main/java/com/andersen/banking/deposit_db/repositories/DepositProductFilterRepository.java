@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface DepositProductFilterRepository {
 
-    DepositProductFilterDto getDepositProductFilter() throws IllegalAccessException;
+    DepositProductFilterDto getDepositProductAvailableSettings() throws IllegalAccessException;
 
     Page<DepositProduct> getDepositProductsByFilter(DepositProductFilterDto depositProductFilterDto, Pageable pageable) throws IllegalAccessException;
 }

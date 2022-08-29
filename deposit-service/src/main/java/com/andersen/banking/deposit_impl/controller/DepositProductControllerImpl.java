@@ -101,7 +101,7 @@ public class DepositProductControllerImpl implements DepositProductController {
     public DepositProductFilterDto getDepositProductFilter() {
         log.debug("Trying to getting deposit product filter");
 
-        DepositProductFilterDto depositProductFilterDto = depositProductService.getDepositProductFilter();
+        DepositProductFilterDto depositProductFilterDto = depositProductService.getDepositProductAvailableSetting();
 
         log.debug("Getting deposit product filter: {}", depositProductFilterDto);
         return depositProductFilterDto;
@@ -110,9 +110,11 @@ public class DepositProductControllerImpl implements DepositProductController {
     @Override
     public Page<DepositProductDto> getFilteredDepositProducts(Pageable pageable, DepositProductFilterDto depositProductFilterDto) {
         log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
+
         Page<DepositProductDto> foundProducts = depositProductService
-                .getFilteredDepositProductFilter(depositProductFilterDto, pageable)
+                .getFilteredDepositProduct(depositProductFilterDto, pageable)
                 .map(depositProductMapper::toDepositProductDto);
+
         log.info("Getting filtered deposit products: {}", foundProducts);
         return foundProducts;
     }

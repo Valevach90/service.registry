@@ -71,7 +71,7 @@ public interface DepositProductService {
      * Get deposit products filter
      * with actual parameters values ranges
      * */
-    DepositProductFilterDto getDepositProductFilter();
+    DepositProductFilterDto getDepositProductAvailableSetting();
 
     /**
      * Get filtered deposit products
@@ -79,5 +79,5 @@ public interface DepositProductService {
      * @param depositProductFilterDto deposit product filter
      * @param pageable page object
      * */
-    Page<DepositProduct> getFilteredDepositProductFilter(DepositProductFilterDto depositProductFilterDto, Pageable pageable);
+    Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable);
 }

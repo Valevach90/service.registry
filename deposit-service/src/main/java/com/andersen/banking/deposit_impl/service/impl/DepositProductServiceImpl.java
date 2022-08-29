@@ -90,12 +90,12 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    public DepositProductFilterDto getDepositProductFilter() {
+    public DepositProductFilterDto getDepositProductAvailableSetting() {
         log.info("Trying to getting deposit product filter");
 
         DepositProductFilterDto depositProductFilterDto = null;
         try {
-            depositProductFilterDto = depositProductRepository.getDepositProductFilter();
+            depositProductFilterDto = depositProductRepository.getDepositProductAvailableSettings();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -105,7 +105,7 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    public Page<DepositProduct> getFilteredDepositProductFilter(DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
+    public Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
         log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
 
         Page<DepositProduct> foundDepositProducts = null;

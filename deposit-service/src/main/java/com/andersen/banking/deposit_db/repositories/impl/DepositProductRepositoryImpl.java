@@ -1,16 +1,13 @@
 package com.andersen.banking.deposit_db.repositories.impl;
 
-import com.andersen.banking.deposit_api.dto.CurrencyDto;
 import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
-import com.andersen.banking.deposit_api.dto.DepositTypeDto;
-import com.andersen.banking.deposit_db.entities.Currency;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.entities.DepositType;
 import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductFilterRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
-import com.andersen.banking.deposit_impl.mapping.CurrencyMapper;
-import com.andersen.banking.deposit_impl.mapping.DepositTypeMapper;
+import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,188 +17,157 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
 public class DepositProductRepositoryImpl implements DepositProductFilterRepository {
 
+    private static final String IS_ACTIVE_PRODUCT_FIELD_NAME = "isActive";
+    private static final String TYPE_OF_PRODUCT_FIELD_NAME = "type";
+    private static final String CURRENCY_FIELD_NAME = "currency";
+    private static final String MIN_VALUE_START_FIELD_NAME = "min";
+    private static final String MAX_VALUE_START_FIELD_NAME = "max";
+
     @Autowired
     EntityManager em;
-    @Autowired//added
+    @Autowired
     DepositTypeRepository depositTypeRepository;
-    @Autowired//added
+    @Autowired
     CurrencyRepository currencyRepository;
 
-    @Autowired
-    DepositTypeMapper depositTypeMapper;
-
-    @Autowired
-    CurrencyMapper currencyMapper;
-
     @Override
-    public DepositProductFilterDto getDepositProductFilter() throws IllegalAccessException {
+    public DepositProductFilterDto getDepositProductAvailableSettings() throws IllegalAccessException {
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<DepositProduct> cq = cb.createQuery(DepositProduct.class);
-        Root<DepositProduct> root = cq.from(DepositProduct.class);
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("isActive"), true));
+        log.info("Getting deposit products available settings");
 
         DepositProductFilterDto depositProductSettingDto = new DepositProductFilterDto();
 
         Field[] declaredFields = depositProductSettingDto.getClass().getDeclaredFields();
-        System.out.println("1");
+
         for (Field field : declaredFields) {
-            System.out.println("2" + field.getName());
             field.setAccessible(true);
 
-            if (field.getName().equals("type")) {
-                System.out.println("2.1" + field.getName());
-                field.set(depositProductSettingDto, depositTypeRepository.findAll());
-            }
+            log.info("Getting deposit products available settings for field: {}", field.getName());
 
-            if (field.getName().equals("currency")) {
-                field.set(depositProductSettingDto, currencyRepository.findAll());
-            }
+            CriteriaBuilder cbuilder = em.getCriteriaBuilder();
+            CriteriaQuery cquery = cbuilder.createQuery();
+            Root<DepositProduct> root = cquery.from(DepositProduct.class);
 
-            if (!Collection.class.isAssignableFrom(field.getType())) {
-                System.out.println("3 " + field.getName());
-                if (field.getName().startsWith("min")) {
-                    System.out.println("4 " + field.getName());
-                    CriteriaBuilder cbMin = em.getCriteriaBuilder();
-                    CriteriaQuery cqMin = cbMin.createQuery(DepositProduct.class);
-                    Root rootMin = cqMin.from(DepositProduct.class);
-                    cqMin.select(cbMin.min(rootMin.get(field.getName())));
-                    System.out.println("4.1 " + field.getName());
-                    List<Long> minValues = em.createQuery(cqMin).getResultList();
-                    System.out.println(minValues);
-                    field.set(depositProductSettingDto, minValues.get(0));
+            if (Collection.class.isAssignableFrom(field.getType())) {
 
-                } else if (field.getName().startsWith("max")) {
-                    System.out.println("5 " + field.getName());
-                    CriteriaBuilder cbMax = em.getCriteriaBuilder();
-                    CriteriaQuery cqMax = cbMax.createQuery(DepositProduct.class);
-                    Root rootMax = cqMax.from(DepositProduct.class);
-                    cqMax.select(cbMax.max(rootMax.get(field.getName())));
-                    System.out.println("5.1 " + field.getName());
-                    List<Long> maxValues = em.createQuery(cqMax).getResultList();
-                    field.set(depositProductSettingDto, maxValues.get(0));
+                Predicate predicate = cbuilder.isTrue(root.get(IS_ACTIVE_PRODUCT_FIELD_NAME).as(Boolean.class));
+                cquery.select(root).where(predicate);
 
-                } else {
-                    System.out.println("6 " + field.getName());
-                    CriteriaBuilder cbBoolean = em.getCriteriaBuilder();
-                    CriteriaQuery cqBoolean = cbBoolean.createQuery();
-                    Root rootBoolean = cqBoolean.from(DepositProduct.class);
-                    /*predicates.add(cb.equal(rootBoolean.get(field.getName()), true));
-                    cqBoolean.where(predicates.toArray(new Predicate[0]));*/
-                    cqBoolean.select(cbBoolean.equal(rootBoolean.get(field.getName()), true));
-                    System.out.println("6.1 " + field.getName());
-                    List<DepositProduct> isTrueOption = em.createQuery(cqBoolean).getResultList();
-                    System.out.println(isTrueOption);
-                    field.set(depositProductSettingDto, true);
+                List<String> namesOfElements = new ArrayList<>();
+
+                for (DepositProduct product : (List<DepositProduct>) em.createQuery(cquery).getResultList()) {
+
+                    if (field.getName().equals(TYPE_OF_PRODUCT_FIELD_NAME)) {
+                        namesOfElements.add(product.getType().getName());
+                    }
+                    if (field.getName().equals(CURRENCY_FIELD_NAME)) {
+                        namesOfElements.add(product.getCurrency().getName());
+                    }
                 }
+                log.info("Available values for field {} are {}", field.getName(), namesOfElements);
+                field.set(depositProductSettingDto, namesOfElements.stream().distinct().collect(Collectors.toList()));
+            }
+            if (!Collection.class.isAssignableFrom(field.getType())) {
+
+                if (field.getName().startsWith(MIN_VALUE_START_FIELD_NAME)) {
+                    cquery.select(cbuilder.min(root.get(field.getName())));
+
+                } else if (field.getName().startsWith(MAX_VALUE_START_FIELD_NAME)) {
+                    cquery.select(cbuilder.max(root.get(field.getName())));
+
+                } else if (field.getType().isAssignableFrom(Boolean.class)) {
+                    cquery.select(cbuilder.isTrue(root.get(field.getName())));
+                }
+                var values = em.createQuery(cquery).getResultList();
+
+                log.info("Available value for field {} is {}", field.getName(), values.get(0));
+                field.set(depositProductSettingDto, values.get(0));
             }
         }
+        log.info("Get deposit products available settings: {}", depositProductSettingDto);
         return depositProductSettingDto;
     }
 
     @Override
-    public Page<DepositProduct> getDepositProductsByFilter(DepositProductFilterDto depositProductFilterDto, Pageable pageable) throws IllegalAccessException {
+    public Page<DepositProduct> getDepositProductsByFilter(DepositProductFilterDto filter, Pageable pageable) throws IllegalAccessException {
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<DepositProduct> cq = cb.createQuery(DepositProduct.class);
+        log.info("Getting deposit products using filter: {}", filter);
 
-        Root<DepositProduct> root = cq.from(DepositProduct.class);
+        CriteriaBuilder cbuilder = em.getCriteriaBuilder();
+        CriteriaQuery cquery = cbuilder.createQuery();
+        Root<DepositProduct> root = cquery.from(DepositProduct.class);
+
         List<Predicate> predicates = new ArrayList<>();
 
-        Field[] declaredFields = depositProductFilterDto.getClass().getDeclaredFields();
-        System.out.println(declaredFields.toString());
-        for (Field field : declaredFields) {
+        Field[] declaredFields = filter.getClass().getDeclaredFields();
 
+        for (Field field : declaredFields) {
             field.setAccessible(true);
 
-            if (Collection.class.isAssignableFrom(field.getType())) {
-                if (field.getName().equals("type")) {
-                    List<DepositTypeDto> elementsDto = (List<DepositTypeDto>) field.get(depositProductFilterDto);
+            log.info("Creating predicate for field {} with value {}", field.getName(), field.get(filter));
 
-                    List<DepositType> elements = elementsDto.stream()
-                            .map(depositTypeMapper::toDepositType)
-                            .collect(Collectors.toList());
+            if(Objects.nonNull(field.get(filter))) {
+                if (Collection.class.isAssignableFrom(field.getType())) {
 
-                    System.out.println(elements);
-                    for (var element : elements) {
-                        predicates.add(cb.equal(root.get(field.getName()), element));
-                        System.out.println(element);
-                    }
+                    List<String> elementsNames = (List<String>) field.get(filter);
+
+                    List<Predicate> orPredicates = new ArrayList<>();
+
+                        for (String elementName : elementsNames) {
+
+                            if (field.getName().equals(TYPE_OF_PRODUCT_FIELD_NAME)) {
+                                orPredicates.add(cbuilder.equal(root.get(field.getName()), depositTypeRepository.findByName(elementName)
+                                        .orElseThrow(() -> new NotFoundException(DepositType.class, elementName))));
+                            }
+                            if (field.getName().equals(CURRENCY_FIELD_NAME)) {
+                                orPredicates.add(cbuilder.equal(root.get(field.getName()), currencyRepository.findByName(elementName)
+                                        .orElseThrow(() -> new NotFoundException(Currency.class, elementName))));
+                            }
+                        }
+                    predicates.add(cbuilder.or(orPredicates.toArray(new Predicate[]{})));
                 }
-                if (field.getName().equals("currency")) {
-                    List<CurrencyDto> elementsDto = (List<CurrencyDto>) field.get(depositProductFilterDto);
+                if (!Collection.class.isAssignableFrom(field.getType())) {
+                    if (field.getName().startsWith(MIN_VALUE_START_FIELD_NAME)) {
 
-                    List<Currency> elements = elementsDto.stream()
-                            .map(currencyMapper::toCurrency)
-                            .collect(Collectors.toList());
-
-                    System.out.println(elements);
-                    for (var element : elements) {
-                        predicates.add(cb.equal(root.get(field.getName()), element));
-                        System.out.println(element);
+                        if (field.getType().equals(Integer.class)) {
+                            Integer value = (Integer) field.get(filter);
+                            predicates.add(cbuilder.lessThanOrEqualTo(root.get(field.getName()), value));
+                        }
+                        if (field.getType().equals(Long.class)) {
+                            Long value = (Long) field.get(filter);
+                            predicates.add(cbuilder.lessThanOrEqualTo(root.get(field.getName()), value));
+                        }
+                    } else if (field.getName().startsWith(MAX_VALUE_START_FIELD_NAME)) {
+                        if (field.getType().equals(Integer.class)) {
+                            Integer value = (Integer) field.get(filter);
+                            predicates.add(cbuilder.greaterThanOrEqualTo(root.get(field.getName()), value));
+                        }
+                        if (field.getType().equals(Long.class)) {
+                            Long value = (Long) field.get(filter);
+                            predicates.add(cbuilder.greaterThanOrEqualTo(root.get(field.getName()), value));
+                        }
+                    } else if (field.getType().isAssignableFrom(Boolean.class)){
+                        Boolean value = (Boolean) field.get(filter);
+                        predicates.add(value ? cbuilder.isTrue(root.get(field.getName()).as(Boolean.class))
+                                             : cbuilder.isFalse(root.get(field.getName()).as(Boolean.class)));
                     }
-                }
-            }
-
-            if (!Collection.class.isAssignableFrom(field.getType())) {
-                System.out.println(field.getName());
-                if (field.getName().startsWith("min")) {
-                    if (field.getType().equals(Integer.class)) {
-                        Integer value = (Integer) field.get(depositProductFilterDto);
-                        System.out.println(value);
-                        predicates.add(cb.gt(root.get(field.getName()), value));
-                        System.out.println(field.getName());
-                    }
-                    if (field.getType().equals(Long.class)) {
-                        Long value = (Long) field.get(depositProductFilterDto);
-                        System.out.println(value);
-                        predicates.add(cb.gt(root.get(field.getName()), value));
-                    }
-
-
-                } else if (field.getName().startsWith("max")) {
-                    if (field.getType().equals(Integer.class)) {
-                        Integer value = (Integer) field.get(depositProductFilterDto);
-                        System.out.println(value);
-                        predicates.add(cb.lt(root.get(field.getName()), value));
-                        System.out.println(field.getName());
-                    }
-                    if (field.getType().equals(Long.class)) {
-                        Long value = (Long) field.get(depositProductFilterDto);
-                        System.out.println(value);
-                        predicates.add(cb.lt(root.get(field.getName()), value));
-                        System.out.println(field.getName());
-                    }
-                } else {
-                    Boolean value = (Boolean) field.get(depositProductFilterDto);
-                    System.out.println(value);
-                    predicates.add(cb.equal(root.get(field.getName()), value));
-                    System.out.println(field.getName());
                 }
             }
         }
-        predicates.add(cb.equal(root.get("isActive"), true));
-        System.out.println(predicates.toString());
+        predicates.add(cbuilder.isTrue(root.get(IS_ACTIVE_PRODUCT_FIELD_NAME).as(Boolean.class)));
 
-        Predicate[] array = new Predicate[predicates.size()];
-        //list.toArray(array); // fill the array
-        Predicate predicate
-                = cb.and(predicates.toArray(array));
-        //cq.where(predicate);
-        /*cq.select(root)
-                .where(predicates.toArray(new Predicate[]{}));*/
-        List<DepositProduct> list = (List<DepositProduct>) em.createQuery(cq).getResultList();
-        System.out.println(list);
-        Page<DepositProduct> pages = new PageImpl<>(list, pageable, list.size());
-        return pages;
+        cquery.select(root).where(predicates.toArray(new Predicate[]{}));
+
+        List<DepositProduct> list = em.createQuery(cquery).getResultList();
+
+        log.info("Found {} deposit products: {}", list.size(), list);
+        return new PageImpl<>(list, pageable, list.size());
     }
 }
