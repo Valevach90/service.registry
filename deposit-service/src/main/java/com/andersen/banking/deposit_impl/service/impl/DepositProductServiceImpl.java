@@ -2,6 +2,7 @@ package com.andersen.banking.deposit_impl.service.impl;
 import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
+import com.andersen.banking.deposit_impl.exceptions.FilterAccessException;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
 import lombok.RequiredArgsConstructor;
@@ -91,31 +92,27 @@ public class DepositProductServiceImpl implements DepositProductService {
 
     @Override
     public DepositProductFilterDto getDepositProductAvailableSetting() {
-        log.info("Trying to getting deposit product filter");
 
-        DepositProductFilterDto depositProductFilterDto = null;
         try {
-            depositProductFilterDto = depositProductRepository.getDepositProductAvailableSettings();
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+            log.info("Getting deposit product filter");
+            return depositProductRepository.getDepositProductAvailableSettings();
 
-        log.info("Getting deposit product filter: {}", depositProductFilterDto);
-        return depositProductFilterDto;
+        } catch (IllegalAccessException e) {
+            log.error("Failed to get deposit product filter: {}", e.getMessage());
+            throw new FilterAccessException(e.getClass());
+        }
     }
 
     @Override
     public Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
-        log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
 
-        Page<DepositProduct> foundDepositProducts = null;
         try {
-            foundDepositProducts = depositProductRepository.getDepositProductsByFilter(depositProductFilterDto, pageable);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+            log.info("Getting filtered deposit products using filter: {}", depositProductFilterDto);
+            return depositProductRepository.getDepositProductsByFilter(depositProductFilterDto, pageable);
 
-        log.info("Getting filtered deposit products: {}", foundDepositProducts);
-        return foundDepositProducts;
+        } catch (IllegalAccessException e) {
+            log.error("Failed to get filtered deposit product: {}", e.getMessage());
+            throw new FilterAccessException(e.getClass());
+        }
     }
 }

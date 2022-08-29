@@ -1,6 +1,7 @@
 package com.andersen.banking.deposit_impl.handlers;
 
 import com.andersen.banking.deposit_api.error.NotFoundError;
+import com.andersen.banking.deposit_impl.exceptions.FilterAccessException;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.ErrorMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,12 @@ public class RestExceptionHandler {
                 notFoundError.getErrorCode());
 
         return notFoundError;
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(FilterAccessException.class)
+    public String handleIFilterAccessException(FilterAccessException exception) {
+        log.error("Caught FilterAccessException: {}", exception.toString());
+        return exception.getLocalizedMessage();
     }
 }
