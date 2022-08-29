@@ -5,14 +5,15 @@ spring:
       maxLifetime: 300000
       minimumIdle: 5
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=deposit_filter2
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=deposit_service
+    username: psqluser
+    password: PoSPa$$woRd
 
   flyway:
-    schemas: deposit_filter2
-    user: postgres
-    password: postgres
+    schemas: deposit_service
+    user: psqluser
+    password: PoSPa$$woRd
+
   security:
     oauth2:
       resourceserver:
