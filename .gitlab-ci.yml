@@ -72,7 +72,7 @@ build config service:
   before_script:
     - echo "$AND_ENV_CONF_LOGIN" >> ${CI_PROJECT_DIR}/config-service/src/main/resources/application.properties
     - echo "$AND_ENV_CONF_PASS" >> ${CI_PROJECT_DIR}/config-service/src/main/resources/application.properties
-    - cat ${CI_PROJECT_DIR}/config-service/src/main/resources/application.properties
+
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${REGISTRY_NAME}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER_RW}" "${REGISTRY_RW_PASS}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
