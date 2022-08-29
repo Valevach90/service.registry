@@ -75,10 +75,10 @@ public interface DepositProductController {
                                       @Parameter(description = "currency name")
                                       @RequestParam(value = "currency", required = false) String currency);
 
-    @Operation(summary = "Get deposit product filter",
-            description = "get deposit product filter")
+    @Operation(summary = "Get deposit product available setting",
+            description = "get deposit product available setting")
     @GetMapping("/filter")
-    DepositProductFilterDto getDepositProductFilter();
+    DepositProductFilterDto getDepositProductAvailableSetting();
 
     @Operation(summary = "Get filtered deposit products",
             description = "get filtered deposit products")

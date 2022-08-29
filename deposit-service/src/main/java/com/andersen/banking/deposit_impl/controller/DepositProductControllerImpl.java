@@ -98,12 +98,12 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public DepositProductFilterDto getDepositProductFilter() {
-        log.debug("Trying to getting deposit product filter");
+    public DepositProductFilterDto getDepositProductAvailableSetting() {
+        log.debug("Trying to getting deposit product available setting");
 
         DepositProductFilterDto depositProductFilterDto = depositProductService.getDepositProductAvailableSetting();
 
-        log.debug("Getting deposit product filter: {}", depositProductFilterDto);
+        log.debug("Getting deposit product available setting: {}", depositProductFilterDto);
         return depositProductFilterDto;
     }
 
