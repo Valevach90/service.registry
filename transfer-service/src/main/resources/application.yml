@@ -20,6 +20,14 @@ spring:
     user: psqluser
     password: PoSPa$$woRd
 
+  redis:
+    host: 10.10.14.31
+    port: 30002
+    timeout: 2000ms
+    database: 1
+    password: JsuuII12
+    duration-days-to-delete: 1
+
   security:
     oauth2:
       resourceserver:
