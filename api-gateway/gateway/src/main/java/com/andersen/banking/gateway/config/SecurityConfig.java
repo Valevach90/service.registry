@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -30,12 +31,16 @@ public class SecurityConfig {
             ServerHttpSecurity http,
             Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter
     ) {
-        http.cors().and().authorizeExchange()
-                .pathMatchers(AUTH_ADMIN).hasAnyAuthority("ADMIN", "EMPLOYEE")
+        http.cors().and()
+                .authorizeExchange()
+
+                .pathMatchers(HttpMethod.POST, AUTH_ADMIN).hasAnyAuthority(AUTH_ROLES)
+                .pathMatchers(HttpMethod.PUT, AUTH_ADMIN).hasAnyAuthority(AUTH_ROLES)
+                .pathMatchers(HttpMethod.DELETE, AUTH_ADMIN).hasAnyAuthority(AUTH_ROLES)
+                .pathMatchers("/api/v1/**").permitAll()
                 .and()
                 .securityMatcher(new NegatedServerWebExchangeMatcher(
                         ServerWebExchangeMatchers.pathMatchers(AUTH_WHITELIST)))
-                .authorizeExchange(exchange -> exchange.anyExchange().permitAll())
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter);
@@ -64,5 +69,9 @@ public class SecurityConfig {
     private static final String[] AUTH_ADMIN = {
             "/api/v1/products",
             "/api/v1/products/**"
+    };
+
+    private static final String[] AUTH_ROLES = {
+            "ADMIN", "EMPLOYEE"
     };
 }
