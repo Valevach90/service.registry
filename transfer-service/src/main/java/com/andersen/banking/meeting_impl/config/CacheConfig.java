@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -12,10 +13,14 @@ import java.time.Duration;
 
 @Configuration
 public class CacheConfig {
+
+    @Value("${spring.redis.duration-days-to-delete}")
+    private Integer days;
+
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofDays(1))
+                .entryTtl(Duration.ofDays(days))
                 .disableCachingNullValues()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
