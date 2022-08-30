@@ -1,6 +1,5 @@
 package com.andersen.banking.service.payment.meeting_impl.service.impl;
 
-import com.andersen.banking.service.payment.meeting_db.entities.Account;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.RegularPayment;
 import com.andersen.banking.service.payment.meeting_db.repository.RegularPaymentRepository;
@@ -21,7 +20,7 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
 
     @Transactional
     @Override
-    public RegularPayment create(RegularPayment regularPayment)  {
+    public RegularPayment create(RegularPayment regularPayment) {
         log.info("Creating regular payment: {}", regularPayment);
 
         Card sourceCard = cardService.findById(regularPayment.getSourceCard().getId());
