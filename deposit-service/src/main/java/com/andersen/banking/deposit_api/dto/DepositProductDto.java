@@ -27,12 +27,10 @@ public class DepositProductDto {
     @NotNull(message = "Deposit name can't be null.")
     private String depositName;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_TYPE, example = OpenApiConstants.EXAMPLE_DEPOSIT_TYPE, defaultValue = OpenApiConstants.EXAMPLE_DEPOSIT_TYPE)
     @JsonProperty("type")
     @NotNull(message = "Deposit type can't be null.")
     private DepositTypeDto type;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_CURRENCY, example = OpenApiConstants.EXAMPLE_CURRENCY_NAME, defaultValue = OpenApiConstants.EXAMPLE_CURRENCY_NAME)
     @JsonProperty("currency")
     @NotNull(message = "Currency can't be null.")
     private CurrencyDto currency;

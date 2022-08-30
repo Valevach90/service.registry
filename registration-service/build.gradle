@@ -64,6 +64,8 @@ dependencies {
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE'
 
+
+	testRuntimeOnly 'com.h2database:h2'
 }
 
 dependencyManagement {

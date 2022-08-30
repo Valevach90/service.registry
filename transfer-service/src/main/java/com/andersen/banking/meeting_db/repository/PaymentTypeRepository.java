@@ -2,6 +2,11 @@ package com.andersen.banking.meeting_db.repository;
 
 import com.andersen.banking.meeting_db.entity.PaymentType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PaymentTypeRepository extends JpaRepository<PaymentType, Long> {
+import java.util.UUID;
+
+@Repository
+public interface PaymentTypeRepository extends JpaRepository<PaymentType, UUID> {
+    PaymentType findByName(String name);
 }

@@ -3,6 +3,7 @@ import com.andersen.banking.deposit_db.entities.Transfer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for working with Transfers.
@@ -24,7 +25,7 @@ public interface TransferService {
      * @param id id of transfer
      * @return transfer
      */
-    Optional<Transfer> findById(Long id);
+    Optional<Transfer> findById(UUID id);
 
     /**
      * Find all transfers.
@@ -46,5 +47,5 @@ public interface TransferService {
      *
      * @param id id of transfer to delete
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 }

@@ -22,8 +22,7 @@ public interface FileStorageController {
             description = "get list of all File Information Dto"
     )
     @GetMapping
-    List<FileInfoDto> getAllFileInfoDto(
-    );
+    List<FileInfoDto> getAllFileInfoDto();
 
     @Operation(summary = "Get file download link",
             description = "get file download link by file name")

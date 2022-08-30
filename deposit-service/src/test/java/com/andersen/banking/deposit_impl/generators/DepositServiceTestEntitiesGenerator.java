@@ -1,13 +1,21 @@
 package com.andersen.banking.deposit_impl.generators;
 
 import com.andersen.banking.deposit_api.dto.*;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.*;
 import com.andersen.banking.deposit_db.entities.Currency;
 import org.springframework.data.domain.*;
 
 import java.sql.Date;
+<<<<<<< HEAD
 import java.time.LocalDate;
 import java.util.*;
+=======
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> add_money_transfers_to_deposit_service
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,14 +33,24 @@ public class DepositServiceTestEntitiesGenerator {
     public static final Long MAX_AMOUNT = 1_000_000L;
     public static final Integer MIN_INTEREST_RATE = 3;
     public static final Integer MAX_INTEREST_RATE = 6;
+
+    public static final String REPLENISHMENT_SOURCE_TYPE = "Card";
+    public static final String WITHDRAWAL_DESTINATION_TYPE = "Card";
     public static final String FROM_CARD_NUMBER = "0000_0000_0000_0001";
     public static final String TO_CARD_NUMBER = "0000_0000_0000_0002";
 
+    public static final String TRANSFER_STATUS_DESCRIPTION = "Transfer successful";
     private static final Integer PAGE_NUMBER = 1;
     private static final Integer PAGE_SIZE = 10;
     private static final String PAGE_SORT_FIELD = "id";
 
+<<<<<<< HEAD
     public static Currency generateCurrency() {
+=======
+    private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
+
+    public static Currency generateCurrency(){
+>>>>>>> add_money_transfers_to_deposit_service
         Currency currency = new Currency();
 
         currency.setId(ID);
@@ -152,12 +170,13 @@ public class DepositServiceTestEntitiesGenerator {
         deposit.setType(generateDepositType());
         deposit.setCurrency(generateCurrency());
         deposit.setTermMonths(MIN_TERM_IN_MONTHS);
+        deposit.setOpenDate(new Date(System.currentTimeMillis()));
         deposit.setAmount(MIN_AMOUNT);
         deposit.setInterestRate(MIN_INTEREST_RATE);
         deposit.setFixedInterest(true);
-        deposit.setReplenishmentCardNumber(FROM_CARD_NUMBER);
+        deposit.setReplenishmentSourceNumber(FROM_CARD_NUMBER);
         deposit.setSubsequentReplenishment(true);
-        deposit.setWithdrawalCardNumber(TO_CARD_NUMBER);
+        deposit.setWithdrawalDestinationNumber(TO_CARD_NUMBER);
         deposit.setEarlyWithdrawal(true);
         deposit.setInterestWithdrawal(true);
         deposit.setCapitalization(true);
@@ -172,6 +191,7 @@ public class DepositServiceTestEntitiesGenerator {
         DepositDto depositDto = new DepositDto();
         List<TransferDto> transfersDto = new ArrayList<>();
 
+<<<<<<< HEAD
         depositDto.setId(deposit.getId());
         depositDto.setDepositNumber(deposit.getDepositNumber());
         depositDto.setDepositProduct(generateDepositProductDto(deposit.getDepositProduct()));
@@ -191,6 +211,27 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setUserId(deposit.getUserId());
 
         for (Transfer transfer : deposit.getTransfers()) {
+=======
+        depositDto.setId(                       deposit.getId());
+        depositDto.setDepositNumber(            deposit.getDepositNumber());
+        depositDto.setDepositProduct(           generateDepositProductDto(deposit.getDepositProduct()));
+        depositDto.setType(                     generateDepositTypeDto(deposit.getType()));
+        depositDto.setCurrency(                 generateCurrencyDto(deposit.getCurrency()));
+        depositDto.setTermMonths(               deposit.getTermMonths());
+        depositDto.setAmount(                   deposit.getAmount());
+        depositDto.setInterestRate(             deposit.getInterestRate());
+        depositDto.setFixedInterest(            deposit.getFixedInterest());
+        depositDto.setReplenishmentSourceNumber(deposit.getReplenishmentSourceNumber());
+        depositDto.setSubsequentReplenishment(  deposit.getSubsequentReplenishment());
+        depositDto.setWithdrawalDestinationNumber(deposit.getWithdrawalDestinationNumber());
+        depositDto.setEarlyWithdrawal(          deposit.getEarlyWithdrawal());
+        depositDto.setInterestWithdrawal(       deposit.getInterestWithdrawal());
+        depositDto.setCapitalization(           deposit.getCapitalization());
+        depositDto.setIsRevocable(              deposit.getIsRevocable());
+        depositDto.setUserId(                   deposit.getUserId());
+
+        for (Transfer transfer : deposit.getTransfers()){
+>>>>>>> add_money_transfers_to_deposit_service
             transfersDto.add(generateTransferDto(transfer));
         }
         depositDto.setTransfersDto(transfersDto);
@@ -201,13 +242,18 @@ public class DepositServiceTestEntitiesGenerator {
     public static Transfer generateTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setId(ID);
+        transfer.setTransferId(ID);
+        transfer.setUserId(ID);
         transfer.setDeposit(generateDeposit());
-        transfer.setFromCardNumber(FROM_CARD_NUMBER);
-        transfer.setToCardNumber(TO_CARD_NUMBER);
+        transfer.setSourceNumber(FROM_CARD_NUMBER);
+        transfer.setSourceType(REPLENISHMENT_SOURCE_TYPE);
+        transfer.setDestinationNumber(TO_CARD_NUMBER);
+        transfer.setDestinationType(WITHDRAWAL_DESTINATION_TYPE);
         transfer.setAmount(MIN_AMOUNT);
-        transfer.setDate(Date.valueOf(LocalDate.now()));
-        transfer.setSuccessStatus(true);
+        transfer.setCurrencyName(CURRENCY_NAME);
+        transfer.setTime(new Timestamp(System.currentTimeMillis()));
+        transfer.setResult(true);
+        transfer.setStatusDescription(TRANSFER_STATUS_DESCRIPTION);
 
         return transfer;
     }
@@ -215,6 +261,7 @@ public class DepositServiceTestEntitiesGenerator {
     public static TransferDto generateTransferDto(Transfer transfer) {
         TransferDto transferDto = new TransferDto();
 
+<<<<<<< HEAD
         transferDto.setId(transfer.getId());
         transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
         transferDto.setFromCardNumber(transfer.getFromCardNumber());
@@ -222,11 +269,64 @@ public class DepositServiceTestEntitiesGenerator {
         transferDto.setAmount(transfer.getAmount());
         transferDto.setDate(transfer.getDate());
         transferDto.setSuccessStatus(transfer.getSuccessStatus());
+=======
+        transferDto.setTransferId(transfer.getTransferId());
+        transferDto.setUserId(transfer.getUserId());
+        transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
+        transferDto.setSourceNumber(transfer.getSourceNumber());
+        transferDto.setSourceType(transfer.getSourceType());
+        transferDto.setDestinationNumber(transfer.getDestinationNumber());
+        transferDto.setDestinationType(transfer.getDestinationType());
+        transferDto.setAmount(transfer.getAmount());
+        transferDto.setTime(transfer.getTime());
+        transferDto.setResult(transfer.getResult());
+        transferDto.setStatusDescription(transfer.getStatusDescription());
+>>>>>>> add_money_transfers_to_deposit_service
 
         return transferDto;
     }
 
+<<<<<<< HEAD
     public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable) {
+=======
+    public static RequestKafkaTransferMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
+
+        RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
+
+        message.setTransferId(ID);
+        message.setUserId(ID);
+        message.setSourceNumber(sourceNumber);
+        message.setSourceType(TRANSFER_WITH_DEPOSIT_TYPE);
+        message.setDestinationNumber(destinationNumber);
+        message.setDestinationType(TRANSFER_WITH_DEPOSIT_TYPE);
+        message.setAmount(MIN_AMOUNT);
+        message.setCurrencyName(CURRENCY_NAME);
+
+        return message;
+    }
+
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(RequestKafkaTransferMessage request){
+
+        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+
+        message.setTransferId(request.getTransferId());
+        message.setResult(true);
+
+        return message;
+    }
+
+    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(RequestKafkaTransferMessage request){
+
+        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+
+        message.setTransferId(request.getTransferId());
+        message.setResult(false);
+
+        return message;
+    }
+
+    public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable){
+>>>>>>> add_money_transfers_to_deposit_service
         List<DepositProduct> listOfProducts = Stream
                 .generate(DepositProduct::new)
                 .limit(pageable.getPageSize())

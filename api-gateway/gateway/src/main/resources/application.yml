@@ -22,7 +22,7 @@ spring:
         - id: transfer-service
           uri: lb://transfer-service
           predicates:
-            - Path=/api/v1/transfers/**
+            - Path=/api/v1/transfer/**
         - id: payment-service
           uri: lb://payment-service
           predicates:
