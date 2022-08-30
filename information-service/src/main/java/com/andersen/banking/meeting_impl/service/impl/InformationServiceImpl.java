@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_db.repositories.*;
+import com.andersen.banking.meeting_impl.exception.InvalidRequestException;
 import com.andersen.banking.meeting_impl.mapper.*;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.andersen.banking.meeting_db.repositories.specifications.CitySpecification.containsName;
+import static com.andersen.banking.meeting_db.repositories.specifications.CitySpecification.hasCountry;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 @Service
@@ -54,6 +59,17 @@ public class InformationServiceImpl implements InformationService {
         log.debug("get cities by countryId : {}", countryId);
         return cityRepository.getCitiesByCountry_IdAndDeletedIsFalse(countryId, pageable)
                 .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, String cityPartName, Pageable pageable) {
+        if(cityPartName.length() < 3) {
+            throw new InvalidRequestException("To search by name, you must pass at least three characters");
+        } else {
+            log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
+            return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName)), pageable)
+                    .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
+        }
     }
 
     @Override

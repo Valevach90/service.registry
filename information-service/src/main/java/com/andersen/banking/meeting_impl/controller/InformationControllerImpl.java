@@ -38,6 +38,12 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
+    public List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(Long countryId, Pageable pageable, String cityPartName) {
+        log.info("get cities  which contain part of the city name");
+        return informationService.getListCityDtoByCountryIdAndPartOfCityName(countryId, cityPartName, pageable);
+    }
+
+    @Override
     public List<StreetDto> getAllStreetsByCityId(Long cityId) {
         log.info("get streets");
         return informationService.getListStreetDtoByCityId(cityId);

@@ -7,8 +7,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,6 +35,16 @@ public interface InformationController {
                                           @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
                                           @RequestParam(defaultValue = "false", required = false) boolean singlePage);
 
+
+    @Operation(summary = "Get all cities by countryId and part of the name of the city",
+            description = "get list with all cities in a selected country by countryId and part of city name")
+    @PostMapping("/country/{id}/cities")
+    List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(@Parameter(description = "country id", required = true)
+                                          @PathVariable(value = "id") Long countryId,
+                                          @ParameterObject @PageableDefault(sort = {"name"}) Pageable pageable,
+                                          @RequestBody String cityPartName);
+
+
     @Operation(summary = "Get all streets by cityId",
             description = "get list with all streets in a selected city by cityId")
     @GetMapping("/city/{id}/street")
@@ -50,6 +63,5 @@ public interface InformationController {
     @GetMapping("/branch/{id}/timetable")
     List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
                                                   @PathVariable(value = "id") Long branchId);
-
 
 }
