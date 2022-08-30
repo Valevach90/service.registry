@@ -1,5 +1,6 @@
 package com.andersen.banking.service.payment.meeting_impl.mapper;
 
+import com.andersen.banking.service.payment.meeting_api.dto.CardCredResponseDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardRegistrationDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardResponseDto;
 import com.andersen.banking.service.payment.meeting_api.dto.CardUpdateDto;
@@ -32,4 +33,9 @@ public interface CardMapper {
     @Mapping(target = "typeCard.typeName", source = "typeName")
     @Mapping(target = "id", ignore = true)
     Card toCard(CardRegistrationDto cardDto);
+
+
+    @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
+    @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
+    CardCredResponseDto toCardCredResponseDto(Card card);
 }

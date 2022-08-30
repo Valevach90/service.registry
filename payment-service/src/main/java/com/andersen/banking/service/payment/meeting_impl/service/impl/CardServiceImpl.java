@@ -16,9 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * CardService implementation.
- */
+import java.util.Optional;
+
+/** CardService implementation. */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,8 +33,8 @@ public class CardServiceImpl implements CardService {
   public Card findById(Long id) {
     log.debug("Find card by id: {}", id);
 
-    Card card = cardRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(Card.class, id));
+    Card card =
+        cardRepository.findById(id).orElseThrow(() -> new NotFoundException(Card.class, id));
 
     log.debug("Card with id {} successfully found", id);
     return card;
@@ -144,16 +144,18 @@ public class CardServiceImpl implements CardService {
   }
 
   private TypeCard findTypeCardById(Long id) {
-    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+    return typeCardRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(TypeCard.class, id));
   }
 
   private void setTypeCard(Card card) {
     TypeCard typeCard = card.getTypeCard();
-    TypeCard existingTypeCard = typeCardRepository
+    TypeCard existingTypeCard =
+        typeCardRepository
             .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
             .orElseThrow(() -> new NotFoundException(TypeCard.class, -1L));
     card.setTypeCard(existingTypeCard);
-
   }
 
   private void setCryptFirstNums(Card card) {
@@ -177,16 +179,34 @@ public class CardServiceImpl implements CardService {
   @Override
   public Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable) {
     log.info("Find all cards by owner except already chosen card: {}", id);
-    Card chosenCard = cardRepository.findById(cardId).orElseThrow(() -> new NotFoundException(Card.class, cardId));
+    Card chosenCard =
+        cardRepository
+            .findById(cardId)
+            .orElseThrow(() -> new NotFoundException(Card.class, cardId));
 
     Long accountId = chosenCard.getAccount().getId();
 
-    Page<Card> cardsSet = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
+    Page<Card> cardsSet =
+        cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
 
     log.info("Found {} cards", cardsSet.getContent().size());
 
     return cardsSet;
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public Card findByNums(String twelveNums, String fourNums) {
+    log.info("Finding card by card's number: ***{}", fourNums);
+    String hash = CryptWithSHA.getCrypt(twelveNums);
+    Optional<Card> card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash, fourNums);
 
+    if (card.isPresent()) {
+      log.info("Found card with number ***{}", fourNums);
+      return card.get();
+    } else {
+      log.info("Not found card with number ***{}", fourNums);
+      throw new NotFoundException(Card.class);
+    }
+  }
 }

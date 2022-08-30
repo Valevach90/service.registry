@@ -1,5 +1,6 @@
 package com.andersen.banking.service.payment.meeting_impl.service;
 
+import com.andersen.banking.service.payment.meeting_api.dto.CardCredResponseDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import org.springframework.data.domain.Page;
@@ -101,4 +102,12 @@ public interface CardService {
      * @return
      */
     Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable);
+
+  /**
+   * This method return Card by card's numbers
+   * @param twelveNums
+   * @param fourNums
+   * @return
+   */
+  Card findByNums(String twelveNums, String fourNums);
 }
