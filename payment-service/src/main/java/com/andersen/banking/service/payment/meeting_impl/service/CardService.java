@@ -1,6 +1,5 @@
 package com.andersen.banking.service.payment.meeting_impl.service;
 
-import com.andersen.banking.service.payment.meeting_api.dto.CardCredResponseDto;
 import com.andersen.banking.service.payment.meeting_db.entities.Card;
 import com.andersen.banking.service.payment.meeting_db.entities.TypeCard;
 import org.springframework.data.domain.Page;
@@ -61,8 +60,8 @@ public interface CardService {
     Page<Card> findByAccountId(Long id, Pageable pageable);
 
     /**
-     * This method returns page of card by payment or type or all together. If type and payment system is null
-     * return all cards
+     * This method returns page of card by payment or type or all together. If type and payment
+     * system is null return all cards
      *
      * @param payment
      * @param type
@@ -103,11 +102,12 @@ public interface CardService {
      */
     Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable);
 
-  /**
-   * This method return Card by card's numbers
-   * @param twelveNums
-   * @param fourNums
-   * @return
-   */
-  Card findByNums(String twelveNums, String fourNums);
+    /**
+     * This method return Card by card's numbers
+     *
+     * @param twelveNums
+     * @param fourNums
+     * @return
+     */
+    Card findByNums(String twelveNums, String fourNums);
 }
