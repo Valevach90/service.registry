@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
@@ -22,15 +23,15 @@ public class PassportDto {
   @Schema(description = DESCRIPTION_PASSPORT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("id")
   @NotNull(message = "Passport id can't be null.")
-  private Long id;
+  private UUID id;
 
   @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("userId")
-  private Long userId;
+  private UUID userId;
 
   @Schema(description = DESCRIPTION_ADDRESS_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("addressId")
-  private Long addressId;
+  private UUID addressId;
 
   @Schema(description = DESCRIPTION_PASSPORT_SERIAL_NUMBER, example = EXAMPLE_PASSPORT_SERIAL_NUMBER,
       defaultValue = EXAMPLE_PASSPORT_SERIAL_NUMBER)

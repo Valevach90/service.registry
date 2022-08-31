@@ -1,7 +1,6 @@
 package com.andersen.banking.meeting_api.controller;
 
 import com.andersen.banking.meeting_api.dto.*;
-import com.andersen.banking.service.payment.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 /**
  * Interface that presents basic endpoints for working with Card entity.
@@ -26,7 +27,7 @@ public interface CardController {
       description = "get card information by id")
   @GetMapping("/{id}")
   CardResponseDto findById(@Parameter(description = "user id", required = true)
-  @PathVariable Long id);
+  @PathVariable UUID id);
 
   @Operation(summary = "Get all cards",
       description = "get page cards information")
@@ -39,7 +40,7 @@ public interface CardController {
       description = "get page cards by account_id")
   @GetMapping("/accounts/{id}")
   Page<CardResponseDto> findAllByAccountId(
-      @Parameter(description = "account id", required = true) @PathVariable Long id,
+      @Parameter(description = "account id", required = true) @PathVariable UUID id,
       @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 
   @Operation(summary = "Update card",
@@ -54,7 +55,7 @@ public interface CardController {
       description = "delete card by id")
   @DeleteMapping("/{id}")
   CardResponseDto deleteById(@Parameter(description = "card id", required = true)
-  @PathVariable Long id);
+  @PathVariable UUID id);
 
   @Operation(summary = "Create card",
       description = "create card by params in dto object")
@@ -76,7 +77,7 @@ public interface CardController {
   @Operation(summary = "Get type card by card id", description = "get type card information by id")
   @GetMapping("/types/{id}")
   TypeCardResponseDto findTypeCardById(@Parameter(description = "card id", required = true)
-                                       @PathVariable Long id);
+                                       @PathVariable UUID id);
 
   @Operation(summary = "Update type card", description = "update type card by params in dto object")
   @PutMapping("/types/{id}")
@@ -87,15 +88,15 @@ public interface CardController {
   @Operation(summary = "Get all cards of owner", description = "get all cards of current user/owner with id")
   @GetMapping("/owner/{id}")
   Page<CardResponseDto> findAllByOwner(
-          @Parameter(description = "owner id", required = true) @PathVariable Long id,
+          @Parameter(description = "owner id", required = true) @PathVariable UUID id,
           @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 
   @Operation(summary = "Get all cards of owner except already chosen card",
           description = "get page cards by owner except already chosen card")
   @GetMapping("/owner/{ownerId}/card/{cardId}")
   Page<CardResponseDto> findAllExceptChosenByOwnerId(
-          @Parameter(description = "owner id", required = true) @PathVariable Long ownerId,
-          @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
+          @Parameter(description = "owner id", required = true) @PathVariable UUID ownerId,
+          @Parameter(description = "already chosen card id", required = true) @PathVariable UUID cardId,
           @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 
   @Operation(summary = "Get all cards of current user", description = "get all cards of current user with id")
@@ -107,6 +108,6 @@ public interface CardController {
           description = "get page cards by current user except already chosen card")
   @GetMapping("/user/{cardId}")
   Page<CardResponseDto> findAllExceptChosenByCurrentUser(
-          @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
+          @Parameter(description = "already chosen card id", required = true) @PathVariable UUID cardId,
           @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 }

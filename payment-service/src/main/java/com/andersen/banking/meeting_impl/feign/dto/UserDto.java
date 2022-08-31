@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import java.util.UUID;
+
 import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
 /**
@@ -26,7 +28,7 @@ public class UserDto {
 
   @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("id")
-  private Long id;
+  private UUID id;
 
   @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
   @JsonProperty("first_name")

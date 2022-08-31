@@ -3,6 +3,7 @@ package com.andersen.banking.meeting_api.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.UUID;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public class CardRegistrationDto {
   @Min(1L)
   @NotNull
   @JsonProperty("account_id")
-  private Long accountId;
+  private UUID accountId;
 
   @NotBlank
   @JsonProperty("first_twelve_numbers")

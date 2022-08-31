@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * CardService implementation.
  */
@@ -30,7 +32,7 @@ public class CardServiceImpl implements CardService {
 
   @Transactional(readOnly = true)
   @Override
-  public Card findById(Long id) {
+  public Card findById(UUID id) {
     log.debug("Find card by id: {}", id);
 
     Card card = cardRepository.findById(id)
@@ -56,7 +58,7 @@ public class CardServiceImpl implements CardService {
   public Card update(Card card) {
     log.debug("Trying to update card: {}", card);
 
-    Long accountId = card.getAccount().getId();
+    UUID accountId = card.getAccount().getId();
     findById(card.getId());
     card.setAccount(accountService.findById(accountId));
 
@@ -72,7 +74,7 @@ public class CardServiceImpl implements CardService {
 
   @Transactional
   @Override
-  public Card deleteById(Long id) {
+  public Card deleteById(UUID id) {
     log.info("Trying to delete card with id: {}", id);
 
     Card card = findById(id);
@@ -101,7 +103,7 @@ public class CardServiceImpl implements CardService {
   }
 
   @Override
-  public Page<Card> findByAccountId(Long id, Pageable pageable) {
+  public Page<Card> findByAccountId(UUID id, Pageable pageable) {
     log.info("Find all cards by account_id: {}", id);
 
     Page<Card> cards = cardRepository.getCardByAccountId(id, pageable);
@@ -121,12 +123,10 @@ public class CardServiceImpl implements CardService {
   }
 
   @Override
-  public TypeCard getTypeCard(Long id) {
+  public TypeCard getTypeCard(UUID id) {
     log.debug("Get card type by id : {}", id);
 
-    TypeCard typeCard = findTypeCardById(id);
-
-    return typeCard;
+    return findTypeCardById(id);
   }
 
   @Override
@@ -143,7 +143,7 @@ public class CardServiceImpl implements CardService {
     return updatedTypeCard;
   }
 
-  private TypeCard findTypeCardById(Long id) {
+  private TypeCard findTypeCardById(UUID id) {
     return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
   }
 
@@ -151,7 +151,7 @@ public class CardServiceImpl implements CardService {
     TypeCard typeCard = card.getTypeCard();
     TypeCard existingTypeCard = typeCardRepository
             .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
-            .orElseThrow(() -> new NotFoundException(TypeCard.class, -1L));
+            .orElseThrow(() -> new NotFoundException(TypeCard.class, null));
     card.setTypeCard(existingTypeCard);
 
   }
@@ -163,27 +163,27 @@ public class CardServiceImpl implements CardService {
 
   @Transactional(readOnly = true)
   @Override
-  public Page<Card> findByOwnerId(Long id, Pageable pageable) {
+  public Page<Card> findByOwnerId(UUID id, Pageable pageable) {
     log.info("Find all cards by owner: {}", id);
 
     Page<Card> cardsByOwner = cardRepository.findCardByAccount_OwnerId(id, pageable);
 
-    log.info("Found {} cards", cardsByOwner.getContent().size());
+    log.info("Found {} cards", cardsByOwner.getTotalElements());
 
     return cardsByOwner;
   }
 
   @Transactional(readOnly = true)
   @Override
-  public Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable) {
+  public Page<Card> findByOwnerIdExceptCard(UUID id, UUID cardId, Pageable pageable) {
     log.info("Find all cards by owner except already chosen card: {}", id);
     Card chosenCard = cardRepository.findById(cardId).orElseThrow(() -> new NotFoundException(Card.class, cardId));
 
-    Long accountId = chosenCard.getAccount().getId();
+    UUID accountId = chosenCard.getAccount().getId();
 
     Page<Card> cardsSet = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
 
-    log.info("Found {} cards", cardsSet.getContent().size());
+    log.info("Found {} cards", cardsSet.getTotalElements());
 
     return cardsSet;
   }

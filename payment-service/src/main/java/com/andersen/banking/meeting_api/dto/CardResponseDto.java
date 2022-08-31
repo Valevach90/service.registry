@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,11 +21,11 @@ public class CardResponseDto {
 
     @NotNull
     @JsonProperty("id")
-    private Long id;
+    private UUID id;
 
     @NotNull
     @JsonProperty("account_id")
-    private Long accountId;
+    private UUID accountId;
 
     @NotBlank
     @JsonProperty("last_four_numbers")

@@ -8,16 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * JpaRepository, which works with Card entity.
  */
 
-public interface CardRepository extends JpaRepository<Card, Long> {
+public interface CardRepository extends JpaRepository<Card, UUID> {
 
     Optional<Card> findByFirstTwelveNumbersAndLastFourNumbers(String f, String s);
 
-    Page<Card> getCardByAccountId(Long id, Pageable pageable);
+    Page<Card> getCardByAccountId(UUID id, Pageable pageable);
 
     @Query(value = "SELECT c FROM Card c " +
             "JOIN c.typeCard tc " +
@@ -29,7 +30,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             Pageable pageable
     );
 
-    Page<Card> findCardByAccount_OwnerId(Long ownerId, Pageable pageable);
+    Page<Card> findCardByAccount_OwnerId(UUID ownerId, Pageable pageable);
 
-    Page<Card> findByAccount_OwnerIdAndAccount_IdNot(Long ownerId, Long id, Pageable pageable);
+    Page<Card> findByAccount_OwnerIdAndAccount_IdNot(UUID ownerId, UUID id, Pageable pageable);
 }
