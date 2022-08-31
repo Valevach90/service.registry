@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
 
-
-    private final AddressMapper addressMapper;
-
     private final AddressRepository addressRepository;
 
     private final UserRepository userRepository;

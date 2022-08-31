@@ -11,13 +11,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class UserGenerator {
 
-    private static final AtomicLong counter = new AtomicLong(1L);
     private Faker faker;
 
     public User generateUser() {
         var user = new User();
-        //todo
-        //user.setId(counter.getAndIncrement());
         user.setId(UUID.randomUUID());
         user.setFirstName(faker.name().firstName());
         user.setLastName(faker.name().lastName());

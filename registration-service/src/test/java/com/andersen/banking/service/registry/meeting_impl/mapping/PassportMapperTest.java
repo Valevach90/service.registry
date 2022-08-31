@@ -66,8 +66,6 @@ class PassportMapperTest {
   void whenMapDtoToEntity_andOk() {
     var result = passportMapper.toPassport(passportDto);
     checkForEquals(passportDto, result);
-    assertNull(result.getAddress());
-    assertNull(result.getUser());
   }
 
   private void checkForEquals(Passport passport, PassportDto passportDto) {

@@ -13,9 +13,12 @@ import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_impl.service.impl.PassportServiceImpl;
 import java.time.LocalDate;
 import java.util.UUID;
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -32,7 +35,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
+@NotThreadSafe
 @SpringBootTest(classes = PassportServiceImpl.class)
 class PassportServiceImplTest {
     private static final Long ID = 23L;
