@@ -5,6 +5,7 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
+import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,12 +96,12 @@ class UserControllerIntegrationTest {
                 .andExpect(jsonPath(PARAM_CONTENT).isArray())
                 .andExpect(jsonPath(PARAM_CONTENT, hasSize(pageSize)))
                 .andExpect(jsonPath(PARAM_CONTENT_FIRST_NAME, Matchers.hasItems(users.stream()
-                        .filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
+                        //.filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
                         .map(User::getFirstName)
                         .distinct()
                         .toArray())))
                 .andExpect(jsonPath(PARAM_CONTENT_LAST_NAME, Matchers.hasItems(users.stream()
-                        .filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
+                        //.filter(user -> user.getId() > (long) pageSize * pageNumber && user.getId() <= pageSize * (pageNumber + 1L))
                         .map(User::getLastName)
                         .distinct()
                         .toArray())));
@@ -109,7 +110,8 @@ class UserControllerIntegrationTest {
     @Test
     void whenGetByIdAndOk() throws Exception {
 
-        User user = userService.findById(random.nextLong(0, users.size())).orElse(null);
+        //User user = userService.findById(random.nextLong(0, users.size())).orElse(null);
+        User user = userService.findById(UUID.randomUUID()).orElse(null);
 
         mockMvc.perform(
                         get(URL_USERS + user.getId())
