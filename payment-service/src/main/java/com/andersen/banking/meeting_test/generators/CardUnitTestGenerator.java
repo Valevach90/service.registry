@@ -4,7 +4,6 @@ import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
-import com.andersen.banking.service.payment.meeting_api.dto.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
