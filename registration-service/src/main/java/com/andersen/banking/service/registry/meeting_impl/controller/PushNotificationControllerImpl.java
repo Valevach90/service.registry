@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class PushNotificationControllerImpl implements PushNotificationController {
 
-  private PushNotificationService pushNotificationService;
+    private PushNotificationService pushNotificationService;
 
-  @Override
-  public ResponseEntity<PushNotificationResponse> sendTokenNotification(@RequestBody PushNotificationRequest request) {
-    pushNotificationService.sendPushNotificationToToken(request);
-    return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."),
-        HttpStatus.OK);
-  }
+    @Override
+    public ResponseEntity<PushNotificationResponse> sendTokenNotification(
+            @RequestBody PushNotificationRequest request) {
+        pushNotificationService.sendPushNotificationToToken(request);
+        return new ResponseEntity<>(
+                new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."),
+                HttpStatus.OK);
+    }
 }

@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_db.entities;
 
+import java.util.UUID;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -19,8 +20,7 @@ public class User {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, name = "first_name")
     private String firstName;
