@@ -5,7 +5,6 @@ import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_impl.feign.RegistrationClient;
-import com.andersen.banking.service.payment.meeting_api.dto.*;
 import com.andersen.banking.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.meeting_impl.service.CardService;
