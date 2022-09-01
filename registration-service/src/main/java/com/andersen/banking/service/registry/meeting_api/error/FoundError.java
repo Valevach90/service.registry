@@ -1,14 +1,14 @@
 package com.andersen.banking.service.registry.meeting_api.error;
 
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ERROR;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ERROR_CODE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_ERROR_FOUND;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.HTTP_NOT_FOUND;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ERROR_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_ERROR;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_ERROR_FOUND;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.HTTP_NOT_FOUND;
 
 /**
  * Dto for errors.

@@ -15,5 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                 authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
                 tokenUrl = "${springdoc.oAuthFlow.tokenUrl}", scopes = {
                 @OAuthScope(name = "read", description = "read scope"),
-                @OAuthScope(name = "write", description = "write scope") })))
-public class OpenApiConfig {}
+                @OAuthScope(name = "write", description = "write scope")})))
+public class OpenApiConfig {
+
+}

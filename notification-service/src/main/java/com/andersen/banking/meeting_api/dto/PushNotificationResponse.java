@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_api.dto;
+package com.andersen.banking.meeting_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,6 @@ import lombok.Setter;
 @Schema(description = "Response entity for push notification.")
 public class PushNotificationResponse {
 
-  private int status;
-  private String message;
+    private int status;
+    private String message;
 }

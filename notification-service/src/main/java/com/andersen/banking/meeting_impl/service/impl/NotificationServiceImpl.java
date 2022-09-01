@@ -1,45 +1,40 @@
-package com.andersen.banking.service.registry.meeting_impl.service.impl;
+package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Notification;
-import com.andersen.banking.service.registry.meeting_db.repositories.NotificationRepository;
-import com.andersen.banking.service.registry.meeting_impl.service.NotificationService;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.BLOCKED;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createBlockingNotification;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createMessage;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createNotification;
+
+import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_db.repository.NotificationRepository;
+import com.andersen.banking.meeting_impl.service.NotificationService;
+import com.andersen.banking.meeting_impl.util.properties.NotificationMailProperties;
+import java.sql.Timestamp;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.util.Optional;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
+    private final NotificationRepository notificationRepository;
+    private final NotificationMailProperties mail;
     @Autowired
     public JavaMailSender emailSender;
-
-    private final NotificationRepository notificationRepository;
-
-    @Value("${notification.mail.code.length}")
-    private int notificationCodeLength;
-    @Value("${notification.mail.code.valid.millis}")
-    private int notificationCodeValidMillis;
-    @Value("${notification.mail.blocking.time.millis}")
-    private int notificationBlockingTimeMillis;
 
     @Override
     @Transactional
     public void sendEmailNotification(String email) {
 
-        if(!isEmailAddressBlocked(email)){
-            Notification notification = createNotification(notificationCodeLength, email);
+        if (!isEmailAddressBlocked(email)) {
+            Notification notification = createNotification(mail.getCode().getLength(), email);
 
             log.info("Creating notification: {}", notification);
 
@@ -65,11 +60,13 @@ public class NotificationServiceImpl implements NotificationService {
 
         Optional<Notification> notification = notificationRepository.findByEmail(email);
 
-        if (notification.isPresent()){
+        if (notification.isPresent()) {
             Notification savedNotification = notification.get();
-            Timestamp time = new Timestamp(System.currentTimeMillis() - notificationCodeValidMillis);
+            Timestamp time = new Timestamp(
+                    System.currentTimeMillis() - mail.getCode().getValid().getMillis());
 
-            if (savedNotification.getCode().equals(code) && savedNotification.getTime().compareTo(time) > 0){
+            if (savedNotification.getCode().equals(code)
+                    && savedNotification.getTime().compareTo(time) > 0) {
                 return true;
             }
         }
@@ -100,10 +97,13 @@ public class NotificationServiceImpl implements NotificationService {
         Optional<Notification> notification = notificationRepository.findByEmail(email);
 
         if (notification.isPresent() && notification.get().getStatus().equals(BLOCKED)
-            && notification.get().getTime().compareTo(new Timestamp(System.currentTimeMillis() - notificationBlockingTimeMillis)) > 0){
-                log.info("Checked Email address {} is blocked", email);
+                && notification.get().getTime().compareTo(
+                new Timestamp(
+                        System.currentTimeMillis() - mail.getBlocking().getTime().getMillis()))
+                > 0) {
+            log.info("Checked Email address {} is blocked", email);
 
-                return true;
+            return true;
         } else {
             log.info("Checked Email address {} is not blocked", email);
 

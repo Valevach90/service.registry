@@ -1,10 +1,10 @@
-package com.andersen.banking.service.registry.meeting_db.repositories;
+package com.andersen.banking.meeting_db.repository;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Notification;
+
+import com.andersen.banking.meeting_db.entity.Notification;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {

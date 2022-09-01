@@ -1,28 +1,27 @@
-package com.andersen.banking.service.registry.meeting_impl.util;
-
-import com.andersen.banking.service.registry.meeting_db.entities.Notification;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.oauth2.jwt.Jwt;
-
-import java.sql.Timestamp;
-import java.util.concurrent.ThreadLocalRandom;
+package com.andersen.banking.meeting_impl.util;
 
 import static java.lang.Math.pow;
+
+import com.andersen.banking.meeting_db.entity.Notification;
+import java.sql.Timestamp;
+import java.util.concurrent.ThreadLocalRandom;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public class MailNotificationUtil {
 
     public static final String BLOCKED = "blocked";
     public static final String SENT = "sent";
 
-    private MailNotificationUtil(){
+    private MailNotificationUtil() {
     }
 
-    public static String extractEmailFromToken(Jwt jwt){
+    public static String extractEmailFromToken(Jwt jwt) {
 
         return jwt.getClaim("email").toString();
     }
 
-    public static String generateCode(Integer length){
+    public static String generateCode(Integer length) {
 
         String codeFormatLength = "%0" + length + "d";
         int randomNum = ThreadLocalRandom.current().nextInt(0, (int) pow(10, length));
@@ -30,7 +29,7 @@ public class MailNotificationUtil {
         return String.format(codeFormatLength, randomNum);
     }
 
-    public static Notification createNotification(int notificationCodeLength, String email){
+    public static Notification createNotification(int notificationCodeLength, String email) {
 
         String code = generateCode(notificationCodeLength);
         Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -39,14 +38,15 @@ public class MailNotificationUtil {
         return notification;
     }
 
-    public static Notification createBlockingNotification(String email){
+    public static Notification createBlockingNotification(String email) {
 
-        Notification notification = new Notification(email, "", new Timestamp(System.currentTimeMillis()), BLOCKED);
+        Notification notification = new Notification(email, "",
+                new Timestamp(System.currentTimeMillis()), BLOCKED);
 
         return notification;
     }
 
-    public static SimpleMailMessage createMessage(Notification notification){
+    public static SimpleMailMessage createMessage(Notification notification) {
 
         SimpleMailMessage message = new SimpleMailMessage();
 

@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_api.dto;
+package com.andersen.banking.meeting_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,18 +17,18 @@ import lombok.Setter;
 @Schema(description = "Request entity for push notifications.")
 public class PushNotificationRequest {
 
-  @JsonProperty("title")
-  @NotNull
-  private String title;
+    @JsonProperty("title")
+    @NotNull
+    private String title;
 
-  @JsonProperty("message")
-  @NotNull
-  private String message;
+    @JsonProperty("message")
+    @NotNull
+    private String message;
 
-  @JsonProperty("topic")
-  private String topic;
+    @JsonProperty("topic")
+    private String topic;
 
-  @JsonProperty("token")
-  @NotNull
-  private String token;
+    @JsonProperty("token")
+    @NotNull
+    private String token;
 }

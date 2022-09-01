@@ -1,7 +1,7 @@
-package com.andersen.banking.service.registry.meeting_api.controller;
+package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.service.registry.meeting_api.dto.PushNotificationRequest;
-import com.andersen.banking.service.registry.meeting_api.dto.PushNotificationResponse;
+import com.andersen.banking.meeting_api.dto.PushNotificationRequest;
+import com.andersen.banking.meeting_api.dto.PushNotificationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/v1/notifications/push")
 public interface PushNotificationController {
 
-  @Operation(summary = "Send push notification", description = "Sends push notification based on token in request")
-  @PostMapping("/token")
-  ResponseEntity<PushNotificationResponse> sendTokenNotification(
-      @RequestBody @Validated PushNotificationRequest request);
+    @Operation(summary = "Send push notification", description = "Sends push notification based on token in request")
+    @PostMapping("/token")
+    ResponseEntity<PushNotificationResponse> sendTokenNotification(
+            @RequestBody @Validated PushNotificationRequest request);
 }

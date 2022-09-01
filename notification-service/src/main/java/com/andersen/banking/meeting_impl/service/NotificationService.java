@@ -1,9 +1,8 @@
-package com.andersen.banking.service.registry.meeting_impl.service;
+package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Notification;
-import org.springframework.stereotype.Service;
-
+import com.andersen.banking.meeting_db.entity.Notification;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 /**
  * Service for sending and confirmation notifications.
