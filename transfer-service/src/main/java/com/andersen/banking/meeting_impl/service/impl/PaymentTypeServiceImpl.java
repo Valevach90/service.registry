@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"paymentTypes"})
+//@CacheConfig(cacheNames = {"paymentTypes"})
 @RequiredArgsConstructor
 public class PaymentTypeServiceImpl implements PaymentTypeService {
 
@@ -29,7 +29,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 
 
     @Override
-    @Cacheable
+    //@Cacheable
     @Transactional(readOnly = true)
     public List<PaymentTypeResponseDto> getAllPaymentTypes() {
         log.debug("Get paymentTypes");
@@ -37,7 +37,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
     }
 
     @Override
-    @Cacheable
+    //@Cacheable
     @Transactional(readOnly = true)
     public PaymentType getPaymentTypeById(UUID id) {
         return paymentTypeRepository.findById(id).orElseThrow(() -> new NotFoundException(PaymentType.class, id));
