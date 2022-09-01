@@ -13,10 +13,6 @@ repositories {
 	mavenCentral()
 }
 
-ext {
-	set('springCloudVersion', "2021.0.1")
-}
-
 dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -26,20 +22,22 @@ dependencies {
 
 	implementation 'org.springframework.data:spring-data-commons:2.7.2'
 
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
-	implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
+	implementation "org.springdoc:springdoc-openapi-ui:${openapiVersion}"
+	implementation "org.springdoc:springdoc-openapi-webflux-ui:${openapiVersion}"
+	implementation "org.springdoc:springdoc-openapi-security:${openapiVersion}"
 
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.2'
 
 	implementation 'com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:3.2.4'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.2'
 
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.2'
+	testImplementation 'org.springframework.security:spring-security-test:5.7.2'
 
 }
 
