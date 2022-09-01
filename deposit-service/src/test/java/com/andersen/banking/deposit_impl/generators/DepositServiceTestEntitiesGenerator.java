@@ -8,19 +8,16 @@ import com.andersen.banking.deposit_db.entities.Currency;
 import org.springframework.data.domain.*;
 
 import java.sql.Date;
-<<<<<<< HEAD
-import java.time.LocalDate;
 import java.util.*;
-=======
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> add_money_transfers_to_deposit_service
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DepositServiceTestEntitiesGenerator {
 
+    public static final UUID UUID = new UUID(11,22);
     public static final Long ID = 1L;
     public static final String DEPOSIT_NUMBER = "0001";
     public static final String CURRENCY_NAME = "EUR";
@@ -44,13 +41,9 @@ public class DepositServiceTestEntitiesGenerator {
     private static final Integer PAGE_SIZE = 10;
     private static final String PAGE_SORT_FIELD = "id";
 
-<<<<<<< HEAD
-    public static Currency generateCurrency() {
-=======
     private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
 
     public static Currency generateCurrency(){
->>>>>>> add_money_transfers_to_deposit_service
         Currency currency = new Currency();
 
         currency.setId(ID);
@@ -59,7 +52,7 @@ public class DepositServiceTestEntitiesGenerator {
         return currency;
     }
 
-    public static Currency generateRandomCurrency() {
+    public static Currency generateRandomCurrency(){
         Currency currency = new Currency();
 
         Random random = new Random();
@@ -191,19 +184,19 @@ public class DepositServiceTestEntitiesGenerator {
         DepositDto depositDto = new DepositDto();
         List<TransferDto> transfersDto = new ArrayList<>();
 
-<<<<<<< HEAD
         depositDto.setId(deposit.getId());
         depositDto.setDepositNumber(deposit.getDepositNumber());
         depositDto.setDepositProduct(generateDepositProductDto(deposit.getDepositProduct()));
         depositDto.setType(generateDepositTypeDto(deposit.getType()));
         depositDto.setCurrency(generateCurrencyDto(deposit.getCurrency()));
         depositDto.setTermMonths(deposit.getTermMonths());
+        depositDto.setOpenDate(deposit.getOpenDate());
         depositDto.setAmount(deposit.getAmount());
         depositDto.setInterestRate(deposit.getInterestRate());
         depositDto.setFixedInterest(deposit.getFixedInterest());
-        depositDto.setReplenishmentCardNumber(deposit.getReplenishmentCardNumber());
+        depositDto.setReplenishmentSourceNumber(deposit.getReplenishmentSourceNumber());
         depositDto.setSubsequentReplenishment(deposit.getSubsequentReplenishment());
-        depositDto.setWithdrawalCardNumber(deposit.getWithdrawalCardNumber());
+        depositDto.setWithdrawalDestinationNumber(deposit.getWithdrawalDestinationNumber());
         depositDto.setEarlyWithdrawal(deposit.getEarlyWithdrawal());
         depositDto.setInterestWithdrawal(deposit.getInterestWithdrawal());
         depositDto.setCapitalization(deposit.getCapitalization());
@@ -211,7 +204,6 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setUserId(deposit.getUserId());
 
         for (Transfer transfer : deposit.getTransfers()) {
-=======
         depositDto.setId(                       deposit.getId());
         depositDto.setDepositNumber(            deposit.getDepositNumber());
         depositDto.setDepositProduct(           generateDepositProductDto(deposit.getDepositProduct()));
@@ -230,8 +222,6 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setIsRevocable(              deposit.getIsRevocable());
         depositDto.setUserId(                   deposit.getUserId());
 
-        for (Transfer transfer : deposit.getTransfers()){
->>>>>>> add_money_transfers_to_deposit_service
             transfersDto.add(generateTransferDto(transfer));
         }
         depositDto.setTransfersDto(transfersDto);
@@ -242,7 +232,7 @@ public class DepositServiceTestEntitiesGenerator {
     public static Transfer generateTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setTransferId(ID);
+        transfer.setTransferId(UUID);
         transfer.setUserId(ID);
         transfer.setDeposit(generateDeposit());
         transfer.setSourceNumber(FROM_CARD_NUMBER);
@@ -261,15 +251,14 @@ public class DepositServiceTestEntitiesGenerator {
     public static TransferDto generateTransferDto(Transfer transfer) {
         TransferDto transferDto = new TransferDto();
 
-<<<<<<< HEAD
-        transferDto.setId(transfer.getId());
+        transferDto.setTransferId(transfer.getTransferId());
         transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
-        transferDto.setFromCardNumber(transfer.getFromCardNumber());
-        transferDto.setToCardNumber(transfer.getToCardNumber());
+        transferDto.setSourceNumber(transfer.getSourceNumber());
+        transferDto.setDestinationNumber(transfer.getDestinationNumber());
         transferDto.setAmount(transfer.getAmount());
-        transferDto.setDate(transfer.getDate());
-        transferDto.setSuccessStatus(transfer.getSuccessStatus());
-=======
+        transferDto.setCurrencyName(transfer.getCurrencyName());
+        transferDto.setTime(transfer.getTime());
+        transferDto.setResult(transfer.getResult());
         transferDto.setTransferId(transfer.getTransferId());
         transferDto.setUserId(transfer.getUserId());
         transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
@@ -281,19 +270,15 @@ public class DepositServiceTestEntitiesGenerator {
         transferDto.setTime(transfer.getTime());
         transferDto.setResult(transfer.getResult());
         transferDto.setStatusDescription(transfer.getStatusDescription());
->>>>>>> add_money_transfers_to_deposit_service
 
         return transferDto;
     }
 
-<<<<<<< HEAD
-    public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable) {
-=======
     public static RequestKafkaTransferMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
 
         RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
 
-        message.setTransferId(ID);
+        message.setTransferId(UUID);
         message.setUserId(ID);
         message.setSourceNumber(sourceNumber);
         message.setSourceType(TRANSFER_WITH_DEPOSIT_TYPE);
@@ -326,7 +311,6 @@ public class DepositServiceTestEntitiesGenerator {
     }
 
     public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable){
->>>>>>> add_money_transfers_to_deposit_service
         List<DepositProduct> listOfProducts = Stream
                 .generate(DepositProduct::new)
                 .limit(pageable.getPageSize())

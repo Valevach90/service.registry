@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TransferServiceImplTest {
 
     private Transfer transfer;
-    private Long id;
+    private java.util.UUID id;
     private Optional<Transfer> transferOptional;
 
     @SpyBean

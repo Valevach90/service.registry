@@ -2,7 +2,10 @@ package com.andersen.banking.deposit_impl.service;
 
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
+import com.andersen.banking.deposit_db.repositories.TransferRepository;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import com.andersen.banking.deposit_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
+import com.andersen.banking.deposit_impl.mapping.TransferMapper;
 import com.andersen.banking.deposit_impl.service.impl.DepositServiceImpl;
 import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +34,15 @@ public class DepositServiceImplTest {
 
     @MockBean
     DepositRepository depositRepository;
+
+    @MockBean
+    TransferRepository transferRepository;
+
+    @MockBean
+    TransferMapper transferMapper;
+
+    @MockBean
+    TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
     @BeforeEach
     void initialize(){
