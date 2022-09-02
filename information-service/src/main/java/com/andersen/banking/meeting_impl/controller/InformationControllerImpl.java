@@ -52,6 +52,7 @@ public class InformationControllerImpl implements InformationController {
         } else {
             return informationService.getListCityDtoByCountryIdAndPartOfCityName(countryId, cityPartName, pageable);
         }
+
     }
 
     @Override

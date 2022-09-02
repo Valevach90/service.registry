@@ -78,6 +78,8 @@ public class InformationServiceImpl implements InformationService {
         log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
         return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName.getName())), pageable)
                     .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
+
+
     }
 
     @Override
