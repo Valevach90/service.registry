@@ -48,8 +48,9 @@ public interface InformationController {
     @PostMapping("/country/{id}/cities")
     List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(@Parameter(description = "country id", required = true)
                                           @PathVariable(value = "id") Long countryId,
-                                                             @ParameterObject @PageableDefault(sort = {"name"}) Pageable pageable,
-                                                             @RequestBody @Valid CityDtoForSearch cityName, BindingResult result);
+                                          @ParameterObject @PageableDefault(sort = {"name"}) Pageable pageable,
+                                          @RequestBody @Valid CityDtoForSearch cityName, BindingResult result);
+
 
 
     @Operation(summary = "Get all streets by cityId",
