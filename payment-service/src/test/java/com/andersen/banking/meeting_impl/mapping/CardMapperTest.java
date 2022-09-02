@@ -10,8 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @SpringBootTest(classes = CardMapperImpl.class)
-public class CardMapperTest {
+class CardMapperTest {
 
     @Autowired
     CardMapper cardMapper;
@@ -21,7 +24,7 @@ public class CardMapperTest {
         Card card = CardUnitTestGenerator.populateCard();
         card.setId(null);
         card.getTypeCard().setId(null);
-        Assertions.assertEquals(card,
+        assertEquals(card,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()));
     }
 
@@ -29,13 +32,13 @@ public class CardMapperTest {
     void toCard_ShouldReturnCard_WhenCardUpdateDtoIsCorrect() {
         Card card = CardUnitTestGenerator.populateCard();
         card.getTypeCard().setId(null);
-        Assertions.assertEquals(card,
+        assertEquals(card,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
     }
 
     @Test
     void toCardDto_ShouldReturnCardDto_WhenCardIsCorrect() {
-        Assertions.assertEquals(CardUnitTestGenerator.populateCardResponseDto(),
+        assertEquals(CardUnitTestGenerator.populateCardResponseDto(),
                 cardMapper.toCardResponseDto(CardUnitTestGenerator.populateCardIncludeAccountWithBalanceAndCurrency()));
     }
 
@@ -44,9 +47,9 @@ public class CardMapperTest {
         Card card = CardUnitTestGenerator.populateCard();
         TypeCard typeCard = card.getTypeCard();
         typeCard.setId(null);
-        Assertions.assertEquals(typeCard,
+        assertEquals(typeCard,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()).getTypeCard());
-        Assertions.assertEquals(typeCard,
+        assertEquals(typeCard,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()).getTypeCard());
     }
 
@@ -55,7 +58,19 @@ public class CardMapperTest {
         Card card = CardUnitTestGenerator.populateCard();
         TypeCard typeCard = card.getTypeCard();
         typeCard.setId(null);
-        Assertions.assertEquals(card,
+        assertEquals(card,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
+    }
+
+    @Test
+    void toCardCredResponseDto_ShouldReturnCardCredResponseDto_OnCard() {
+        Card card = CardUnitTestGenerator.populateCard();
+        CardCredResponseDto credResponseDto = cardMapper.toCardCredResponseDto(card);
+
+        assertNotNull(credResponseDto);
+        assertEquals(card.getFirstTwelveNumbers(), credResponseDto.getFirstTwelveNumbersHash());
+        assertEquals(card.getLastFourNumbers(), credResponseDto.getLastFourNumbers());
+        assertEquals(card.getHolderName(), credResponseDto.getHolderName());
+        assertEquals(card.getTypeCard().getPaymentSystem(), credResponseDto.getPaymentSystem());
     }
 }

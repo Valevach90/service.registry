@@ -24,169 +24,190 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
-  private final CardRepository cardRepository;
-  private final TypeCardRepository typeCardRepository;
-  private final AccountService accountService;
+    private final CardRepository cardRepository;
+    private final TypeCardRepository typeCardRepository;
+    private final AccountService accountService;
 
-  @Transactional(readOnly = true)
-  @Override
-  public Card findById(Long id) {
-    log.debug("Find card by id: {}", id);
+    @Transactional(readOnly = true)
+    @Override
+    public Card findById(Long id) {
+        log.debug("Find card by id: {}", id);
 
-    Card card = cardRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(Card.class, id));
+        Card card =
+            cardRepository.findById(id).orElseThrow(() -> new NotFoundException(Card.class, id));
 
-    log.debug("Card with id {} successfully found", id);
-    return card;
-  }
+        log.debug("Card with id {} successfully found", id);
+        return card;
+    }
 
-  @Transactional(readOnly = true)
-  @Override
-  public Page<Card> findAll(Pageable pageable) {
-    log.info("Find all cards for pageable: {}", pageable);
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Card> findAll(Pageable pageable) {
+        log.info("Find all cards for pageable: {}", pageable);
 
-    Page<Card> allCards = cardRepository.findAll(pageable);
+        Page<Card> allCards = cardRepository.findAll(pageable);
 
-    log.info("Found {} cards", allCards.getContent().size());
-    return allCards;
-  }
+        log.info("Found {} cards", allCards.getContent().size());
+        return allCards;
+    }
 
-  @Transactional
-  @Override
-  public Card update(Card card) {
-    log.debug("Trying to update card: {}", card);
+    @Transactional
+    @Override
+    public Card update(Card card) {
+        log.debug("Trying to update card: {}", card);
 
-    Long accountId = card.getAccount().getId();
-    findById(card.getId());
-    card.setAccount(accountService.findById(accountId));
+        Long accountId = card.getAccount().getId();
+        findById(card.getId());
+        card.setAccount(accountService.findById(accountId));
 
-    setTypeCard(card);
-    setCryptFirstNums(card);
+        setTypeCard(card);
+        setCryptFirstNums(card);
 
-    Card updatedCard = cardRepository.save(card);
+        Card updatedCard = cardRepository.save(card);
 
-    log.debug("Return updated card: {}", updatedCard);
+        log.debug("Return updated card: {}", updatedCard);
 
-    return updatedCard;
-  }
+        return updatedCard;
+    }
 
-  @Transactional
-  @Override
-  public Card deleteById(Long id) {
-    log.info("Trying to delete card with id: {}", id);
+    @Transactional
+    @Override
+    public Card deleteById(Long id) {
+        log.info("Trying to delete card with id: {}", id);
 
-    Card card = findById(id);
+        Card card = findById(id);
 
-    cardRepository.deleteById(id);
+        cardRepository.deleteById(id);
 
-    log.info("Deleted card with id: {}", id);
-    return card;
-  }
+        log.info("Deleted card with id: {}", id);
+        return card;
+    }
 
-  @Transactional
-  @Override
-  public Card create(Card card) {
-    log.info("Creating card: {}", card);
+    @Transactional
+    @Override
+    public Card create(Card card) {
+        log.info("Creating card: {}", card);
 
-    Account account = accountService.findById(card.getAccount().getId());
-    card.setAccount(account);
+        Account account = accountService.findById(card.getAccount().getId());
+        card.setAccount(account);
 
-    setTypeCard(card);
-    setCryptFirstNums(card);
+        setTypeCard(card);
+        setCryptFirstNums(card);
 
-    Card savedCard = cardRepository.save(card);
+        Card savedCard = cardRepository.save(card);
 
-    log.info("Created card: {}", savedCard);
-    return savedCard;
-  }
+        log.info("Created card: {}", savedCard);
+        return savedCard;
+    }
 
-  @Override
-  public Page<Card> findByAccountId(Long id, Pageable pageable) {
-    log.info("Find all cards by account_id: {}", id);
+    @Override
+    public Page<Card> findByAccountId(Long id, Pageable pageable) {
+        log.info("Find all cards by account_id: {}", id);
 
-    Page<Card> cards = cardRepository.getCardByAccountId(id, pageable);
+        Page<Card> cards = cardRepository.getCardByAccountId(id, pageable);
 
-    log.info("Found {} cards", cards.getContent().size());
-    return cards;
-  }
+        log.info("Found {} cards", cards.getContent().size());
+        return cards;
+    }
 
-  @Override
-  public Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable) {
-    log.info("Find all cards with payment system {} and type {}", payment, type);
+    @Override
+    public Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable) {
+        log.info("Find all cards with payment system {} and type {}", payment, type);
 
-    Page<Card> cards = cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
+        Page<Card> cards = cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
 
-    log.info("Found {} cards", cards.getContent().size());
-    return cards;
-  }
+        log.info("Found {} cards", cards.getContent().size());
+        return cards;
+    }
 
-  @Override
-  public TypeCard getTypeCard(Long id) {
-    log.debug("Get card type by id : {}", id);
+    @Override
+    public TypeCard getTypeCard(Long id) {
+        log.debug("Get card type by id : {}", id);
 
-    TypeCard typeCard = findTypeCardById(id);
+        TypeCard typeCard = findTypeCardById(id);
 
-    return typeCard;
-  }
+        return typeCard;
+    }
 
-  @Override
-  public TypeCard updateTypeCard(TypeCard typeCard) {
-    log.debug("Trying to update card type: {}", typeCard);
+    @Override
+    public TypeCard updateTypeCard(TypeCard typeCard) {
+        log.debug("Trying to update card type: {}", typeCard);
 
-    TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
-    updatedTypeCard.setTypeName(typeCard.getTypeName());
-    updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
-    typeCardRepository.save(updatedTypeCard);
+        TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
+        updatedTypeCard.setTypeName(typeCard.getTypeName());
+        updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
+        typeCardRepository.save(updatedTypeCard);
 
-    log.debug("Return update card type : {}", updatedTypeCard);
+        log.debug("Return update card type : {}", updatedTypeCard);
 
-    return updatedTypeCard;
-  }
+        return updatedTypeCard;
+    }
 
-  private TypeCard findTypeCardById(Long id) {
-    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
-  }
+    private TypeCard findTypeCardById(Long id) {
+        return typeCardRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+    }
 
-  private void setTypeCard(Card card) {
-    TypeCard typeCard = card.getTypeCard();
-    TypeCard existingTypeCard = typeCardRepository
-            .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
-            .orElseThrow(() -> new NotFoundException(TypeCard.class, -1L));
-    card.setTypeCard(existingTypeCard);
+    private void setTypeCard(Card card) {
+        TypeCard typeCard = card.getTypeCard();
+        TypeCard existingTypeCard =
+            typeCardRepository
+                .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
+                .orElseThrow(() -> new NotFoundException(TypeCard.class, -1L));
+        card.setTypeCard(existingTypeCard);
+    }
 
-  }
+    private void setCryptFirstNums(Card card) {
+        String firstTwelveNums = card.getFirstTwelveNumbers();
+        card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
+    }
 
-  private void setCryptFirstNums(Card card) {
-    String firstTwelveNums = card.getFirstTwelveNumbers();
-    card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
-  }
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Card> findByOwnerId(Long id, Pageable pageable) {
+        log.info("Find all cards by owner: {}", id);
 
-  @Transactional(readOnly = true)
-  @Override
-  public Page<Card> findByOwnerId(Long id, Pageable pageable) {
-    log.info("Find all cards by owner: {}", id);
+        Page<Card> cardsByOwner = cardRepository.findCardByAccount_OwnerId(id, pageable);
 
-    Page<Card> cardsByOwner = cardRepository.findCardByAccount_OwnerId(id, pageable);
+        log.info("Found {} cards", cardsByOwner.getContent().size());
 
-    log.info("Found {} cards", cardsByOwner.getContent().size());
+        return cardsByOwner;
+    }
 
-    return cardsByOwner;
-  }
+    @Transactional(readOnly = true)
+    @Override
+    public Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable) {
+        log.info("Find all cards by owner except already chosen card: {}", id);
+        Card chosenCard =
+            cardRepository
+                .findById(cardId)
+                .orElseThrow(() -> new NotFoundException(Card.class, cardId));
 
-  @Transactional(readOnly = true)
-  @Override
-  public Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable) {
-    log.info("Find all cards by owner except already chosen card: {}", id);
-    Card chosenCard = cardRepository.findById(cardId).orElseThrow(() -> new NotFoundException(Card.class, cardId));
+        Long accountId = chosenCard.getAccount().getId();
 
-    Long accountId = chosenCard.getAccount().getId();
+        Page<Card> cardsSet =
+            cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
 
-    Page<Card> cardsSet = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
+        log.info("Found {} cards", cardsSet.getContent().size());
 
-    log.info("Found {} cards", cardsSet.getContent().size());
+        return cardsSet;
+    }
 
-    return cardsSet;
-  }
+    @Override
+    @Transactional(readOnly = true)
+    public Card findByNums(String twelveNums, String fourNums) {
+        log.info("Finding card by card's number: ***{}", fourNums);
+        String hash = CryptWithSHA.getCrypt(twelveNums);
+        Optional<Card> card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash,
+            fourNums);
 
-
+        if (card.isPresent()) {
+            log.info("Found card with number ***{}", fourNums);
+            return card.get();
+        } else {
+            log.info("Not found card with number ***{}", fourNums);
+            throw new NotFoundException(Card.class);
+        }
+    }
 }

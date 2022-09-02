@@ -11,6 +11,7 @@ import com.andersen.banking.meeting_impl.service.CardService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,6 +25,9 @@ import java.util.stream.Stream;
 
 import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateCard;
 import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = CardServiceImpl.class)
 public class CardServiceImplTest {
@@ -43,6 +47,7 @@ public class CardServiceImplTest {
     TypeCardRepository typeCardRepository;
     @MockBean
     AccountService accountService;
+
     private Card returnedCard;
     private Card receivedCard;
 
