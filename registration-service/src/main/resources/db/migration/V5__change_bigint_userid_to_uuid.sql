@@ -16,8 +16,6 @@ CREATE FOREIGN TABLE foreign_table (
     SERVER foreign_server
     OPTIONS (schema_name '${schemaname}', table_name '${tablename}');
 
-SELECT * FROM foreign_table;
-
 ALTER TABLE users
     ADD COLUMN uuid UUID UNIQUE;
 ALTER TABLE passport
