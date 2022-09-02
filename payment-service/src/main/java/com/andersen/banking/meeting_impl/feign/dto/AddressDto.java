@@ -22,7 +22,7 @@ public class AddressDto {
 
     @Schema(description = DESCRIPTION_ADDRESS_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("id")
-    private UUID id;
+    private Long id;
 
     @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("userId")

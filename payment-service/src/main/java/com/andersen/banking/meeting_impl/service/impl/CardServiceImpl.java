@@ -6,9 +6,9 @@ import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
-import com.andersen.banking.meeting_impl.util.CryptWithSHA;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.CardService;
+import com.andersen.banking.meeting_impl.util.CryptWithSHA;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,13 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import java.util.Optional;
-
-/**
- * CardService implementation.
- */
+/** CardService implementation. */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,8 +34,8 @@ public class CardServiceImpl implements CardService {
   public Card findById(UUID id) {
     log.debug("Find card by id: {}", id);
 
-    Card card = cardRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(Card.class, id));
+    Card card =
+        cardRepository.findById(id).orElseThrow(() -> new NotFoundException(Card.class, id));
 
     log.debug("Card with id {} successfully found", id);
     return card;
@@ -146,16 +143,18 @@ public class CardServiceImpl implements CardService {
   }
 
   private TypeCard findTypeCardById(UUID id) {
-    return typeCardRepository.findById(id).orElseThrow(() -> new NotFoundException(TypeCard.class, id));
+    return typeCardRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(TypeCard.class, id));
   }
 
   private void setTypeCard(Card card) {
     TypeCard typeCard = card.getTypeCard();
-    TypeCard existingTypeCard = typeCardRepository
+    TypeCard existingTypeCard =
+        typeCardRepository
             .findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName())
             .orElseThrow(() -> new NotFoundException(TypeCard.class, null));
     card.setTypeCard(existingTypeCard);
-
   }
 
   private void setCryptFirstNums(Card card) {
@@ -179,11 +178,15 @@ public class CardServiceImpl implements CardService {
   @Override
   public Page<Card> findByOwnerIdExceptCard(UUID id, UUID cardId, Pageable pageable) {
     log.info("Find all cards by owner except already chosen card: {}", id);
-    Card chosenCard = cardRepository.findById(cardId).orElseThrow(() -> new NotFoundException(Card.class, cardId));
+    Card chosenCard =
+        cardRepository
+            .findById(cardId)
+            .orElseThrow(() -> new NotFoundException(Card.class, cardId));
 
     UUID accountId = chosenCard.getAccount().getId();
 
-    Page<Card> cardsSet = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
+    Page<Card> cardsSet =
+        cardRepository.findByAccount_OwnerIdAndAccount_IdNot(id, accountId, pageable);
 
     log.info("Found {} cards", cardsSet.getTotalElements());
 
@@ -195,8 +198,7 @@ public class CardServiceImpl implements CardService {
   public Card findByNums(String twelveNums, String fourNums) {
     log.info("Finding card by card's number: ***{}", fourNums);
     String hash = CryptWithSHA.getCrypt(twelveNums);
-    Optional<Card> card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash,
-            fourNums);
+    Optional<Card> card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash, fourNums);
 
     if (card.isPresent()) {
       log.info("Found card with number ***{}", fourNums);
@@ -206,5 +208,4 @@ public class CardServiceImpl implements CardService {
       throw new NotFoundException(Card.class);
     }
   }
-
 }

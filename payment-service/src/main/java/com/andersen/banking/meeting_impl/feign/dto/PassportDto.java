@@ -31,7 +31,7 @@ public class PassportDto {
 
   @Schema(description = DESCRIPTION_ADDRESS_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
   @JsonProperty("addressId")
-  private UUID addressId;
+  private Long addressId;
 
   @Schema(description = DESCRIPTION_PASSPORT_SERIAL_NUMBER, example = EXAMPLE_PASSPORT_SERIAL_NUMBER,
       defaultValue = EXAMPLE_PASSPORT_SERIAL_NUMBER)
