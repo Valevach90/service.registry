@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import java.util.Optional;
+
 /**
  * CardService implementation.
  */
@@ -188,5 +190,21 @@ public class CardServiceImpl implements CardService {
     return cardsSet;
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public Card findByNums(String twelveNums, String fourNums) {
+    log.info("Finding card by card's number: ***{}", fourNums);
+    String hash = CryptWithSHA.getCrypt(twelveNums);
+    Optional<Card> card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash,
+            fourNums);
+
+    if (card.isPresent()) {
+      log.info("Found card with number ***{}", fourNums);
+      return card.get();
+    } else {
+      log.info("Not found card with number ***{}", fourNums);
+      throw new NotFoundException(Card.class);
+    }
+  }
 
 }

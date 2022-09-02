@@ -1,16 +1,19 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
+import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,6 +21,24 @@ import java.util.Optional;
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
+
+    private final UserRepository userRepository;
+
+    @Override
+    public Address create(Address address) {
+        log.debug("Creating new address: {}", address);
+
+        UUID userId = address.getUser().getId();
+        address.setUser(userRepository.getById(userId));
+
+        address.setId(null);
+
+        Address saveAddress = addressRepository.save(address);
+
+        log.debug("Created new address: {}", saveAddress);
+
+        return saveAddress;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -32,7 +53,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Address> findAddressByUserId(Long userId) {
+    public Optional<Address> findAddressByUserId(UUID userId) {
         log.debug("Find address by userId: {}", userId);
 
         Optional<Address> result = addressRepository.findAddressByUserId(userId);

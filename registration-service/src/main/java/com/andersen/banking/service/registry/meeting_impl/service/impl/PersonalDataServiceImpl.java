@@ -14,7 +14,6 @@ import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundExc
 import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
-
 import com.andersen.banking.service.registry.meeting_impl.service.PersonalDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +43,13 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         UserDto userDto = userMapper.toUserDto(userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(User.class, email)));
 
-        PassportDto passportDto = passportMapper.toPassportDto(passportRepository.findByUserId(userDto.getId())
-                .orElseThrow(() -> new NotFoundException(Passport.class, userDto.getId())));
+        PassportDto passportDto = passportMapper.toPassportDto(
+                passportRepository.findByUserId(userDto.getId())
+                        .orElseThrow(() -> new NotFoundException(Passport.class, userDto.getId())));
 
-        AddressDto addressDto = addressMapper.toAddressDto(addressRepository.findAddressByUserId(userDto.getId())
-                .orElseThrow(() -> new NotFoundException(Address.class, userDto.getId())));
+        AddressDto addressDto = addressMapper.toAddressDto(
+                addressRepository.findAddressByUserId(userDto.getId())
+                        .orElseThrow(() -> new NotFoundException(Address.class, userDto.getId())));
 
         PersonalDataDto personalDataDto = new PersonalDataDto(userDto, passportDto, addressDto);
 
@@ -77,6 +78,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         passportRepository.save(updatedPassport);
         addressRepository.save(updatedAddress);
 
-        log.info("Updated user: {}, passport: {}, address: {}", updatedUser, updatedPassport, updatedAddress);
+        log.info("Updated user: {}, passport: {}, address: {}", updatedUser, updatedPassport,
+                updatedAddress);
     }
 }

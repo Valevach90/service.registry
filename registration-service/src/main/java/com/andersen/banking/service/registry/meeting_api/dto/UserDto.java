@@ -7,6 +7,7 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -24,9 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto {
 
-  @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+  @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
   @JsonProperty("id")
-  private Long id;
+  private UUID id;
 
   @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
   @JsonProperty("first_name")

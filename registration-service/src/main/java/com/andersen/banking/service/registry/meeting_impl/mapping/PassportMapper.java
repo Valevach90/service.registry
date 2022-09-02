@@ -16,7 +16,7 @@ public interface PassportMapper {
     @Mapping(target = "addressId", source = "address.id")
     PassportDto toPassportDto(Passport passport);
 
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "address", ignore = true)
+    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "address.id", source = "addressId")
     Passport toPassport(PassportDto passportDto);
 }

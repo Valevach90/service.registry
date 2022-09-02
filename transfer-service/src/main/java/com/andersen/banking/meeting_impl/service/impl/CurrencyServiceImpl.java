@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"currencies"})
+//@CacheConfig(cacheNames = {"currencies"})
 @RequiredArgsConstructor
 public class CurrencyServiceImpl implements CurrencyService {
 
@@ -29,7 +29,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    @Cacheable
+    //@Cacheable
     @Transactional(readOnly = true)
     public List<CurrencyResponseDto> getAllCurrencies() {
         log.debug("Get currencies");
@@ -39,7 +39,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    @Cacheable
+    //@Cacheable
     @Transactional(readOnly = true)
     public Currency getCurrencyById(UUID id) throws NotFoundException {
         return currencyRepository.findById(id).orElseThrow(() -> new NotFoundException(Currency.class, id));

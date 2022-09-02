@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class PushNotificationService {
 
-  private FCMService fcmService;
+    private FCMService fcmService;
 
-  public void sendPushNotificationToToken(PushNotificationRequest request) {
-    try {
-      fcmService.sendMessageToToken(request);
-    } catch (Exception e) {
-      log.error(e.getMessage());
-      throw new NotificationException("Notification wasn't send.");
+    public void sendPushNotificationToToken(PushNotificationRequest request) {
+        try {
+            fcmService.sendMessageToToken(request);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new NotificationException("Notification wasn't send.");
+        }
     }
-  }
 }

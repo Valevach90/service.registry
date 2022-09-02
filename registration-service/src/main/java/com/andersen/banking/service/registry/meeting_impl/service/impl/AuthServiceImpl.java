@@ -1,5 +1,11 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractAccessTokenFromJson;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.prepareBodyToGetAccessToken;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.preparePasswordInJson;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.prepareRoleInJson;
+import static com.andersen.banking.service.registry.meeting_impl.util.ValidationUtil.isPasswordValid;
+
 import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
@@ -17,9 +23,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
-import static com.andersen.banking.service.registry.meeting_impl.util.ValidationUtil.isPasswordValid;
 
 @Slf4j
 @Service
@@ -92,7 +95,8 @@ public class AuthServiceImpl implements AuthService {
                 ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(prepareRoleInJson(role.getUser().getId(), role.getUser().getName())))
+                .body(BodyInserters.fromValue(
+                        prepareRoleInJson(role.getUser().getId(), role.getUser().getName())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
@@ -115,7 +119,8 @@ public class AuthServiceImpl implements AuthService {
                 ))
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(prepareRoleInJson(role.getAdmin().getId(), role.getAdmin().getName())))
+                .body(BodyInserters.fromValue(
+                        prepareRoleInJson(role.getAdmin().getId(), role.getAdmin().getName())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
@@ -165,7 +170,9 @@ public class AuthServiceImpl implements AuthService {
                     .block();
             log.debug("New password set: user id {}, password {}", id, newPassword);
         } else {
-            throw new ValidationException(String.format("New password %s does not meet policy requirements", newPassword));
+            throw new ValidationException(
+                    String.format("New password %s does not meet policy requirements",
+                            newPassword));
         }
     }
 
@@ -218,7 +225,8 @@ public class AuthServiceImpl implements AuthService {
                         keycloak.getRealm()
                 ))
                 .body(BodyInserters.fromFormData(prepareBodyToGetAccessToken(
-                        admin.getUsername(), admin.getPassword(), admin.getGrantType(), admin.getClientId())))
+                        admin.getUsername(), admin.getPassword(), admin.getGrantType(),
+                        admin.getClientId())))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

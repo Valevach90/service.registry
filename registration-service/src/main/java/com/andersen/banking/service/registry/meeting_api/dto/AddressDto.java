@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_api.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.UUID;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -22,9 +23,9 @@ public class AddressDto {
     @JsonProperty("id")
     private Long id;
 
-    @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     @JsonProperty("userId")
-    private Long userId;
+    private UUID userId;
 
     @Schema(description = DESCRIPTION_ZIP_CODE, example = EXAMPLE_ZIP_CODE, defaultValue = EXAMPLE_ZIP_CODE)
     @JsonProperty("zipCode")
