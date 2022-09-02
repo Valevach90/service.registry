@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_api.controller.CardController;
 import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
+import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.feign.RegistrationClient;
 import com.andersen.banking.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.meeting_impl.mapper.TypeCardMapper;
@@ -13,13 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-/**
- * Implementation class for CardController.
- */
-
+/** Implementation class for CardController. */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +29,7 @@ public class CardControllerImpl implements CardController {
   private final CardMapper cardMapper;
   private final TypeCardMapper typeCardMapper;
 
-  @Autowired
-  RegistrationClient registrationClient;
+  @Autowired RegistrationClient registrationClient;
 
   /**
    * End-point to find Card entity by ud.
@@ -58,8 +57,7 @@ public class CardControllerImpl implements CardController {
   public Page<CardResponseDto> findAll(Pageable pageable) {
     log.trace("Receiving request for all cards");
 
-    Page<CardResponseDto> result = cardService.findAll(pageable)
-        .map(cardMapper::toCardResponseDto);
+    Page<CardResponseDto> result = cardService.findAll(pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning list of cards: {}", result.getContent());
     return result;
@@ -69,7 +67,8 @@ public class CardControllerImpl implements CardController {
   public Page<CardResponseDto> findAllByAccountId(Long id, Pageable pageable) {
     log.trace("Receiving request for getting all cards by account id");
 
-    Page<CardResponseDto> result = cardService.findByAccountId(id, pageable).map(cardMapper::toCardResponseDto);
+    Page<CardResponseDto> result =
+        cardService.findByAccountId(id, pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning page of cards: {}", result.getContent());
     return result;
@@ -86,7 +85,8 @@ public class CardControllerImpl implements CardController {
     log.trace("Receiving card: {}", cardUpdateDto);
 
     Card cardToUpdate = cardMapper.toCard(cardUpdateDto);
-    CardResponseDto cardResponseDto = cardMapper.toCardResponseDto(cardService.update(cardToUpdate));
+    CardResponseDto cardResponseDto =
+        cardMapper.toCardResponseDto(cardService.update(cardToUpdate));
 
     log.trace("Returning updated card: {}", cardResponseDto);
     return cardResponseDto;
@@ -120,7 +120,8 @@ public class CardControllerImpl implements CardController {
 
     Card cardToCreate = cardMapper.toCard(cardDto);
 
-    CardResponseDto cardResponseDto = cardMapper.toCardResponseDto(cardService.create(cardToCreate));
+    CardResponseDto cardResponseDto =
+        cardMapper.toCardResponseDto(cardService.create(cardToCreate));
 
     log.trace("Returning created card: {}", cardResponseDto);
     return cardResponseDto;
@@ -130,9 +131,8 @@ public class CardControllerImpl implements CardController {
   public Page<CardResponseDto> findAllByTypeCard(String payment, String type, Pageable pageable) {
     log.trace("Receiving request for getting all cards by type card");
 
-    Page<CardResponseDto> result = cardService
-            .findAllByTypeCard(payment, type, pageable)
-            .map(cardMapper::toCardResponseDto);
+    Page<CardResponseDto> result =
+        cardService.findAllByTypeCard(payment, type, pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning page of cards: {}", result.getContent());
     return result;
@@ -166,6 +166,7 @@ public class CardControllerImpl implements CardController {
 
   /**
    * End-point to find all Cards for the specific owner.
+   *
    * @param id - owner id
    * @param pageable
    * @return
@@ -174,7 +175,8 @@ public class CardControllerImpl implements CardController {
   public Page<CardResponseDto> findAllByOwner(Long id, Pageable pageable) {
     log.trace("Receiving request for getting all cards by owner");
 
-    Page<CardResponseDto> result = cardService.findByOwnerId(id, pageable).map(cardMapper::toCardResponseDto);
+    Page<CardResponseDto> result =
+        cardService.findByOwnerId(id, pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning page of cards: {}", result.getContent());
 
@@ -182,29 +184,35 @@ public class CardControllerImpl implements CardController {
   }
 
   /**
-   * End-point to find all Cards for the specific owner except chosen card and cards who have the same account
+   * End-point to find all Cards for the specific owner except chosen card and cards who have the
+   * same account
+   *
    * @param ownerId - owner id
    * @param cardId
    * @param pageable
    * @return
    */
   @Override
-  public Page<CardResponseDto> findAllExceptChosenByOwnerId(Long ownerId, Long cardId, Pageable pageable) {
-    return cardService.findByOwnerIdExceptCard(ownerId, cardId, pageable)
-            .map(cardMapper::toCardResponseDto);
+  public Page<CardResponseDto> findAllExceptChosenByOwnerId(
+      Long ownerId, Long cardId, Pageable pageable) {
+    return cardService
+        .findByOwnerIdExceptCard(ownerId, cardId, pageable)
+        .map(cardMapper::toCardResponseDto);
   }
 
   /**
    * End-point to find all Cards for the current user.
+   *
    * @param pageable
    * @return
    */
   @Override
-  public Page<CardResponseDto> findAllByCurrentUser (Pageable pageable) {
+  public Page<CardResponseDto> findAllByCurrentUser(Pageable pageable) {
 
     log.trace("Receiving request for getting all cards by owner");
     Long userId = registrationClient.getUserPersonalData().getUser().getId();
-    Page<CardResponseDto> result = cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
+    Page<CardResponseDto> result =
+        cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning page of cards: {}", result.getContent());
 
@@ -212,7 +220,9 @@ public class CardControllerImpl implements CardController {
   }
 
   /**
-   * End-point to find all Cards for the current user except chosen card and cards who have the same account
+   * End-point to find all Cards for the current user except chosen card and cards who have the same
+   * account
+   *
    * @param cardId
    * @param pageable
    * @return
@@ -220,8 +230,31 @@ public class CardControllerImpl implements CardController {
   @Override
   public Page<CardResponseDto> findAllExceptChosenByCurrentUser(Long cardId, Pageable pageable) {
     Long userId = registrationClient.getUserPersonalData().getUser().getId();
-    Page<CardResponseDto> result = cardService.findByOwnerIdExceptCard(userId, cardId, pageable)
+    Page<CardResponseDto> result =
+        cardService
+            .findByOwnerIdExceptCard(userId, cardId, pageable)
             .map(cardMapper::toCardResponseDto);
     return result;
+  }
+
+  /**
+   * End-point to get information about Card by card's number
+   *
+   * @param twelveNums
+   * @param fourNums
+   * @return
+   */
+  @Override
+  public CardCredResponseDto findCardByCardNumber(String twelveNums, String fourNums) {
+    log.info("Receiving request on getting info about Card by card's number ***{}", fourNums);
+    try {
+      Card card = cardService.findByNums(twelveNums, fourNums);
+      CardCredResponseDto credResponseDto = cardMapper.toCardCredResponseDto(card);
+
+      log.info("Response info with info about card with card's number ***{}", fourNums);
+      return credResponseDto;
+    } catch (NotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found", e);
+    }
   }
 }
