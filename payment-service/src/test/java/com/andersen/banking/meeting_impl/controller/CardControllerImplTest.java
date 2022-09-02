@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SpringBootTest(classes = CardControllerImpl.class)
+@SpringBootTest()
 public class CardControllerImplTest {
 
     private static final Long ID = 17L;
@@ -56,6 +56,8 @@ public class CardControllerImplTest {
     CardMapper cardMapper;
     @MockBean
     TypeCardMapper typeCardMapper;
+
+
 
     @Test
     void findById_ShouldReturnCardDto_WhenIdIsCorrect() {

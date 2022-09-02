@@ -4,12 +4,13 @@ import com.andersen.banking.meeting_api.dto.RegularPaymentRequestDto;
 import com.andersen.banking.meeting_api.dto.RegularPaymentResponseDto;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_impl.mapper.RegularPaymentMapper;
-import com.andersen.banking.service.payment.meeting_impl.mapper.RegularPaymentMapperImpl;
+import com.andersen.banking.meeting_impl.mapper.RegularPaymentMapperImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.*;
+import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.populateRegularPayment;
+import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.populateRegularPaymentRequestDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = RegularPaymentMapperImpl.class)

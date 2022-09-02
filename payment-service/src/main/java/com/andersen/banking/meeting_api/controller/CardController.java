@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_api.controller;
 
+
 import com.andersen.banking.meeting_api.dto.*;
-import com.andersen.banking.service.payment.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
