@@ -15,7 +15,6 @@ public class Currency {
     @Id
     @Column(name = "id")
     private Long id;
-
     @Column(name = "name", nullable = false)
     private String name;
 }
