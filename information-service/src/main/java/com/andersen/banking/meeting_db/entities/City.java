@@ -26,5 +26,7 @@ public class City extends BaseEntity {
     private Country country;
 
     @Column(nullable = false, name = "city_name", length = 80)
+    @CityNameConstraint
+    @Size(min = 3)
     private String name;
 }
