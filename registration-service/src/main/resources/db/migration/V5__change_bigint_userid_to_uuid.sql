@@ -5,7 +5,7 @@ CREATE SERVER foreign_server
         port '${port}',
         dbname '${dbname}');
 
-CREATE USER MAPPING FOR psqluser
+CREATE USER MAPPING FOR postgres
     SERVER foreign_server
     OPTIONS (user '${username}', password '${password}');
 
@@ -14,7 +14,7 @@ CREATE FOREIGN TABLE foreign_table (
     email                       varchar(255)
     )
     SERVER foreign_server
-    OPTIONS (schema_name '${schemaname}', table_name 'tablename');
+    OPTIONS (schema_name '${schemaname}', table_name '${tablename}');
 
 SELECT * FROM foreign_table;
 
@@ -54,18 +54,25 @@ ALTER TABLE passport DROP COLUMN user_id;
 ALTER TABLE address DROP COLUMN user_id;
 
 ALTER TABLE users
-    ADD PRIMARY KEY (uuid);
+    RENAME COLUMN uuid TO id;
+ALTER TABLE address
+    RENAME COLUMN user_uuid TO user_id;
+ALTER TABLE passport
+    RENAME COLUMN user_uuid TO user_id;
+
+ALTER TABLE users
+    ADD PRIMARY KEY (id);
 
 ALTER TABLE address
-    ADD CONSTRAINT fk_address_on_user FOREIGN KEY (user_uuid) REFERENCES users (uuid)
+    ADD CONSTRAINT fk_address_on_user FOREIGN KEY (user_id) REFERENCES users (id)
         ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE passport
-    ADD CONSTRAINT fk_passport_on_users FOREIGN KEY (user_uuid) REFERENCES users (uuid)
+    ADD CONSTRAINT fk_passport_on_users FOREIGN KEY (user_id) REFERENCES users (id)
         ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 DROP FOREIGN TABLE foreign_table;
-DROP USER MAPPING FOR psqluser SERVER foreign_server;
+DROP USER MAPPING FOR postgres SERVER foreign_server;
 DROP SERVER foreign_server;
 DROP EXTENSION postgres_fdw;
