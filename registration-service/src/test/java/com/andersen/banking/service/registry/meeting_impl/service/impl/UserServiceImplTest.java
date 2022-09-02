@@ -1,9 +1,11 @@
-package com.andersen.banking.service.registry.meeting_impl.service;
+package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_impl.service.impl.UserServiceImpl;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(classes = UserServiceImpl.class)
 class UserServiceImplTest {
     private static final Long ID = 23L;
+    private static final UUID UUID_ID = UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464");
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "id";
@@ -49,10 +52,10 @@ class UserServiceImplTest {
     @Test
     void whenFindById_andOk() {
         Mockito
-                .when(userRepository.findById(ID))
+                .when(userRepository.findById(UUID_ID))
                 .thenReturn(user);
 
-        var result = userService.findById(ID);
+        var result = userService.findById(UUID_ID);
 
         assertEquals(user, result);
     }
@@ -74,8 +77,8 @@ class UserServiceImplTest {
 
     @Test
     void whenUpdate_andOk() {
-        user.get().setId(ID);
-        userToUpdate.setId(ID);
+        user.get().setId(UUID_ID);
+        userToUpdate.setId(UUID_ID);
 
         Mockito
                 .when(userRepository.findById(userToUpdate.getId()))
@@ -92,10 +95,10 @@ class UserServiceImplTest {
 
     @Test
     void whenUpdate_andNotFound_shouldThrowException() {
-        userToUpdate.setId(ID);
+        userToUpdate.setId(UUID_ID);
 
         Mockito
-                .when(userRepository.findById(ID))
+                .when(userRepository.findById(UUID_ID))
                 .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.update(userToUpdate));
@@ -104,30 +107,30 @@ class UserServiceImplTest {
     @Test
     void whenDeleteById_andOk() {
         Mockito
-                .when(userRepository.findById(ID))
+                .when(userRepository.findById(UUID_ID))
                 .thenReturn(user);
 
-        userService.deleteById(ID);
+        userService.deleteById(UUID_ID);
 
         Mockito
                 .verify(userRepository, Mockito.times(1))
-                .deleteById(ID);
+                .deleteById(UUID_ID);
     }
 
     @Test
     void whenDeleteById_andNotFound_shouldThrowException() {
-        assertThrows(NotFoundException.class, () -> userService.deleteById(ID));
+        assertThrows(NotFoundException.class, () -> userService.deleteById(UUID_ID));
 
         Mockito
                 .verify(userRepository, Mockito.times(0))
-                .deleteById(ID);
+                .deleteById(UUID_ID);
     }
 
     @Test
     void whenCreate_andOk() {
 
         Mockito
-                .when(userService.findById(ID))
+                .when(userService.findById(UUID_ID))
                 .thenReturn(user);
         Mockito
                 .when(userRepository.save(user.get()))

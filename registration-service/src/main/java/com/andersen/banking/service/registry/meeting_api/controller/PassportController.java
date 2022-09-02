@@ -4,6 +4,7 @@ import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public interface PassportController {
     @GetMapping(value = "user/{id}")
     PassportDto findByUserId(
             @Parameter(description = "user id", required = true)
-            @PathVariable("id") Long id
+            @PathVariable("id") UUID id
     );
 
     @Operation(summary = "user passport info",
