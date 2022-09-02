@@ -1,7 +1,11 @@
 package com.andersen.banking.meeting_api.controller;
 
 
-import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.CityDto;
+import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.StreetDto;
+import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "Information controller", description = "work with information")
@@ -42,7 +47,7 @@ public interface InformationController {
     List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(@Parameter(description = "country id", required = true)
                                           @PathVariable(value = "id") Long countryId,
                                           @ParameterObject @PageableDefault(sort = {"name"}) Pageable pageable,
-                                          @RequestBody String cityPartName);
+                                          @RequestBody @Valid String cityPartName);
 
 
     @Operation(summary = "Get all streets by cityId",

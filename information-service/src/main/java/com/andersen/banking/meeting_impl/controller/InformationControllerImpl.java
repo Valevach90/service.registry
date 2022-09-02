@@ -1,7 +1,11 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.InformationController;
-import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.CityDto;
+import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.StreetDto;
+import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +43,7 @@ public class InformationControllerImpl implements InformationController {
 
     @Override
     public List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(Long countryId, Pageable pageable, String cityPartName) {
-        log.info("get cities  which contain part of the city name");
+        log.info("get cities which contain part of the city name");
         return informationService.getListCityDtoByCountryIdAndPartOfCityName(countryId, cityPartName, pageable);
     }
 

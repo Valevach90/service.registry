@@ -1,9 +1,11 @@
 package com.andersen.banking.meeting_db.entities;
 
+import com.andersen.banking.meeting_impl.config.CityNameConstraint;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -24,6 +26,7 @@ public class City extends BaseEntity {
     private Country country;
 
     @Column(nullable = false, name = "city_name", length = 80)
+    @CityNameConstraint
+    @Size(min = 3)
     private String name;
-
 }

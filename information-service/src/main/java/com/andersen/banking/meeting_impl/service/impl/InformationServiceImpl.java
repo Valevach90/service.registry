@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,8 +65,8 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     public List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, String cityPartName, Pageable pageable) {
-        if(cityPartName.length() < 3) {
-            throw new InvalidRequestException("To search by name, you must pass at least three characters");
+        if(cityPartName.length() > 100) {
+            throw new InvalidRequestException("too short string: " + cityPartName);
         } else {
             log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
             return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName)), pageable)
