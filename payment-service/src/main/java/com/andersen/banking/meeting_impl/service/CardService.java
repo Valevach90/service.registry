@@ -60,8 +60,8 @@ public interface CardService {
     Page<Card> findByAccountId(Long id, Pageable pageable);
 
     /**
-     * This method returns page of card by payment or type or all together. If type and payment
-     * system is null return all cards
+     * This method returns page of card by payment or type or all together. If type and payment system is null
+     * return all cards
      *
      * @param payment
      * @param type
@@ -101,13 +101,4 @@ public interface CardService {
      * @return
      */
     Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable);
-
-    /**
-     * This method return Card by card's numbers
-     *
-     * @param twelveNums
-     * @param fourNums
-     * @return
-     */
-    Card findByNums(String twelveNums, String fourNums);
 }

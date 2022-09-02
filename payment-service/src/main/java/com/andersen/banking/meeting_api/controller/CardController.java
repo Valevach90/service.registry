@@ -102,20 +102,10 @@ public interface CardController {
   Page<CardResponseDto> findAllByCurrentUser(
           @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 
-    @Operation(
-        summary = "Get all cards of current user except already chosen card",
-        description = "get page cards by current user except already chosen card")
-    @GetMapping("/user/{cardId}")
-    Page<CardResponseDto> findAllExceptChosenByCurrentUser(
-        @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
-        @ParameterObject
-        @PageableDefault(
-            sort = {"id"},
-            direction = Sort.Direction.DESC)
-            Pageable pageable);
-
-    @GetMapping("/numbers")
-    CardCredResponseDto findCardByCardNumber(
-        @RequestParam(required = true, name = "first_twelve") String twelveNums,
-        @RequestParam(required = true, name = "last_four") String fourNums);
+  @Operation(summary = "Get all cards of current user except already chosen card",
+          description = "get page cards by current user except already chosen card")
+  @GetMapping("/user/{cardId}")
+  Page<CardResponseDto> findAllExceptChosenByCurrentUser(
+          @Parameter(description = "already chosen card id", required = true) @PathVariable Long cardId,
+          @ParameterObject @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable);
 }
