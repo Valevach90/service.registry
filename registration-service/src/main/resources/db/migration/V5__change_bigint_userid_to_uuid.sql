@@ -5,7 +5,7 @@ CREATE SERVER foreign_server
         port '${port}',
         dbname '${dbname}');
 
-CREATE USER MAPPING FOR postgres
+CREATE USER MAPPING FOR ${username}
     SERVER foreign_server
     OPTIONS (user '${username}', password '${password}');
 
@@ -73,6 +73,6 @@ ALTER TABLE passport
 
 
 DROP FOREIGN TABLE foreign_table;
-DROP USER MAPPING FOR postgres SERVER foreign_server;
+DROP USER MAPPING FOR ${username} SERVER foreign_server;
 DROP SERVER foreign_server;
 DROP EXTENSION postgres_fdw;
