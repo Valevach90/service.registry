@@ -1,9 +1,21 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.meeting_api.dto.*;
-import com.andersen.banking.meeting_db.repositories.*;
-import com.andersen.banking.meeting_impl.exception.InvalidRequestException;
-import com.andersen.banking.meeting_impl.mapper.*;
+import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.CityDto;
+import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
+import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.StreetDto;
+import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_db.repositories.BankBranchRepository;
+import com.andersen.banking.meeting_db.repositories.CityRepository;
+import com.andersen.banking.meeting_db.repositories.CountryRepository;
+import com.andersen.banking.meeting_db.repositories.StreetRepository;
+import com.andersen.banking.meeting_db.repositories.TimeTableRepository;
+import com.andersen.banking.meeting_impl.mapper.BankBranchMapper;
+import com.andersen.banking.meeting_impl.mapper.CityMapper;
+import com.andersen.banking.meeting_impl.mapper.CountryMapper;
+import com.andersen.banking.meeting_impl.mapper.StreetMapper;
+import com.andersen.banking.meeting_impl.mapper.TimeTableMapper;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,14 +74,10 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
-    public List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, String cityPartName, Pageable pageable) {
-        if(cityPartName.length() < 3) {
-            throw new InvalidRequestException("To search by name, you must pass at least three characters");
-        } else {
-            log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
-            return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName)), pageable)
+    public List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, CityDtoForSearch cityPartName, Pageable pageable) {
+        log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
+        return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName.getName())), pageable)
                     .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
-        }
     }
 
     @Override
