@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountRepository extends JpaRepository<Account, Long> {
-    Page<Account> findAccountByOwnerId(Long id, Pageable pageable);
+import java.util.UUID;
+
+public interface AccountRepository extends JpaRepository<Account, UUID> {
+    Page<Account> findAccountByOwnerId(UUID id, Pageable pageable);
 
 }

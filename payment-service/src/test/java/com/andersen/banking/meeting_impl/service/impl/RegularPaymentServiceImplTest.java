@@ -31,7 +31,7 @@ public class RegularPaymentServiceImplTest {
 
     @Test
     void create_ShouldReturnRegularPayment_WhenReceivedRegularPaymentIsCorrect() {
-        Mockito.when(cardService.findById(25L)).thenReturn(RegularPaymentUnitTestGenerator.populateSourceCard());
+        Mockito.when(cardService.findById(RegularPaymentUnitTestGenerator.SOURCE_CARD_ID)).thenReturn(RegularPaymentUnitTestGenerator.populateSourceCard());
         Mockito.when(regularPaymentRepository.save(receivedRegularPayment)).thenReturn(returnedRegularPayment);
 
         Assertions.assertEquals(returnedRegularPayment, regularPaymentService.create(receivedRegularPayment));

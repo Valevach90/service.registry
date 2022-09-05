@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * AccountService implementation
  */
@@ -35,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public Account findById(Long id) {
+    public Account findById(UUID id) {
         log.debug("Finding account by id: {}", id);
 
         Account account = accountRepository.findById(id)
@@ -59,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Account> findByOwnerId(Long id, Pageable pageable) {
+    public Page<Account> findByOwnerId(UUID id, Pageable pageable) {
         log.info("Trying to find accounts with ownerId: {}", id);
 
         Page<Account> accounts = accountRepository.findAccountByOwnerId(id, pageable);
@@ -83,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account deleteById(Long id) {
+    public Account deleteById(UUID id) {
         log.info("Trying to delete account with id: {}", id);
 
         Account deletedAccount = findById(id);

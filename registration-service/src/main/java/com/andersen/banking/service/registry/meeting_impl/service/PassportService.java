@@ -1,6 +1,7 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,7 +26,7 @@ public interface PassportService {
      * @param userId Id of user
      * @return Passport
      */
-    Optional<Passport> findByUserId(Long userId);
+    Optional<Passport> findByUserId(UUID userId);
 
     /**
      * Find passport by address Id.
@@ -63,5 +64,5 @@ public interface PassportService {
      * @param passport passport to create
      * @return passport
      */
-    Passport create(Passport passport, Long userId, Long addressId);
+    Passport create(Passport passport, UUID userId, Long addressId);
 }

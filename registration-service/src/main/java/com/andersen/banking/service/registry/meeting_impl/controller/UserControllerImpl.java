@@ -2,11 +2,11 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
-import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserDto findById(Long id) {
+    public UserDto findById(UUID id) {
         log.trace("Find user by Id: {}", id);
 
         UserDto result = userService.findById(id)
@@ -70,7 +70,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.trace("Try to delete user with id: {}", id);
 
         userService.deleteById(id);

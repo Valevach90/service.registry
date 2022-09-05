@@ -5,6 +5,7 @@ import com.andersen.banking.service.registry.meeting_db.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public interface UserController {
             description = "get user information by id")
     @GetMapping("/users/{id}")
     UserDto findById(@Parameter(description = "user id", required = true)
-                         @PathVariable Long id);
+                         @PathVariable UUID id);
 
     @Operation(summary = "Create user",
             description = "create user by params in dto object")
@@ -55,5 +56,5 @@ public interface UserController {
             description = "delete user by id")
     @DeleteMapping("/users/{id}")
     void deleteById(@Parameter(description = "user id", required = true)
-                         @PathVariable Long id);
+                         @PathVariable UUID id);
 }

@@ -17,6 +17,14 @@ spring:
     schemas: public
     user: postgres
     password: postgres
+    placeholders:
+      username: psqluser
+      password: PoSPa$$woRd
+      host: 10.10.14.31
+      port: 30000
+      dbname: keycloak
+      schemaname: public
+      tablename: user_entity
   security:
     oauth2:
       resourceserver:

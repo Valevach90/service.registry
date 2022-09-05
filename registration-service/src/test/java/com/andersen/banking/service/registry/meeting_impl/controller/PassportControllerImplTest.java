@@ -8,6 +8,7 @@ import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(classes = PassportControllerImpl.class)
 class PassportControllerImplTest {
     private static final Long ID = 23L;
+    private static final UUID UUID_ID = UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464");
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "userId";
@@ -86,13 +88,13 @@ class PassportControllerImplTest {
     @Test
     void whenFindByUserId_andOk() {
         Mockito
-                .when(passportService.findByUserId(ID))
+                .when(passportService.findByUserId(UUID_ID))
                 .thenReturn(passport);
         Mockito
                 .when(passportMapper.toPassportDto(passport.get()))
                 .thenReturn(passportDto);
 
-        var result = passportController.findByUserId(ID);
+        var result = passportController.findByUserId(UUID_ID);
 
         assertEquals(passportDto, result);
     }
@@ -103,7 +105,7 @@ class PassportControllerImplTest {
                 .when(passportService.findById(ID))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> passportController.findByUserId(ID));
+        assertThrows(NotFoundException.class, () -> passportController.findByUserId(UUID_ID));
 
         Mockito
                 .verify(passportMapper, Mockito.times(0))
@@ -202,7 +204,7 @@ class PassportControllerImplTest {
 
     @Test
     void whenCreate_andOk() {
-        passportDto.setUserId(ID);
+        passportDto.setUserId(UUID_ID);
         passportDto.setAddressId(ID);
 
         var createdPassport = new Passport();
@@ -212,7 +214,8 @@ class PassportControllerImplTest {
                 .when(passportMapper.toPassport(passportDto))
                 .thenReturn(passport.get());
         Mockito
-                .when(passportService.create(passport.get(), passportDto.getUserId(), passportDto.getUserId()))
+                .when(passportService.create(
+                        passport.get(), passportDto.getUserId(), passportDto.getAddressId()))
                 .thenReturn(createdPassport);
         Mockito
                 .when(passportMapper.toPassportDto(createdPassport))

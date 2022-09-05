@@ -3,10 +3,10 @@ package com.andersen.banking.service.registry.meeting_impl.controller;
 import com.andersen.banking.service.registry.meeting_api.controller.AddressController;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
-import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +26,20 @@ public class AddressControllerImpl implements AddressController {
     private final AddressMapper addressMapper;
 
     @Override
+    public AddressDto create(AddressDto addressDto) {
+        log.debug("Try to create address: {}", addressDto);
+
+        Address address = addressMapper.toAddress(addressDto);
+
+        Address savedAddress = addressService.create(address);
+
+        AddressDto savedAddressDto = addressMapper.toAddressDto(savedAddress);
+
+        log.debug("created address: {}", savedAddressDto);
+        return savedAddressDto;
+    }
+
+    @Override
     public List<AddressDto> findAll() {
         log.info("Find all offices");
 
@@ -38,7 +52,7 @@ public class AddressControllerImpl implements AddressController {
     }
 
     @Override
-    public AddressDto findAddressByUserId(Long userId) {
+    public AddressDto findAddressByUserId(UUID userId) {
         log.info("Find address by userId: {}", userId);
 
         AddressDto result = addressService.findAddressByUserId(userId)

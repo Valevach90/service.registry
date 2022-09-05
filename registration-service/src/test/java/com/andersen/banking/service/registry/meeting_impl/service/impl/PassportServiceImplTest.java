@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_impl.service;
+package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
@@ -7,11 +7,18 @@ import com.andersen.banking.service.registry.meeting_db.repositories.PassportRep
 import com.andersen.banking.service.registry.meeting_impl.date.DateSupportService;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
+import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_impl.service.impl.PassportServiceImpl;
 import java.time.LocalDate;
+import java.util.UUID;
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -28,10 +35,13 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
+@NotThreadSafe
 @SpringBootTest(classes = PassportServiceImpl.class)
 class PassportServiceImplTest {
     private static final Long ID = 23L;
+    private static final UUID UUID_ID = UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464");
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "userId";
@@ -70,10 +80,10 @@ class PassportServiceImplTest {
     @Test
     void whenFindByUserId_andOk() {
         Mockito
-                .when(passportRepository.findByUserId(ID))
+                .when(passportRepository.findByUserId(UUID_ID))
                 .thenReturn(passportOptional);
 
-        var result = passportService.findByUserId(ID);
+        var result = passportService.findByUserId(UUID_ID);
 
         assertEquals(passportOptional, result);
     }
@@ -178,19 +188,19 @@ class PassportServiceImplTest {
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(Optional.empty());
         Mockito
-                .when(passportService.findByUserId(ID))
+                .when(passportService.findByUserId(UUID_ID))
                 .thenReturn(Optional.empty());
         Mockito
                 .when(addressService.findById(ID))
                 .thenReturn(address);
         Mockito
-                .when(userService.findById(ID))
+                .when(userService.findById(UUID_ID))
                 .thenReturn(user);
         Mockito
                 .when(passportRepository.save(passport))
                 .thenReturn(passport);
 
-        var result = passportService.create(passport, ID, ID);
+        var result = passportService.create(passport, UUID_ID, ID);
 
         assertEquals(passport, result);
         assertEquals(user.get(), passport.getUser());
@@ -208,7 +218,7 @@ class PassportServiceImplTest {
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(passportOptional);
 
-        assertThrows(FoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(FoundException.class, () -> passportService.create(pas, UUID_ID, ID));
     }
 
     @Test
@@ -222,10 +232,10 @@ class PassportServiceImplTest {
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(Optional.empty());
         Mockito
-                .when(passportService.findByUserId(ID))
+                .when(passportService.findByUserId(UUID_ID))
                 .thenReturn(passportOptional);
 
-        assertThrows(FoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(FoundException.class, () -> passportService.create(pas, UUID_ID, ID));
     }
 
     @Test
@@ -239,13 +249,13 @@ class PassportServiceImplTest {
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(Optional.empty());
         Mockito
-                .when(passportService.findByUserId(ID))
+                .when(passportService.findByUserId(UUID_ID))
                 .thenReturn(Optional.empty());
         Mockito
                 .when(addressService.findById(ID))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, UUID_ID, ID));
     }
 
     @Test
@@ -260,16 +270,16 @@ class PassportServiceImplTest {
                 .when(passportService.findByAddressId(ID))
                 .thenReturn(Optional.empty());
         Mockito
-                .when(passportService.findByUserId(ID))
+                .when(passportService.findByUserId(UUID_ID))
                 .thenReturn(Optional.empty());
         Mockito
                 .when(addressService.findById(ID))
                 .thenReturn(address);
         Mockito
-                .when(userService.findById(ID))
+                .when(userService.findById(UUID_ID))
                 .thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> passportService.create(pas, ID, ID));
+        assertThrows(NotFoundException.class, () -> passportService.create(pas, UUID_ID, ID));
     }
 
     private List<Passport> generatePassports() {

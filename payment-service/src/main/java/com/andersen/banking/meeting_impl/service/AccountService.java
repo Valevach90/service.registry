@@ -4,6 +4,8 @@ import com.andersen.banking.meeting_db.entities.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 
 public interface AccountService {
 
@@ -32,7 +34,7 @@ public interface AccountService {
      * @param pageable
      * @return
      */
-    Page<Account> findByOwnerId(Long id, Pageable pageable);
+    Page<Account> findByOwnerId(UUID id, Pageable pageable);
 
 
     /**
@@ -41,7 +43,7 @@ public interface AccountService {
      * @param id of the account
      * @return Account
      */
-    Account findById(Long id);
+    Account findById(UUID id);
 
 
     /**
@@ -59,7 +61,7 @@ public interface AccountService {
      * @param id
      * @return Account
      */
-    Account deleteById(Long id);
+    Account deleteById(UUID id);
 
 
 }
