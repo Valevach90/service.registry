@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
+import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
 import org.springframework.stereotype.Service;
 
 /**
@@ -47,4 +48,8 @@ public interface AuthService {
      * @param newPassword
      */
     void resetPassword(String id, String newPassword);
+
+    TokenDto refreshToken(String refreshToken);
+
+    void logoutUser(String refreshToken);
 }

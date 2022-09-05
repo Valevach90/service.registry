@@ -1,15 +1,24 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
 
+import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for working with address.
  */
 public interface AddressService {
+
+    /**
+     * Create address
+     *
+     * @param address - parameters for new address
+     * @return Address
+     */
+    Address create(Address address);
 
     /**
      * Return address by id.
@@ -25,7 +34,7 @@ public interface AddressService {
      * @param userId userId of the address
      * @return Address
      */
-    Optional<Address> findAddressByUserId(Long userId);
+    Optional<Address> findAddressByUserId(UUID userId);
 
     /**
      * Return all addresses.

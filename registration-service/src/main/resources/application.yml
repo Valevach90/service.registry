@@ -1,6 +1,7 @@
 server:
   port: 8181
 
+
 spring:
   application:
     name: registration-service
@@ -17,6 +18,14 @@ spring:
     schemas: public
     user: postgres
     password: postgres
+    placeholders:
+      username: psqluser
+      password: PoSPa$$woRd
+      host: 10.10.14.31
+      port: 30000
+      dbname: keycloak
+      schemaname: public
+      tablename: user_entity
   security:
     oauth2:
       resourceserver:
@@ -63,8 +72,39 @@ eureka:
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
 
+keycloak:
+  auth-server-url: http://10.10.14.31:30001
+  realm: Meetingroom-New
+  client-id: api-gateway
+  client-secret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
+  role:
+    unauthorized:
+      id: 2c2bb0cd-a1b2-4fcf-8ce7-17220c2bef37
+      name: UNAUTHORIZED
+    user:
+      id: cb018865-0e2d-4d93-bbd0-f1d04c76301d
+      name: USER
+    admin:
+      id: 5fca58c4-742a-4bce-8051-3bd0bb2c1a9c
+      name: ADMIN
+
+  client:
+    gateway:
+      id: 28848ed9-d935-4f4c-97d2-01d2ab9d477c
+      name: api-gateway
+    gateway_user_management:
+      id: 67166f4a-7ade-44fe-8d23-57a8c6acc6e7
+      name: gateway-user-management
+
+  admin:
+    username: user-management-admin
+    password: admin
+    grant_type: password
+    client_id: gateway-user-management
+
 app:
   firebase-configuration-file: meetingroom-notification-firebase-adminsdk-dyfbb-b4f0e42672.json
+
 notification:
   mail:
     host: smtp.gmail.com
@@ -80,33 +120,3 @@ notification:
       time:
         millis: 2700000
 
-keycloak:
-  uri:
-    tokens_obtain: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token/
-    add: http://10.10.14.31:30001/auth/admin/realms/Meetingroom-New/users
-    realm_users: http://10.10.14.31:30001/auth/admin/realms/Meetingroom-New/users/
-    role_mapping: /role-mappings/clients/
-    jwks: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
-    password_reset: /reset-password
-  client:
-    gateway:
-      id: 28848ed9-d935-4f4c-97d2-01d2ab9d477c
-      name: api-gateway
-    gateway_user_management:
-      id: 67166f4a-7ade-44fe-8d23-57a8c6acc6e7
-      name: gateway-user-management
-  role:
-    unauthorized:
-      id: 2c2bb0cd-a1b2-4fcf-8ce7-17220c2bef37
-      name: UNAUTHORIZED
-    user:
-      id: cb018865-0e2d-4d93-bbd0-f1d04c76301d
-      name: USER
-    admin:
-      id: 5fca58c4-742a-4bce-8051-3bd0bb2c1a9c
-      name: ADMIN
-  admin:
-    username: user-management-admin
-    password: admin
-    grant_type: password
-    client_id: gateway-user-management

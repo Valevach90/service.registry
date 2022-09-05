@@ -1,13 +1,14 @@
 package com.andersen.banking.service.registry.meeting_impl.security;
 
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakRealmRoleConverter;
-import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakUriProperties;
+import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,21 +23,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    KeycloakUriProperties uri;
+    KeycloakProperties keycloak;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
-                .authorizeRequests(authorizeRequests -> authorizeRequests
+                .authorizeRequests()
                 .antMatchers("/api/v1/**").permitAll()
-                .anyRequest().authenticated()).oauth2ResourceServer(
-                oauth2ResourceServer -> oauth2ResourceServer.jwt(
-                        jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-        );
+                .anyRequest().authenticated()
+                .and()
+                .oauth2ResourceServer(
+                        oauth2ResourceServer -> oauth2ResourceServer.jwt(
+                                jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                );
     }
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
@@ -47,7 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(uri.getJwks()).build();
+        return NimbusJwtDecoder.withJwkSetUri(
+                KeycloakUrlUtil.getUriJwks(keycloak.getAuthServerUrl(), keycloak.getRealm())
+        ).build();
     }
 
     @Override
@@ -70,6 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/configuration/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/logout"
     };
 }
