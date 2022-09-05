@@ -35,15 +35,6 @@ public interface InformationService {
     /**
      * Find all CityDto.
      *
-     * @param countryId - country id.
-     * @param cityPartName - full name of the city or part of name
-     * @return list of CityDto by country_Id and which contain part of the city name
-     */
-    List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, CityDtoForSearch cityPartName, Pageable pageable);
-
-    /**
-     * Find all CityDto.
-     *
      * @param cityId - city id.
      * @return list of CityDto by Country Id
      */
