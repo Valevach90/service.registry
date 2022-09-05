@@ -18,13 +18,17 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SpringBootTest(classes = AccountControllerImpl.class)
 public class AccountControllerImplTest {
 
-    private static final Long ID = 17L;
+    final UUID ID = UUID.randomUUID();
+    final UUID OWNER_ID = UUID.randomUUID();
+
+    private static final UUID ACCOUNT_ID = UUID.randomUUID();
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "accountId";
@@ -49,15 +53,15 @@ public class AccountControllerImplTest {
     @Test
     void findById_ShouldReturnAccountDto_WhenIdISCorrect() {
 
-        Mockito.when(accountService.findById(ID)).thenReturn(account);
+        Mockito.when(accountService.findById(OWNER_ID)).thenReturn(account);
         Mockito.when(accountMapper.toAccountDto(account)).thenReturn(accountDto);
-        Assertions.assertEquals(accountDto, accountController.findById(ID));
+        Assertions.assertEquals(accountDto, accountController.findById(OWNER_ID));
     }
 
     @Test
     void findById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(accountService.findById(ID)).thenThrow(new NotFoundException(Account.class, ID));
-        Assertions.assertThrows(NotFoundException.class, () -> accountController.findById(ID));
+        Mockito.when(accountService.findById(OWNER_ID)).thenThrow(new NotFoundException(Account.class, OWNER_ID));
+        Assertions.assertThrows(NotFoundException.class, () -> accountController.findById(OWNER_ID));
     }
 
     @Test
@@ -110,17 +114,17 @@ public class AccountControllerImplTest {
 
     @Test
     void deleteById_ShouldReturnDeletedObject_WhenIdIsCorrect() {
-        Mockito.when(accountService.deleteById(ID)).thenReturn(account);
+        Mockito.when(accountService.deleteById(OWNER_ID)).thenReturn(account);
         Mockito.when(accountMapper.toAccountDto(account)).thenReturn(accountDto);
 
-        Assertions.assertEquals(accountDto, accountController.deleteById(ID));
+        Assertions.assertEquals(accountDto, accountController.deleteById(OWNER_ID));
     }
 
     @Test
     void deleteById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(accountService.deleteById(ID)).thenThrow(new NotFoundException(Account.class, ID));
+        Mockito.when(accountService.deleteById(OWNER_ID)).thenThrow(new NotFoundException(Account.class, OWNER_ID));
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountController.deleteById(ID));
+        Assertions.assertThrows(NotFoundException.class, () -> accountController.deleteById(OWNER_ID));
     }
 
     @Test
@@ -152,33 +156,33 @@ public class AccountControllerImplTest {
         Page<AccountDto> pageOfDto = new PageImpl<>(accountDtos, pageable, SIZE_PAGE);
         Page<Account> pageOfCards = new PageImpl<>(accounts, pageable, SIZE_PAGE);
 
-        Mockito.when(accountService.findByOwnerId(ID, pageable)).thenReturn(pageOfCards);
+        Mockito.when(accountService.findByOwnerId(OWNER_ID, pageable)).thenReturn(pageOfCards);
         Mockito.when(accountMapper.toAccountDto(Mockito.any(Account.class))).thenReturn(new AccountDto());
 
-        Page<AccountDto> result = accountController.findByOwnerId(ID, pageable);
+        Page<AccountDto> result = accountController.findByOwnerId(OWNER_ID, pageable);
 
         Assertions.assertEquals(pageOfDto, result);
     }
 
     private Account populateAccount(Account account) {
-        account.setId(9L);
+        account.setId(ACCOUNT_ID);
         account.setBalance(10000L);
         account.setBankName("Bank");
         account.setAccountNumber("1234567890");
         account.setCurrency("USD");
-        account.setOwnerId(1L);
+        account.setOwnerId(OWNER_ID);
         account.setOpenDate(LocalDate.of(2021, 10, 23));
         account.setCloseDate(LocalDate.of(2024, 10, 23));
         return account;
     }
 
     private AccountDto populateAccountDto(AccountDto accountDto) {
-        accountDto.setId(9L);
+        accountDto.setId(ACCOUNT_ID);
         accountDto.setBalance(10000L);
         accountDto.setBankName("Bank");
         accountDto.setAccountNumber("1234567890");
         accountDto.setCurrency("USD");
-        accountDto.setOwnerId(1L);
+        accountDto.setOwnerId(OWNER_ID);
         accountDto.setOpenDate(LocalDate.of(2021, 10, 23));
         accountDto.setCloseDate(LocalDate.of(2024, 10, 23));
         return accountDto;

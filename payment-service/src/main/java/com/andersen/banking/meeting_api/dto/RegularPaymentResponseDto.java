@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,7 +21,7 @@ public class RegularPaymentResponseDto {
 
     @JsonProperty("id")
     @NotNull
-    private Long id;
+    private UUID id;
 
     @NotBlank
     @Pattern(regexp = "[a-zA-Z- ]{3,30}", message = "description should have at least 3 and at maximum 30 characters")
@@ -41,11 +42,11 @@ public class RegularPaymentResponseDto {
 
     @JsonProperty("source_card_id")
     @NotNull
-    private Long sourceCardId;
+    private UUID sourceCardId;
 
     @JsonProperty("recipient_card_id")
     @NotNull
-    private Long recipientCardId;
+    private UUID recipientCardId;
 
     @JsonProperty("amount")
     @NotNull

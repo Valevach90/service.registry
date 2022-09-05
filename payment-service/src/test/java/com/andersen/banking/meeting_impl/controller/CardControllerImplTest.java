@@ -23,13 +23,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SpringBootTest(classes = CardControllerImpl.class)
 public class CardControllerImplTest {
 
-    private static final Long ID = 17L;
+    private static final UUID TYPE_ID = UUID.randomUUID();
+    private static final UUID ID = UUID.randomUUID(); // 17L
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "accountId";
@@ -163,32 +165,38 @@ public class CardControllerImplTest {
 
     @Test
     void findAllByOwner_ShouldReturnPageOfCards() {
+
+        final UUID uuid = UUID.randomUUID();
+
         List<CardResponseDto> cardUpdateDtos = generateListOfCardDto();
         List<Card> cards = generateCards();
         Pageable pageable = createPageable();
         Page<CardResponseDto> pageOfDto = new PageImpl<>(cardUpdateDtos, pageable, SIZE_PAGE);
         Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
-        Mockito.when(cardService.findByOwnerId(1L, pageable)).thenReturn(pageOfCards);
+        Mockito.when(cardService.findByOwnerId(uuid, pageable)).thenReturn(pageOfCards);
         Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(new CardResponseDto());
 
-        Page<CardResponseDto> result = cardController.findAllByOwner(1L, pageable);
+        Page<CardResponseDto> result = cardController.findAllByOwner(uuid, pageable);
 
         Assertions.assertEquals(pageOfDto, result);
     }
 
     @Test
     void findAllExceptChosenByAccountId_ShouldReturnPageOfCards() {
+        final UUID OWNER_ID = UUID.randomUUID();
+        final UUID CARD_ID = UUID.randomUUID();
+
         List<CardResponseDto> cardUpdateDtos = generateListOfCardDto();
         List<Card> cards = generateCards();
         Pageable pageable = createPageable();
         Page<CardResponseDto> pageOfDto = new PageImpl<>(cardUpdateDtos, pageable, SIZE_PAGE);
         Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
-        Mockito.when(cardService.findByOwnerIdExceptCard(1L, 1L, pageable)).thenReturn(pageOfCards);
+        Mockito.when(cardService.findByOwnerIdExceptCard(OWNER_ID, CARD_ID, pageable)).thenReturn(pageOfCards);
         Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(new CardResponseDto());
 
-        Page<CardResponseDto> result = cardController.findAllExceptChosenByOwnerId(1L, 1L, pageable);
+        Page<CardResponseDto> result = cardController.findAllExceptChosenByOwnerId(OWNER_ID, CARD_ID, pageable);
 
         Assertions.assertEquals(pageOfDto, result);
     }
@@ -233,7 +241,7 @@ public class CardControllerImplTest {
 
     @NotNull
     private TypeCard populateTypeCard(TypeCard typeCard) {
-        typeCard.setId(2L);
+        typeCard.setId(TYPE_ID);
         typeCard.setPaymentSystem("MASTERCARD");
         typeCard.setTypeName("STANDARD");
         return typeCard;

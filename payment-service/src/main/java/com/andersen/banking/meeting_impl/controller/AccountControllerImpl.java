@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 /**
  * Implementation class for AccountController
  */
@@ -70,7 +72,7 @@ public class AccountControllerImpl implements AccountController {
      */
 
     @Override
-    public Page<AccountDto> findByOwnerId(Long id, Pageable pageable) {
+    public Page<AccountDto> findByOwnerId(UUID id, Pageable pageable) {
         log.trace("Receiving request for account with ownerId: {}", id);
 
         Page<AccountDto> accountDtoPage = accountService.findByOwnerId(id, pageable)
@@ -89,7 +91,7 @@ public class AccountControllerImpl implements AccountController {
 
 
     @Override
-    public AccountDto findById(Long id) {
+    public AccountDto findById(UUID id) {
         log.trace("Receiving account id: {}", id);
 
         AccountDto accountDto = accountMapper.toAccountDto(accountService.findById(id));
@@ -128,7 +130,7 @@ public class AccountControllerImpl implements AccountController {
 
 
     @Override
-    public AccountDto deleteById(Long id) {
+    public AccountDto deleteById(UUID id) {
         log.trace("Receiving account id: {}", id);
 
         Account deletedAccount = accountService.deleteById(id);
