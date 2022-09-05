@@ -6,6 +6,7 @@ import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundExc
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotificationException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.ErrorMapper;
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.sql.SQLException;
 
 /**
  * Exception Handler Controller.

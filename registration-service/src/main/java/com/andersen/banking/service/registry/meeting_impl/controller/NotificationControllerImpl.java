@@ -1,20 +1,18 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.extractEmailFromToken;
+
 import com.andersen.banking.service.registry.meeting_api.controller.NotificationController;
 import com.andersen.banking.service.registry.meeting_api.dto.NotificationDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Notification;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.NotificationMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.NotificationService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.*;
 
 /**
  * Notification controller implementation.

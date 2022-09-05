@@ -3,11 +3,10 @@ package com.andersen.banking.service.registry.meeting_test.generators;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.github.javafaker.Faker;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AddressGenerator {

@@ -1,7 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
 
-import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import java.util.List;
 import java.util.Optional;

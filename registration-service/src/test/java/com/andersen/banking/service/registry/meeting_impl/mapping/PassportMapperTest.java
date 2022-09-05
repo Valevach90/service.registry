@@ -1,7 +1,6 @@
 package com.andersen.banking.service.registry.meeting_impl.mapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;

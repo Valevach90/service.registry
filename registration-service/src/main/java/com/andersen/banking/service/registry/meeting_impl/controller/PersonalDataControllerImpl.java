@@ -1,14 +1,15 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractEmailFromToken;
+
 import com.andersen.banking.service.registry.meeting_api.controller.PersonalDataController;
 import com.andersen.banking.service.registry.meeting_api.dto.PersonalDataDto;
 import com.andersen.banking.service.registry.meeting_impl.service.PersonalDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractEmailFromToken;
 
 /**
  * Personal Data controller implementation.
@@ -22,7 +23,9 @@ public class PersonalDataControllerImpl implements PersonalDataController {
     private final PersonalDataService personalDataService;
 
     @Override
-    public PersonalDataDto getUserPersonalData(Jwt jwt) {
+    public PersonalDataDto getUserPersonalData(Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
 
         String email = extractEmailFromToken(jwt);
 

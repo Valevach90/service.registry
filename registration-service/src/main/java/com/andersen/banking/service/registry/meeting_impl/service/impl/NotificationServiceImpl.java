@@ -1,8 +1,15 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.BLOCKED;
+import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.createBlockingNotification;
+import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.createMessage;
+import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.createNotification;
+
 import com.andersen.banking.service.registry.meeting_db.entities.Notification;
 import com.andersen.banking.service.registry.meeting_db.repositories.NotificationRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.NotificationService;
+import java.sql.Timestamp;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +18,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.util.Optional;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.MailNotificationUtil.*;
 
 @Slf4j
 @Service

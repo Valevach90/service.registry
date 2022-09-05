@@ -1,13 +1,12 @@
 package com.andersen.banking.service.registry.meeting_impl.util;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Notification;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.oauth2.jwt.Jwt;
+import static java.lang.Math.pow;
 
+import com.andersen.banking.service.registry.meeting_db.entities.Notification;
 import java.sql.Timestamp;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static java.lang.Math.pow;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public class MailNotificationUtil {
 

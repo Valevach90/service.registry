@@ -7,14 +7,22 @@ import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @OpenAPIDefinition(info = @Info(title = "Registration Service",
         description = "This is the API for the Registration Service of the MeetingRoom New project", version = "v1"))
-@SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2, bearerFormat = "JWT",
+@SecurityScheme(name = "Bearer Authentication",
+        type = SecuritySchemeType.OAUTH2,
+        bearerFormat = "JWT",
         scheme = "bearer",
         flows = @OAuthFlows(authorizationCode = @OAuthFlow(
                 authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
-                tokenUrl = "${springdoc.oAuthFlow.tokenUrl}", scopes = {
-                @OAuthScope(name = "read", description = "read scope"),
-                @OAuthScope(name = "write", description = "write scope") })))
-public class OpenApiConfig {}
+                tokenUrl = "${springdoc.oAuthFlow.tokenUrl}",
+                scopes = {
+                        @OAuthScope(name = "openid", description = "openid"),
+                        @OAuthScope(name = "read", description = "read scope"),
+                        @OAuthScope(name = "write", description = "write scope")})))
+public class OpenApiConfig {
+
+}
