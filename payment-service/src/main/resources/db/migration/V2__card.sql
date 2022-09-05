@@ -1,7 +1,7 @@
 CREATE TABLE payment_service.card
 (
     id                   UUID DEFAULT gen_random_uuid() NOT NULL,
-    account_id           BIGINT                         NOT NULL,
+    account_id           UUID                           NOT NULL,
     first_twelve_numbers VARCHAR(64)                    NOT NULL,
     last_four_numbers    VARCHAR(4)                     NOT NULL,
     valid_from_date      DATE                           NOT NULL,

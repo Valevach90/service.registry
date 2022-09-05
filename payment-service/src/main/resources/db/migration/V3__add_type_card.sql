@@ -15,10 +15,10 @@ VALUES ('VISA', 'STANDARD'),
        ('MASTERCARD', 'PLATINUM');
 
 ALTER TABLE payment_service.card
-    ADD COLUMN type_card_id INT;
+    ADD COLUMN type_card_id UUID;
 
 UPDATE payment_service.card
-SET type_card_id=1;
+SET type_card_id=gen_random_uuid();
 
 ALTER TABLE payment_service.card
     ALTER COLUMN type_card_id SET NOT NULL;
