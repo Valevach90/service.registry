@@ -5,7 +5,7 @@ import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.create
 import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createMessage;
 import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createNotification;
 
-import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_db.entity.RegistrationNotification;
 import com.andersen.banking.meeting_db.repository.NotificationRepository;
 import com.andersen.banking.meeting_impl.service.NotificationService;
 import com.andersen.banking.meeting_impl.util.properties.NotificationMailProperties;
@@ -34,15 +34,15 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendEmailNotification(String email) {
 
         if (!isEmailAddressBlocked(email)) {
-            Notification notification = createNotification(mail.getCode().getLength(), email);
+            RegistrationNotification registrationNotification = createNotification(mail.getCode().getLength(), email);
 
-            log.info("Creating notification: {}", notification);
+            log.info("Creating notification: {}", registrationNotification);
 
-            notificationRepository.save(notification);
+            notificationRepository.save(registrationNotification);
 
-            log.info("Created notification: {}", notification);
+            log.info("Created notification: {}", registrationNotification);
 
-            SimpleMailMessage message = createMessage(notification);
+            SimpleMailMessage message = createMessage(registrationNotification);
 
             log.info("Sending notification message: {}", message);
 
@@ -58,15 +58,15 @@ public class NotificationServiceImpl implements NotificationService {
 
         log.info("Confirmation whether code {} was sent by email {}", code, email);
 
-        Optional<Notification> notification = notificationRepository.findByEmail(email);
+        Optional<RegistrationNotification> notification = notificationRepository.findByEmail(email);
 
         if (notification.isPresent()) {
-            Notification savedNotification = notification.get();
+            RegistrationNotification savedRegistrationNotification = notification.get();
             Timestamp time = new Timestamp(
                     System.currentTimeMillis() - mail.getCode().getValid().getMillis());
 
-            if (savedNotification.getCode().equals(code)
-                    && savedNotification.getTime().compareTo(time) > 0) {
+            if (savedRegistrationNotification.getCode().equals(code)
+                    && savedRegistrationNotification.getTime().compareTo(time) > 0) {
                 return true;
             }
         }
@@ -79,13 +79,13 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void blockEmailAddress(String email) {
 
-        Notification notification = createBlockingNotification(email);
+        RegistrationNotification registrationNotification = createBlockingNotification(email);
 
-        log.info("Creating blocking notification: {}", notification);
+        log.info("Creating blocking notification: {}", registrationNotification);
 
-        notificationRepository.save(notification);
+        notificationRepository.save(registrationNotification);
 
-        log.info("Created blocking notification: {}", notification);
+        log.info("Created blocking notification: {}", registrationNotification);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         log.info("Checking if email address {} is blocked", email);
 
-        Optional<Notification> notification = notificationRepository.findByEmail(email);
+        Optional<RegistrationNotification> notification = notificationRepository.findByEmail(email);
 
         if (notification.isPresent() && notification.get().getStatus().equals(BLOCKED)
                 && notification.get().getTime().compareTo(
@@ -113,11 +113,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Notification> getNotification(String email) {
+    public Optional<RegistrationNotification> getNotification(String email) {
 
         log.info("Find notification by email: {}", email);
 
-        Optional<Notification> notification = notificationRepository.findByEmail(email);
+        Optional<RegistrationNotification> notification = notificationRepository.findByEmail(email);
 
         log.info("Found notification: {}", notification);
 

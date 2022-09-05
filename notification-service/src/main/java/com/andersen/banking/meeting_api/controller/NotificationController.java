@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.dto.NotificationDto;
+import com.andersen.banking.meeting_api.dto.RegistrationNotificationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +57,7 @@ public interface NotificationController {
             description = "get saved notification"
     )
     @GetMapping("/email/notification")
-    NotificationDto getNotification(
+    RegistrationNotificationDto getNotification(
             @AuthenticationPrincipal Jwt jwt
     );
 }

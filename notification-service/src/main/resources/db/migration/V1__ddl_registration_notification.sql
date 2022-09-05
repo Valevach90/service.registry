@@ -1,4 +1,4 @@
-CREATE TABLE notifications
+CREATE TABLE registration_notifications
 (
     email  VARCHAR(255),
     code   VARCHAR(255),

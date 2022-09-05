@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_db.entity.RegistrationNotification;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +46,5 @@ public interface NotificationService {
      *
      * @param email
      */
-    Optional<Notification> getNotification(String email);
+    Optional<RegistrationNotification> getNotification(String email);
 }

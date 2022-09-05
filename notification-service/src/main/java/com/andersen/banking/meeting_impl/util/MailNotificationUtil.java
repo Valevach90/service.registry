@@ -2,7 +2,7 @@ package com.andersen.banking.meeting_impl.util;
 
 import static java.lang.Math.pow;
 
-import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_db.entity.RegistrationNotification;
 import java.sql.Timestamp;
 import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.mail.SimpleMailMessage;
@@ -29,30 +29,30 @@ public class MailNotificationUtil {
         return String.format(codeFormatLength, randomNum);
     }
 
-    public static Notification createNotification(int notificationCodeLength, String email) {
+    public static RegistrationNotification createNotification(int notificationCodeLength, String email) {
 
         String code = generateCode(notificationCodeLength);
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        Notification notification = new Notification(email, code, time, SENT);
+        RegistrationNotification registrationNotification = new RegistrationNotification(email, code, time, SENT);
 
-        return notification;
+        return registrationNotification;
     }
 
-    public static Notification createBlockingNotification(String email) {
+    public static RegistrationNotification createBlockingNotification(String email) {
 
-        Notification notification = new Notification(email, "",
+        RegistrationNotification registrationNotification = new RegistrationNotification(email, "",
                 new Timestamp(System.currentTimeMillis()), BLOCKED);
 
-        return notification;
+        return registrationNotification;
     }
 
-    public static SimpleMailMessage createMessage(Notification notification) {
+    public static SimpleMailMessage createMessage(RegistrationNotification registrationNotification) {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setTo(notification.getEmail());
+        message.setTo(registrationNotification.getEmail());
         message.setSubject("Confirmation code");
-        message.setText(notification.getCode());
+        message.setText(registrationNotification.getCode());
 
         return message;
     }

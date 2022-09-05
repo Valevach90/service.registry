@@ -22,7 +22,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for notification")
-public class NotificationDto {
+public class RegistrationNotificationDto {
 
     @Schema(description = DESCRIPTION_EMAIL, example = EXAMPLE_EMAIL, defaultValue = EXAMPLE_EMAIL)
     @JsonProperty("email")

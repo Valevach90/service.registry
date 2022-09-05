@@ -3,8 +3,8 @@ package com.andersen.banking.meeting_impl.controller;
 import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.extractEmailFromToken;
 
 import com.andersen.banking.meeting_api.controller.NotificationController;
-import com.andersen.banking.meeting_api.dto.NotificationDto;
-import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_api.dto.RegistrationNotificationDto;
+import com.andersen.banking.meeting_db.entity.RegistrationNotification;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.mapper.NotificationMapper;
 import com.andersen.banking.meeting_impl.service.NotificationService;
@@ -80,19 +80,19 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public NotificationDto getNotification(Jwt jwt) {
+    public RegistrationNotificationDto getNotification(Jwt jwt) {
         String email = extractEmailFromToken(jwt);
 
         log.trace("Find notification by email: {}", email);
 
-        Optional<Notification> notification = notificationService.getNotification(email);
+        Optional<RegistrationNotification> notification = notificationService.getNotification(email);
 
-        NotificationDto notificationDto = notificationMapper.toNotificationDto(
+        RegistrationNotificationDto registrationNotificationDto = notificationMapper.toNotificationDto(
                 notification.orElseThrow(
-                        () -> new NotFoundException(Notification.class, email)));
+                        () -> new NotFoundException(RegistrationNotification.class, email)));
 
-        log.trace("Found notification: {}", notificationDto);
+        log.trace("Found notification: {}", registrationNotificationDto);
 
-        return notificationDto;
+        return registrationNotificationDto;
     }
 }

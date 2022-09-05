@@ -14,11 +14,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @Entity
-@Table(name = "notifications")
+@Table(name = "registration_notifications")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Notification {
+public class RegistrationNotification {
 
     @Id
     @Column(name = "email", nullable = false)

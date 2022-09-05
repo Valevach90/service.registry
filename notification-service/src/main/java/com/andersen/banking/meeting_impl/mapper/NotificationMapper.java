@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.mapper;
 
-import com.andersen.banking.meeting_api.dto.NotificationDto;
-import com.andersen.banking.meeting_db.entity.Notification;
+import com.andersen.banking.meeting_api.dto.RegistrationNotificationDto;
+import com.andersen.banking.meeting_db.entity.RegistrationNotification;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 
@@ -12,5 +12,5 @@ import org.mapstruct.Mapper;
 @Mapper(config = MapperConfig.class)
 public interface NotificationMapper {
 
-    NotificationDto toNotificationDto(Notification notification);
+    RegistrationNotificationDto toNotificationDto(RegistrationNotification registrationNotification);
 }
