@@ -10,7 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @OpenAPIDefinition(info = @Info(title = "Registration Service",
         description = "This is the API for the Registration Service of the MeetingRoom New project", version = "v1"))
-@SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2,
+@SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2, bearerFormat = "JWT",
+        scheme = "bearer",
         flows = @OAuthFlows(authorizationCode = @OAuthFlow(
                 authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
                 tokenUrl = "${springdoc.oAuthFlow.tokenUrl}", scopes = {
