@@ -27,12 +27,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api-docs/**",
+            "/v2/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/configuration/**",
+            "/webjars/**",
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/logout"
+    };
     @Autowired
     KeycloakProperties keycloak;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable()
+        http.csrf().disable()
                 .cors()
                 .and()
                 .authorizeRequests()
@@ -70,17 +82,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", corsConfiguration.applyPermitDefaultValues());
         return source;
     }
-
-    private static final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/api-docs/**",
-            "/v2/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-resources/**",
-            "/configuration/**",
-            "/webjars/**",
-            "/api/v1/auth/refresh",
-            "/api/v1/auth/logout"
-    };
 }

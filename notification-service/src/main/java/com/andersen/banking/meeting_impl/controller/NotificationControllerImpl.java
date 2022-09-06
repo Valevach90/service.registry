@@ -11,6 +11,7 @@ import com.andersen.banking.meeting_impl.service.NotificationService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,9 @@ public class NotificationControllerImpl implements NotificationController {
     private final NotificationMapper notificationMapper;
 
     @Override
-    public void sendEmailNotification(Jwt jwt) {
+    public void sendEmailNotification(Authentication authentication) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
 
         String email = extractEmailFromToken(jwt);
 
@@ -41,7 +44,9 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public Boolean confirmEmailNotification(Jwt jwt, String code) {
+    public Boolean confirmEmailNotification(Authentication authentication, String code) {
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
 
         String email = extractEmailFromToken(jwt);
 
@@ -56,7 +61,9 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public void blockEmailAddress(Jwt jwt) {
+    public void blockEmailAddress(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+
         String email = extractEmailFromToken(jwt);
 
         log.trace("Block email {} for notifications", email);
@@ -67,7 +74,9 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public Boolean isEmailAddressBlocked(Jwt jwt) {
+    public Boolean isEmailAddressBlocked(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+
         String email = extractEmailFromToken(jwt);
 
         log.trace("Checking if email {} is blocked", email);
@@ -80,7 +89,9 @@ public class NotificationControllerImpl implements NotificationController {
     }
 
     @Override
-    public RegistrationNotificationDto getNotification(Jwt jwt) {
+    public RegistrationNotificationDto getNotification(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+
         String email = extractEmailFromToken(jwt);
 
         log.trace("Find notification by email: {}", email);

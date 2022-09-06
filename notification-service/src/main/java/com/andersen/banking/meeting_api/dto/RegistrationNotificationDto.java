@@ -9,15 +9,6 @@ import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_NOT
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_NOTIFICATION_STATUS;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TIME;
 
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_EMAIL;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_NOTIFICATION_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_NOTIFICATION_STATUS;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_NOTIFICATION_TIME;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_EMAIL;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_NOTIFICATION_CODE;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_NOTIFICATION_STATUS;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_TIME;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
