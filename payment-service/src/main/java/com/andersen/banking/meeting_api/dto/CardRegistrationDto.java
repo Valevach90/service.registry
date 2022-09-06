@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CardRegistrationDto {
 
-  @Min(1L)
   @NotNull
   @JsonProperty("account_id")
   private UUID accountId;

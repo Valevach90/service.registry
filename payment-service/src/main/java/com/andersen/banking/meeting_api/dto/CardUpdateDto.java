@@ -26,7 +26,6 @@ public class CardUpdateDto {
   @NotNull
   private UUID id;
 
-  @Min(1L)
   @NotNull
   @JsonProperty("account_id")
   private UUID accountId;
