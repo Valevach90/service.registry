@@ -14,7 +14,7 @@ import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTes
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = RegularPaymentMapperImpl.class)
-public class RegularPaymentMapperTest {
+class RegularPaymentMapperTest {
 
     private final RegularPayment regularPayment = populateRegularPayment();
     private final RegularPaymentRequestDto regularPaymentRequestDto = populateRegularPaymentRequestDto();

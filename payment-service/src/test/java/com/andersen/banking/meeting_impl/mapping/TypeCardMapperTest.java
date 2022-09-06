@@ -15,7 +15,7 @@ import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator
 import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCardUpdateDto;
 
 @SpringBootTest(classes = TypeCardMapperImpl.class)
-public class TypeCardMapperTest {
+class TypeCardMapperTest {
 
     private TypeCard typeCard;
     private TypeCardResponseDto typeCardResponseDto;

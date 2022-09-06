@@ -14,6 +14,12 @@ spring:
     schemas: notification_service
     user: psqluser
     password: PoSPa$$woRd
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
+          jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
 logging:
   level:
@@ -46,3 +52,25 @@ springdoc:
   model-converters:
     pageable-converter:
       enabled: true
+  oAuthFlow:
+    authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
+    tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
+    use-pkce-with-authorization-code-grant: true
+
+notification:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    sender:
+      username: sergei.yurevich@gmail.com
+      password: ozfbcmmrgpxwlbdm
+    code:
+      length: 4
+      valid:
+        millis: 60000
+    blocking:
+      time:
+        millis: 2700000
+
+app:
+  firebase-configuration-file: meetingroom-notification-firebase-adminsdk-dyfbb-b4f0e42672.json

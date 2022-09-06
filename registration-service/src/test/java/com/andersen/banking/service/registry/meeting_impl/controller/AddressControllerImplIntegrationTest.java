@@ -1,24 +1,5 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Address;
-import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
-import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
-import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
-import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,6 +8,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
+import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
+import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
+import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -85,7 +84,9 @@ class AddressControllerImplIntegrationTest {
     @Test
     void whenFindById_andOk() throws Exception {
 
-        address = addressService.findById(random.nextLong(0, addressService.findAllAddresses().size())).orElse(null);
+        address = addressService.findById(
+                random.nextLong(0, addressService.findAllAddresses().size())
+        ).orElse(null);
 
         mvc.perform(
                         get("/api/v1/addresses/" + address.getId())
@@ -93,7 +94,7 @@ class AddressControllerImplIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(address.getId()))
-                .andExpect(jsonPath("$.userId").value(address.getUser().getId()))
+                .andExpect(jsonPath("$.userId").value(address.getUser().getId().toString()))
                 .andExpect(jsonPath("$.zipCode").value(address.getZipCode()))
                 .andExpect(jsonPath("$.country").value(address.getCountry()))
                 .andExpect(jsonPath("$.region").value(address.getRegion()))
@@ -117,7 +118,7 @@ class AddressControllerImplIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(address.getId()))
-                .andExpect(jsonPath("$.userId").value(address.getUser().getId()))
+                .andExpect(jsonPath("$.userId").value(address.getUser().getId().toString()))
                 .andExpect(jsonPath("$.zipCode").value(address.getZipCode()))
                 .andExpect(jsonPath("$.country").value(address.getCountry()))
                 .andExpect(jsonPath("$.region").value(address.getRegion()))
@@ -151,7 +152,7 @@ class AddressControllerImplIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(address.getId()))
-                .andExpect(jsonPath("$.userId").value(address.getUser().getId()))
+                .andExpect(jsonPath("$.userId").value(address.getUser().getId().toString()))
                 .andExpect(jsonPath("$.zipCode").value(address.getZipCode()))
                 .andExpect(jsonPath("$.country").value(address.getCountry()))
                 .andExpect(jsonPath("$.region").value(address.getRegion()))

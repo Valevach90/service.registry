@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,11 +38,11 @@ public class RegularPaymentRequestDto {
 
     @JsonProperty("source_card_id")
     @NotNull
-    private Long sourceCardId;
+    private UUID sourceCardId;
 
     @JsonProperty("recipient_card_id")
     @NotNull
-    private Long recipientCardId;
+    private UUID recipientCardId;
 
     @JsonProperty("amount")
     @NotNull

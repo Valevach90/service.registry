@@ -1,11 +1,10 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service for working with address.
@@ -17,7 +16,7 @@ public interface UserService {
      * @param id Id of user
      * @return User
      */
-    Optional<User> findById(Long id);
+    Optional<User> findById(UUID id);
 
     /**
      * Find all users.
@@ -39,7 +38,7 @@ public interface UserService {
      *
      * @param id Id of user
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     /**
      * Create new user.

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.util.UUID;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ import lombok.Data;
 public class AccountDto {
 
     @JsonProperty("id")
-    private Long id;
+    private UUID id;
 
     @NotBlank
     @JsonProperty("account_number")
@@ -40,7 +41,7 @@ public class AccountDto {
     @Min(1L)
     @NotNull
     @JsonProperty("owner_id")
-    private Long ownerId;
+    private UUID ownerId;
 
     @NotBlank
     @JsonProperty("currency")

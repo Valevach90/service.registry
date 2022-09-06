@@ -1,12 +1,10 @@
 package com.andersen.banking.service.registry.meeting_db.repositories;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
     /**
@@ -15,5 +13,5 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
      * @param userId address for filtering results
      * @return address with filtration by user id
      */
-    Optional<Address> findAddressByUserId(Long userId);
+    Optional<Address> findAddressByUserId(UUID userId);
 }

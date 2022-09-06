@@ -1,9 +1,11 @@
 package com.andersen.banking.meeting_db.entities;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,9 +17,12 @@ import java.time.LocalDate;
 public class RegularPayment {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
 
     @Column(name = "payment_description", nullable = false)
     private String description;

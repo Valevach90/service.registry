@@ -19,6 +19,7 @@ import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,8 +29,12 @@ import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator
 @SpringBootTest(classes = CardServiceImpl.class)
 public class CardServiceImplTest {
 
-    private static final Long ID = 17L;
-    private static final Long TYPE_CARD_ID = 1L;
+    private static final UUID ID = UUID.randomUUID();
+
+    private static final UUID ACCOUNT_ID = UUID.randomUUID();
+
+    private static final UUID OWNER_ID = UUID.randomUUID();
+    private static final UUID TYPE_CARD_ID = UUID.randomUUID();
     private static final Integer NUMBER_PAGE = 0;
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "accountId";
@@ -143,7 +148,7 @@ public class CardServiceImplTest {
 
     @Test
     void create_ShouldReturnCard_WhenReceivedCardIsCorrect() {
-        Mockito.when(accountService.findById(5L)).thenReturn(populateAccount(new Account()));
+        Mockito.when(accountService.findById(ACCOUNT_ID)).thenReturn(populateAccount(new Account()));
         Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
         TypeCard typeCard = returnedCard.getTypeCard();
@@ -199,9 +204,9 @@ public class CardServiceImplTest {
         Pageable pageable = createPageable();
         Page<Card> page = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
-        Mockito.when(cardRepository.findCardByAccount_OwnerId(3L, pageable)).thenReturn(page);
+        Mockito.when(cardRepository.findCardByAccount_OwnerId(OWNER_ID, pageable)).thenReturn(page);
 
-        Page<Card> result = cardService.findByOwnerId(3L, pageable);
+        Page<Card> result = cardService.findByOwnerId(OWNER_ID, pageable);
 
         Assertions.assertEquals(page, result);
     }
@@ -213,16 +218,16 @@ public class CardServiceImplTest {
         Page<Card> page = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
         Account account = new Account();
-        account.setId(1L);
+        account.setId(ACCOUNT_ID);
 
         Card card = new Card();
-        card.setId(1L);
+        card.setId(ID);
         card.setAccount(account);
 
-        Mockito.when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
-        Mockito.when(cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L, 1L, pageable)).thenReturn(page);
+        Mockito.when(cardRepository.findById(ID)).thenReturn(Optional.of(card));
+        Mockito.when(cardRepository.findByAccount_OwnerIdAndAccount_IdNot(OWNER_ID, ACCOUNT_ID, pageable)).thenReturn(page);
 
-        Page<Card> result = cardService.findByOwnerIdExceptCard(1L, 1L, pageable);
+        Page<Card> result = cardService.findByOwnerIdExceptCard(OWNER_ID, ID, pageable);
 
         Assertions.assertEquals(page, result);
     }
@@ -231,9 +236,9 @@ public class CardServiceImplTest {
     void findByOwnerIdExceptCard_ShouldThrowNotFoundException_WhenCardIdIsIncorrect() {
         Pageable pageable = createPageable();
 
-        Mockito.when(cardRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(cardRepository.findById(ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> cardService.findByOwnerIdExceptCard(1L, 1L, pageable));
+        Assertions.assertThrows(NotFoundException.class, () -> cardService.findByOwnerIdExceptCard(OWNER_ID, ID, pageable));
     }
 
     private List<Card> generateCards() {
@@ -263,7 +268,7 @@ public class CardServiceImplTest {
     }
 
     private Account populateAccount(Account account) {
-        account.setId(5L);
+        account.setId(ACCOUNT_ID);
         account.setAccountNumber("1234567890");
         return account;
     }
@@ -272,12 +277,12 @@ public class CardServiceImplTest {
         TypeCard typeCard = new TypeCard();
         switch (type) {
             case "VISAS": {
-                typeCard.setId(1L);
+                typeCard.setId(UUID.randomUUID());
                 typeCard.setPaymentSystem("VISA");
                 typeCard.setTypeName("STANDARD");
             }
             case "MASTERCARDS": {
-                typeCard.setId(4L);
+                typeCard.setId(UUID.randomUUID());
                 typeCard.setPaymentSystem("MASTERCARD");
                 typeCard.setTypeName("STANDARD");
             }

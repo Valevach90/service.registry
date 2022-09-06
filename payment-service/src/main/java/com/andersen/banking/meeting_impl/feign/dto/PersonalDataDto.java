@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
 
 import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
@@ -16,6 +17,7 @@ import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for personal data")
 public class PersonalDataDto {

@@ -1,22 +1,24 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
+import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {
         AddressGenerator.class,
@@ -26,9 +28,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class AddressServiceImplTest {
 
     private Address address;
+    private User user;
+    private static final UUID UUID_ID = UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464");
 
     @MockBean
     private AddressRepository addressRepository;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Autowired
     private AddressService addressService;
@@ -38,11 +45,25 @@ class AddressServiceImplTest {
     private UserGenerator userGenerator;
 
     @BeforeEach
-    void initData(
-            @Autowired AddressGenerator addressGenerator,
-            @Autowired UserGenerator userGenerator)
-    {
-        address = addressGenerator.generateAddress(userGenerator.generateUser());
+    void initData() {
+        user = userGenerator.generateUser();
+        address = addressGenerator.generateAddress(user);
+    }
+
+    @Test
+    void whenCreateAddress_andOk() {
+
+        Optional<Address> addressCheck = Optional.of(address);
+
+        Mockito.when(userRepository.getById(UUID_ID))
+                .thenReturn(user);
+
+        Mockito.when(addressRepository.save(address))
+                .thenReturn(address);
+
+        Address result = addressService.create(address);
+
+        assertEquals(address, result);
     }
 
     @Test
@@ -50,9 +71,8 @@ class AddressServiceImplTest {
 
         Optional<Address> addressCheck = Optional.of(address);
 
-        Mockito
-        .when(addressRepository.findById(address.getId()))
-        .thenReturn(addressCheck);
+        Mockito.when(addressRepository.findById(address.getId()))
+                .thenReturn(addressCheck);
 
         Optional<Address> result = addressService.findById(address.getId());
 
@@ -64,8 +84,7 @@ class AddressServiceImplTest {
 
         Optional<Address> addressCheck = Optional.of(address);
 
-        Mockito
-                .when(addressRepository.findAddressByUserId(address.getUser().getId()))
+        Mockito.when(addressRepository.findAddressByUserId(address.getUser().getId()))
                 .thenReturn(addressCheck);
 
         Optional<Address> result = addressService.findAddressByUserId(address.getUser().getId());
@@ -76,7 +95,8 @@ class AddressServiceImplTest {
     @Test
     void findAllAddress_andOk() {
 
-        List<Address> addresses = Stream.generate(() -> addressGenerator.generateAddress(userGenerator.generateUser()))
+        List<Address> addresses = Stream.generate(
+                        () -> addressGenerator.generateAddress(userGenerator.generateUser()))
                 .filter(element -> element.getCountry().length() <= 30)
                 .limit(100).toList();
         Mockito

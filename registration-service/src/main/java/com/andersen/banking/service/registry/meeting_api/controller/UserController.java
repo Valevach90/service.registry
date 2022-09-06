@@ -1,19 +1,24 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
-import com.andersen.banking.service.registry.meeting_db.entities.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for mapping users.
@@ -34,14 +39,14 @@ public interface UserController {
             description = "get user information by id")
     @GetMapping("/users/{id}")
     UserDto findById(@Parameter(description = "user id", required = true)
-                         @PathVariable Long id);
+    @PathVariable UUID id);
 
     @Operation(summary = "Create user",
             description = "create user by params in dto object")
     @PostMapping("/users")
     UserDto create(@Parameter(description = "user", required = true)
-                         @RequestBody
-                         @Validated UserDto userDto);
+    @RequestBody
+    @Validated UserDto userDto);
 
     @Operation(summary = "Update user",
             description = "update user by params in dto object")
@@ -55,5 +60,5 @@ public interface UserController {
             description = "delete user by id")
     @DeleteMapping("/users/{id}")
     void deleteById(@Parameter(description = "user id", required = true)
-                         @PathVariable Long id);
+    @PathVariable UUID id);
 }

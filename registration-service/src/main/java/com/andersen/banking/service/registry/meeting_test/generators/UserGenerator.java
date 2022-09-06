@@ -2,20 +2,18 @@ package com.andersen.banking.service.registry.meeting_test.generators;
 
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.github.javafaker.Faker;
-import org.springframework.stereotype.Component;
-
+import java.util.UUID;
 import javax.annotation.PostConstruct;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserGenerator {
 
-    private static final AtomicLong counter = new AtomicLong(1L);
     private Faker faker;
 
     public User generateUser() {
         var user = new User();
-        user.setId(counter.getAndIncrement());
+        user.setId(UUID.randomUUID());
         user.setFirstName(faker.name().firstName());
         user.setLastName(faker.name().lastName());
         user.setEmail(faker.internet().emailAddress());

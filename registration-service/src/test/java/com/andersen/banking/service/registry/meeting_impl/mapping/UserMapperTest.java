@@ -1,13 +1,14 @@
 package com.andersen.banking.service.registry.meeting_impl.mapping;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(classes = UserMapperImpl.class)
@@ -22,7 +23,7 @@ class UserMapperTest {
     @BeforeEach
     void initData() {
         user = new User();
-        user.setId(1L);
+        user.setId(UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464"));
         user.setFirstName("1");
         user.setLastName("1");
         user.setEmail("1");
@@ -30,7 +31,7 @@ class UserMapperTest {
         user.setPhone("1");
 
         userDto = new UserDto();
-        userDto.setId(1L);
+        userDto.setId(UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464"));
         userDto.setFirstName("1");
         userDto.setLastName("1");
         userDto.setEmail("1");

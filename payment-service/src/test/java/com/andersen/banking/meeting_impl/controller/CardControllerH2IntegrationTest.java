@@ -29,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +38,13 @@ import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CardControllerH2IntegrationTest {
+
+    private final UUID TYPE_CARD_ID_1 = UUID.randomUUID();
+
+    private final UUID TYPE_CARD_ID_2 = UUID.randomUUID();
+
+    private final UUID TYPE_CARD_ID_3 = UUID.randomUUID();
+    private final UUID OWNER_ID = UUID.randomUUID();
     private Account account1;
     private Account account2;
     private Account account3;
@@ -70,20 +78,21 @@ public class CardControllerH2IntegrationTest {
 
     @BeforeEach
     public void setUp() {
+
         typeCardRepository.save(createTypeCard("VISAS"));
         typeCardRepository.save(createTypeCard("MASTERCARDS"));
         typeCardRepository.save(createTypeCard("MASTERCARDSPLAT"));
 
         Account acc1 = AccountUnitTestGenerator.populateAccount(new Account());
-        acc1.setOwnerId(1L);
+        acc1.setOwnerId(OWNER_ID);
         account1 = accountRepository.save(acc1);
 
         Account acc2 = AccountUnitTestGenerator.populateAccount(new Account());
-        acc2.setOwnerId(1L);
+        acc2.setOwnerId(OWNER_ID);
         account2 = accountRepository.save(acc2);
 
         Account acc3 = AccountUnitTestGenerator.populateAccount(new Account());
-        acc3.setOwnerId(2L);
+        acc3.setOwnerId(UUID.randomUUID());
         account3 = accountRepository.save(acc3);
 
         cards = generateCards();
@@ -94,7 +103,7 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findTypeCardById_AndOk() {
-        final Long typeCardId = 1L;
+        final UUID typeCardId = UUID.randomUUID();
 
         TypeCardResponseDto response = restTemplate
                 .getForObject(baseUrl + "/types/{id}", TypeCardResponseDto.class, typeCardId);
@@ -106,7 +115,7 @@ public class CardControllerH2IntegrationTest {
     //fix with authorization
     @Disabled
     void updateTypeCard_andOk() {
-        final Long typeCardId = 1L;
+        final UUID typeCardId = UUID.randomUUID();
 
         restTemplate.put(baseUrl + "/types/{id}", typeCardId, typeCardUpdateDto);
 
@@ -160,13 +169,15 @@ public class CardControllerH2IntegrationTest {
 
     @Test
     void findAllByOwner_ShouldReturnSizeOfCards() {
-        Page<Card> cardByAccount_ownerId = cardRepository.findCardByAccount_OwnerId(1L, Pageable.unpaged());
+
+
+        Page<Card> cardByAccount_ownerId = cardRepository.findCardByAccount_OwnerId(OWNER_ID, Pageable.unpaged());
         Assertions.assertEquals(5, cardByAccount_ownerId.getSize());
     }
 
     @Test
     void findByOwnerIdAndAccountIdIsNot_ShouldReturnSizeOfCards() {
-        Page<Card> cardByAccount_ownerId = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(1L, 2L, Pageable.unpaged());
+        Page<Card> cardByAccount_ownerId = cardRepository.findByAccount_OwnerIdAndAccount_IdNot(OWNER_ID, TYPE_CARD_ID_2, Pageable.unpaged());
         Assertions.assertEquals(2, cardByAccount_ownerId.getSize());
     }
 
@@ -225,19 +236,19 @@ public class CardControllerH2IntegrationTest {
         TypeCard typeCard = new TypeCard();
         switch (type) {
             case "VISAS": {
-                typeCard.setId(1L);
+                typeCard.setId(TYPE_CARD_ID_1);
                 typeCard.setPaymentSystem("VISA");
                 typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDS": {
-                typeCard.setId(2L);
+                typeCard.setId(TYPE_CARD_ID_2);
                 typeCard.setPaymentSystem("MASTERCARD");
                 typeCard.setTypeName("SILVER");
                 break;
             }
             case "MASTERCARDSPLAT": {
-                typeCard.setId(3L);
+                typeCard.setId(TYPE_CARD_ID_3);
                 typeCard.setPaymentSystem("MASTERCARD");
                 typeCard.setTypeName("PLATINUM");
                 break;
