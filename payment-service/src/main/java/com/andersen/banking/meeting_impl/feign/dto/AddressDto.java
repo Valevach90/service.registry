@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
@@ -16,6 +17,7 @@ import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
  * Address Dto with full information about user.
  */
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for address")
 public class AddressDto {
