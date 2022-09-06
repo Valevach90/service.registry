@@ -20,9 +20,7 @@ import org.springframework.context.annotation.Configuration;
                 authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
                 tokenUrl = "${springdoc.oAuthFlow.tokenUrl}",
                 scopes = {
-                        @OAuthScope(name = "openid", description = "openid"),
-                        @OAuthScope(name = "read", description = "read scope"),
-                        @OAuthScope(name = "write", description = "write scope")})))
+                        @OAuthScope(name = "openid", description = "openid")})))
 public class OpenApiConfig {
 
 }
