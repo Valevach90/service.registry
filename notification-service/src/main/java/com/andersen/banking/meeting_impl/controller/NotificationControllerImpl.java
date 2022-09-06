@@ -31,9 +31,7 @@ public class NotificationControllerImpl implements NotificationController {
     @Override
     public void sendEmailNotification(Authentication authentication) {
 
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String email = extractEmailFromToken(jwt);
+        String email = getEmail(authentication);
 
         log.trace("Sending email notification: {}", email);
 
@@ -46,9 +44,7 @@ public class NotificationControllerImpl implements NotificationController {
     @Override
     public Boolean confirmEmailNotification(Authentication authentication, String code) {
 
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String email = extractEmailFromToken(jwt);
+        String email = getEmail(authentication);
 
         log.trace("Confirmation whether code {} was sent by mail {}", code, email);
 
@@ -62,9 +58,7 @@ public class NotificationControllerImpl implements NotificationController {
 
     @Override
     public void blockEmailAddress(Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String email = extractEmailFromToken(jwt);
+        String email = getEmail(authentication);
 
         log.trace("Block email {} for notifications", email);
 
@@ -73,11 +67,14 @@ public class NotificationControllerImpl implements NotificationController {
         log.trace("Email {} blocked for notifications", email);
     }
 
+    private static String getEmail(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        return extractEmailFromToken(jwt);
+    }
+
     @Override
     public Boolean isEmailAddressBlocked(Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String email = extractEmailFromToken(jwt);
+        String email = getEmail(authentication);
 
         log.trace("Checking if email {} is blocked", email);
 
@@ -90,9 +87,7 @@ public class NotificationControllerImpl implements NotificationController {
 
     @Override
     public RegistrationNotificationDto getNotification(Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String email = extractEmailFromToken(jwt);
+        String email = getEmail(authentication);
 
         log.trace("Find notification by email: {}", email);
 
