@@ -19,6 +19,7 @@ public class DepositServiceTestEntitiesGenerator {
 
     public static final UUID UUID = new UUID(11,22);
     public static final Long ID = 1L;
+    public static final UUID UUID_ID = UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
     public static final String DEPOSIT_NUMBER = "0001";
     public static final String CURRENCY_NAME = "EUR";
     public static final List<String> possibleCurrencyNames = List.of("USD", "RUB", "EU");
@@ -45,7 +46,6 @@ public class DepositServiceTestEntitiesGenerator {
 
     public static Currency generateCurrency(){
         Currency currency = new Currency();
-
         currency.setId(ID);
         currency.setName(CURRENCY_NAME);
 
@@ -210,6 +210,7 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setType(                     generateDepositTypeDto(deposit.getType()));
         depositDto.setCurrency(                 generateCurrencyDto(deposit.getCurrency()));
         depositDto.setTermMonths(               deposit.getTermMonths());
+        depositDto.setOpenDate(                 deposit.getOpenDate());
         depositDto.setAmount(                   deposit.getAmount());
         depositDto.setInterestRate(             deposit.getInterestRate());
         depositDto.setFixedInterest(            deposit.getFixedInterest());
@@ -267,6 +268,7 @@ public class DepositServiceTestEntitiesGenerator {
         transferDto.setDestinationNumber(transfer.getDestinationNumber());
         transferDto.setDestinationType(transfer.getDestinationType());
         transferDto.setAmount(transfer.getAmount());
+        transferDto.setCurrencyName(transfer.getCurrencyName());
         transferDto.setTime(transfer.getTime());
         transferDto.setResult(transfer.getResult());
         transferDto.setStatusDescription(transfer.getStatusDescription());

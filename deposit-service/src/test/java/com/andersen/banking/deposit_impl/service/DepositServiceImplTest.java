@@ -34,6 +34,14 @@ public class DepositServiceImplTest {
 
     @MockBean
     DepositRepository depositRepository;
+    @MockBean
+    TransferRepository transferRepository;
+    @MockBean
+    TransferMapper transferMapper;
+    @MockBean
+    DepositMapper depositMapper;
+    @MockBean
+    TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
     @MockBean
     TransferRepository transferRepository;
