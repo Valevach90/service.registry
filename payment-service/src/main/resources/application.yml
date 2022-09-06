@@ -20,10 +20,12 @@ spring:
     password: PoSPa$$woRd
 
   kafka:
-    groupId: my_group
+    groupId: payment-service
     bootstrapAddress: 10.10.14.68:19092
-    topicName: test
+    transfer_request_topic_name: transfer_to_payment_request
+    transfer_response_topic_name: to_transfer_response
     maxRetryAttempts: 3
+
 
 logging:
   level:
