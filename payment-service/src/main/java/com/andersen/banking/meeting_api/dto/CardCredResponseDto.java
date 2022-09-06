@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class CardCredResponseDto {
 
     @NotNull
     @JsonProperty("id")
-    private Long id;
+    private UUID id;
 
     @NotBlank
     @JsonProperty("last_four_numbers")

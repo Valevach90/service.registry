@@ -5,6 +5,8 @@ import com.andersen.banking.meeting_db.entities.TypeCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 /** This interface presents the basic contract for service, which works with Card entity. */
 public interface CardService {
 
@@ -14,7 +16,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  Card findById(Long id);
+  Card findById(UUID id);
 
   /**
    * This method returns page of Card entities.
@@ -38,7 +40,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  Card deleteById(Long id);
+  Card deleteById(UUID id);
 
   /**
    * This method registers new Card.
@@ -54,7 +56,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  Page<Card> findByAccountId(Long id, Pageable pageable);
+  Page<Card> findByAccountId(UUID id, Pageable pageable);
 
   /**
    * This method returns page of card by payment or type or all together. If type and payment system
@@ -73,7 +75,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  TypeCard getTypeCard(Long id);
+  TypeCard getTypeCard(UUID id);
 
   /**
    * This method updates the given card type and returns updated version.
@@ -89,7 +91,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  Page<Card> findByOwnerId(Long id, Pageable pageable);
+  Page<Card> findByOwnerId(UUID id, Pageable pageable);
 
   /**
    * This method returns page of cards by owner_id except card in use.
@@ -97,7 +99,7 @@ public interface CardService {
    * @param id
    * @return
    */
-  Page<Card> findByOwnerIdExceptCard(Long id, Long cardId, Pageable pageable);
+  Page<Card> findByOwnerIdExceptCard(UUID id, UUID cardId, Pageable pageable);
 
   /**
    * This method return Card by card's numbers

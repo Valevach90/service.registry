@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 /**
  * This class presents an entity, which is available via TypeCardController endpoints.
@@ -20,7 +21,7 @@ public class TypeCardUpdateDto {
 
     @NotNull
     @JsonProperty("id")
-    private Long id;
+    private UUID id;
 
     @NotNull
     @JsonProperty("payment_system")

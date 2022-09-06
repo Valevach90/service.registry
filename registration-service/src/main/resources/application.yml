@@ -1,7 +1,6 @@
 server:
   port: 8181
 
-
 spring:
   application:
     name: registration-service
@@ -101,22 +100,3 @@ keycloak:
     password: admin
     grant_type: password
     client_id: gateway-user-management
-
-app:
-  firebase-configuration-file: meetingroom-notification-firebase-adminsdk-dyfbb-b4f0e42672.json
-
-notification:
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    sender:
-      username: sergei.yurevich@gmail.com
-      password: ozfbcmmrgpxwlbdm
-    code:
-      length: 4
-      valid:
-        millis: 60000
-    blocking:
-      time:
-        millis: 2700000
-

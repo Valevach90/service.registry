@@ -19,7 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-/** Implementation class for CardController. */
+import java.util.UUID;
+
+/**
+ * Implementation class for CardController.
+ */
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +43,7 @@ public class CardControllerImpl implements CardController {
    * @return
    */
   @Override
-  public CardResponseDto findById(@PathVariable Long id) {
+  public CardResponseDto findById(@PathVariable UUID id) {
     log.trace("Receiving card id: {}", id);
 
     CardResponseDto cardResponseDto = cardMapper.toCardResponseDto(cardService.findById(id));
@@ -64,7 +69,7 @@ public class CardControllerImpl implements CardController {
   }
 
   @Override
-  public Page<CardResponseDto> findAllByAccountId(Long id, Pageable pageable) {
+  public Page<CardResponseDto> findAllByAccountId(UUID id, Pageable pageable) {
     log.trace("Receiving request for getting all cards by account id");
 
     Page<CardResponseDto> result =
@@ -99,7 +104,7 @@ public class CardControllerImpl implements CardController {
    * @return
    */
   @Override
-  public CardResponseDto deleteById(Long id) {
+  public CardResponseDto deleteById(UUID id) {
     log.trace("Receiving card id {}", id);
 
     Card deletedCard = cardService.deleteById(id);
@@ -145,7 +150,7 @@ public class CardControllerImpl implements CardController {
    * @return
    */
   @Override
-  public TypeCardResponseDto findTypeCardById(Long id) {
+  public TypeCardResponseDto findTypeCardById(UUID id) {
     log.info("Find card type by id : {}", id);
     return typeCardMapper.typeCard2TypeCardResponseDto(cardService.getTypeCard(id));
   }
@@ -172,7 +177,7 @@ public class CardControllerImpl implements CardController {
    * @return
    */
   @Override
-  public Page<CardResponseDto> findAllByOwner(Long id, Pageable pageable) {
+  public Page<CardResponseDto> findAllByOwner(UUID id, Pageable pageable) {
     log.trace("Receiving request for getting all cards by owner");
 
     Page<CardResponseDto> result =
@@ -193,11 +198,9 @@ public class CardControllerImpl implements CardController {
    * @return
    */
   @Override
-  public Page<CardResponseDto> findAllExceptChosenByOwnerId(
-      Long ownerId, Long cardId, Pageable pageable) {
-    return cardService
-        .findByOwnerIdExceptCard(ownerId, cardId, pageable)
-        .map(cardMapper::toCardResponseDto);
+  public Page<CardResponseDto> findAllExceptChosenByOwnerId(UUID ownerId, UUID cardId, Pageable pageable) {
+    return cardService.findByOwnerIdExceptCard(ownerId, cardId, pageable)
+            .map(cardMapper::toCardResponseDto);
   }
 
   /**
@@ -210,9 +213,8 @@ public class CardControllerImpl implements CardController {
   public Page<CardResponseDto> findAllByCurrentUser(Pageable pageable) {
 
     log.trace("Receiving request for getting all cards by owner");
-    Long userId = registrationClient.getUserPersonalData().getUser().getId();
-    Page<CardResponseDto> result =
-        cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
+    UUID userId = registrationClient.getUserPersonalData().getUser().getId();
+    Page<CardResponseDto> result = cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
 
     log.trace("Returning page of cards: {}", result.getContent());
 
@@ -220,19 +222,15 @@ public class CardControllerImpl implements CardController {
   }
 
   /**
-   * End-point to find all Cards for the current user except chosen card and cards who have the same
-   * account
-   *
+   * End-point to find all Cards for the current user except chosen card and cards who have the same account
    * @param cardId
    * @param pageable
    * @return
    */
   @Override
-  public Page<CardResponseDto> findAllExceptChosenByCurrentUser(Long cardId, Pageable pageable) {
-    Long userId = registrationClient.getUserPersonalData().getUser().getId();
-    Page<CardResponseDto> result =
-        cardService
-            .findByOwnerIdExceptCard(userId, cardId, pageable)
+  public Page<CardResponseDto> findAllExceptChosenByCurrentUser(UUID cardId, Pageable pageable) {
+    UUID userId = registrationClient.getUserPersonalData().getUser().getId();
+    Page<CardResponseDto> result = cardService.findByOwnerIdExceptCard(userId, cardId, pageable)
             .map(cardMapper::toCardResponseDto);
     return result;
   }
