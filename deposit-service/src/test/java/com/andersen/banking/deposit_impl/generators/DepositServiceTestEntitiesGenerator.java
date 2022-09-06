@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 public class DepositServiceTestEntitiesGenerator {
 
+    public static final UUID UUID = new UUID(11,22);
     public static final Long ID = 1L;
     public static final UUID UUID_ID = UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
     public static final String DEPOSIT_NUMBER = "0001";
@@ -51,7 +52,7 @@ public class DepositServiceTestEntitiesGenerator {
         return currency;
     }
 
-    public static Currency generateRandomCurrency() {
+    public static Currency generateRandomCurrency(){
         Currency currency = new Currency();
 
         Random random = new Random();
@@ -183,6 +184,26 @@ public class DepositServiceTestEntitiesGenerator {
         DepositDto depositDto = new DepositDto();
         List<TransferDto> transfersDto = new ArrayList<>();
 
+        depositDto.setId(deposit.getId());
+        depositDto.setDepositNumber(deposit.getDepositNumber());
+        depositDto.setDepositProduct(generateDepositProductDto(deposit.getDepositProduct()));
+        depositDto.setType(generateDepositTypeDto(deposit.getType()));
+        depositDto.setCurrency(generateCurrencyDto(deposit.getCurrency()));
+        depositDto.setTermMonths(deposit.getTermMonths());
+        depositDto.setOpenDate(deposit.getOpenDate());
+        depositDto.setAmount(deposit.getAmount());
+        depositDto.setInterestRate(deposit.getInterestRate());
+        depositDto.setFixedInterest(deposit.getFixedInterest());
+        depositDto.setReplenishmentSourceNumber(deposit.getReplenishmentSourceNumber());
+        depositDto.setSubsequentReplenishment(deposit.getSubsequentReplenishment());
+        depositDto.setWithdrawalDestinationNumber(deposit.getWithdrawalDestinationNumber());
+        depositDto.setEarlyWithdrawal(deposit.getEarlyWithdrawal());
+        depositDto.setInterestWithdrawal(deposit.getInterestWithdrawal());
+        depositDto.setCapitalization(deposit.getCapitalization());
+        depositDto.setIsRevocable(deposit.getIsRevocable());
+        depositDto.setUserId(deposit.getUserId());
+
+        for (Transfer transfer : deposit.getTransfers()) {
         depositDto.setId(                       deposit.getId());
         depositDto.setDepositNumber(            deposit.getDepositNumber());
         depositDto.setDepositProduct(           generateDepositProductDto(deposit.getDepositProduct()));
@@ -202,7 +223,6 @@ public class DepositServiceTestEntitiesGenerator {
         depositDto.setIsRevocable(              deposit.getIsRevocable());
         depositDto.setUserId(                   deposit.getUserId());
 
-        for (Transfer transfer : deposit.getTransfers()){
             transfersDto.add(generateTransferDto(transfer));
         }
         depositDto.setTransfersDto(transfersDto);
@@ -213,7 +233,7 @@ public class DepositServiceTestEntitiesGenerator {
     public static Transfer generateTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setTransferId(UUID_ID);
+        transfer.setTransferId(UUID);
         transfer.setUserId(ID);
         transfer.setDeposit(generateDeposit());
         transfer.setSourceNumber(FROM_CARD_NUMBER);
@@ -232,6 +252,14 @@ public class DepositServiceTestEntitiesGenerator {
     public static TransferDto generateTransferDto(Transfer transfer) {
         TransferDto transferDto = new TransferDto();
 
+        transferDto.setTransferId(transfer.getTransferId());
+        transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
+        transferDto.setSourceNumber(transfer.getSourceNumber());
+        transferDto.setDestinationNumber(transfer.getDestinationNumber());
+        transferDto.setAmount(transfer.getAmount());
+        transferDto.setCurrencyName(transfer.getCurrencyName());
+        transferDto.setTime(transfer.getTime());
+        transferDto.setResult(transfer.getResult());
         transferDto.setTransferId(transfer.getTransferId());
         transferDto.setUserId(transfer.getUserId());
         transferDto.setDeposit(generateDepositDto(transfer.getDeposit()));
@@ -252,7 +280,7 @@ public class DepositServiceTestEntitiesGenerator {
 
         RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
 
-        message.setTransferId(UUID_ID);
+        message.setTransferId(UUID);
         message.setUserId(ID);
         message.setSourceNumber(sourceNumber);
         message.setSourceType(TRANSFER_WITH_DEPOSIT_TYPE);
@@ -285,7 +313,6 @@ public class DepositServiceTestEntitiesGenerator {
     }
 
     public static Page<DepositProduct> generatePageOfDepositProducts(Pageable pageable){
-
         List<DepositProduct> listOfProducts = Stream
                 .generate(DepositProduct::new)
                 .limit(pageable.getPageSize())

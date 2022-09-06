@@ -1,12 +1,12 @@
 package com.andersen.banking.gateway.meeting_impl.controller;
 
 import com.andersen.banking.gateway.meeting_api.controller.BalanceController;
-import com.andersen.banking.gateway.meeting_impl.feign_client.BalanceDepositClient;
-import com.andersen.banking.gateway.meeting_impl.feign_client.BalancePaymentClient;
 import com.andersen.banking.gateway.meeting_api.dto.RestResponsePage;
 import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
 import com.andersen.banking.gateway.meeting_api.dto.gateway.User;
 import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
+import com.andersen.banking.gateway.meeting_impl.feign_client.BalanceDepositClient;
+import com.andersen.banking.gateway.meeting_impl.feign_client.BalancePaymentClient;
 import com.andersen.banking.gateway.meeting_impl.service.BalanceService;
 import com.andersen.banking.gateway.meeting_impl.service.impl.BalanceServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,7 +66,7 @@ class BalanceControllerTest {
         RestResponsePage<Account> pageAccount = new RestResponsePage<>(accounts, Pageable.unpaged(), Long.MAX_VALUE);
         RestResponsePage<Deposit> pageDeposit = new RestResponsePage<>(deposits, Pageable.unpaged(), Long.MAX_VALUE);
 
-        Mockito.when(depositService.findAll(Pageable.unpaged())).thenReturn(Mono.just(pageDeposit));
+        Mockito.when(depositService.findDepositsByUserId(1L, Pageable.unpaged())).thenReturn(Mono.just(pageDeposit));
         Mockito.when(paymentService.findByOwnerId(1L, Pageable.unpaged())).thenReturn(Mono.just(pageAccount));
 
         MvcResult result = mockMvc.perform(get("/api/v1/balance/{id}", id))

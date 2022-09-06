@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TransferServiceImplTest {
 
     private Transfer transfer;
-    private UUID id;
+    private java.util.UUID id;
     private Optional<Transfer> transferOptional;
 
     @SpyBean

@@ -1,11 +1,7 @@
 package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.dto.CardCredResponseDto;
-import com.andersen.banking.meeting_api.dto.CardRegistrationDto;
-import com.andersen.banking.meeting_api.dto.CardResponseDto;
-import com.andersen.banking.meeting_api.dto.CardUpdateDto;
-import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
-import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
+
+import com.andersen.banking.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

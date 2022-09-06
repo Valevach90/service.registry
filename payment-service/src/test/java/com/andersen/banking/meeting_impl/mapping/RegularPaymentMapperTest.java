@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.*;
+import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.populateRegularPayment;
+import static com.andersen.banking.meeting_test.generators.RegularPaymentUnitTestGenerator.populateRegularPaymentRequestDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = RegularPaymentMapperImpl.class)
