@@ -1,11 +1,10 @@
 package com.andersen.banking.service.registry.meeting_impl.service;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service for working with Passports.

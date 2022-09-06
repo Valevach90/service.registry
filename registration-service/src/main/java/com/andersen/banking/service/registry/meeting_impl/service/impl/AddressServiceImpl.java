@@ -1,11 +1,9 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
-import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
 import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
-import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import java.util.List;
 import java.util.Optional;

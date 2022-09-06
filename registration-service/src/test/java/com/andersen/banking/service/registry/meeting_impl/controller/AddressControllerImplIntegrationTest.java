@@ -1,25 +1,5 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
-import com.andersen.banking.service.registry.meeting_db.entities.Address;
-import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
-import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
-import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
-import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
-
-import java.util.UUID;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +8,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
+import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
+import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
+import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

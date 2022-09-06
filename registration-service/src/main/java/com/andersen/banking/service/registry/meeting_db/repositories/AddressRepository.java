@@ -1,11 +1,9 @@
 package com.andersen.banking.service.registry.meeting_db.repositories;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
 

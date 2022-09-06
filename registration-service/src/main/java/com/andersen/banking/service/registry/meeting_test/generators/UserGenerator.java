@@ -3,10 +3,8 @@ package com.andersen.banking.service.registry.meeting_test.generators;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.github.javafaker.Faker;
 import java.util.UUID;
-import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserGenerator {

@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_impl.util;
+package com.andersen.banking.meeting_impl.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

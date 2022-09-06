@@ -1,5 +1,8 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
@@ -8,7 +11,11 @@ import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,14 +27,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = PassportControllerImpl.class)
 class PassportControllerImplTest {
