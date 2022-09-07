@@ -32,13 +32,13 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
 
     @Override
-    public List<TransferResponseDto> findAllByUserId(Long userId, Pageable pageable) {
+    public List<TransferResponseDto> findAllByUserId(UUID userId, Pageable pageable) {
         log.info("Find all transfers by user_id: {}", userId);
         return transferService.findByUserId(userId, pageable);
     }
 
     @Override
-    public TransferResponseDto findById(UUID transferId, Long userId) {
+    public TransferResponseDto findById(UUID transferId, UUID userId) {
         log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
         return transferService.findById(transferId);
     }

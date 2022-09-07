@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,7 @@ public interface TransferMoneyController {
     @Operation(summary = "Get all transfers",
             description = "get all transfers for user")
     @GetMapping("")
-    List<TransferResponseDto> findAllByUserId(@RequestParam(required = true) Long userId,
+    List<TransferResponseDto> findAllByUserId(@RequestParam(required = true) UUID userId,
                                               @ParameterObject @PageableDefault Pageable pageable);
 
 
@@ -35,7 +34,7 @@ public interface TransferMoneyController {
     @GetMapping("/{transfer_id}")
     TransferResponseDto findById(@Parameter(description = "transfer_id", required = true)
                                  @PathVariable(value = "transfer_id") UUID transferId,
-                                 @RequestParam(required = true) Long userId);
+                                 @RequestParam(required = true) UUID userId);
 
 
     @Operation(summary = "Get information about transfer status by transfer id",
