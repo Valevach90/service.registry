@@ -1,7 +1,5 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpirationTime;
-
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
@@ -12,15 +10,18 @@ import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.util.CardGenerator;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpirationTime;
 
 /** CardService implementation. */
 @Slf4j
@@ -92,7 +93,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public Card create(Card card) {
-        log.info("Creating card: {}", card);
+        log.info("Creating card: [{}/{}]", card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName());
 
         Account account = accountService.findById(card.getAccount().getId());
         card.setAccount(account);
