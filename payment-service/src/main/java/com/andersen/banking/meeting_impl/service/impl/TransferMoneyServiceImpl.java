@@ -138,19 +138,14 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     }
 
     private ImmutablePair<Card, Card> getSrcAndDestinationCard(String requestSrcNum, String requestDestNum) {
-        Optional<Card> optionalCardSrc;
-        Optional<Card> optionalCardDest;
+        log.info("Getting cards by request nums: src = {} and dest = {}", requestSrcNum, requestDestNum );
 
-        if ((CARD_NUMBER_HASH_LENGTH == requestSrcNum.length())) {
+        Optional<Card> optionalCardSrc = cardRepository
+                .findByFirstTwelveNumbersAndLastFourNumbers(requestSrcNum.substring(0, 64), requestSrcNum.substring(64, 68));
 
-            optionalCardSrc = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(requestSrcNum.substring(0, 64), requestSrcNum.substring(64, 68));
-        }else {
+        Optional<Card> optionalCardDest = cardRepository
+                .findByFirstTwelveNumbersAndLastFourNumbers(requestDestNum.substring(0, 64), requestDestNum.substring(64, 68));
 
-            optionalCardSrc = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(CryptWithSHA.getCrypt(requestSrcNum.substring(0, 12)), requestSrcNum.substring(12, 16));
-
-        }
-
-        optionalCardDest = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(CryptWithSHA.getCrypt(requestDestNum.substring(0, 12)), requestDestNum.substring(12, 16));
 
         if (optionalCardSrc.isEmpty()) throw new NotFoundException(Card.class);
         if (optionalCardDest.isEmpty()) throw new NotFoundException(Card.class);

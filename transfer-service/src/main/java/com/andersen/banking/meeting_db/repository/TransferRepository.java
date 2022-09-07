@@ -12,8 +12,8 @@ import java.util.UUID;
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, UUID> {
 
-    Optional<Transfer> findById(Long id);
+    Optional<Transfer> findById(UUID id);
 
-    Page<Transfer> findByUserId(Long id, Pageable pageable);
+    Page<Transfer> findByUserId(UUID id, Pageable pageable);
 
 }

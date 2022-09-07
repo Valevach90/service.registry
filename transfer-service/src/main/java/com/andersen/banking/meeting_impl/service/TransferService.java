@@ -46,6 +46,6 @@ public interface TransferService {
      * @param pageable
      * @return
      */
-    List<TransferResponseDto> findByUserId(Long id, Pageable pageable);
+    List<TransferResponseDto> findByUserId(UUID id, Pageable pageable);
 
 }

@@ -118,7 +118,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     @Cacheable(value = "transfers", key = "#userId")
     @Transactional(readOnly = true)
-    public List<TransferResponseDto> findByUserId(Long userId, Pageable pageable) {
+    public List<TransferResponseDto> findByUserId(UUID userId, Pageable pageable) {
 
         log.info("Finding transfers for userId: {}", userId);
 
