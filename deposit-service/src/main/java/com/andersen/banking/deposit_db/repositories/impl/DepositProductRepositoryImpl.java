@@ -73,9 +73,7 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
                 }
                 log.info("Available values for field {} are {}", field.getName(), namesOfElements);
                 field.set(depositProductSettingDto, namesOfElements.stream().distinct().collect(Collectors.toList()));
-            }
-            if (!Collection.class.isAssignableFrom(field.getType())) {
-
+            } else {
                 if (field.getName().startsWith(MIN_VALUE_START_FIELD_NAME)) {
                     cquery.select(cbuilder.min(root.get(field.getName())));
 
@@ -113,27 +111,26 @@ public class DepositProductRepositoryImpl implements DepositProductFilterReposit
 
             log.info("Creating predicate for field {} with value {}", field.getName(), field.get(filter));
 
-            if(Objects.nonNull(field.get(filter))) {
+            if (Objects.nonNull(field.get(filter))) {
                 if (Collection.class.isAssignableFrom(field.getType())) {
 
                     List<String> elementsNames = (List<String>) field.get(filter);
 
                     List<Predicate> orPredicates = new ArrayList<>();
 
-                        for (String elementName : elementsNames) {
+                    for (String elementName : elementsNames) {
 
-                            if (field.getName().equals(TYPE_OF_PRODUCT_FIELD_NAME)) {
-                                orPredicates.add(cbuilder.equal(root.get(field.getName()), depositTypeRepository.findByName(elementName)
-                                        .orElseThrow(() -> new NotFoundException(DepositType.class, elementName))));
-                            }
-                            if (field.getName().equals(CURRENCY_FIELD_NAME)) {
-                                orPredicates.add(cbuilder.equal(root.get(field.getName()), currencyRepository.findByName(elementName)
-                                        .orElseThrow(() -> new NotFoundException(Currency.class, elementName))));
-                            }
-                        }
+                       if (field.getName().equals(TYPE_OF_PRODUCT_FIELD_NAME)) {
+                           orPredicates.add(cbuilder.equal(root.get(field.getName()), depositTypeRepository.findByName(elementName)
+                                       .orElseThrow(() -> new NotFoundException(DepositType.class, elementName))));
+                       }
+                       if (field.getName().equals(CURRENCY_FIELD_NAME)) {
+                          orPredicates.add(cbuilder.equal(root.get(field.getName()), currencyRepository.findByName(elementName)
+                                      .orElseThrow(() -> new NotFoundException(Currency.class, elementName))));
+                       }
+                    }
                     predicates.add(cbuilder.or(orPredicates.toArray(new Predicate[]{})));
-                }
-                if (!Collection.class.isAssignableFrom(field.getType())) {
+                } else {
                     if (field.getName().startsWith(MIN_VALUE_START_FIELD_NAME)) {
 
                         if (field.getType().equals(Integer.class)) {
