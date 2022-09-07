@@ -13,7 +13,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
-import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.retry.policy.SimpleRetryPolicy;
@@ -47,8 +46,10 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, RequestKafkaTransferMessage> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, RequestKafkaTransferMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, RequestKafkaTransferMessage>
+            kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, RequestKafkaTransferMessage> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setBatchListener(false);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
@@ -68,5 +69,3 @@ public class KafkaConsumerConfig {
         return new SimpleRetryPolicy(kafkaProperties.getMaxRetryAttempts(), exceptionMap, true);
     }
 }
-
-

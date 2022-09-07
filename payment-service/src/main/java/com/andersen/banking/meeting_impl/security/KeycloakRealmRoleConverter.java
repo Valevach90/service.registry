@@ -18,17 +18,19 @@ public class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<Gra
     private static final String API_GATEWAY = "api-gateway";
     private static final String ROLES = "roles";
 
-
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
 
         List<GrantedAuthority> roles = new ArrayList<>();
 
-        final Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get(REALM_ACCESS);
+        final Map<String, Object> realmAccess =
+                (Map<String, Object>) jwt.getClaims().get(REALM_ACCESS);
         roles.addAll(getRoles(realmAccess));
 
-        final Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get(RESOURCE_ACCESS);
-        final Map<String, Object> gatewayAccess = (Map<String, Object>) resourceAccess.get(API_GATEWAY);
+        final Map<String, Object> resourceAccess =
+                (Map<String, Object>) jwt.getClaims().get(RESOURCE_ACCESS);
+        final Map<String, Object> gatewayAccess =
+                (Map<String, Object>) resourceAccess.get(API_GATEWAY);
 
         if (resourceAccess.get(API_GATEWAY) != null) {
             roles.addAll(getRoles(gatewayAccess));
@@ -37,9 +39,10 @@ public class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<Gra
     }
 
     private static List<SimpleGrantedAuthority> getRoles(Map<String, Object> gatewayAccess) {
-        return ((List<String>) gatewayAccess.get(ROLES)).stream()
-                .map(roleName -> "ROLE_" + roleName)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return ((List<String>) gatewayAccess.get(ROLES))
+                .stream()
+                        .map(roleName -> "ROLE_" + roleName)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
     }
 }

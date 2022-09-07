@@ -56,4 +56,16 @@ public interface AccountService {
      * @return Account
      */
     Account deleteById(UUID id);
+
+    /**
+     * This method transfers money between an accounts with the given amount and currency of money and.
+     *
+     * @param source
+     * @param target
+     * @param amount
+     * @return true or false
+     */
+
+    boolean transfer(Account source, Account target, long amount);
+
 }

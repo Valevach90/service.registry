@@ -18,12 +18,8 @@ import java.util.UUID;
 public class TransferLog {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
     private UUID id;
+
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
@@ -54,7 +50,10 @@ public class TransferLog {
         if (this == o) return true;
         if (!(o instanceof TransferLog)) return false;
         TransferLog that = (TransferLog) o;
-        return id.equals(that.id) && userId.equals(that.userId) && sourcePaymentType.equals(that.sourcePaymentType) && sourceNumber.equals(that.sourceNumber);
+        return id.equals(that.id)
+                && userId.equals(that.userId)
+                && sourcePaymentType.equals(that.sourcePaymentType)
+                && sourceNumber.equals(that.sourceNumber);
     }
 
     @Override
@@ -62,4 +61,3 @@ public class TransferLog {
         return Objects.hash(id, userId, sourcePaymentType, sourceNumber);
     }
 }
-

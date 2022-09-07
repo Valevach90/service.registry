@@ -18,7 +18,7 @@ public class TransferMoneyTopicListenerImpl implements TransferMoneyTopicListene
     private final TransferMoneyMediator transferMoneyMediator;
 
     @Override
-    @KafkaListener(topics = "$spring.kafka.transfer_request_topic_name")
+    @KafkaListener(topics = "${spring.kafka.transfer_request_topic_name}")
     public void listenKafkaTopicOnInternalTransfer(List<RequestKafkaTransferMessage> messages) {
         messages.forEach(
                 m -> {

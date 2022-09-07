@@ -42,13 +42,10 @@ public class AccountControllerImplTest {
         accountDto = new AccountDto();
     }
 
-    @Autowired
-    AccountController accountController;
+    @Autowired AccountController accountController;
 
-    @MockBean
-    AccountService accountService;
-    @MockBean
-    AccountMapper accountMapper;
+    @MockBean AccountService accountService;
+    @MockBean AccountMapper accountMapper;
 
     @Test
     void findById_ShouldReturnAccountDto_WhenIdISCorrect() {
@@ -60,8 +57,10 @@ public class AccountControllerImplTest {
 
     @Test
     void findById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(accountService.findById(OWNER_ID)).thenThrow(new NotFoundException(Account.class, OWNER_ID));
-        Assertions.assertThrows(NotFoundException.class, () -> accountController.findById(OWNER_ID));
+        Mockito.when(accountService.findById(OWNER_ID))
+                .thenThrow(new NotFoundException(Account.class, OWNER_ID));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> accountController.findById(OWNER_ID));
     }
 
     @Test
@@ -73,7 +72,8 @@ public class AccountControllerImplTest {
         Page<Account> pageOfCards = new PageImpl<>(accounts, pageable, SIZE_PAGE);
 
         Mockito.when(accountService.findAll(pageable)).thenReturn(pageOfCards);
-        Mockito.when(accountMapper.toAccountDto(Mockito.any(Account.class))).thenReturn(new AccountDto());
+        Mockito.when(accountMapper.toAccountDto(Mockito.any(Account.class)))
+                .thenReturn(new AccountDto());
 
         Page<AccountDto> result = accountController.findAll(pageable);
 
@@ -98,7 +98,8 @@ public class AccountControllerImplTest {
 
         Mockito.when(accountMapper.toAccount(accountDto)).thenThrow(new MapperException());
 
-        Assertions.assertThrows(MapperException.class, () -> accountController.updateAccount(accountDto));
+        Assertions.assertThrows(
+                MapperException.class, () -> accountController.updateAccount(accountDto));
     }
 
     @Test
@@ -107,9 +108,11 @@ public class AccountControllerImplTest {
         accountDto = populateAccountDto(accountDto);
 
         Mockito.when(accountMapper.toAccount(accountDto)).thenReturn(account);
-        Mockito.when(accountService.update(account)).thenThrow(new NotFoundException(Account.class, account.getId()));
+        Mockito.when(accountService.update(account))
+                .thenThrow(new NotFoundException(Account.class, account.getId()));
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountController.updateAccount(accountDto));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> accountController.updateAccount(accountDto));
     }
 
     @Test
@@ -122,9 +125,11 @@ public class AccountControllerImplTest {
 
     @Test
     void deleteById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(accountService.deleteById(OWNER_ID)).thenThrow(new NotFoundException(Account.class, OWNER_ID));
+        Mockito.when(accountService.deleteById(OWNER_ID))
+                .thenThrow(new NotFoundException(Account.class, OWNER_ID));
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountController.deleteById(OWNER_ID));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> accountController.deleteById(OWNER_ID));
     }
 
     @Test
@@ -157,7 +162,8 @@ public class AccountControllerImplTest {
         Page<Account> pageOfCards = new PageImpl<>(accounts, pageable, SIZE_PAGE);
 
         Mockito.when(accountService.findByOwnerId(OWNER_ID, pageable)).thenReturn(pageOfCards);
-        Mockito.when(accountMapper.toAccountDto(Mockito.any(Account.class))).thenReturn(new AccountDto());
+        Mockito.when(accountMapper.toAccountDto(Mockito.any(Account.class)))
+                .thenReturn(new AccountDto());
 
         Page<AccountDto> result = accountController.findByOwnerId(OWNER_ID, pageable);
 
@@ -189,17 +195,11 @@ public class AccountControllerImplTest {
     }
 
     private List<Account> generateAccounts() {
-        return Stream
-                .generate(Account::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(Account::new).limit(27).collect(Collectors.toList());
     }
 
     private List<AccountDto> generateAccountDtos() {
-        return Stream
-                .generate(AccountDto::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(AccountDto::new).limit(27).collect(Collectors.toList());
     }
 
     private Pageable createPageable() {

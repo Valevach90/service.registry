@@ -64,6 +64,7 @@ public class TransferLogServiceImpl implements TransferLogService {
     public TransferLog createTransferLogAccordingToRequestKafkaMessage(
             RequestKafkaTransferMessage requestKafkaTransferMessage)
             throws TransferLogAlreadyExistsException {
+
         TransferLog transferLog = new TransferLog();
         transferLog.setId(requestKafkaTransferMessage.getTransferId());
         transferLog.setSourceNumber(requestKafkaTransferMessage.getSourceNumber());
@@ -86,9 +87,8 @@ public class TransferLogServiceImpl implements TransferLogService {
     }
 
     @Override
-    public void changeTransferLogStatus(UUID id, int status) throws RuntimeException {
+    public void changeTransferLogStatus(UUID id, int status) throws NotFoundException{
         log.info("Changing status for transferLog : {} to {}", id, status);
-
         TransferLog transferLog = findById(id);
         transferLog.setStatus(status);
         transferLogRepository.save(transferLog);

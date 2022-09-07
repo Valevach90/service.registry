@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Entity
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class Transfer extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private UUID userId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_payment_type_id", nullable = false)

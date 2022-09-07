@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-
 @Getter
 @Setter
 @Configuration
@@ -21,5 +20,4 @@ public class KafkaProperties {
     private String transfer_request_topic_name;
 
     private String transfer_response_topic_name;
-
 }

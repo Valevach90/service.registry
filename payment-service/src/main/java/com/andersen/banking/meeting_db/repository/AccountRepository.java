@@ -9,5 +9,4 @@ import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
     Page<Account> findAccountByOwnerId(UUID id, Pageable pageable);
-
 }

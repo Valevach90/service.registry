@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.meeting_impl.service.TransferLogService;
@@ -28,21 +29,35 @@ public class TransferMoneyMediatorImpl implements TransferMoneyMediator {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public void run(RequestKafkaTransferMessage requestKafkaTransferMessage) {
+        try {
+            log.info("Executing run with : {}", requestKafkaTransferMessage);
 
-        transferLogService.createTransferLogAccordingToRequestKafkaMessage(
-                requestKafkaTransferMessage);
+            transferLogService.createTransferLogAccordingToRequestKafkaMessage(
+                    requestKafkaTransferMessage);
 
-        ImmutablePair<Boolean, StringBuffer> transferResults =
-                transferMoneyService.executeTransfer(requestKafkaTransferMessage);
+            ImmutablePair<Boolean, StringBuffer> transferResults =
+                    transferMoneyService.executeTransfer(requestKafkaTransferMessage);
 
-        transferLogService.changeTransferLogStatus(
-                requestKafkaTransferMessage.getTransferId(), Status.STATUS_COMMITTING);
+            transferLogService.changeTransferLogStatus(
+                    requestKafkaTransferMessage.getTransferId(), Status.STATUS_COMMITTING);
 
-        transferMoneyTopicSender.sendResponseMessage(
-                ResponseKafkaTransferMessage.builder()
-                        .transferId(requestKafkaTransferMessage.getTransferId())
-                        .result(transferResults.left)
-                        .statusDescription(transferResults.right.toString())
-                        .build());
+            transferMoneyTopicSender.sendResponseMessage(
+                    ResponseKafkaTransferMessage.builder()
+                            .transferId(requestKafkaTransferMessage.getTransferId())
+                            .result(transferResults.left)
+                            .statusDescription(transferResults.right.toString())
+                            .build());
+            log.info("Executed run with : {}", requestKafkaTransferMessage);
+
+        } catch (NotFoundException e) {
+            log.error("Get an exception : {} with : {}.", e, requestKafkaTransferMessage);
+
+            transferMoneyTopicSender.sendResponseMessage(
+                    ResponseKafkaTransferMessage.builder()
+                            .transferId(requestKafkaTransferMessage.getTransferId())
+                            .result(false)
+                            .statusDescription(e.toString())
+                            .build());
+        }
     }
 }

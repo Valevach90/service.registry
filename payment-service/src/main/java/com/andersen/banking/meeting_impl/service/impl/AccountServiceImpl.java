@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -91,4 +92,46 @@ public class AccountServiceImpl implements AccountService {
         log.info("Deleted account with id: {}", id);
         return deletedAccount;
     }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public boolean transfer(Account source, Account target, long amount) throws RuntimeException {
+
+        log.info("Trying to transfer money from : {} to : {}.", source.getAccountNumber(), target.getAccountNumber());
+
+        if (source.getCurrency().equals(target.getCurrency())) {
+
+            long sourceBalanceAfterWithdraw = source.getBalance() - amount;
+            long targetBalanceAfterWithdraw = target.getBalance() + amount;
+
+            if (sourceBalanceAfterWithdraw >= 0L) {
+
+                source.setBalance(sourceBalanceAfterWithdraw);
+                target.setBalance(targetBalanceAfterWithdraw);
+
+                accountRepository.save(source);
+                accountRepository.save(target);
+                accountRepository.flush();
+
+                log.info("Transfer money from : {} to : {} successfully completed.",
+                        source.getAccountNumber(), target.getAccountNumber());
+
+                return true;
+            } else {
+
+                log.info("Transfer money from : {} to : {} not completed. Have not enough money on source account.",
+                        source.getAccountNumber(), target.getAccountNumber());
+
+                return false;
+            }
+
+        } else {
+
+            log.info("Transfer money from : {} to : {} not completed. Has different currencies.",
+                    source.getAccountNumber(), target.getAccountNumber());
+
+            return false;
+        }
+    }
+
 }

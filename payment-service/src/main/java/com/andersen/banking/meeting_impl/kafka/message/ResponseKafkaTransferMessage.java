@@ -14,12 +14,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ResponseKafkaTransferMessage {
 
-    @NotNull
-    private UUID transferId;
+    @NotNull private UUID transferId;
 
-    @NotNull
-    private boolean result;
+    @NotNull private boolean result;
 
     private String statusDescription;
-
 }

@@ -12,29 +12,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @SpringBootTest(classes = RegularPaymentServiceImpl.class)
 public class RegularPaymentServiceImplTest {
 
-    private final RegularPayment returnedRegularPayment = RegularPaymentUnitTestGenerator.populateRegularPayment();
-    private final RegularPayment receivedRegularPayment = RegularPaymentUnitTestGenerator.populateRegularPayment();
+    private final RegularPayment returnedRegularPayment =
+            RegularPaymentUnitTestGenerator.populateRegularPayment();
+    private final RegularPayment receivedRegularPayment =
+            RegularPaymentUnitTestGenerator.populateRegularPayment();
 
-    @MockBean
-    CardService cardService;
+    @MockBean CardService cardService;
 
-    @SpyBean
-    RegularPaymentService regularPaymentService;
+    @SpyBean RegularPaymentService regularPaymentService;
 
-    @MockBean
-    RegularPaymentRepository regularPaymentRepository;
+    @MockBean RegularPaymentRepository regularPaymentRepository;
 
     @Test
     void create_ShouldReturnRegularPayment_WhenReceivedRegularPaymentIsCorrect() {
-        Mockito.when(cardService.findById(RegularPaymentUnitTestGenerator.SOURCE_CARD_ID)).thenReturn(RegularPaymentUnitTestGenerator.populateSourceCard());
-        Mockito.when(regularPaymentRepository.save(receivedRegularPayment)).thenReturn(returnedRegularPayment);
+        Mockito.when(cardService.findById(RegularPaymentUnitTestGenerator.SOURCE_CARD_ID))
+                .thenReturn(RegularPaymentUnitTestGenerator.populateSourceCard());
+        Mockito.when(regularPaymentRepository.save(receivedRegularPayment))
+                .thenReturn(returnedRegularPayment);
 
-        Assertions.assertEquals(returnedRegularPayment, regularPaymentService.create(receivedRegularPayment));
-
+        Assertions.assertEquals(
+                returnedRegularPayment, regularPaymentService.create(receivedRegularPayment));
     }
 }

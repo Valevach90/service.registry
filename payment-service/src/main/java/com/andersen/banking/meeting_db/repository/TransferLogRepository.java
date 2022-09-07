@@ -9,5 +9,5 @@ import java.util.UUID;
 @Repository
 public interface TransferLogRepository extends JpaRepository<TransferLog, UUID> {
 
-  boolean existsById(UUID id);
+    boolean existsById(UUID id);
 }

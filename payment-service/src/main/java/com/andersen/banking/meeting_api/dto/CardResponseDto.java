@@ -18,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CardResponseDto {
 
-
     @NotNull
     @JsonProperty("id")
     private UUID id;
@@ -46,7 +45,9 @@ public class CardResponseDto {
 
     @NotBlank
     @JsonProperty("holder_name")
-    @Pattern(regexp = "[a-zA-Z- ]{3,30}", message = "holder_name should have at least 3 and at maximum 30 characters")
+    @Pattern(
+            regexp = "[a-zA-Z- ]{3,30}",
+            message = "holder_name should have at least 3 and at maximum 30 characters")
     private String holderName;
 
     @NotNull

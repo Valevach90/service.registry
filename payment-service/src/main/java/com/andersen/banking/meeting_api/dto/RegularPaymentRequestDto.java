@@ -20,17 +20,23 @@ import java.util.UUID;
 public class RegularPaymentRequestDto {
 
     @NotBlank
-    @Pattern(regexp = "[a-zA-Z- ]{3,30}", message = "description should have at least 3 and at maximum 30 characters")
+    @Pattern(
+            regexp = "[a-zA-Z- ]{3,30}",
+            message = "description should have at least 3 and at maximum 30 characters")
     @JsonProperty("description")
     private String description;
 
-    @Schema(description = "Regular payment start date", example = "2022-09-21",
+    @Schema(
+            description = "Regular payment start date",
+            example = "2022-09-21",
             defaultValue = "2022-09-21")
     @JsonProperty("first_date")
     @NotNull
     private LocalDate firstDate;
 
-    @Schema(description = "Regular payment last date", example = "2023-09-21",
+    @Schema(
+            description = "Regular payment last date",
+            example = "2023-09-21",
             defaultValue = "2023-09-21")
     @JsonProperty("last_date")
     @NotNull
@@ -48,7 +54,9 @@ public class RegularPaymentRequestDto {
     @NotNull
     private Long amount;
 
-    @Schema(description = "Frequency of sending payments", example = "monthly",
+    @Schema(
+            description = "Frequency of sending payments",
+            example = "monthly",
             defaultValue = "monthly")
     @JsonProperty("frequency")
     @NotNull

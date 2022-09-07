@@ -17,19 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RegularPaymentMapperTest {
 
     private final RegularPayment regularPayment = populateRegularPayment();
-    private final RegularPaymentRequestDto regularPaymentRequestDto = populateRegularPaymentRequestDto();
+    private final RegularPaymentRequestDto regularPaymentRequestDto =
+            populateRegularPaymentRequestDto();
 
-    @Autowired
-    RegularPaymentMapper regularPaymentMapper;
+    @Autowired RegularPaymentMapper regularPaymentMapper;
 
     @Test
-    void whenRegularPaymentRequestDtoToRegularPayment_andOk () {
+    void whenRegularPaymentRequestDtoToRegularPayment_andOk() {
         var result = regularPaymentMapper.toRegularPayment(regularPaymentRequestDto);
         checkForEqualsRequest(result, regularPaymentRequestDto);
     }
 
     @Test
-    void whenRegularPaymentToRegularPaymentResponseDto_AndOk () {
+    void whenRegularPaymentToRegularPaymentResponseDto_AndOk() {
         var result = regularPaymentMapper.toDto(regularPayment);
         checkForEqualsResponse(result, regularPayment);
     }

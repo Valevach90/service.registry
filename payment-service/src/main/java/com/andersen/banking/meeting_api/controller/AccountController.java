@@ -13,52 +13,42 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-
-/**
- * Interface that presents basic endpoints for working with Account entity.
- */
-
-
+/** Interface that presents basic endpoints for working with Account entity. */
 @Tag(name = "Account controller", description = "work with accounts")
 @RequestMapping(value = "/api/v1/accounts")
 public interface AccountController {
 
     @Operation(summary = "Create account", description = "create account by params from dto object")
     @PostMapping("/")
-    AccountDto create(@Parameter(description = "account", required = true)
-                      @RequestBody
-                      @Validated AccountDto accountDto);
-
+    AccountDto create(
+            @Parameter(description = "account", required = true) @RequestBody @Validated
+                    AccountDto accountDto);
 
     @Operation(summary = "Get all accounts", description = "get page of account's information")
     @GetMapping("/")
     Page<AccountDto> findAll(@ParameterObject @PageableDefault Pageable pageable);
 
-    @Operation(summary = "Get accounts with ownerId", description = "get page of accounts with ownerId")
+    @Operation(
+            summary = "Get accounts with ownerId",
+            description = "get page of accounts with ownerId")
     @GetMapping("/owners/{id}")
-    Page<AccountDto> findByOwnerId(@Parameter(description = "ownerId", required = true)
-                                   @PathVariable("id") UUID id,
-                                   Pageable pageable);
+    Page<AccountDto> findByOwnerId(
+            @Parameter(description = "ownerId", required = true) @PathVariable("id") UUID id,
+            Pageable pageable);
 
     @Operation(summary = "Get account by id", description = "get account information by id")
     @GetMapping("/{id}")
     AccountDto findById(
-            @Parameter(description = "account id", required = true)
-            @PathVariable("id") UUID id
-    );
+            @Parameter(description = "account id", required = true) @PathVariable("id") UUID id);
 
     @Operation(summary = "Update account", description = "update account by params into dto object")
     @PutMapping("/")
     AccountDto updateAccount(
-            @Parameter(description = "account id", required = true)
-            @RequestBody
-            @Validated AccountDto accountDto
-    );
+            @Parameter(description = "account id", required = true) @RequestBody @Validated
+                    AccountDto accountDto);
 
     @Operation(summary = "Delete account", description = "delete account by id")
     @DeleteMapping("/{id}")
-    AccountDto deleteById(@Parameter(description = "account id", required = true)
-                          @PathVariable UUID id);
-
-
+    AccountDto deleteById(
+            @Parameter(description = "account id", required = true) @PathVariable UUID id);
 }

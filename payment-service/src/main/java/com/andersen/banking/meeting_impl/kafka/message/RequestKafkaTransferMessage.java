@@ -9,37 +9,25 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestKafkaTransferMessage {
 
-    @NotNull
-    private UUID transferId;
+    @NotNull private UUID transferId;
 
-    @NotNull
-    private UUID userId;
+    @NotNull private UUID userId;
 
-    @NotBlank
-    private String sourceNumber;
+    @NotBlank private String sourceNumber;
 
-    @NotBlank
-    private String sourceType;
+    @NotBlank private String sourceType;
 
-    @NotBlank
-    private String destinationNumber;
+    @NotBlank private String destinationNumber;
 
-    @NotBlank
-    private String destinationType;
+    @NotBlank private String destinationType;
 
-    @NotNull
-    private Long amount;
+    @NotNull private Long amount;
 
-    @NotBlank
-    private String currencyName;
-
+    @NotBlank private String currencyName;
 }
-
-

@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 @SpringBootTest(classes = AccountServiceImpl.class)
 public class AccountServiceImplTest {
 
-
     final UUID ACCOUNT_ID = UUID.randomUUID();
     final UUID OWNER_ID = UUID.randomUUID();
 
@@ -35,10 +34,8 @@ public class AccountServiceImplTest {
     private Account receivedAccount;
     private Account returnedAccount;
 
-    @SpyBean
-    AccountService accountService;
-    @MockBean
-    AccountRepository accountRepository;
+    @SpyBean AccountService accountService;
+    @MockBean AccountRepository accountRepository;
 
     @BeforeEach
     void initArguments() {
@@ -48,7 +45,8 @@ public class AccountServiceImplTest {
 
     @Test
     void findById_ShouldReturnAccount_WhenIdIsCorrect() {
-        Mockito.when(accountRepository.findById(ACCOUNT_ID)).thenReturn(Optional.of(returnedAccount));
+        Mockito.when(accountRepository.findById(ACCOUNT_ID))
+                .thenReturn(Optional.of(returnedAccount));
         Assertions.assertEquals(returnedAccount, accountService.findById(ACCOUNT_ID));
     }
 
@@ -77,7 +75,8 @@ public class AccountServiceImplTest {
         receivedAccount = populateAccount(receivedAccount);
         returnedAccount = populateAccount(returnedAccount);
 
-        Mockito.when(accountRepository.findById(receivedAccount.getId())).thenReturn(Optional.of(returnedAccount));
+        Mockito.when(accountRepository.findById(receivedAccount.getId()))
+                .thenReturn(Optional.of(returnedAccount));
         Mockito.when(accountRepository.save(receivedAccount)).thenReturn(returnedAccount);
 
         Assertions.assertEquals(returnedAccount, accountService.update(receivedAccount));
@@ -90,21 +89,25 @@ public class AccountServiceImplTest {
         Mockito.when(accountRepository.findById(receivedAccount.getId()))
                 .thenThrow(new NotFoundException(Account.class, receivedAccount.getId()));
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountService.update(receivedAccount));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> accountService.update(receivedAccount));
     }
 
     @Test
     void deleteById_ShouldReturnDeletedAccount_WhenAccountIdIsCorrect() {
-        Mockito.when(accountRepository.findById(ACCOUNT_ID)).thenReturn(Optional.of(returnedAccount));
+        Mockito.when(accountRepository.findById(ACCOUNT_ID))
+                .thenReturn(Optional.of(returnedAccount));
 
         Assertions.assertEquals(returnedAccount, accountService.deleteById(ACCOUNT_ID));
     }
 
     @Test
     void deleteById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(accountRepository.findById(ACCOUNT_ID)).thenThrow(new NotFoundException(Card.class, receivedAccount.getId()));
+        Mockito.when(accountRepository.findById(ACCOUNT_ID))
+                .thenThrow(new NotFoundException(Card.class, receivedAccount.getId()));
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountService.deleteById(ACCOUNT_ID));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> accountService.deleteById(ACCOUNT_ID));
     }
 
     @Test
@@ -131,10 +134,7 @@ public class AccountServiceImplTest {
     }
 
     private List<Account> generateAccounts() {
-        return Stream
-                .generate(Account::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(Account::new).limit(27).collect(Collectors.toList());
     }
 
     private Pageable createPageable() {
