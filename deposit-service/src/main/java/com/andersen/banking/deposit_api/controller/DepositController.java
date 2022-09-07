@@ -4,11 +4,13 @@ import com.andersen.banking.deposit_api.dto.DepositDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,16 @@ public interface DepositController {
     DepositDto findById(
             @Parameter(description = "deposit id", required = true)
             @PathVariable("id") Long id
+    );
+
+    @Operation(summary = "Get all deposit for current user",
+            description = "Get all deposits by current user from token"
+    )
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/users")
+    Page<DepositDto> findDepositsByCurrentUserId(
+            Authentication authentication,
+            @ParameterObject @PageableDefault Pageable pageable
     );
 
     @Operation(summary = "Get all deposit for user",
