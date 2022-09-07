@@ -1,7 +1,5 @@
 package com.andersen.banking.service.registry.meeting_impl.util;
 
-import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

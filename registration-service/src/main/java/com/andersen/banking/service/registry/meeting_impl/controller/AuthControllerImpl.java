@@ -1,5 +1,10 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.doesUserHaveNoRoles;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.doesUserHaveUserRoles;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractIdFromToken;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractLoginFromToken;
+
 import com.andersen.banking.service.registry.meeting_api.controller.AuthController;
 import com.andersen.banking.service.registry.meeting_api.dto.RegistrationDto;
 import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
@@ -7,20 +12,9 @@ import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.*;
 
 
 /**
@@ -36,8 +30,8 @@ public class AuthControllerImpl implements AuthController {
     AuthService authService;
 
     @Override
-    public RegistrationDto auth(Jwt jwt) {
-
+    public RegistrationDto auth(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
         String id = extractIdFromToken(jwt);
         String login = extractLoginFromToken(jwt);
 
@@ -54,8 +48,9 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public void resetPassword(Jwt jwt, String newPassword) {
+    public void resetPassword(Authentication authentication, String newPassword) {
 
+        Jwt jwt = (Jwt) authentication.getPrincipal();
         String id = extractIdFromToken(jwt);
 
         log.trace("Setting new password, user id {} ", id);

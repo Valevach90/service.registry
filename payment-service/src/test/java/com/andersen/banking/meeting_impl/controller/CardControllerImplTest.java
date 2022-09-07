@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SpringBootTest(classes = CardControllerImpl.class)
+@SpringBootTest()
 public class CardControllerImplTest {
 
     private static final UUID TYPE_ID = UUID.randomUUID();
@@ -58,6 +58,8 @@ public class CardControllerImplTest {
     CardMapper cardMapper;
     @MockBean
     TypeCardMapper typeCardMapper;
+
+
 
     @Test
     void findById_ShouldReturnCardDto_WhenIdIsCorrect() {

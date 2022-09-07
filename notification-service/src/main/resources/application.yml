@@ -52,6 +52,10 @@ springdoc:
   model-converters:
     pageable-converter:
       enabled: true
+  oAuthFlow:
+    authorizationUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/auth
+    tokenUrl: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/token
+    use-pkce-with-authorization-code-grant: true
 
 notification:
   mail:

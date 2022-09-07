@@ -15,10 +15,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
 
 @SpringBootTest(classes = DepositProductServiceImpl.class)
 public class DepositProductServiceImplTest {
