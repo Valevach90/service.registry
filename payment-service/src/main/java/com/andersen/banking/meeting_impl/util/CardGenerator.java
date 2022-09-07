@@ -2,11 +2,12 @@ package com.andersen.banking.meeting_impl.util;
 
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_impl.exception.PaymentServiceException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CardGenerator {
@@ -39,17 +40,16 @@ public class CardGenerator {
         }
 
 
-        String cardNumber = startNumbersList.get(random.nextInt(startNumbersList.size()));
-        StringBuilder builder = new StringBuilder(cardNumber);
+        String startNumbers = startNumbersList.get(random.nextInt(startNumbersList.size()));
+        StringBuilder builder = new StringBuilder(startNumbers);
 
-        //First 6 numbers refer to bank info
-        for (int i = 0; i < 6 - cardNumber.length(); i++) {
+        //First 4 numbers refer to bank info
+        for (int i = 0; i < 4 - startNumbers.length(); i++) {
             builder.append(random.nextInt(10));
         }
 
-        //append currNumber
+        //append currencyNumber
         String currencyNumber = AccountNumberGenerator.getCurrencyNumberMap().get(currency);
-        int currNumberLength = AccountNumberGenerator.getCurrencyNumberMap().values().toArray()[0].toString().length();
         if (currencyNumber != null)
             builder.append(currencyNumber);
         else {
@@ -59,7 +59,6 @@ public class CardGenerator {
 
         //append typeNumber
         String typeNumber = typeNumberMap.get(typeName);
-        int typeNumberLength = typeNumberMap.values().toArray()[0].toString().length();
         if (typeNumber != null)
             builder.append(typeNumber);
         else {
@@ -67,10 +66,20 @@ public class CardGenerator {
             throw new PaymentServiceException("Wrong type of card");
         }
 
-        if (uuidHash.length() > 5)
-            uuidHash = uuidHash.substring(0, 5);
-        //append unique number(count of cards with selected type and payment system)
-        builder.append(uuidHash);
+        //append unique number(UUID_hash)
+        if (uuidHash.length() > 15 - builder.length()){
+            uuidHash = uuidHash.substring(0, 15 - builder.length());
+            builder.append(uuidHash);
+        }
+        else {
+            builder.append(uuidHash);
+            int countToMake15 = 15 - builder.length();
+            for (int i = 0; i < countToMake15; i++) {
+                builder.append(random.nextInt(10));
+            }
+        }
+
+        //append check number
         builder.append(getCheckDigit(builder.toString()));
 
         return builder.toString();
