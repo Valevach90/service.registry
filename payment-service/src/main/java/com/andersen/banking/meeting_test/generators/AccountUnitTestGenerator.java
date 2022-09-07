@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountUnitTestGenerator {
 
-    final static UUID OWNER_ID = UUID.randomUUID();
+    static final UUID OWNER_ID = UUID.randomUUID();
 
     public static Account populateAccount(Account account) {
         account.setAccountNumber("123454326");

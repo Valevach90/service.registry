@@ -1,16 +1,11 @@
 package com.andersen.banking.meeting_db.entities;
 
-import java.time.LocalDate;
-import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,10 +18,7 @@ public class Account {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(name = "account_number", nullable = false, length = 34)
@@ -49,5 +41,4 @@ public class Account {
 
     @Column(name = "balance", nullable = false)
     private long balance;
-
 }

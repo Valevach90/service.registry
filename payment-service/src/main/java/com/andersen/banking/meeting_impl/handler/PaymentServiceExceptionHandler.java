@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * Exception handler class for Payment service
- */
-
+/** Exception handler class for Payment service */
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -32,4 +29,3 @@ public class PaymentServiceExceptionHandler {
         return exception.getLocalizedMessage();
     }
 }
-

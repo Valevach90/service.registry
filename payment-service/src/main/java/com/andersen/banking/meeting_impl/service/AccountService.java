@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
-
 public interface AccountService {
-
 
     /**
      * This method registers new Account.
@@ -26,7 +24,6 @@ public interface AccountService {
      */
     Page<Account> findAll(Pageable pageable);
 
-
     /**
      * Return accounts by ownerId
      *
@@ -36,7 +33,6 @@ public interface AccountService {
      */
     Page<Account> findByOwnerId(UUID id, Pageable pageable);
 
-
     /**
      * Return Account by id.
      *
@@ -44,7 +40,6 @@ public interface AccountService {
      * @return Account
      */
     Account findById(UUID id);
-
 
     /**
      * Update accounts.
@@ -54,7 +49,6 @@ public interface AccountService {
      */
     Account update(Account updateAccount);
 
-
     /**
      * This method deletes the Account with the given id.
      *
@@ -63,5 +57,15 @@ public interface AccountService {
      */
     Account deleteById(UUID id);
 
+    /**
+     * This method transfers money between an accounts with the given amount and currency of money and.
+     *
+     * @param source
+     * @param target
+     * @param amount
+     * @return true or false
+     */
+
+    boolean transfer(Account source, Account target, long amount);
 
 }

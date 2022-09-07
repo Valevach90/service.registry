@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS payment_service.account
     account_number VARCHAR(34)                    NOT NULL,
     currency       VARCHAR(3)                     NOT NULL,
     balance        BIGINT                         NOT NULL,
-    CONSTRAINT pk_account PRIMARY KEY(id)
+    CONSTRAINT pk_account PRIMARY KEY (id)
 );
 

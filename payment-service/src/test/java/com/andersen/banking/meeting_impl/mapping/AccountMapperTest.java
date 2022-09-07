@@ -18,8 +18,7 @@ class AccountMapperTest {
     final UUID ACCOUNT_ID = UUID.randomUUID();
     final UUID OWNER_ID = UUID.randomUUID();
 
-    @Autowired
-    AccountMapper accountMapper;
+    @Autowired AccountMapper accountMapper;
 
     @Test
     void toAccount_ShouldReturnAccountDto_WhenAccountIsCorrect() {
@@ -28,7 +27,8 @@ class AccountMapperTest {
 
     @Test
     void toAccountDto_ShouldReturnAccount_WhenAccountDtoIsCorrect() {
-        Assertions.assertEquals(populateAccountDto(), accountMapper.toAccountDto(populateAccount()));
+        Assertions.assertEquals(
+                populateAccountDto(), accountMapper.toAccountDto(populateAccount()));
     }
 
     @Test

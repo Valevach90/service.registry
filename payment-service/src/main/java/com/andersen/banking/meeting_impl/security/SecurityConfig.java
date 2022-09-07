@@ -26,14 +26,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
-                .authorizeRequests(authorizeRequests -> authorizeRequests
-                .antMatchers("/api/v1/**").permitAll()
-                .anyRequest().authenticated()).oauth2ResourceServer(
-                oauth2ResourceServer -> oauth2ResourceServer.jwt(
-                        jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-        );
+        http.cors()
+                .and()
+                .authorizeRequests(
+                        authorizeRequests ->
+                                authorizeRequests
+                                        .antMatchers("/api/v1/**")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated())
+                .oauth2ResourceServer(
+                        oauth2ResourceServer ->
+                                oauth2ResourceServer.jwt(
+                                        jwt ->
+                                                jwt.jwtAuthenticationConverter(
+                                                        jwtAuthenticationConverter())));
     }
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
@@ -60,13 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] AUTH_WHITELIST = {
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/api-docs/**",
-            "/v2/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-resources/**",
-            "/configuration/**",
-            "/webjars/**"
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/api-docs/**",
+        "/v2/api-docs",
+        "/v3/api-docs/**",
+        "/swagger-resources/**",
+        "/configuration/**",
+        "/webjars/**"
     };
 }

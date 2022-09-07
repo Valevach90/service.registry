@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "RegularPayment controllers", description = "Endpoints to work with Regular Payment entity.")
+@Tag(
+        name = "RegularPayment controllers",
+        description = "Endpoints to work with Regular Payment entity.")
 @RequestMapping(value = "/api/v1/payments/regular")
 @RestController
 public interface RegularPaymentController {
 
-    @Operation(summary = "Create regular payment", description = "create regular payment by params in dto object")
+    @Operation(
+            summary = "Create regular payment",
+            description = "create regular payment by params in dto object")
     @PostMapping("/")
-    RegularPaymentResponseDto create(@Parameter(description = "regular_payment", required = true)
-                                     @RequestBody
-                                     @Validated RegularPaymentRequestDto regularPaymentDto);
+    RegularPaymentResponseDto create(
+            @Parameter(description = "regular_payment", required = true) @RequestBody @Validated
+                    RegularPaymentRequestDto regularPaymentDto);
 }

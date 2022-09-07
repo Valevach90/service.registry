@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface TypeCardRepository extends JpaRepository<TypeCard, UUID> {
 
-  Optional<TypeCard> findByPaymentSystemAndTypeName(String ps, String tn);
+    Optional<TypeCard> findByPaymentSystemAndTypeName(String ps, String tn);
 }

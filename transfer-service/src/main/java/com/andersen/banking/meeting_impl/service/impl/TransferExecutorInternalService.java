@@ -19,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferExecutorInternalService implements TransferExecutor {
 
-    private final static String CARD = "CARD";
+    private static final String CARD = "CARD";
 
-    private final static String DEPOSIT = "DEPOSIT";
+    private static final String DEPOSIT = "DEPOSIT";
 
     private final TransferService transferService;
 
@@ -31,27 +31,26 @@ public class TransferExecutorInternalService implements TransferExecutor {
 
     private final Converter<RequestKafkaTransferMessage, Transfer> converter;
 
-
     /**
      * @param transferRequestDto
      * @return
      */
-
-
     @Override
     @Transactional
     public TransferResponseDto execute(TransferRequestDto transferRequestDto) {
 
-        log.info("Running internal transfer for transfer request : {}", transferRequestDto);
+        log.info("Executing internal transfer for transfer request : {}", transferRequestDto);
 
         Transfer transfer = transferService.create(transferRequestDto);
         RequestKafkaTransferMessage requestKafkaTransferMessage = converter.convert(transfer);
 
         transferMoneyTopicSender.sendRequestMessage(
+                getTopicNameByPaymentTypes(
+                        requestKafkaTransferMessage.getSourceType(),
+                        requestKafkaTransferMessage.getDestinationType()),
+                requestKafkaTransferMessage);
 
-                getTopicNameByPaymentTypes(requestKafkaTransferMessage.getSourceType(), requestKafkaTransferMessage.getDestinationType()), requestKafkaTransferMessage);
-
-        log.info("Ran internal transfer for transfer request : {}", transferRequestDto);
+        log.info("Executed internal transfer for transfer request : {}", transferRequestDto);
         return transferService.findById(transfer.getId());
     }
 
@@ -63,5 +62,4 @@ public class TransferExecutorInternalService implements TransferExecutor {
             return kafkaProperties.getDeposit_transfer_request_topic_name();
         } else throw new RuntimeException("Not found topic for using payment-types");
     }
-
 }

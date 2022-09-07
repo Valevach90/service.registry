@@ -13,30 +13,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = CardMapperImpl.class)
 class CardMapperTest {
 
-    @Autowired
-    CardMapper cardMapper;
+    @Autowired CardMapper cardMapper;
 
     @Test
     void toCard_ShouldReturnCard_WhenCardRegistrationIsCorrect() {
         Card card = CardUnitTestGenerator.populateCard();
         card.setId(null);
         card.getTypeCard().setId(null);
-        Assertions.assertEquals(card,
-                cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()));
+        Assertions.assertEquals(
+                card, cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()));
     }
 
     @Test
     void toCard_ShouldReturnCard_WhenCardUpdateDtoIsCorrect() {
         Card card = CardUnitTestGenerator.populateCard();
         card.getTypeCard().setId(null);
-        Assertions.assertEquals(card,
-                cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
+        Assertions.assertEquals(
+                card, cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
     }
 
     @Test
     void toCardDto_ShouldReturnCardDto_WhenCardIsCorrect() {
-        Assertions.assertEquals(CardUnitTestGenerator.populateCardResponseDto(),
-                cardMapper.toCardResponseDto(CardUnitTestGenerator.populateCardIncludeAccountWithBalanceAndCurrency()));
+        Assertions.assertEquals(
+                CardUnitTestGenerator.populateCardResponseDto(),
+                cardMapper.toCardResponseDto(
+                        CardUnitTestGenerator.populateCardIncludeAccountWithBalanceAndCurrency()));
     }
 
     @Test
@@ -44,10 +45,14 @@ class CardMapperTest {
         Card card = CardUnitTestGenerator.populateCard();
         TypeCard typeCard = card.getTypeCard();
         typeCard.setId(null);
-        Assertions.assertEquals(typeCard,
+        Assertions.assertEquals(
+                typeCard,
                 cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()).getTypeCard());
-        Assertions.assertEquals(typeCard,
-                cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()).getTypeCard());
+        Assertions.assertEquals(
+                typeCard,
+                cardMapper
+                        .toCard(CardUnitTestGenerator.populateCardRegistrationDto())
+                        .getTypeCard());
     }
 
     @Test
@@ -55,7 +60,7 @@ class CardMapperTest {
         Card card = CardUnitTestGenerator.populateCard();
         TypeCard typeCard = card.getTypeCard();
         typeCard.setId(null);
-        Assertions.assertEquals(card,
-                cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
+        Assertions.assertEquals(
+                card, cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
     }
 }

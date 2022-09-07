@@ -10,6 +10,5 @@ public interface RegularPaymentService {
      * @param regularPayment
      * @return
      */
-    RegularPayment create (RegularPayment regularPayment);
-
+    RegularPayment create(RegularPayment regularPayment);
 }

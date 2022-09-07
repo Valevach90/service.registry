@@ -40,14 +40,10 @@ public class CardServiceImplTest {
     private static final String SORT_FIELD = "accountId";
     private final TypeCard returnedTypeCard = populateTypeCard();
     private final TypeCard receivedTypeCard = populateTypeCard();
-    @SpyBean
-    CardService cardService;
-    @MockBean
-    CardRepository cardRepository;
-    @MockBean
-    TypeCardRepository typeCardRepository;
-    @MockBean
-    AccountService accountService;
+    @SpyBean CardService cardService;
+    @MockBean CardRepository cardRepository;
+    @MockBean TypeCardRepository typeCardRepository;
+    @MockBean AccountService accountService;
     private Card returnedCard;
     private Card receivedCard;
 
@@ -59,7 +55,8 @@ public class CardServiceImplTest {
 
     @Test
     void update_ShouldReturnTypeCardResponseDto_WhenReceivedTypeCardIsCorrect() {
-        Mockito.when(typeCardRepository.findById(receivedTypeCard.getId())).thenReturn(Optional.of(receivedTypeCard));
+        Mockito.when(typeCardRepository.findById(receivedTypeCard.getId()))
+                .thenReturn(Optional.of(receivedTypeCard));
         Mockito.when(typeCardRepository.save(receivedTypeCard)).thenReturn(returnedTypeCard);
         var result = cardService.updateTypeCard(receivedTypeCard);
         Assertions.assertEquals(returnedTypeCard, result);
@@ -67,23 +64,24 @@ public class CardServiceImplTest {
 
     @Test
     void update_ShouldThrowNotFoundException_WhenReceivedTypeCardHasIncorrectId() {
-        Mockito
-                .when(typeCardRepository.findById(receivedTypeCard.getId()))
+        Mockito.when(typeCardRepository.findById(receivedTypeCard.getId()))
                 .thenThrow(new NotFoundException(Card.class, receivedTypeCard.getId()));
-        Assertions.assertThrows(NotFoundException.class,
-                () -> cardService.updateTypeCard(receivedTypeCard));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> cardService.updateTypeCard(receivedTypeCard));
     }
 
     @Test
     void getTypeCard_ShouldReturnTypeCardResponseDto_WhenIdIsCorrect() {
-        Mockito.when(typeCardRepository.findById(TYPE_CARD_ID)).thenReturn(Optional.of(returnedTypeCard));
+        Mockito.when(typeCardRepository.findById(TYPE_CARD_ID))
+                .thenReturn(Optional.of(returnedTypeCard));
         var result = cardService.getTypeCard(TYPE_CARD_ID);
         Assertions.assertEquals(returnedTypeCard, result);
     }
 
     @Test
     void getTypeCard_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Assertions.assertThrows(NotFoundException.class, () -> cardService.getTypeCard(TYPE_CARD_ID));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> cardService.getTypeCard(TYPE_CARD_ID));
     }
 
     @Test
@@ -112,13 +110,16 @@ public class CardServiceImplTest {
 
     @Test
     void update_ShouldReturnCard_WhenReceivedCardIsCorrect() {
-        Mockito.when(accountService.findById(receivedCard.getAccount().getId())).thenReturn(populateAccount(new Account()));
-        Mockito.when(cardRepository.findById(receivedCard.getId())).thenReturn(Optional.of(receivedCard));
+        Mockito.when(accountService.findById(receivedCard.getAccount().getId()))
+                .thenReturn(populateAccount(new Account()));
+        Mockito.when(cardRepository.findById(receivedCard.getId()))
+                .thenReturn(Optional.of(receivedCard));
         Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
         TypeCard typeCard = returnedCard.getTypeCard();
-        Mockito
-                .when(typeCardRepository.findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName()))
+        Mockito.when(
+                        typeCardRepository.findByPaymentSystemAndTypeName(
+                                typeCard.getPaymentSystem(), typeCard.getTypeName()))
                 .thenReturn(Optional.of(typeCard));
 
         Assertions.assertEquals(returnedCard, cardService.update(receivedCard));
@@ -141,19 +142,22 @@ public class CardServiceImplTest {
 
     @Test
     void deleteById_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
-        Mockito.when(cardRepository.findById(ID)).thenThrow(new NotFoundException(Card.class, receivedCard.getId()));
+        Mockito.when(cardRepository.findById(ID))
+                .thenThrow(new NotFoundException(Card.class, receivedCard.getId()));
 
         Assertions.assertThrows(NotFoundException.class, () -> cardService.deleteById(ID));
     }
 
     @Test
     void create_ShouldReturnCard_WhenReceivedCardIsCorrect() {
-        Mockito.when(accountService.findById(ACCOUNT_ID)).thenReturn(populateAccount(new Account()));
+        Mockito.when(accountService.findById(ACCOUNT_ID))
+                .thenReturn(populateAccount(new Account()));
         Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
         TypeCard typeCard = returnedCard.getTypeCard();
-        Mockito
-                .when(typeCardRepository.findByPaymentSystemAndTypeName(typeCard.getPaymentSystem(), typeCard.getTypeName()))
+        Mockito.when(
+                        typeCardRepository.findByPaymentSystemAndTypeName(
+                                typeCard.getPaymentSystem(), typeCard.getTypeName()))
                 .thenReturn(Optional.of(typeCard));
 
         Assertions.assertEquals(returnedCard, cardService.create(receivedCard));
@@ -164,16 +168,19 @@ public class CardServiceImplTest {
         String checkPayment = "MASTERCARD";
         String checkType = "STANDARD";
 
-        List<Card> filtered = generateCardsWithTypeCard()
-                .stream()
-                .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
-                .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
-                .collect(Collectors.toList());
+        List<Card> filtered =
+                generateCardsWithTypeCard().stream()
+                        .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+                        .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
+                        .collect(Collectors.toList());
 
         Pageable pageable = createPageable();
         Page<Card> page = new PageImpl<>(filtered, pageable, SIZE_PAGE);
 
-        Mockito.when(cardRepository.findCardByPaymentSystemAndType(checkPayment, checkType, pageable)).thenReturn(page);
+        Mockito.when(
+                        cardRepository.findCardByPaymentSystemAndType(
+                                checkPayment, checkType, pageable))
+                .thenReturn(page);
 
         Page<Card> result = cardService.findAllByTypeCard(checkPayment, checkType, pageable);
 
@@ -184,15 +191,16 @@ public class CardServiceImplTest {
     void findAllByTypeCardAndOnlyType_ShouldReturnPageOfCards() {
         String checkType = "STANDARD";
 
-        List<Card> filtered = generateCardsWithTypeCard()
-                .stream()
-                .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
-                .collect(Collectors.toList());
+        List<Card> filtered =
+                generateCardsWithTypeCard().stream()
+                        .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+                        .collect(Collectors.toList());
 
         Pageable pageable = createPageable();
         Page<Card> page = new PageImpl<>(filtered, pageable, SIZE_PAGE);
 
-        Mockito.when(cardRepository.findCardByPaymentSystemAndType(null, checkType, pageable)).thenReturn(page);
+        Mockito.when(cardRepository.findCardByPaymentSystemAndType(null, checkType, pageable))
+                .thenReturn(page);
 
         Page<Card> result = cardService.findAllByTypeCard(null, checkType, pageable);
         Assertions.assertEquals(page, result);
@@ -225,7 +233,10 @@ public class CardServiceImplTest {
         card.setAccount(account);
 
         Mockito.when(cardRepository.findById(ID)).thenReturn(Optional.of(card));
-        Mockito.when(cardRepository.findByAccount_OwnerIdAndAccount_IdNot(OWNER_ID, ACCOUNT_ID, pageable)).thenReturn(page);
+        Mockito.when(
+                        cardRepository.findByAccount_OwnerIdAndAccount_IdNot(
+                                OWNER_ID, ACCOUNT_ID, pageable))
+                .thenReturn(page);
 
         Page<Card> result = cardService.findByOwnerIdExceptCard(OWNER_ID, ID, pageable);
 
@@ -238,26 +249,26 @@ public class CardServiceImplTest {
 
         Mockito.when(cardRepository.findById(ID)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> cardService.findByOwnerIdExceptCard(OWNER_ID, ID, pageable));
+        Assertions.assertThrows(
+                NotFoundException.class,
+                () -> cardService.findByOwnerIdExceptCard(OWNER_ID, ID, pageable));
     }
 
     private List<Card> generateCards() {
-        return Stream
-                .generate(Card::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(Card::new).limit(27).collect(Collectors.toList());
     }
 
     private List<Card> generateCardsWithTypeCard() {
-        List<Card> collect = Stream
-                .generate(Card::new)
-                .limit(5)
-                .peek(c -> c.setTypeCard(createTypeCard("MASTERCARDS")))
-                .collect(Collectors.toList());
-        List<Card> addOtherType = Stream
-                .generate(Card::new)
-                .limit(5)
-                .peek(c -> c.setTypeCard(createTypeCard("VISAS"))).toList();
+        List<Card> collect =
+                Stream.generate(Card::new)
+                        .limit(5)
+                        .peek(c -> c.setTypeCard(createTypeCard("MASTERCARDS")))
+                        .collect(Collectors.toList());
+        List<Card> addOtherType =
+                Stream.generate(Card::new)
+                        .limit(5)
+                        .peek(c -> c.setTypeCard(createTypeCard("VISAS")))
+                        .toList();
         collect.addAll(addOtherType);
         return collect;
     }
@@ -276,16 +287,18 @@ public class CardServiceImplTest {
     private TypeCard createTypeCard(String type) {
         TypeCard typeCard = new TypeCard();
         switch (type) {
-            case "VISAS": {
-                typeCard.setId(UUID.randomUUID());
-                typeCard.setPaymentSystem("VISA");
-                typeCard.setTypeName("STANDARD");
-            }
-            case "MASTERCARDS": {
-                typeCard.setId(UUID.randomUUID());
-                typeCard.setPaymentSystem("MASTERCARD");
-                typeCard.setTypeName("STANDARD");
-            }
+            case "VISAS":
+                {
+                    typeCard.setId(UUID.randomUUID());
+                    typeCard.setPaymentSystem("VISA");
+                    typeCard.setTypeName("STANDARD");
+                }
+            case "MASTERCARDS":
+                {
+                    typeCard.setId(UUID.randomUUID());
+                    typeCard.setPaymentSystem("MASTERCARD");
+                    typeCard.setTypeName("STANDARD");
+                }
         }
         return typeCard;
     }

@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-/**
- * This class presents an entity, which is available via TypeCardController endpoints.
- */
-
+/** This class presents an entity, which is available via TypeCardController endpoints. */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor

@@ -9,9 +9,7 @@ import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-/**
- * This interface presents the basic contract for converting Card to CardDto and vice versa.
- */
+/** This interface presents the basic contract for converting Card to CardDto and vice versa. */
 @Mapper(config = MapperConfig.class)
 public interface CardMapper {
 
@@ -37,5 +35,4 @@ public interface CardMapper {
     @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
     @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
     CardCredResponseDto toCardCredResponseDto(Card card);
-
 }
