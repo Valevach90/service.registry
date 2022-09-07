@@ -23,7 +23,7 @@ spring:
     groupId: payment-service
     bootstrapAddress: 10.10.14.68:19092
     transfer_request_topic_name: transfer_to_payment_request
-    transfer_response_topic_name: to_transfer_response
+    transfer_response_topic_name: transfer_response
     maxRetryAttempts: 3
 
 
