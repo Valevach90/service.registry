@@ -22,9 +22,6 @@ public class DeliveryAddress {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "branch_number")
-    private String branchNumber;
-
     @Column(name = "city", nullable = false)
     private String city;
 

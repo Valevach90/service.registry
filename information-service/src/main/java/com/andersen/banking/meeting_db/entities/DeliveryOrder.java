@@ -25,7 +25,7 @@ public class DeliveryOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_type_id", nullable = false)
-    private DeliveryType delivery_type;
+    private DeliveryType deliveryType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_address_id", nullable = false)
@@ -34,7 +34,7 @@ public class DeliveryOrder {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "card_id", nullable = false)
+    @Column(name = "card_id")
     private UUID cardId;
 
     @Column(name = "opening_time", nullable = false)
