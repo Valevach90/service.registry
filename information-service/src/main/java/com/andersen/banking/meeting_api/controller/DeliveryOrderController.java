@@ -41,7 +41,7 @@ public interface DeliveryOrderController {
     );
 
     @Operation(summary = "Get all delivery orders",
-            description = "Get all delivery orders"
+            description = "get all delivery orders"
     )
     @GetMapping
     Page<DeliveryOrderDto> findAll(
@@ -50,7 +50,7 @@ public interface DeliveryOrderController {
     );
 
     @Operation(summary = "Get all delivery types",
-            description = "Get all delivery types"
+            description = "get all delivery types"
     )
     @GetMapping("/types")
     Page<DeliveryTypeDto> findAllDeliveryTypes(
@@ -59,7 +59,7 @@ public interface DeliveryOrderController {
     );
 
     @Operation(summary = "Get all delivery orders for user",
-            description = "Get all delivery orders by user id"
+            description = "get all delivery orders by user id"
     )
     @GetMapping("/users/{id}")
     Page<DeliveryOrderDto> findDeliveryOrderByUserId(
@@ -68,7 +68,7 @@ public interface DeliveryOrderController {
     );
 
     @Operation(summary = "Get delivery order for card",
-            description = "Get delivery order by card id"
+            description = "get delivery order by card id"
     )
     @GetMapping("/cards/{id}")
     DeliveryOrderDto findDeliveryOrderByCardId(
