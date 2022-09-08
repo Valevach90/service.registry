@@ -17,9 +17,12 @@ import java.util.stream.Stream;
 
 public class DepositServiceTestEntitiesGenerator {
 
-    public static final UUID UUID = new UUID(11,22);
-    public static final Long ID = 1L;
-    public static final UUID UUID_ID = UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
+    public static final UUID TRANSFER_UUID = new UUID(11,22);
+    public static final UUID ID = UUID.randomUUID();
+
+    static final UUID OWNER_ID = TRANSFER_UUID.randomUUID();
+
+    public static final UUID UUID_ID = TRANSFER_UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
     public static final String DEPOSIT_NUMBER = "0001";
     public static final String CURRENCY_NAME = "EUR";
     public static final List<String> possibleCurrencyNames = List.of("USD", "RUB", "EU");
@@ -57,7 +60,7 @@ public class DepositServiceTestEntitiesGenerator {
 
         Random random = new Random();
 
-        currency.setId(random.nextLong(1_000_000));
+        currency.setId(ID);
         currency.setName(possibleCurrencyNames.get(random.nextInt(3)));
 
         return currency;
@@ -233,7 +236,7 @@ public class DepositServiceTestEntitiesGenerator {
     public static Transfer generateTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setTransferId(UUID);
+        transfer.setTransferId(TRANSFER_UUID);
         transfer.setUserId(ID);
         transfer.setDeposit(generateDeposit());
         transfer.setSourceNumber(FROM_CARD_NUMBER);
@@ -280,7 +283,7 @@ public class DepositServiceTestEntitiesGenerator {
 
         RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
 
-        message.setTransferId(UUID);
+        message.setTransferId(TRANSFER_UUID);
         message.setUserId(ID);
         message.setSourceNumber(sourceNumber);
         message.setSourceType(TRANSFER_WITH_DEPOSIT_TYPE);

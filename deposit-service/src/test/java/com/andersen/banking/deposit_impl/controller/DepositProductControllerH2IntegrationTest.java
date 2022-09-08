@@ -1,11 +1,21 @@
 package com.andersen.banking.deposit_impl.controller;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateCurrency;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProduct;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProductDto;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.generators.CustomPageImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,20 +28,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DepositProductControllerH2IntegrationTest {
 
     private DepositProduct product;
     private DepositProductDto productDto;
-    private Long id;
+    private UUID id;
 
     @LocalServerPort
     private int port;
@@ -118,7 +121,7 @@ public class DepositProductControllerH2IntegrationTest {
 
         restTemplate.put(baseUrl, product);
 
-        DepositProduct response = productRepository.findById(1L).get();
+        DepositProduct response = productRepository.findById(product.getId()).get();
 
         assertEquals(product, response);
         assertEquals(1, productRepository.findAll().size());

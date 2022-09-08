@@ -1,19 +1,20 @@
 package com.andersen.banking.deposit_impl.mapping;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateTransfer;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateTransferDto;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.andersen.banking.deposit_api.dto.TransferDto;
 import com.andersen.banking.deposit_db.entities.Transfer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateTransfer;
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateTransferDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TransferMapperTest {
 
     private final TransferMapper transferMapper = new TransferMapperImpl();
 
     private Transfer transfer;
+
     private TransferDto transferDto;
 
 

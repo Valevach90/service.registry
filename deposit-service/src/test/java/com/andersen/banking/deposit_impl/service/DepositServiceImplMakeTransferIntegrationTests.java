@@ -1,11 +1,24 @@
 package com.andersen.banking.deposit_impl.service;
 
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
-import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateCurrency;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDeposit;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProduct;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositType;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateRequestTransferKafkaMessage;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateResponseKafkaTransferMessage_WithSuccessfulResult;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateResponseKafkaTransferMessage_WithUnsuccessfulResult;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.andersen.banking.deposit_db.entities.Deposit;
-import com.andersen.banking.deposit_db.repositories.*;
+import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
+import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
+import com.andersen.banking.deposit_db.repositories.DepositRepository;
+import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
 import com.andersen.banking.deposit_impl.service.impl.DepositServiceImpl;
+import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,10 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateRequestTransferKafkaMessage;
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DepositServiceImplMakeTransferIntegrationTests {
@@ -25,8 +34,8 @@ public class DepositServiceImplMakeTransferIntegrationTests {
     private Deposit sourceDeposit;
     private Deposit sourceDepositWithNotEnoughMoney;
 
-    private static final Long SOURCE_DEPOSIT_ID = 1L;
-    private static final Long DESTINATION_DEPOSIT_ID = 2L;
+    private static final UUID SOURCE_DEPOSIT_ID = UUID.randomUUID();
+    private static final UUID DESTINATION_DEPOSIT_ID = UUID.randomUUID();
     private static final String SOURCE_DEPOSIT_NUMBER = "0001";
     private static final String DESTINATION_DEPOSIT_NUMBER = "0002";
 
