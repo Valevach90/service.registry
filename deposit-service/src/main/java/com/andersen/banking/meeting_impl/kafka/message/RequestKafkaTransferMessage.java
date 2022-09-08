@@ -18,7 +18,7 @@ public class RequestKafkaTransferMessage {
 
     @NotNull
     @JsonProperty("userId")
-    private Long userId;
+    private UUID userId;
 
     @NotBlank
     @JsonProperty("sourceNumber")
