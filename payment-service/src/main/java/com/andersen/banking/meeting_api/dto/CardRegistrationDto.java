@@ -1,7 +1,12 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_NAME;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PAYMENT_SYSTEM;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TYPECARD;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,6 +48,7 @@ public class CardRegistrationDto {
     private LocalDate expireDate;
 
     @NotBlank
+    @Schema(defaultValue = EXAMPLE_NAME, example = EXAMPLE_NAME)
     @Pattern(
             regexp = "[a-zA-Z- ]{3,30}",
             message =
@@ -51,10 +57,12 @@ public class CardRegistrationDto {
     private String holderName;
 
     @NotNull
+    @Schema(defaultValue = EXAMPLE_PAYMENT_SYSTEM, example = EXAMPLE_PAYMENT_SYSTEM)
     @JsonProperty("payment_system")
     private String paymentSystem;
 
     @NotNull
     @JsonProperty("type_name")
+    @Schema(defaultValue = EXAMPLE_TYPECARD, example = EXAMPLE_TYPECARD)
     private String typeName;
 }
