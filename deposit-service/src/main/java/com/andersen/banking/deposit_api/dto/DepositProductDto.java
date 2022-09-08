@@ -1,5 +1,7 @@
 package com.andersen.banking.deposit_api.dto;
 
+import static com.andersen.banking.deposit_api.utils.OpenApiConstants.*;
+
 import com.andersen.banking.deposit_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -98,4 +100,8 @@ public class DepositProductDto {
     @JsonProperty("isActive")
     @NotNull(message = "Active option can't be null.")
     private Boolean isActive;
+
+    @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
+    @JsonProperty("description")
+    private String description;
 }
