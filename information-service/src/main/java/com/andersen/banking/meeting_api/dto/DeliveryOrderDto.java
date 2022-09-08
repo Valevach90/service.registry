@@ -26,32 +26,32 @@ public class DeliveryOrderDto {
     private UUID id;
 
     @NotNull
-    @JsonProperty("delivery_type")
+    @JsonProperty("deliveryType")
     private DeliveryTypeDto deliveryType;
 
     @NotNull
-    @JsonProperty("delivery_address")
+    @JsonProperty("deliveryAddress")
     private DeliveryAddressDto deliveryAddress;
 
     @NotNull
-    @JsonProperty("user_id")
+    @JsonProperty("userId")
     private UUID userId;
 
     @NotNull
-    @JsonProperty("card_id")
+    @JsonProperty("cardId")
     private UUID cardId;
 
     @NotNull
-    @JsonProperty("opening_time")
+    @JsonProperty("openingTime")
     private Timestamp openingTime;
 
-    @JsonProperty("lead_time")
+    @JsonProperty("leadTime")
     private Timestamp leadTime;
 
     @NotNull
-    @JsonProperty("is_delivered")
+    @JsonProperty("isDelivered")
     private Boolean isDelivered;
 
-    @JsonProperty("status_description")
+    @JsonProperty("statusDescription")
     private String statusDescription;
 }

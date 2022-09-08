@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.DeliveryOrderCreateRequestDto;
 import com.andersen.banking.meeting_api.dto.DeliveryOrderDto;
 import com.andersen.banking.meeting_api.dto.DeliveryTypeDto;
 import com.andersen.banking.meeting_db.entities.DeliveryOrder;
+import com.andersen.banking.meeting_db.repositories.DeliveryAddressRepository;
 import com.andersen.banking.meeting_db.repositories.DeliveryOrderRepository;
 import com.andersen.banking.meeting_db.repositories.DeliveryTypeRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
@@ -34,6 +35,8 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
 
     private final DeliveryTypeRepository deliveryTypeRepository;
 
+    private final DeliveryAddressRepository deliveryAddressRepository;
+
     private final DeliveryOrderMapper deliveryOrderMapper;
 
     private final DeliveryTypeMapper deliveryTypeMapper;
@@ -43,8 +46,11 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
         log.info("Creating delivery order: {}", orderCreateRequest);
 
         DeliveryOrder newOrder = deliveryOrderMapper.toDeliveryOrder(orderCreateRequest);
-        newOrder.setOpeningTime(new Timestamp(System.currentTimeMillis()));
 
+        newOrder.setOpeningTime(new Timestamp(System.currentTimeMillis()));
+        newOrder.setIsDelivered(false);
+
+        deliveryAddressRepository.save(newOrder.getDeliveryAddress());
         DeliveryOrder savedOrder = deliveryOrderRepository.save(newOrder);
 
         log.info("Created delivery order: {}", savedOrder);

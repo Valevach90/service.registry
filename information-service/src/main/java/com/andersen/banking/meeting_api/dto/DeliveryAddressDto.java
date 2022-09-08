@@ -21,7 +21,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DeliveryAddressDto {
 
-    @NotNull
     @JsonProperty("id")
     private UUID id;
 

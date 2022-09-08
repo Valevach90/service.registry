@@ -52,7 +52,7 @@ public interface DeliveryOrderController {
     @Operation(summary = "Get all delivery types",
             description = "Get all delivery types"
     )
-    @GetMapping
+    @GetMapping("/types")
     Page<DeliveryTypeDto> findAllDeliveryTypes(
             @ParameterObject
             @PageableDefault Pageable pageable

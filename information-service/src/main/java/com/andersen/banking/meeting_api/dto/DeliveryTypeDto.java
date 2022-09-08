@@ -25,6 +25,6 @@ public class DeliveryTypeDto {
     private UUID id;
 
     @NotNull
-    @JsonProperty("type_name")
-    private String type_name;
+    @JsonProperty("typeName")
+    private String typeName;
 }

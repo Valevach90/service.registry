@@ -8,7 +8,7 @@ CREATE TABLE delivery_type
 
 INSERT INTO delivery_type (type_name)
 VALUES ('COURIER'),
-       ('BANK_BRANCH');
+       ('BRANCH');
 
 CREATE TABLE delivery_address
 (
@@ -32,7 +32,7 @@ CREATE TABLE delivery_order
     opening_time          TIMESTAMP                      NOT NULL,
     lead_time             TIMESTAMP                              ,
     is_delivered          Boolean DEFAULT FALSE          NOT NULL,
-    status_description    VARCHAR(500)                   NOT NULL,
+    status_description    VARCHAR(500)                           ,
 
     CONSTRAINT pk_delivery_order PRIMARY KEY (id)
 );
