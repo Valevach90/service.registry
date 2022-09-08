@@ -34,181 +34,185 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @ExtendWith(MockitoExtension.class)
+//@SpringBootTest(classes = JavaMailSender.class)
 public class NotificationServiceImplTest {
 
-  @Mock
-  private NotificationMailProperties mail;
-  @Mock
-  private NotificationRepository notificationRepository;
-  @MockBean
-  public JavaMailSender emailSender;
+    @Mock
+    private NotificationMailProperties mail;
+    @Mock
+    private NotificationRepository notificationRepository;
+    @MockBean
+    public JavaMailSender emailSender;
 
-  @InjectMocks
-  private NotificationServiceImpl notificationService;
+    @InjectMocks
+    private NotificationServiceImpl notificationService;
 
-  @Test
-  void sendEmailNotificationIsSuccess() {
-    when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
-    RegistrationNotification registrationNotification = createNotification(
-        mail.getCode().getLength(), EMAIL);
-    ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
-        RegistrationNotification.class);
-    Mockito
-        .doReturn(new RegistrationNotification())
-        .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+    @Test
+    void sendEmailNotificationIsSuccess() {
+        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+        RegistrationNotification registrationNotification = createNotification(
+            mail.getCode().getLength(), EMAIL);
+        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
+            RegistrationNotification.class);
+        Mockito
+            .doReturn(new RegistrationNotification())
+            .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
 
-    SimpleMailMessage message = createMessage(registrationNotification);
-    ArgumentCaptor<SimpleMailMessage> messageArgumentCaptor = ArgumentCaptor.forClass(
-        SimpleMailMessage.class);
+        SimpleMailMessage message = createMessage(registrationNotification);
+        ArgumentCaptor<SimpleMailMessage> messageArgumentCaptor = ArgumentCaptor.forClass(
+            SimpleMailMessage.class);
     /*Mockito
         .doNothing()
         .when(emailSender).send(messageArgumentCaptor.capture()); //на этом методе падает, emailSender=null
 
     notificationService.sendEmailNotification(EMAIL);*/
 
-    verify(notificationRepository, times(1)).save(registrationNotificationArgumentCaptor.capture());
-    //verify()
+        verify(notificationRepository, times(1)).save(
+            registrationNotificationArgumentCaptor.capture());
+        //verify()
 
-    assertEquals(registrationNotification.getStatus(),
-        registrationNotificationArgumentCaptor.getValue().getStatus());
-    // assertEquals(message.getText(),messageArgumentCaptor.getValue().getText());
-  }
-
-  @Test
-  void ConfirmCodeReceivedByEmailNotificationWithFailure() {
-
-    when(notificationRepository.findByEmail(EMAIL))
-        .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
-    when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
-
-    var actualResult = notificationService
-        .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
-
-    verify(notificationRepository, times(1)).findByEmail(EMAIL);
-    verify(mail, times(1)).getCode();
-
-    assertFalse(actualResult);
-  }
-
-  @Test
-  void confirmCodeReceivedByEmailNotificationWithSuccess() {
-
-    when(notificationRepository.findByEmail(EMAIL))
-        .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_SEND)));
-    when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
-
-    var actualResult = notificationService
-        .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
-
-    verify(notificationRepository, times(1)).findByEmail(EMAIL);
-    verify(mail, times(1)).getCode();
-
-    assertTrue(actualResult);
-  }
-
-  @Test
-  void isEmailAddressBlockedWithSuccess() {
-
-    when(notificationRepository.findByEmail(EMAIL))
-        .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED)));
-    when(mail.getBlocking()).thenReturn(givenBlocking(givenTime(1)));
-
-    var actualResult = notificationService
-        .isEmailAddressBlocked(EMAIL);
-
-    verify(notificationRepository, times(1)).findByEmail(EMAIL);
-    verify(mail, times(1)).getBlocking();
-
-    assertTrue(actualResult);
-  }
-
-  @Test
-  void isEmailAddressBlockedWithFailure() {
-
-    when(notificationRepository.findByEmail(EMAIL))
-        .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
-
-    var actualResult = notificationService
-        .isEmailAddressBlocked(EMAIL);
-
-    verify(notificationRepository, times(1)).findByEmail(EMAIL);
-
-    assertFalse(actualResult);
-  }
-
-  @Test
-  void blockEmailAddressIsSuccess() {
-    RegistrationNotification registrationNotification = createNotification(
-        mail.getCode().getLength(), EMAIL);
-    ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
-        RegistrationNotification.class);
-    Mockito
-        .doReturn(new RegistrationNotification())
-        .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
-    notificationService.blockEmailAddress(EMAIL);
-
-    verify(notificationRepository, times(1)).save(registrationNotificationArgumentCaptor.capture());
-
-    assertEquals(registrationNotification.getStatus(),
-        registrationNotificationArgumentCaptor.getValue().getStatus());
-  }
-
-  @Test
-  void getNotificationIsReturnedNotification() {
-
-    when(notificationRepository.findByEmail(EMAIL)).thenReturn(
-        Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
-
-    var actualResult = notificationService.getNotification(EMAIL);
-
-    actualResult.ifPresent(
-        registrationNotification -> assertEquals(EMAIL, registrationNotification.getEmail()));
-  }
-
-
-  public static class Constants {
-
-    public static final String EMAIL = "michail@mail.ru";
-    public static final String CODE = "0002";
-    public static final Timestamp TIME_LAST = Timestamp.valueOf("2022-06-06 13:33:29.573");
-    public static final Timestamp TIME_FUTURE = Timestamp.valueOf("2023-06-06 13:33:29.573");
-    public static final String STATUS_SEND = "sent";
-    public static final String STATUS_BLOCKED = "blocked";
-
-    public static RegistrationNotification givenRegistrationNotification(
-        Timestamp time, String status) {
-      return RegistrationNotification
-          .builder()
-          .email(EMAIL)
-          .code(CODE)
-          .time(time)
-          .status(status)
-          .build();
+        assertEquals(registrationNotification.getStatus(),
+            registrationNotificationArgumentCaptor.getValue().getStatus());
+        // assertEquals(message.getText(),messageArgumentCaptor.getValue().getText());
     }
 
-    public static Code givenCode(int length, Time valid) {
-      Code codeResult = new Code();
-      codeResult.setValid(valid);
-      codeResult.setLength(length);
-      return codeResult;
+    @Test
+    void ConfirmCodeReceivedByEmailNotificationWithFailure() {
+
+        when(notificationRepository.findByEmail(EMAIL))
+            .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
+        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+
+        var actualResult = notificationService
+            .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
+
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+        verify(mail, times(1)).getCode();
+
+        assertFalse(actualResult);
     }
 
-    public static Time givenTime(int millis) {
-      Time timeResult = new Time();
-      timeResult.setMillis(millis);
-      return timeResult;
+    @Test
+    void confirmCodeReceivedByEmailNotificationWithSuccess() {
+
+        when(notificationRepository.findByEmail(EMAIL))
+            .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_SEND)));
+        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+
+        var actualResult = notificationService
+            .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
+
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+        verify(mail, times(1)).getCode();
+
+        assertTrue(actualResult);
     }
 
-    public static Blocking givenBlocking(Time time) {
-      Blocking blockingResult = new Blocking();
-      blockingResult.setTime(time);
-      return blockingResult;
+    @Test
+    void isEmailAddressBlockedWithSuccess() {
+
+        when(notificationRepository.findByEmail(EMAIL))
+            .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED)));
+        when(mail.getBlocking()).thenReturn(givenBlocking(givenTime(1)));
+
+        var actualResult = notificationService
+            .isEmailAddressBlocked(EMAIL);
+
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+        verify(mail, times(1)).getBlocking();
+
+        assertTrue(actualResult);
     }
 
-  }
+    @Test
+    void isEmailAddressBlockedWithFailure() {
+
+        when(notificationRepository.findByEmail(EMAIL))
+            .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
+
+        var actualResult = notificationService
+            .isEmailAddressBlocked(EMAIL);
+
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+
+        assertFalse(actualResult);
+    }
+
+    @Test
+    void blockEmailAddressIsSuccess() {
+        RegistrationNotification registrationNotification = createNotification(
+            mail.getCode().getLength(), EMAIL);
+        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
+            RegistrationNotification.class);
+        Mockito
+            .doReturn(new RegistrationNotification())
+            .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+        notificationService.blockEmailAddress(EMAIL);
+
+        verify(notificationRepository, times(1)).save(
+            registrationNotificationArgumentCaptor.capture());
+
+        assertEquals(registrationNotification.getStatus(),
+            registrationNotificationArgumentCaptor.getValue().getStatus());
+    }
+
+    @Test
+    void getNotificationIsReturnedNotification() {
+
+        when(notificationRepository.findByEmail(EMAIL)).thenReturn(
+            Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
+
+        var actualResult = notificationService.getNotification(EMAIL);
+
+        actualResult.ifPresent(
+            registrationNotification -> assertEquals(EMAIL, registrationNotification.getEmail()));
+    }
+
+
+    public static class Constants {
+
+        public static final String EMAIL = "michail@mail.ru";
+        public static final String CODE = "0002";
+        public static final Timestamp TIME_LAST = Timestamp.valueOf("2022-06-06 13:33:29.573");
+        public static final Timestamp TIME_FUTURE = Timestamp.valueOf("2023-06-06 13:33:29.573");
+        public static final String STATUS_SEND = "sent";
+        public static final String STATUS_BLOCKED = "blocked";
+
+        public static RegistrationNotification givenRegistrationNotification(
+            Timestamp time, String status) {
+            return RegistrationNotification
+                .builder()
+                .email(EMAIL)
+                .code(CODE)
+                .time(time)
+                .status(status)
+                .build();
+        }
+
+        public static Code givenCode(int length, Time valid) {
+            Code codeResult = new Code();
+            codeResult.setValid(valid);
+            codeResult.setLength(length);
+            return codeResult;
+        }
+
+        public static Time givenTime(int millis) {
+            Time timeResult = new Time();
+            timeResult.setMillis(millis);
+            return timeResult;
+        }
+
+        public static Blocking givenBlocking(Time time) {
+            Blocking blockingResult = new Blocking();
+            blockingResult.setTime(time);
+            return blockingResult;
+        }
+
+    }
 }
