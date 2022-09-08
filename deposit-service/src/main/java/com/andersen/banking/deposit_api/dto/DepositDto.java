@@ -4,6 +4,7 @@ import com.andersen.banking.deposit_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.UUID;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,7 @@ public class DepositDto {
     @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
     @JsonProperty("id")
     @NotNull(message = "Deposit id can't be null.")
-    private Long id;
+    private UUID id;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
     @JsonProperty("depositNumber")
@@ -106,7 +107,7 @@ public class DepositDto {
     @Schema(description = OpenApiConstants.DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
-    private Long userId;
+    private UUID userId;
 
     @JsonProperty(value = "transfersDto", access = JsonProperty.Access.READ_ONLY)
     private List<TransferDto> transfersDto;

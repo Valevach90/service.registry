@@ -6,6 +6,7 @@ import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositProductMapper;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public DepositProductDto findById(Long id) {
+    public DepositProductDto findById(UUID id) {
         log.debug("Find deposit product by id: {}", id);
 
         Optional<DepositProduct> depositProduct = depositProductService.findById(id);
@@ -75,7 +76,7 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.debug("Deleting deposit product with id: {}", id);
 
         depositProductService.deleteById(id);

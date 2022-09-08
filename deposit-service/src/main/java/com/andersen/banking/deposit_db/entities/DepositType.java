@@ -1,10 +1,12 @@
 package com.andersen.banking.deposit_db.entities;
 
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -14,7 +16,7 @@ public class DepositType {
 
     @Id
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     private String name;

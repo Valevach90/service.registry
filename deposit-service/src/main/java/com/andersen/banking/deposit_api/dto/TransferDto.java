@@ -24,7 +24,7 @@ public class TransferDto {
     @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
-    private Long userId;
+    private UUID userId;
 
     @Schema(description = DESCRIPTION_DEPOSIT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
     @JsonProperty("deposit")
