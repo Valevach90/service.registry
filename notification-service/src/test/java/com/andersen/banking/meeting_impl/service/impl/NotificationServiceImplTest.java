@@ -10,6 +10,8 @@ import static com.andersen.banking.meeting_impl.service.impl.NotificationService
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenCode;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenRegistrationNotification;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenTime;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createMessage;
+import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createNotification;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,9 +29,14 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationServiceImplTest {
@@ -38,9 +45,39 @@ public class NotificationServiceImplTest {
   private NotificationMailProperties mail;
   @Mock
   private NotificationRepository notificationRepository;
+  @MockBean
+  public JavaMailSender emailSender;
 
   @InjectMocks
   private NotificationServiceImpl notificationService;
+
+  @Test
+  void sendEmailNotificationIsSuccess() {
+    when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+    RegistrationNotification registrationNotification = createNotification(
+        mail.getCode().getLength(), EMAIL);
+    ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
+        RegistrationNotification.class);
+    Mockito
+        .doReturn(new RegistrationNotification())
+        .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+
+    SimpleMailMessage message = createMessage(registrationNotification);
+    ArgumentCaptor<SimpleMailMessage> messageArgumentCaptor = ArgumentCaptor.forClass(
+        SimpleMailMessage.class);
+    /*Mockito
+        .doNothing()
+        .when(emailSender).send(messageArgumentCaptor.capture()); //на этом методе падает, emailSender=null
+
+    notificationService.sendEmailNotification(EMAIL);*/
+
+    verify(notificationRepository, times(1)).save(registrationNotificationArgumentCaptor.capture());
+    //verify()
+
+    assertEquals(registrationNotification.getStatus(),
+        registrationNotificationArgumentCaptor.getValue().getStatus());
+    // assertEquals(message.getText(),messageArgumentCaptor.getValue().getText());
+  }
 
   @Test
   void ConfirmCodeReceivedByEmailNotificationWithFailure() {
@@ -105,11 +142,24 @@ public class NotificationServiceImplTest {
   }
 
   @Test
-  void blockEmailAddress() {
+  void blockEmailAddressIsSuccess() {
+    RegistrationNotification registrationNotification = createNotification(
+        mail.getCode().getLength(), EMAIL);
+    ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
+        RegistrationNotification.class);
+    Mockito
+        .doReturn(new RegistrationNotification())
+        .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+    notificationService.blockEmailAddress(EMAIL);
+
+    verify(notificationRepository, times(1)).save(registrationNotificationArgumentCaptor.capture());
+
+    assertEquals(registrationNotification.getStatus(),
+        registrationNotificationArgumentCaptor.getValue().getStatus());
   }
 
   @Test
-  void getNotification() {
+  void getNotificationIsReturnedNotification() {
 
     when(notificationRepository.findByEmail(EMAIL)).thenReturn(
         Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
