@@ -20,7 +20,7 @@ import java.util.List;
 @Schema(description = "dto for deposit")
 public class DepositDto {
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("id")
     @NotNull(message = "Deposit id can't be null.")
     private UUID id;
@@ -56,7 +56,7 @@ public class DepositDto {
     @JsonProperty("closeDate")
     private Date closeDate;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_AMOUNT, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("amount")
     @NotNull(message = "Amount can't be null.")
     private Long amount;
@@ -104,7 +104,7 @@ public class DepositDto {
     @NotNull(message = "Revocation Option can't be null.")
     private Boolean isRevocable;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
     private UUID userId;

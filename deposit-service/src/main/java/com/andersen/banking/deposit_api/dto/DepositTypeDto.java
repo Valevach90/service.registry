@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "dto for deposit type")
 public class DepositTypeDto {
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_TYPE_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_TYPE_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("id")
     @NotNull(message = "Deposit type id can't be null.")
     private UUID id;

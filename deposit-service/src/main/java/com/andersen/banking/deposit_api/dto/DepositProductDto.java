@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "dto for deposit product")
 public class DepositProductDto {
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_PRODUCT_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_PRODUCT_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("id")
     @NotNull(message = "Deposit product id can't be null.")
     private UUID id;
@@ -46,12 +46,12 @@ public class DepositProductDto {
     @NotNull(message = "Maximal Term in Months can't be null.")
     private Integer maxTermMonths;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_MIN_AMOUNT, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_MIN_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("minAmount")
     @NotNull(message = "Minimal Amount can't be null.")
     private Long minAmount;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_MAX_AMOUNT, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_MAX_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("maxAmount")
     @NotNull(message = "Maximal Amount can't be null.")
     private Long maxAmount;
