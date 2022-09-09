@@ -3,8 +3,9 @@ package com.andersen.banking.meeting_db.repository;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.EMAIL;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.STATUS_SEND;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.TIME_LAST;
-import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenRegistrationNotification;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildRegistrationNotification;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -16,24 +17,45 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class NotificationRepositoryIntegrationTest {
 
-  @Autowired
-  private NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
-  @Test
-  void findByEmailWithSuccess() {
+    @Test
+    void findByEmailWithSuccess() {
 
-    notificationRepository.save(givenRegistrationNotification(TIME_LAST, STATUS_SEND));
+        var givenRegistrationNotification = buildRegistrationNotification(
+            TIME_LAST,
+            STATUS_SEND
+        );
 
-    var actualResult = notificationRepository
-        .findByEmail(EMAIL);
+        notificationRepository.save(givenRegistrationNotification);
 
-    actualResult.ifPresent(
-        registrationNotification -> assertEquals(
-            givenRegistrationNotification(TIME_LAST, STATUS_SEND), registrationNotification));
-  }
+        var actualResult = notificationRepository
+            .findByEmail(EMAIL);
 
-  @AfterEach
-  void cleanUp() {
-    notificationRepository.deleteAll();
-  }
+        actualResult.ifPresent(
+            registrationNotification -> assertEquals(
+                givenRegistrationNotification, registrationNotification));
+    }
+
+    @Test
+    void findByEmailWithFailure() {
+
+        var givenRegistrationNotification = buildRegistrationNotification(
+            TIME_LAST,
+            STATUS_SEND
+        );
+
+        var actualResult = notificationRepository
+            .findByEmail(EMAIL);
+
+        actualResult.ifPresent(
+            registrationNotification -> assertNotEquals(
+                givenRegistrationNotification, registrationNotification));
+    }
+
+    @AfterEach
+    void cleanUp() {
+        notificationRepository.deleteAll();
+    }
 }

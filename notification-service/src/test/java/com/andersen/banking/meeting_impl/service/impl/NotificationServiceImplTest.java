@@ -2,14 +2,15 @@ package com.andersen.banking.meeting_impl.service.impl;
 
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.CODE;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.EMAIL;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.EMAIL_SENDER;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.STATUS_BLOCKED;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.STATUS_SEND;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.TIME_FUTURE;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.TIME_LAST;
-import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenBlocking;
-import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenCode;
-import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenRegistrationNotification;
-import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.givenTime;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildBlocking;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildCode;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildRegistrationNotification;
+import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildTime;
 import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createMessage;
 import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.createNotification;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,27 +54,22 @@ public class NotificationServiceImplTest {
     @Test
     void sendEmailNotificationIsSuccess() {
 
-        when(mail.getCode()).thenReturn(givenCode(1, givenTime(10)));
+        when(mail.getCode()).thenReturn(buildCode(1, buildTime(10)));
 
         RegistrationNotification registrationNotification = createNotification(
             mail.getCode().getLength(), EMAIL);
 
-        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
-            RegistrationNotification.class);
-
+        final var emailSenderMocked = mock(JavaMailSender.class);
         SimpleMailMessage message = createMessage(registrationNotification);
 
+        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor =
+            ArgumentCaptor.forClass(
+                RegistrationNotification.class
+            );
         ArgumentCaptor<SimpleMailMessage> messageArgumentCaptor = ArgumentCaptor.forClass(
             SimpleMailMessage.class);
 
-        final var emailSenderMocked = mock(JavaMailSender.class);
-        try {
-            var field = notificationService.getClass().getDeclaredField("emailSender");
-            field.setAccessible(true);
-            field.set(notificationService, emailSenderMocked);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        setEmailSenderByReflection(emailSenderMocked);
 
         doReturn(new RegistrationNotification())
             .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
@@ -83,19 +79,21 @@ public class NotificationServiceImplTest {
 
         verify(notificationRepository, times(1)).save(
             registrationNotificationArgumentCaptor.capture());
-        verify(emailSenderMocked, times(1)).send(messageArgumentCaptor.capture());
+        verify(emailSenderMocked, times(1))
+            .send(messageArgumentCaptor.capture());
 
         assertEquals(registrationNotification.getStatus(),
             registrationNotificationArgumentCaptor.getValue().getStatus());
         assertEquals(message.getSubject(), messageArgumentCaptor.getValue().getSubject());
     }
 
+
     @Test
     void confirmCodeReceivedByEmailNotificationWithFailure() {
 
         when(notificationRepository.findByEmail(EMAIL))
-            .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
-        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+            .thenReturn(Optional.of(buildRegistrationNotification(TIME_LAST, STATUS_SEND)));
+        when(mail.getCode()).thenReturn(buildCode(1, buildTime(3)));
 
         var actualResult = notificationService
             .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
@@ -110,8 +108,8 @@ public class NotificationServiceImplTest {
     void confirmCodeReceivedByEmailNotificationWithSuccess() {
 
         when(notificationRepository.findByEmail(EMAIL))
-            .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_SEND)));
-        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+            .thenReturn(Optional.of(buildRegistrationNotification(TIME_FUTURE, STATUS_SEND)));
+        when(mail.getCode()).thenReturn(buildCode(1, buildTime(3)));
 
         var actualResult = notificationService
             .confirmCodeReceivedByEmailNotification(EMAIL, CODE);
@@ -126,8 +124,8 @@ public class NotificationServiceImplTest {
     void isEmailAddressBlockedWithSuccess() {
 
         when(notificationRepository.findByEmail(EMAIL))
-            .thenReturn(Optional.of(givenRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED)));
-        when(mail.getBlocking()).thenReturn(givenBlocking(givenTime(1)));
+            .thenReturn(Optional.of(buildRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED)));
+        when(mail.getBlocking()).thenReturn(buildBlocking(buildTime(1)));
 
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
@@ -142,7 +140,7 @@ public class NotificationServiceImplTest {
     void isEmailAddressBlockedWithFailure() {
 
         when(notificationRepository.findByEmail(EMAIL))
-            .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
+            .thenReturn(Optional.of(buildRegistrationNotification(TIME_LAST, STATUS_SEND)));
 
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
@@ -155,16 +153,18 @@ public class NotificationServiceImplTest {
     @Test
     void blockEmailAddressIsSuccess() {
 
-        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
-            RegistrationNotification.class);
+        ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor =
+            ArgumentCaptor.forClass(RegistrationNotification.class);
+
         doReturn(new RegistrationNotification())
             .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+
         notificationService.blockEmailAddress(EMAIL);
 
         verify(notificationRepository, times(1)).save(
             registrationNotificationArgumentCaptor.capture());
 
-        assertEquals(givenRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED).getStatus(),
+        assertEquals(buildRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED).getStatus(),
             registrationNotificationArgumentCaptor.getValue().getStatus());
     }
 
@@ -172,7 +172,7 @@ public class NotificationServiceImplTest {
     void getNotificationIsReturnedNotification() {
 
         when(notificationRepository.findByEmail(EMAIL)).thenReturn(
-            Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
+            Optional.of(buildRegistrationNotification(TIME_LAST, STATUS_SEND)));
 
         var actualResult = notificationService.getNotification(EMAIL);
 
@@ -180,6 +180,26 @@ public class NotificationServiceImplTest {
             registrationNotification -> assertEquals(EMAIL, registrationNotification.getEmail()));
     }
 
+    @Test
+    void getNotificationIsNotReturnedNotification() {
+
+        when(notificationRepository.findByEmail(EMAIL)).thenReturn(
+            Optional.empty());
+
+        var actualResult = notificationService.getNotification(EMAIL);
+
+       assertTrue(actualResult.isEmpty());
+    }
+
+    private void setEmailSenderByReflection(JavaMailSender emailSenderMocked) {
+        try {
+            var field = notificationService.getClass().getDeclaredField(EMAIL_SENDER);
+            field.setAccessible(true);
+            field.set(notificationService, emailSenderMocked);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static class Constants {
 
@@ -189,8 +209,13 @@ public class NotificationServiceImplTest {
         public static final Timestamp TIME_FUTURE = Timestamp.valueOf("2023-06-06 13:33:29.573");
         public static final String STATUS_SEND = "sent";
         public static final String STATUS_BLOCKED = "blocked";
+        public static final String EMAIL_SENDER = "emailSender";
 
-        public static RegistrationNotification givenRegistrationNotification(
+    }
+
+    public static class NotificationFactory {
+
+        public static RegistrationNotification buildRegistrationNotification(
             Timestamp time, String status) {
             return RegistrationNotification
                 .builder()
@@ -201,20 +226,20 @@ public class NotificationServiceImplTest {
                 .build();
         }
 
-        public static Code givenCode(int length, Time valid) {
+        public static Code buildCode(int length, Time valid) {
             Code codeResult = new Code();
             codeResult.setValid(valid);
             codeResult.setLength(length);
             return codeResult;
         }
 
-        public static Time givenTime(int millis) {
+        public static Time buildTime(int millis) {
             Time timeResult = new Time();
             timeResult.setMillis(millis);
             return timeResult;
         }
 
-        public static Blocking givenBlocking(Time time) {
+        public static Blocking buildBlocking(Time time) {
             Blocking blockingResult = new Blocking();
             blockingResult.setTime(time);
             return blockingResult;
