@@ -61,7 +61,7 @@ public class DepositProductControllerH2IntegrationTest {
         depositTypeRepository.save(generateDepositType());
         currencyRepository.save(generateCurrency());
 
-        product = generateDepositProduct();
+        product = productRepository.save(generateDepositProduct());
         productDto = generateDepositProductDto(product);
         id = product.getId();
 
@@ -71,9 +71,10 @@ public class DepositProductControllerH2IntegrationTest {
     @Test
     void create_whenOk_shouldReturnSavedDepositProductDto(){
         DepositProductDto response = restTemplate.postForObject(baseUrl, productDto, DepositProductDto.class);
+        productDto.setId(response.getId());
 
         assertEquals(productDto, response);
-        assertEquals(1, productRepository.findAll().size());
+        assertEquals(2, productRepository.findAll().size());
     }
 
     @Test
@@ -84,8 +85,8 @@ public class DepositProductControllerH2IntegrationTest {
     }
 
     @Test
-    void findById_whenOk_shouldReturnFoundDepositProductDto(){
-        productRepository.save(product);
+    void findById_whenOk_shouldReturnFoundDepositProductDto() {
+        UUID id = productRepository.save(product).getId();
 
         DepositProductDto response = restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, id);
 
@@ -95,9 +96,9 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void findById_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
-        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, id));
+        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, UUID.randomUUID()));
     }
 
     @Test
@@ -116,10 +117,10 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void update_whenOk(){
-        productRepository.save(product);
         product.setDepositName("SecondName");
+        productDto.setDepositName("SecondName");
 
-        restTemplate.put(baseUrl, product);
+        restTemplate.put(baseUrl, productDto);
 
         DepositProduct response = productRepository.findById(product.getId()).get();
 
@@ -129,17 +130,13 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void update_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
         assertThrows(Exception.class, () -> restTemplate.put(baseUrl, product));
     }
 
     @Test
     void delete_whenOk(){
-        assertEquals(0, productRepository.findAll().size());
-
-        productRepository.save(product);
-
         assertEquals(1, productRepository.findAll().size());
 
         restTemplate.delete(baseUrl + "/{id}", id);
@@ -149,8 +146,8 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void delete_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
-        assertThrows(Exception.class, () -> restTemplate.delete(baseUrl + "/{id}", id));
+        assertThrows(Exception.class, () -> restTemplate.delete(baseUrl + "/{id}", UUID.randomUUID()));
     }
 }

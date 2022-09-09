@@ -1,42 +1,54 @@
+ALTER TABLE deposit_products
+    DROP CONSTRAINT fk_deposit_products_on_deposit_types,
+    DROP CONSTRAINT fk_deposit_products_on_currencies;
+
+ALTER TABLE deposits
+    DROP CONSTRAINT fk_deposits_on_deposit_products,
+    DROP CONSTRAINT fk_deposits_on_deposit_types,
+    DROP CONSTRAINT fk_deposits_on_currencies;
+
+ALTER TABLE transfers
+    DROP CONSTRAINT fk_transfer_on_deposit;
+
 ALTER TABLE deposit_types
-    DROP COLUMN id CASCADE,
+    DROP COLUMN id,
     ADD COLUMN id UUID UNIQUE DEFAULT gen_random_uuid() NOT NULL;
 
 ALTER TABLE currencies
-    DROP COLUMN id CASCADE,
+    DROP COLUMN id,
     ADD COLUMN id UUID UNIQUE DEFAULT gen_random_uuid() NOT NULL;
 
 ALTER TABLE deposit_products
-    DROP COLUMN id CASCADE,
+    DROP COLUMN id,
     ADD COLUMN id UUID UNIQUE DEFAULT gen_random_uuid() NOT NULL,
 
-    DROP COLUMN deposit_type_id CASCADE,
+    DROP COLUMN deposit_type_id,
     ADD COLUMN deposit_type_id UUID NOT NULL,
 
-    DROP COLUMN currency_id CASCADE,
+    DROP COLUMN currency_id,
     ADD COLUMN currency_id UUID NOT NULL;
 
 ALTER TABLE deposits
-    DROP COLUMN id CASCADE,
+    DROP COLUMN id,
     ADD COLUMN id UUID UNIQUE DEFAULT gen_random_uuid() NOT NULL,
 
-    DROP COLUMN deposit_product_id CASCADE,
+    DROP COLUMN deposit_product_id,
     ADD COLUMN deposit_product_id UUID NOT NULL,
 
-    DROP COLUMN deposit_type_id CASCADE,
+    DROP COLUMN deposit_type_id,
     ADD COLUMN deposit_type_id UUID NOT NULL,
 
-    DROP COLUMN currency_id CASCADE,
+    DROP COLUMN currency_id,
     ADD COLUMN currency_id UUID NOT NULL,
 
-    DROP COLUMN user_id CASCADE,
+    DROP COLUMN user_id,
     ADD COLUMN user_id UUID NOT NULL;
 
 ALTER TABLE transfers
-    DROP COLUMN user_id CASCADE ,
+    DROP COLUMN user_id,
     ADD COLUMN user_id UUID NOT NULL,
 
-    DROP COLUMN deposit_id CASCADE ,
+    DROP COLUMN deposit_id,
     ADD COLUMN deposit_id UUID NOT NULL;
 
 ALTER TABLE deposit_types

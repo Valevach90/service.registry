@@ -10,6 +10,7 @@ import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEnt
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.andersen.banking.deposit_db.entities.Deposit;
+import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
 import com.andersen.banking.deposit_db.repositories.DepositRepository;
@@ -33,6 +34,8 @@ public class DepositServiceImplMakeTransferIntegrationTests {
 
     private Deposit sourceDeposit;
     private Deposit sourceDepositWithNotEnoughMoney;
+
+    private DepositProduct depositProduct;
 
     private static final UUID SOURCE_DEPOSIT_ID = UUID.randomUUID();
     private static final UUID DESTINATION_DEPOSIT_ID = UUID.randomUUID();
@@ -58,12 +61,16 @@ public class DepositServiceImplMakeTransferIntegrationTests {
         currencyRepository.save(generateCurrency());
         depositProductRepository.save(generateDepositProduct());
 
+        depositProduct = depositProductRepository.save(generateDepositProduct());
+
         sourceDeposit = generateDeposit();
+        sourceDeposit.setDepositProduct(depositProduct);
         sourceDeposit.setId(SOURCE_DEPOSIT_ID);
         sourceDeposit.setDepositNumber(SOURCE_DEPOSIT_NUMBER);
         depositRepository.save(sourceDeposit);
 
         sourceDepositWithNotEnoughMoney = generateDeposit();
+        sourceDepositWithNotEnoughMoney.setDepositProduct(depositProduct);
         sourceDepositWithNotEnoughMoney.setId(DESTINATION_DEPOSIT_ID);
         sourceDepositWithNotEnoughMoney.setDepositNumber(DESTINATION_DEPOSIT_NUMBER);
         depositRepository.save(sourceDepositWithNotEnoughMoney);
