@@ -31,21 +31,15 @@ public class UserAuthenticationControllerImpl implements
 
     @Override
     public UserDto create(Authentication authentication, UserDto userDto) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        UUID id = UUID.fromString(extractIdFromToken(jwt));
-        log.debug("Create authentication user with id {}", id);
-        userDto.setId(id);
-        userDto.setEmail(extractEmailFromToken(jwt));
+        setIdAndMail(authentication, userDto);
+        log.debug("Create authentication user with id {}", userDto.getId());
         return userController.create(userDto);
     }
 
     @Override
     public void updateUser(Authentication authentication, UserDto userDto) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        UUID id = UUID.fromString(extractIdFromToken(jwt));
-        userDto.setId(id);
-        log.debug("Update authentication user with id {}", id);
-        userDto.setEmail(extractEmailFromToken(jwt));
+        setIdAndMail(authentication, userDto);
+        log.debug("Update authentication user with id {}", userDto.getId());
         userController.updateUser(userDto);
     }
 
@@ -55,5 +49,12 @@ public class UserAuthenticationControllerImpl implements
         UUID id = UUID.fromString(extractIdFromToken(jwt));
         log.debug("Delete authentication user with id {}", id);
         userController.deleteById(id);
+    }
+
+    private void setIdAndMail(Authentication authentication, UserDto userDto) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID id = UUID.fromString(extractIdFromToken(jwt));
+        userDto.setId(id);
+        userDto.setEmail(extractEmailFromToken(jwt));
     }
 }

@@ -5,16 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
 import java.util.Map;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class AuthServiceUtil {
 
-    private AuthServiceUtil() {}
+    private AuthServiceUtil() {
+    }
 
-    public static MultiValueMap<String, String> prepareBodyToGetAccessToken(String userName, String password, String grantType, String clientId){
+    public static MultiValueMap<String, String> prepareBodyToGetAccessToken(String userName,
+            String password, String grantType, String clientId) {
 
         MultiValueMap<String, String> bodyValues = new LinkedMultiValueMap<>();
 
@@ -25,7 +26,8 @@ public class AuthServiceUtil {
 
         return bodyValues;
     }
-    public static String extractAccessTokenFromJson(String token){
+
+    public static String extractAccessTokenFromJson(String token) {
 
         final String json = token;
         final ObjectNode node;
@@ -38,7 +40,8 @@ public class AuthServiceUtil {
 
         return accessToken.substring(1, accessToken.length() - 1);
     }
-    public static String prepareRoleInJson(String roleId, String roleName){
+
+    public static String prepareRoleInJson(String roleId, String roleName) {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -55,7 +58,7 @@ public class AuthServiceUtil {
         return roles;
     }
 
-    public static String preparePasswordInJson(String newPassport){
+    public static String preparePasswordInJson(String newPassport) {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -66,34 +69,40 @@ public class AuthServiceUtil {
 
         String mappedPassport;
         try {
-            mappedPassport = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(preparedPassport);
+            mappedPassport = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(preparedPassport);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         return mappedPassport;
     }
 
-    public static String extractIdFromToken(Jwt jwt){
+    public static String extractIdFromToken(Jwt jwt) {
 
         return jwt.getClaim("sub").toString();
     }
-    public static String extractLoginFromToken(Jwt jwt){
+
+    public static String extractLoginFromToken(Jwt jwt) {
 
         return jwt.getClaim("preferred_username").toString();
     }
 
-    public static String extractEmailFromToken(Jwt jwt){
+    public static String extractEmailFromToken(Jwt jwt) {
 
         return jwt.getClaim("email").toString();
     }
-    public static boolean doesUserHaveNoRoles(Jwt jwt){
-        Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
+
+    public static boolean doesUserHaveNoRoles(Jwt jwt) {
+        Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims()
+                .get("resource_access");
         return !resourceAccess.containsKey("api-gateway");
     }
 
-    public static boolean doesUserHaveUserRoles(Jwt jwt){
-        Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims().get("resource_access");
-        Map<String, List<Object>> stringObjectMap = (Map<String, List<Object>>) resourceAccess.get("api-gateway");
+    public static boolean doesUserHaveUserRoles(Jwt jwt) {
+        Map<String, Object> resourceAccess = (Map<String, Object>) jwt.getClaims()
+                .get("resource_access");
+        Map<String, List<Object>> stringObjectMap = (Map<String, List<Object>>) resourceAccess.get(
+                "api-gateway");
         List<Object> roles = stringObjectMap.get("roles");
         return roles.contains("USER");
     }
