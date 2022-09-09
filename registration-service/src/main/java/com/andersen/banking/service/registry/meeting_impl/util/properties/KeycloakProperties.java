@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("keycloak")
 public class KeycloakProperties {
-    String authServerUrl;
-    String realm;
-    String clientId;
-    String clientSecret;
+    private String authServerUrl;
+    private String realm;
+    private String clientId;
+    private String clientSecret;
+    private String clientIdRefresh;
 }

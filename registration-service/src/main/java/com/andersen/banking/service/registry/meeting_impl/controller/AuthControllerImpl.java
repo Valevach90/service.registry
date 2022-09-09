@@ -69,6 +69,7 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     public void logout(String refreshToken) {
+        log.trace("logout user");
         authService.logoutUser(refreshToken);
     }
 }
