@@ -15,6 +15,9 @@ import static com.andersen.banking.meeting_impl.util.MailNotificationUtil.create
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,58 +35,63 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @ExtendWith(MockitoExtension.class)
-//@SpringBootTest(classes = JavaMailSender.class)
 public class NotificationServiceImplTest {
 
     @Mock
     private NotificationMailProperties mail;
     @Mock
     private NotificationRepository notificationRepository;
-    @MockBean
-    public JavaMailSender emailSender;
 
     @InjectMocks
     private NotificationServiceImpl notificationService;
 
     @Test
     void sendEmailNotificationIsSuccess() {
-        when(mail.getCode()).thenReturn(givenCode(1, givenTime(3)));
+
+        when(mail.getCode()).thenReturn(givenCode(1, givenTime(10)));
+
         RegistrationNotification registrationNotification = createNotification(
             mail.getCode().getLength(), EMAIL);
+
         ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
             RegistrationNotification.class);
-        Mockito
-            .doReturn(new RegistrationNotification())
-            .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
 
         SimpleMailMessage message = createMessage(registrationNotification);
+
         ArgumentCaptor<SimpleMailMessage> messageArgumentCaptor = ArgumentCaptor.forClass(
             SimpleMailMessage.class);
-    /*Mockito
-        .doNothing()
-        .when(emailSender).send(messageArgumentCaptor.capture()); //на этом методе падает, emailSender=null
 
-    notificationService.sendEmailNotification(EMAIL);*/
+        final var emailSenderMocked = mock(JavaMailSender.class);
+        try {
+            var field = notificationService.getClass().getDeclaredField("emailSender");
+            field.setAccessible(true);
+            field.set(notificationService, emailSenderMocked);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        doReturn(new RegistrationNotification())
+            .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
+        doNothing().when(emailSenderMocked).send(messageArgumentCaptor.capture());
+
+        notificationService.sendEmailNotification(EMAIL);
 
         verify(notificationRepository, times(1)).save(
             registrationNotificationArgumentCaptor.capture());
-        //verify()
+        verify(emailSenderMocked, times(1)).send(messageArgumentCaptor.capture());
 
         assertEquals(registrationNotification.getStatus(),
             registrationNotificationArgumentCaptor.getValue().getStatus());
-        // assertEquals(message.getText(),messageArgumentCaptor.getValue().getText());
+        assertEquals(message.getSubject(), messageArgumentCaptor.getValue().getSubject());
     }
 
     @Test
-    void ConfirmCodeReceivedByEmailNotificationWithFailure() {
+    void confirmCodeReceivedByEmailNotificationWithFailure() {
 
         when(notificationRepository.findByEmail(EMAIL))
             .thenReturn(Optional.of(givenRegistrationNotification(TIME_LAST, STATUS_SEND)));
@@ -146,19 +154,17 @@ public class NotificationServiceImplTest {
 
     @Test
     void blockEmailAddressIsSuccess() {
-        RegistrationNotification registrationNotification = createNotification(
-            mail.getCode().getLength(), EMAIL);
+
         ArgumentCaptor<RegistrationNotification> registrationNotificationArgumentCaptor = ArgumentCaptor.forClass(
             RegistrationNotification.class);
-        Mockito
-            .doReturn(new RegistrationNotification())
+        doReturn(new RegistrationNotification())
             .when(notificationRepository).save(registrationNotificationArgumentCaptor.capture());
         notificationService.blockEmailAddress(EMAIL);
 
         verify(notificationRepository, times(1)).save(
             registrationNotificationArgumentCaptor.capture());
 
-        assertEquals(registrationNotification.getStatus(),
+        assertEquals(givenRegistrationNotification(TIME_FUTURE, STATUS_BLOCKED).getStatus(),
             registrationNotificationArgumentCaptor.getValue().getStatus());
     }
 
@@ -213,6 +219,5 @@ public class NotificationServiceImplTest {
             blockingResult.setTime(time);
             return blockingResult;
         }
-
     }
 }
