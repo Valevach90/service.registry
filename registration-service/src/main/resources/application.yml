@@ -75,6 +75,7 @@ keycloak:
   auth-server-url: http://10.10.14.31:30001
   realm: Meetingroom-New
   client-id: api-gateway
+  client-id-refresh: gateway-user-management
   client-secret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
   role:
     unauthorized:

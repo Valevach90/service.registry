@@ -180,8 +180,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refreshToken(String refreshToken) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("grant_type", "refresh_token");
-        parameters.add("client_id", keycloak.getClientId());
-        parameters.add("client_secret", keycloak.getClientSecret());
+        parameters.add("client_id", keycloak.getClientIdRefresh());
         parameters.add("refresh_token", refreshToken);
 
         return client.post()
