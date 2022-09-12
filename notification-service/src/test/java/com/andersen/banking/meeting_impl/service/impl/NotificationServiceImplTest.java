@@ -130,7 +130,7 @@ public class NotificationServiceImplTest {
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
 
-        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+        verify(notificationRepository, times(2)).findByEmail(EMAIL);
         verify(mail, times(1)).getBlocking();
 
         assertTrue(actualResult);
@@ -145,7 +145,7 @@ public class NotificationServiceImplTest {
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
 
-        verify(notificationRepository, times(1)).findByEmail(EMAIL);
+        verify(notificationRepository, times(2)).findByEmail(EMAIL);
 
         assertFalse(actualResult);
     }
@@ -176,6 +176,9 @@ public class NotificationServiceImplTest {
 
         var actualResult = notificationService.getNotification(EMAIL);
 
+        assertFalse(actualResult.isEmpty());
+        assertEquals(EMAIL, actualResult.get().getEmail());
+
         actualResult.ifPresent(
             registrationNotification -> assertEquals(EMAIL, registrationNotification.getEmail()));
     }
@@ -188,7 +191,7 @@ public class NotificationServiceImplTest {
 
         var actualResult = notificationService.getNotification(EMAIL);
 
-       assertTrue(actualResult.isEmpty());
+        assertTrue(actualResult.isEmpty());
     }
 
     private void setEmailSenderByReflection(JavaMailSender emailSenderMocked) {

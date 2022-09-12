@@ -5,7 +5,9 @@ import static com.andersen.banking.meeting_impl.service.impl.NotificationService
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.Constants.TIME_LAST;
 import static com.andersen.banking.meeting_impl.service.impl.NotificationServiceImplTest.NotificationFactory.buildRegistrationNotification;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ class NotificationRepositoryIntegrationTest {
         var actualResult = notificationRepository
             .findByEmail(EMAIL);
 
+        assertFalse(actualResult.isEmpty());
+        assertEquals(EMAIL, actualResult.get().getEmail());
+
         actualResult.ifPresent(
             registrationNotification -> assertEquals(
                 givenRegistrationNotification, registrationNotification));
@@ -48,6 +53,8 @@ class NotificationRepositoryIntegrationTest {
 
         var actualResult = notificationRepository
             .findByEmail(EMAIL);
+
+        assertTrue(actualResult.isEmpty());
 
         actualResult.ifPresent(
             registrationNotification -> assertNotEquals(
