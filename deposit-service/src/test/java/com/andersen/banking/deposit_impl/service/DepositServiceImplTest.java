@@ -39,27 +39,19 @@ public class DepositServiceImplTest {
     @MockBean
     DepositMapper depositMapper;
 
-    @MockBean
-    TransferRepository transferRepository;
-
-    @MockBean
-    TransferMapper transferMapper;
-
-    @MockBean
-    TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
     @BeforeEach
-    void initialize(){
+    void initialize() {
         deposit = DepositServiceTestEntitiesGenerator.generateDeposit();
         id = deposit.getId();
         depositOptional = Optional.of(deposit);
     }
 
     @Test
-    void create_whenOk_shouldReturnSavedDeposit(){
+    void create_whenOk_shouldReturnSavedDeposit() {
         Mockito
-                .when(depositRepository.save(deposit))
-                .thenReturn(deposit);
+            .when(depositRepository.save(deposit))
+            .thenReturn(deposit);
 
         Deposit result = depositService.create(deposit);
 
@@ -67,10 +59,10 @@ public class DepositServiceImplTest {
     }
 
     @Test
-    void findById_whenOk_shouldReturnFoundDeposit(){
+    void findById_whenOk_shouldReturnFoundDeposit() {
         Mockito
-                .when(depositRepository.findById(id))
-                .thenReturn(depositOptional);
+            .when(depositRepository.findById(id))
+            .thenReturn(depositOptional);
 
         Optional<Deposit> result = depositService.findById(id);
 
@@ -78,7 +70,7 @@ public class DepositServiceImplTest {
     }
 
     @Test
-    void findById_whenNotFound_shouldReturnEmptyOptional(){
+    void findById_whenNotFound_shouldReturnEmptyOptional() {
         Optional<Deposit> empty = Optional.empty();
         Optional<Deposit> result = depositService.findById(id);
 
@@ -86,13 +78,14 @@ public class DepositServiceImplTest {
     }
 
     @Test
-    void findAll_whenOk_shouldReturnPageOfDeposit(){
+    void findAll_whenOk_shouldReturnPageOfDeposit() {
         Pageable pageable = DepositServiceTestEntitiesGenerator.createPageable();
-        Page<Deposit> pageOfDeposits = DepositServiceTestEntitiesGenerator.generatePageOfDeposits(pageable);
+        Page<Deposit> pageOfDeposits = DepositServiceTestEntitiesGenerator.generatePageOfDeposits(
+            pageable);
 
         Mockito
-                .when(depositRepository.findAll(pageable))
-                .thenReturn(pageOfDeposits);
+            .when(depositRepository.findAll(pageable))
+            .thenReturn(pageOfDeposits);
 
         Page<Deposit> result = depositService.findAll(pageable);
 
@@ -100,53 +93,53 @@ public class DepositServiceImplTest {
     }
 
     @Test
-    void update_whenOk(){
+    void update_whenOk() {
         Mockito
-                .when(depositRepository.findById(id))
-                .thenReturn(depositOptional);
+            .when(depositRepository.findById(id))
+            .thenReturn(depositOptional);
 
         depositService.update(deposit);
 
         Mockito
-                .verify(depositRepository, Mockito.times(1))
-                .save(deposit);
+            .verify(depositRepository, Mockito.times(1))
+            .save(deposit);
     }
 
     @Test
-    void update_whenNotFound_shouldThrowNotFoundException(){
+    void update_whenNotFound_shouldThrowNotFoundException() {
 
         Mockito
-                .when(depositRepository.findById(id))
-                .thenReturn(Optional.empty());
+            .when(depositRepository.findById(id))
+            .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> depositService.update(deposit));
         Mockito
-                .verify(depositRepository, Mockito.never())
-                .save(deposit);
+            .verify(depositRepository, Mockito.never())
+            .save(deposit);
     }
 
     @Test
-    void delete_whenOk(){
+    void delete_whenOk() {
         Mockito
-                .when(depositRepository.findById(id))
-                .thenReturn(depositOptional);
+            .when(depositRepository.findById(id))
+            .thenReturn(depositOptional);
 
         depositService.deleteById(id);
 
         Mockito
-                .verify(depositRepository, Mockito.times(1))
-                .deleteById(id);
+            .verify(depositRepository, Mockito.times(1))
+            .deleteById(id);
     }
 
     @Test
-    void delete_whenNotFound_shouldThrowNotFoundException(){
+    void delete_whenNotFound_shouldThrowNotFoundException() {
         Mockito
-                .when(depositRepository.findById(id))
-                .thenReturn(Optional.empty());
+            .when(depositRepository.findById(id))
+            .thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> depositService.deleteById(id));
         Mockito
-                .verify(depositRepository, Mockito.never())
-                .deleteById(id);
+            .verify(depositRepository, Mockito.never())
+            .deleteById(id);
     }
 }

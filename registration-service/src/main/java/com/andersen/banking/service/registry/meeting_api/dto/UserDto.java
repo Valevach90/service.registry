@@ -35,38 +35,37 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto {
 
-  @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
-  @JsonProperty("id")
-  private UUID id;
+    @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID, hidden = true)
+    @JsonProperty("id")
+    private UUID id;
 
-  @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
-  @JsonProperty("first_name")
-  @NotNull(message = "User first name can't be null.")
-  @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid first name.")
-  private String firstName;
+    @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
+    @JsonProperty("first_name")
+    @NotNull(message = "User first name can't be null.")
+    @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid first name.")
+    private String firstName;
 
-  @Schema(description = DESCRIPTION_LAST_NAME, example = EXAMPLE_LAST_NAME, defaultValue = EXAMPLE_LAST_NAME)
-  @JsonProperty("last_name")
-  @NotNull(message = "User last name can't be null.")
-  @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid last name.")
-  private String lastName;
+    @Schema(description = DESCRIPTION_LAST_NAME, example = EXAMPLE_LAST_NAME, defaultValue = EXAMPLE_LAST_NAME)
+    @JsonProperty("last_name")
+    @NotNull(message = "User last name can't be null.")
+    @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid last name.")
+    private String lastName;
 
-  @Schema(description = DESCRIPTION_PATRONYMIC, example = EXAMPLE_PATRONYMIC, defaultValue = EXAMPLE_PATRONYMIC)
-  @JsonProperty("patronymic")
-  @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid patronymic.")
-  private String patronymic;
+    @Schema(description = DESCRIPTION_PATRONYMIC, example = EXAMPLE_PATRONYMIC, defaultValue = EXAMPLE_PATRONYMIC)
+    @JsonProperty("patronymic")
+    @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid patronymic.")
+    private String patronymic;
 
-  @Schema(description = DESCRIPTION_EMAIL, example = EXAMPLE_EMAIL, defaultValue = EXAMPLE_EMAIL)
-  @JsonProperty("email")
-  @NotNull(message = "Email can't be null.")
-  @Pattern(regexp = "(?=.{1,50}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})",
-      message = "Invalid email.")
-  private String email;
+    @Schema(description = DESCRIPTION_EMAIL, example = EXAMPLE_EMAIL, defaultValue = EXAMPLE_EMAIL, hidden = true)
+    @JsonProperty("email")
+    @Pattern(regexp = "(?=.{1,50}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})",
+            message = "Invalid email.")
+    private String email;
 
-  @Schema(description = DESCRIPTION_PHONE, example = EXAMPLE_PHONE, defaultValue = EXAMPLE_PHONE)
-  @JsonProperty("phone")
-  @NotNull(message = "Phone number can't be null.")
-  @Pattern(regexp = "[0-9]{10,12}", message = "Invalid phone number.")
-  private String phone;
+    @Schema(description = DESCRIPTION_PHONE, example = EXAMPLE_PHONE, defaultValue = EXAMPLE_PHONE)
+    @JsonProperty("phone")
+    @NotNull(message = "Phone number can't be null.")
+    @Pattern(regexp = "[0-9]{10,12}", message = "Invalid phone number.")
+    private String phone;
 
 }
