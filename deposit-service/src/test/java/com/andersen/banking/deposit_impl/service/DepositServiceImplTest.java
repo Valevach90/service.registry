@@ -39,7 +39,6 @@ public class DepositServiceImplTest {
     @MockBean
     DepositMapper depositMapper;
 
-
     @BeforeEach
     void initialize() {
         deposit = DepositServiceTestEntitiesGenerator.generateDeposit();

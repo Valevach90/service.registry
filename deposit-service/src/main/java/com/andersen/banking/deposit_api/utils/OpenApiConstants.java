@@ -24,6 +24,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_DEPOSIT_PRODUCT = "Deposit Product for creating Deposits";
     public static final String DESCRIPTION_TRANSFERS = "List transfers of deposit";
     public static final String EXAMPLE_DEPOSIT_NAME = "Deposit for All";
+    public static final String EXAMPLE_PRODUCT_DESCRIPTION = "Deposit description";
     public static final String EXAMPLE_DEPOSIT_TYPE_NAME = "Deposit";
     public static final String EXAMPLE_CURRENCY_NAME = "EUR";
     public static final String DESCRIPTION_DEPOSIT_TYPE = "Deposit Type";

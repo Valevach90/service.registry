@@ -18,6 +18,7 @@ CREATE TABLE deposit_products
     is_revocable                Boolean                                         ,
     is_customizable             Boolean                                 NOT NULL,
     is_active                   Boolean                                 NOT NULL,
+    description                 VARCHAR(500)                                    ,
 
     CONSTRAINT pk_deposits_products PRIMARY KEY (id)
 );

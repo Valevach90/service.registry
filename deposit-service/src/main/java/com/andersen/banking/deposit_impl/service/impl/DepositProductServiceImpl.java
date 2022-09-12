@@ -1,6 +1,8 @@
 package com.andersen.banking.deposit_impl.service.impl;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
+import com.andersen.banking.deposit_impl.exceptions.FilterAccessException;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
 import java.util.UUID;
@@ -87,5 +89,31 @@ public class DepositProductServiceImpl implements DepositProductService {
 
         log.info("Found {} deposit products", pageOfProducts.getContent().size());
         return pageOfProducts;
+    }
+
+    @Override
+    public DepositProductFilterDto getDepositProductAvailableSetting() {
+
+        try {
+            log.info("Getting deposit product filter");
+            return depositProductRepository.getDepositProductAvailableSettings();
+
+        } catch (IllegalAccessException e) {
+            log.error("Failed to get deposit product filter: {}", e.getMessage());
+            throw new FilterAccessException(e.getClass());
+        }
+    }
+
+    @Override
+    public Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
+
+        try {
+            log.info("Getting filtered deposit products using filter: {}", depositProductFilterDto);
+            return depositProductRepository.getDepositProductsByFilter(depositProductFilterDto, pageable);
+
+        } catch (IllegalAccessException e) {
+            log.error("Failed to get filtered deposit product: {}", e.getMessage());
+            throw new FilterAccessException(e.getClass());
+        }
     }
 }

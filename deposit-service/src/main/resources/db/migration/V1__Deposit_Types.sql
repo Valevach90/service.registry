@@ -5,3 +5,4 @@ CREATE TABLE deposit_types
 
     CONSTRAINT pk_deposit_types PRIMARY KEY (id)
 );
+
