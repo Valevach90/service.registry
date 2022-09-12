@@ -1,24 +1,14 @@
 package com.andersen.banking.meeting_impl.util;
 
-import com.andersen.banking.meeting_impl.exception.PaymentServiceException;
-import lombok.extern.slf4j.Slf4j;
+import static com.andersen.banking.meeting_impl.util.PaymentInfoMaps.getCurrencyNumberMap;
 
-import java.util.Map;
+import com.andersen.banking.meeting_impl.exception.PaymentServiceException;
 import java.util.Random;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AccountNumberGenerator {
-
-    private static final Map<String, String> currencyNumberMap = Map.of(
-            "RUB", "0",
-            "EUR", "1",
-            "USD", "2"
-    );
-
-    public static Map<String, String> getCurrencyNumberMap(){
-        return currencyNumberMap;
-    }
 
     public static String generateAccountNumber(String bankName, String currency, UUID ownerId){
         Random random = new Random(System.currentTimeMillis());
@@ -26,7 +16,7 @@ public class AccountNumberGenerator {
 
         String bankHash = String.valueOf(Math.abs(bankName.hashCode()));
         String uuidHash = String.valueOf(Math.abs(ownerId.toString().hashCode()));
-        String currencyNumber = currencyNumberMap.get(currency);
+        String currencyNumber = getCurrencyNumberMap().get(currency);
 
         //append currNumber
         if (currencyNumber != null)
