@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_impl.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +13,9 @@ class CardGeneratorTest {
       String paymentSystem = "VISA";
       String typeName = "GOLD";
       String currency = "USD";
-      UUID uuid = UUID.randomUUID();
+      long count = 21212;
 
-      String cardNumber = CardGenerator.generateCardNumber(paymentSystem, typeName, currency, uuid);
+      String cardNumber = CardGenerator.generateCardNumber(paymentSystem, typeName, currency, count);
 
       Assertions.assertAll(() -> {
         assertTrue(cardNumber.startsWith("4"));

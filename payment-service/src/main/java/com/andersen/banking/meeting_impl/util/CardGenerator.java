@@ -8,69 +8,78 @@ import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_impl.exception.PaymentServiceException;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CardGenerator {
+
+  private static final Random randomizer = new Random(System.currentTimeMillis());
 
   public static void generateExpirationTime(Card card) {
     // need to add some logic;
     card.setExpireDate(card.getValidFromDate().plusYears(3));
   }
 
-  public static String generateCardNumber(
-      String cardPaymentSystem, String typeName, String currency, UUID uuid) {
-    String uuidHash = String.valueOf(Math.abs(uuid.toString().hashCode()));
-    Random random = new Random(System.currentTimeMillis());
+  public static String generateCardNumber(String cardPaymentSystem, String typeName, String currency, long countAllCardCreated) {
+    StringBuilder cardNumberBuilder = new StringBuilder();
+
+    appendStartNumbers(cardNumberBuilder, cardPaymentSystem); //first 4 digits
+    appendCurrencyNumber(cardNumberBuilder, currency);
+    appendTypeNumber(cardNumberBuilder, typeName);
+    appendUniqueNumbers(cardNumberBuilder, countAllCardCreated + 1);
+    appendCheckDigit(cardNumberBuilder);
+
+    return cardNumberBuilder.toString();
+  }
+
+
+  private static void appendStartNumbers(StringBuilder cardNumberBuilder, String cardPaymentSystem){
     List<String> startNumbersList = getPaymentSystemMap().get(cardPaymentSystem);
     if (startNumbersList == null) {
       log.error("Payment System [{}] not found. Couldn't generate card", cardPaymentSystem);
       throw new PaymentServiceException("Wrong card payment system");
     }
 
-    String startNumbers = startNumbersList.get(random.nextInt(startNumbersList.size()));
-    StringBuilder builder = new StringBuilder(startNumbers);
+    String startNumbers = startNumbersList.get(randomizer.nextInt(startNumbersList.size()));
+    cardNumberBuilder.append(startNumbers);
 
-    // First 4 numbers refer to bank info
+    //To make 4 length number if needed
     for (int i = 0; i < 4 - startNumbers.length(); i++) {
-      builder.append(random.nextInt(10));
+      cardNumberBuilder.append(randomizer.nextInt(10));
     }
+  }
 
-    // append currencyNumber
+  private static void appendCurrencyNumber(StringBuilder cardNumberBuilder, String currency){
     String currencyNumber = getCurrencyNumberMap().get(currency);
-    if (currencyNumber != null)
-      builder.append(currencyNumber);
-    else {
+    if (currencyNumber != null) {
+      cardNumberBuilder.append(currencyNumber);
+    } else {
       log.error("Currency [{}] not found. Couldn't generate card", currency);
       throw new PaymentServiceException("Wrong currency");
     }
+  }
 
-    // append typeNumber
+  private static void appendTypeNumber(StringBuilder cardNumberBuilder, String typeName){
     String typeNumber = getTypeNumberMap().get(typeName);
-    if (typeNumber != null)
-      builder.append(typeNumber);
-    else {
+    if (typeNumber != null) {
+      cardNumberBuilder.append(typeNumber);
+    } else {
       log.error("Type [{}] not found. Couldn't generate card", typeName);
       throw new PaymentServiceException("Wrong type of card");
     }
+  }
 
-    // append unique number(UUID_hash)
-    if (uuidHash.length() > 15 - builder.length()) {
-      uuidHash = uuidHash.substring(0, 15 - builder.length());
-      builder.append(uuidHash);
-    } else {
-      builder.append(uuidHash);
-      int countToMake15 = 15 - builder.length();
-      for (int i = 0; i < countToMake15; i++) {
-        builder.append(random.nextInt(10));
-      }
+  private static void appendUniqueNumbers(StringBuilder cardNumberBuilder, long countAllCardCreated){
+    String countAllCardCreatedStr = String.valueOf(countAllCardCreated);
+    int zeroesNeeded = 15 - cardNumberBuilder.length() - countAllCardCreatedStr.length();
+    for (int i = 0; i < zeroesNeeded; i++) {
+      cardNumberBuilder.append("0");
     }
+    cardNumberBuilder.append(countAllCardCreatedStr);
+  }
 
-    // append check number
-    builder.append(getCheckDigit(builder.toString()));
-
-    return builder.toString();
+  private static void appendCheckDigit(StringBuilder cardNumberBuilder){
+    cardNumberBuilder.append(getCheckDigit(cardNumberBuilder.toString()));
   }
 
   // required to make sum % 10 == 0
