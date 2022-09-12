@@ -130,7 +130,7 @@ public class NotificationServiceImplTest {
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
 
-        verify(notificationRepository, times(2)).findByEmail(EMAIL);
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
         verify(mail, times(1)).getBlocking();
 
         assertTrue(actualResult);
@@ -145,7 +145,7 @@ public class NotificationServiceImplTest {
         var actualResult = notificationService
             .isEmailAddressBlocked(EMAIL);
 
-        verify(notificationRepository, times(2)).findByEmail(EMAIL);
+        verify(notificationRepository, times(1)).findByEmail(EMAIL);
 
         assertFalse(actualResult);
     }
