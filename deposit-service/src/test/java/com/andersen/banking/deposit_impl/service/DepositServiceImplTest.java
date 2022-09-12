@@ -43,7 +43,6 @@ public class DepositServiceImplTest {
     @MockBean
     TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
-
     @BeforeEach
     void initialize() {
         deposit = DepositServiceTestEntitiesGenerator.generateDeposit();
