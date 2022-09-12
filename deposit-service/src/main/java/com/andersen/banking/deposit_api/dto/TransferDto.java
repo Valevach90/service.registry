@@ -1,6 +1,8 @@
 package com.andersen.banking.deposit_api.dto;
 
 import static com.andersen.banking.deposit_api.utils.OpenApiConstants.*;
+
+import com.andersen.banking.deposit_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,12 +23,12 @@ public class TransferDto {
     @NotNull(message = "Transfer id can't be null.")
     private UUID transferId;
 
-    @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    @Schema(description = DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
-    private Long userId;
+    private UUID userId;
 
-    @Schema(description = DESCRIPTION_DEPOSIT_ID, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    @Schema(description = DESCRIPTION_DEPOSIT_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("deposit")
     private DepositDto deposit;
 
@@ -50,7 +52,7 @@ public class TransferDto {
     @NotNull(message = "Type of destination for Withdrawal.")
     private String destinationType;
 
-    @Schema(description = DESCRIPTION_AMOUNT, example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    @Schema(description = DESCRIPTION_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("amount")
     @NotNull(message = "Amount can't be null.")
     private Long amount;

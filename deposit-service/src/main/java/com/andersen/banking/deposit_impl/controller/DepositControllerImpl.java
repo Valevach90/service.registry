@@ -6,17 +6,13 @@ import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
-import io.swagger.v3.oas.annotations.Parameter;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,7 +43,7 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public DepositDto findById(Long id) {
+    public DepositDto findById(UUID id) {
         log.debug("Find deposit by id: {}", id);
 
         Optional<Deposit> deposit = depositService.findById(id);
@@ -70,7 +66,7 @@ public class DepositControllerImpl implements DepositController {
         return allDepositDto;
     }
 
-    public Page<DepositDto> findDepositsByUserId(Long userId, Pageable pageable) {
+    public Page<DepositDto> findDepositsByUserId(UUID userId, Pageable pageable) {
         log.debug("Find all deposits for user {} and pageable: {}", userId, pageable);
 
         Page<DepositDto> depositDtos = depositService.findDepositByUserId(userId, pageable)
@@ -91,7 +87,7 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.debug("Deleting deposit with id: {}", id);
 
         depositService.deleteById(id);

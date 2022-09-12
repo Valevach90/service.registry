@@ -1,5 +1,6 @@
 package com.andersen.banking.deposit_impl.service;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public interface DepositProductService {
      * @param id id of deposit product
      * @return deposit product
      */
-    Optional<DepositProduct> findById(Long id);
+    Optional<DepositProduct> findById(UUID id);
 
     /**
      * Find all deposit products.
@@ -46,7 +47,7 @@ public interface DepositProductService {
      *
      * @param id id of deposit product to delete
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     /**
      * Get page of deposit products

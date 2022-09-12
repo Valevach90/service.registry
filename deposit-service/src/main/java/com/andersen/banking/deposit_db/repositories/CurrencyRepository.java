@@ -1,8 +1,8 @@
 package com.andersen.banking.deposit_db.repositories;
 
 import com.andersen.banking.deposit_db.entities.Currency;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-public interface CurrencyRepository extends JpaRepository<Currency, Long> {
+public interface CurrencyRepository extends JpaRepository<Currency, UUID> {
 }

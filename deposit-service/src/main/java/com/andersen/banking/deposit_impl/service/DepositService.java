@@ -2,6 +2,7 @@ package com.andersen.banking.deposit_impl.service;
 
 import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
 import com.andersen.banking.deposit_db.entities.Deposit;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,7 +28,7 @@ public interface DepositService {
      * @param id id of deposit
      * @return deposit
      */
-    Optional<Deposit> findById(Long id);
+    Optional<Deposit> findById(UUID id);
 
     /**
      * Find deposits by user id.
@@ -36,7 +37,7 @@ public interface DepositService {
      * @param pageable - page object
      * @return
      */
-    Page<Deposit> findDepositByUserId(Long userId, Pageable pageable);
+    Page<Deposit> findDepositByUserId(UUID userId, Pageable pageable);
 
     /**
      * Find all deposits.
@@ -58,7 +59,7 @@ public interface DepositService {
      *
      * @param id id of deposit to delete
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     /**
      * Make transfer

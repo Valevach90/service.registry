@@ -13,6 +13,7 @@ import com.andersen.banking.deposit_impl.mapping.DepositMapper;
 import com.andersen.banking.deposit_impl.mapping.TransferMapper;
 import com.andersen.banking.deposit_impl.service.impl.DepositServiceImpl;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,7 +27,7 @@ import org.springframework.data.domain.Pageable;
 public class DepositServiceImplTest {
 
     private Deposit deposit;
-    private Long id;
+    private UUID id;
     private Optional<Deposit> depositOptional;
 
     @SpyBean
@@ -34,14 +35,9 @@ public class DepositServiceImplTest {
 
     @MockBean
     DepositRepository depositRepository;
-    @MockBean
-    TransferRepository transferRepository;
-    @MockBean
-    TransferMapper transferMapper;
+
     @MockBean
     DepositMapper depositMapper;
-    @MockBean
-    TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
 
     @BeforeEach

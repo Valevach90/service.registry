@@ -1,13 +1,18 @@
 package com.andersen.banking.deposit_impl.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.andersen.banking.deposit_api.controller.DepositController;
 import com.andersen.banking.deposit_api.dto.DepositDto;
 import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_impl.exceptions.MapperException;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
+import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
 import com.andersen.banking.deposit_impl.mapping.DepositMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
-import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,16 +22,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @SpringBootTest(classes = DepositControllerImpl.class)
 public class DepositControllerImplTest {
 
     private Deposit deposit;
-    private Long id;
+    private UUID id;
     private Optional<Deposit> depositOptional;
     private DepositDto depositDto;
 
