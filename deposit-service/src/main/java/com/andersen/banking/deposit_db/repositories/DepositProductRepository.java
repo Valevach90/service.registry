@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-public interface DepositProductRepository extends JpaRepository<DepositProduct, Long> {
+public interface DepositProductRepository extends JpaRepository<DepositProduct, Long>, DepositProductFilterRepository {
 
     @Query("SELECT dp FROM DepositProduct dp " +
             "WHERE (:name IS NULL OR dp.depositName = :name) AND " +

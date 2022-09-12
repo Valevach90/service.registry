@@ -1,4 +1,5 @@
 package com.andersen.banking.deposit_impl.service;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,4 +66,18 @@ public interface DepositProductService {
     Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
                                                         String depositName,
                                                         String currencyName);
+
+    /**
+     * Get deposit products filter
+     * with actual parameters values ranges
+     * */
+    DepositProductFilterDto getDepositProductAvailableSetting();
+
+    /**
+     * Get filtered deposit products
+     *
+     * @param depositProductFilterDto deposit product filter
+     * @param pageable page object
+     * */
+    Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable);
 }

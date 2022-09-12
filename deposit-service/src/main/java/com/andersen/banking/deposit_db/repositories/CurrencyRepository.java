@@ -2,7 +2,10 @@ package com.andersen.banking.deposit_db.repositories;
 
 import com.andersen.banking.deposit_db.entities.Currency;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
+
+    Optional<Currency> findByName(String name);
 }
