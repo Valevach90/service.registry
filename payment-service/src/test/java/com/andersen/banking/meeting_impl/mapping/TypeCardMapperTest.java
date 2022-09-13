@@ -9,10 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCardResponseDto;
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCardUpdateDto;
 
 @SpringBootTest(classes = TypeCardMapperImpl.class)
 class TypeCardMapperTest {
@@ -20,8 +19,7 @@ class TypeCardMapperTest {
     private TypeCard typeCard;
     private TypeCardResponseDto typeCardResponseDto;
     private TypeCardUpdateDto typeCardUpdateDto;
-    @Autowired
-    TypeCardMapper typeCardMapper;
+    @Autowired TypeCardMapper typeCardMapper;
 
     @BeforeEach
     void initData() {
@@ -54,8 +52,8 @@ class TypeCardMapperTest {
         checkForEqualsUpdateDto(result, typeCardUpdateDto);
     }
 
-
-    private void checkForEqualsResponseDto(TypeCard typeCard, TypeCardResponseDto typeCardResponseDto) {
+    private void checkForEqualsResponseDto(
+            TypeCard typeCard, TypeCardResponseDto typeCardResponseDto) {
         assertEquals(typeCard.getId(), typeCardResponseDto.getId());
         assertEquals(typeCard.getTypeName(), typeCardResponseDto.getTypeName());
         assertEquals(typeCard.getPaymentSystem(), typeCardResponseDto.getPaymentSystem());

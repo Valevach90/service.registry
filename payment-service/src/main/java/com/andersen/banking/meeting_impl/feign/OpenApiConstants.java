@@ -3,9 +3,7 @@ package com.andersen.banking.meeting_impl.feign;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-/**
- * Constants for open api.
- */
+/** Constants for open api. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OpenApiConstants {
 

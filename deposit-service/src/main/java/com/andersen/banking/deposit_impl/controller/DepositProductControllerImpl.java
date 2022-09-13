@@ -2,10 +2,12 @@ package com.andersen.banking.deposit_impl.controller;
 
 import com.andersen.banking.deposit_api.controller.DepositProductController;
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositProductMapper;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,7 +43,7 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public DepositProductDto findById(Long id) {
+    public DepositProductDto findById(UUID id) {
         log.debug("Find deposit product by id: {}", id);
 
         Optional<DepositProduct> depositProduct = depositProductService.findById(id);
@@ -75,7 +77,7 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         log.debug("Deleting deposit product with id: {}", id);
 
         depositProductService.deleteById(id);
@@ -93,6 +95,28 @@ public class DepositProductControllerImpl implements DepositProductController {
                 .map(depositProductMapper::toDepositProductDto);
 
         log.debug("Search was successful. Found {} deposit products", foundProducts.getContent().size());
+        return foundProducts;
+    }
+
+    @Override
+    public DepositProductFilterDto getDepositProductAvailableSetting() {
+        log.debug("Trying to getting deposit product available setting");
+
+        DepositProductFilterDto depositProductFilterDto = depositProductService.getDepositProductAvailableSetting();
+
+        log.debug("Getting deposit product available setting: {}", depositProductFilterDto);
+        return depositProductFilterDto;
+    }
+
+    @Override
+    public Page<DepositProductDto> getFilteredDepositProducts(Pageable pageable, DepositProductFilterDto depositProductFilterDto) {
+        log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
+
+        Page<DepositProductDto> foundProducts = depositProductService
+                .getFilteredDepositProduct(depositProductFilterDto, pageable)
+                .map(depositProductMapper::toDepositProductDto);
+
+        log.info("Getting filtered deposit products: {}", foundProducts);
         return foundProducts;
     }
 }

@@ -170,8 +170,8 @@ public class CardControllerH2IntegrationTest {
     @Test
     void findAllByOwner_ShouldReturnSizeOfCards() {
 
-
-        Page<Card> cardByAccount_ownerId = cardRepository.findCardByAccount_OwnerId(OWNER_ID, Pageable.unpaged());
+        Page<Card> cardByAccount_ownerId =
+                cardRepository.findCardByAccount_OwnerId(OWNER_ID, Pageable.unpaged());
         Assertions.assertEquals(5, cardByAccount_ownerId.getSize());
     }
 

@@ -1,5 +1,13 @@
 package com.andersen.banking.deposit_impl.controller;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.createPageable;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProduct;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProductDto;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generatePageOfDepositProducts;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generatePageOfDepositProductsDto;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.andersen.banking.deposit_api.controller.DepositProductController;
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
@@ -7,6 +15,8 @@ import com.andersen.banking.deposit_impl.exceptions.MapperException;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositProductMapper;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,17 +26,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @SpringBootTest(classes = DepositProductControllerImpl.class)
 public class DepositProductControllerImplTest {
 
     private DepositProduct product;
-    private Long id;
+    private UUID id;
     private Optional<DepositProduct> productOptional;
     private DepositProductDto productDto;
 

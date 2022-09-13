@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-/**
- * Implementation class for AccountController
- */
-
+/** Implementation class for AccountController */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -31,8 +28,6 @@ public class AccountControllerImpl implements AccountController {
      * @param accountDto - AccountDto to register
      * @return accountDto - created AccountDto
      */
-
-
     @Override
     public AccountDto create(AccountDto accountDto) {
         log.trace("Receiving request for creating account: {}", accountDto);
@@ -50,14 +45,12 @@ public class AccountControllerImpl implements AccountController {
      * @param pageable
      * @return accountDtoPage
      */
-
-
     @Override
     public Page<AccountDto> findAll(Pageable pageable) {
         log.trace("Receiving request for all accounts");
 
-        Page<AccountDto> accountDtoPage = accountService.findAll(pageable)
-                .map(accountMapper::toAccountDto);
+        Page<AccountDto> accountDtoPage =
+                accountService.findAll(pageable).map(accountMapper::toAccountDto);
 
         log.trace("Returning list of accounts: {}", accountDtoPage.getContent());
         return accountDtoPage;
@@ -66,17 +59,16 @@ public class AccountControllerImpl implements AccountController {
     /**
      * End-point to find page of accounts with ownerId
      *
-     * @param id       - ownerId
+     * @param id - ownerId
      * @param pageable
      * @return accountPageDto
      */
-
     @Override
     public Page<AccountDto> findByOwnerId(UUID id, Pageable pageable) {
         log.trace("Receiving request for account with ownerId: {}", id);
 
-        Page<AccountDto> accountDtoPage = accountService.findByOwnerId(id, pageable)
-                .map(accountMapper::toAccountDto);
+        Page<AccountDto> accountDtoPage =
+                accountService.findByOwnerId(id, pageable).map(accountMapper::toAccountDto);
 
         log.trace("Returning page of accounts: {}", accountDtoPage.getContent());
         return accountDtoPage;
@@ -88,8 +80,6 @@ public class AccountControllerImpl implements AccountController {
      * @param id - Account id
      * @return accountDto - account with required id
      */
-
-
     @Override
     public AccountDto findById(UUID id) {
         log.trace("Receiving account id: {}", id);
@@ -98,7 +88,6 @@ public class AccountControllerImpl implements AccountController {
 
         log.trace("Returning account with id: {}", id);
         return accountDto;
-
     }
 
     /**
@@ -107,18 +96,16 @@ public class AccountControllerImpl implements AccountController {
      * @param accountDto - dto with require updating fields
      * @return updatedAccountDto - updated entity dto
      */
-
-
     @Override
     public AccountDto updateAccount(AccountDto accountDto) {
         log.trace("Receiving account: {}", accountDto);
 
         Account account2Update = accountMapper.toAccount(accountDto);
-        AccountDto updatedAccountDto = accountMapper.toAccountDto(accountService.update(account2Update));
+        AccountDto updatedAccountDto =
+                accountMapper.toAccountDto(accountService.update(account2Update));
 
         log.trace("Returning updated account: {}", updatedAccountDto);
         return updatedAccountDto;
-
     }
 
     /**
@@ -127,8 +114,6 @@ public class AccountControllerImpl implements AccountController {
      * @param id - Account id
      * @return deletedAccountDto - deleted entity dto
      */
-
-
     @Override
     public AccountDto deleteById(UUID id) {
         log.trace("Receiving account id: {}", id);
@@ -138,7 +123,5 @@ public class AccountControllerImpl implements AccountController {
 
         log.trace("Returning deleted account with id: {}", id);
         return deletedAccountDto;
-
     }
-
 }

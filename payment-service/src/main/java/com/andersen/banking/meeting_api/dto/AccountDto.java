@@ -1,30 +1,35 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_ACCOUNT_NUMBER;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BANKNAME;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CURRENCY;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
-import java.util.UUID;
-import javax.validation.constraints.Min;
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.Data;
-
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for accounts")
 public class AccountDto {
 
+    @Schema(hidden = true)
     @JsonProperty("id")
     private UUID id;
 
     @NotBlank
+    @Schema(example = EXAMPLE_ACCOUNT_NUMBER, defaultValue = EXAMPLE_ACCOUNT_NUMBER)
     @JsonProperty("account_number")
-    //@Pattern(regexp = "\\d+")
     private String accountNumber;
 
     @NotNull
@@ -37,24 +42,28 @@ public class AccountDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate closeDate = null;
 
-
-    @Min(1L)
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     @JsonProperty("owner_id")
     private UUID ownerId;
 
     @NotBlank
     @JsonProperty("currency")
+    @Schema(example = EXAMPLE_CURRENCY, defaultValue = EXAMPLE_CURRENCY)
     @Size(min = 3, max = 3, message = "currency should have exactly 3 characters")
     private String currency;
 
     @NotBlank
     @JsonProperty("bank_name")
-    @Size(min = 3, max = 30, message = "bank_name should have at least 3 and at maximum 30 characters")
+    @Schema(example = EXAMPLE_BANKNAME, defaultValue = EXAMPLE_BANKNAME)
+    @Size(
+            min = 3,
+            max = 30,
+            message = "bank_name should have at least 3 and at maximum 30 characters")
     private String bankName;
 
     @NotNull
+    @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     @JsonProperty("balance")
     private double balance;
-
 }

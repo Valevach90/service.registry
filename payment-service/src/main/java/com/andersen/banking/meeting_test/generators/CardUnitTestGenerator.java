@@ -13,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardUnitTestGenerator {
 
-    private static UUID CARD_ID = UUID.randomUUID();
-    private static UUID ACCOUNT_ID = UUID.randomUUID();
-    private static UUID TYPE_ID = UUID.randomUUID();
+    private static final UUID CARD_ID = UUID.randomUUID();
+    private static final UUID ACCOUNT_ID = UUID.randomUUID();
+    private static final UUID TYPE_ID = UUID.randomUUID();
 
     public static Card populateCard() {
         Card card = new Card();
@@ -82,7 +82,6 @@ public class CardUnitTestGenerator {
         return cardResponseDto;
     }
 
-
     public static Account populateAccount(Account account) {
         account.setId(ACCOUNT_ID);
         return account;
@@ -127,5 +126,4 @@ public class CardUnitTestGenerator {
         typeCardUpdateDto.setTypeName("SILVER");
         return typeCardUpdateDto;
     }
-
 }

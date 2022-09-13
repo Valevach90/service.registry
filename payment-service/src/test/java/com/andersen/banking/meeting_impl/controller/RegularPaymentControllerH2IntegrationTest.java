@@ -23,14 +23,14 @@ public class RegularPaymentControllerH2IntegrationTest {
 
     private static RestTemplate restTemplate;
 
-    private final RegularPaymentResponseDto regularPaymentResponseDto = populateRegularPaymentResponseDto();
-    private final RegularPaymentRequestDto regularPaymentRequestDto = populateRegularPaymentRequestDto();
+    private final RegularPaymentResponseDto regularPaymentResponseDto =
+            populateRegularPaymentResponseDto();
+    private final RegularPaymentRequestDto regularPaymentRequestDto =
+            populateRegularPaymentRequestDto();
 
-    @Autowired
-    RegularPaymentRepository regularPaymentRepository;
+    @Autowired RegularPaymentRepository regularPaymentRepository;
 
-    @LocalServerPort
-    private int port;
+    @LocalServerPort private int port;
 
     private String baseUrl = "http://localhost";
 
@@ -47,8 +47,9 @@ public class RegularPaymentControllerH2IntegrationTest {
     //org.springframework.web.client.HttpClientErrorException$Unauthorized: 401 : [no body]
     @Disabled
     void create_shouldReturnRegularPaymentResponseDto_whenRequestDtoIsCorrect() {
-        RegularPaymentResponseDto response = restTemplate
-                .postForObject(baseUrl, regularPaymentRequestDto, RegularPaymentResponseDto.class);
+        RegularPaymentResponseDto response =
+                restTemplate.postForObject(
+                        baseUrl, regularPaymentRequestDto, RegularPaymentResponseDto.class);
 
         assertEquals(regularPaymentResponseDto, response);
         assertEquals(1, regularPaymentRepository.findAll().size());
@@ -57,7 +58,8 @@ public class RegularPaymentControllerH2IntegrationTest {
     void create_shouldThrowException_whenRequestDtoIsIncorrect() {
         RegularPaymentRequestDto empty = new RegularPaymentRequestDto();
 
-        assertThrows(Exception.class, () -> restTemplate
-                .postForObject(baseUrl, empty, RegularPaymentResponseDto.class));
+        assertThrows(
+                Exception.class,
+                () -> restTemplate.postForObject(baseUrl, empty, RegularPaymentResponseDto.class));
     }
 }

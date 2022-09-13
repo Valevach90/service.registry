@@ -23,6 +23,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 @Service
@@ -156,18 +157,23 @@ public class AuthServiceImpl implements AuthService {
 
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
         if (isPasswordValid(newPassword)) {
-            String response = client.put()
-                    .uri(KeycloakUrlUtil.getUrlForResetPassword(
-                            keycloak.getAuthServerUrl(),
-                            keycloak.getRealm(),
-                            id
-                    ))
-                    .headers(header -> header.setBearerAuth(token))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+            try {
+                String response = client.put()
+                        .uri(KeycloakUrlUtil.getUrlForResetPassword(
+                                keycloak.getAuthServerUrl(),
+                                keycloak.getRealm(),
+                                id
+                        ))
+                        .headers(header -> header.setBearerAuth(token))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(BodyInserters.fromValue(preparePasswordInJson(newPassword)))
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .block();
+            } catch (WebClientResponseException e) {
+                throw new ValidationException(
+                        String.format("New password %s is recently used", newPassword));
+            }
             log.debug("New password set: user id {}, password {}", id, newPassword);
         } else {
             throw new ValidationException(
@@ -180,8 +186,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto refreshToken(String refreshToken) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("grant_type", "refresh_token");
-        parameters.add("client_id", keycloak.getClientId());
-        parameters.add("client_secret", keycloak.getClientSecret());
+        parameters.add("client_id", keycloak.getClientIdRefresh());
         parameters.add("refresh_token", refreshToken);
 
         return client.post()

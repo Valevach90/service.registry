@@ -2,22 +2,20 @@ package com.andersen.banking.meeting_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.time.LocalDate;
+import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardResponseDto {
-
 
     @NotNull
     @JsonProperty("id")
@@ -46,7 +44,9 @@ public class CardResponseDto {
 
     @NotBlank
     @JsonProperty("holder_name")
-    @Pattern(regexp = "[a-zA-Z- ]{3,30}", message = "holder_name should have at least 3 and at maximum 30 characters")
+    @Pattern(
+            regexp = "[a-zA-Z- ]{3,30}",
+            message = "holder_name should have at least 3 and at maximum 30 characters")
     private String holderName;
 
     @NotNull

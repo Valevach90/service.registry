@@ -21,7 +21,7 @@ public class RequestKafkaTransferMessage {
     private UUID transferId;
 
     @NotNull
-    private Long userId;
+    private UUID userId;
 
     @NotBlank
     private String sourceNumber;

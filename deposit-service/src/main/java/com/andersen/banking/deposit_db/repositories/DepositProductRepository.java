@@ -1,14 +1,14 @@
 package com.andersen.banking.deposit_db.repositories;
 
 import com.andersen.banking.deposit_db.entities.DepositProduct;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-public interface DepositProductRepository extends JpaRepository<DepositProduct, Long> {
+public interface DepositProductRepository extends JpaRepository<DepositProduct, UUID>, DepositProductFilterRepository {
 
     @Query("SELECT dp FROM DepositProduct dp " +
             "WHERE (:name IS NULL OR dp.depositName = :name) AND " +

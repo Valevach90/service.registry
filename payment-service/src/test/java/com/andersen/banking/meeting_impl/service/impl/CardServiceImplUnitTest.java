@@ -1,12 +1,5 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
@@ -17,6 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class CardServiceImplUnitTest {
 
@@ -24,14 +22,11 @@ class CardServiceImplUnitTest {
     static final String FOUR_NUMS = "4567";
     static final String TWELVE_NUMS_HASH = CryptWithSHA.getCrypt(TWELVE_NUMS);
 
-    @Mock
-    Card card;
+    @Mock Card card;
 
-    @Mock
-    CardRepository cardRepository;
+    @Mock CardRepository cardRepository;
 
-    @InjectMocks
-    CardServiceImpl cardService;
+    @InjectMocks CardServiceImpl cardService;
 
     @Test
     void findByNums_ShouldReturnCard_WhenCardRepositoryReturnedCardIsPresent() {

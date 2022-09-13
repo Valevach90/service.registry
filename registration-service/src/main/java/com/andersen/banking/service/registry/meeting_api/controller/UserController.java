@@ -3,7 +3,6 @@ package com.andersen.banking.service.registry.meeting_api.controller;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
@@ -21,36 +20,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller for mapping users.
+ * Controller for mapping authentication users.
  */
 @Tag(name = "User controller", description = "work with users")
-@RequestMapping(value = "/api/v1/")
+@RequestMapping(value = "/api/v1/users")
 @RestController
 public interface UserController {
 
     @Operation(summary = "Get all users",
             description = "get all users information")
-    @GetMapping("/users")
+    @GetMapping
     Page<UserDto> findAll(
             @ParameterObject
             @PageableDefault Pageable pageable);
 
     @Operation(summary = "Get user by user id",
             description = "get user information by id")
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     UserDto findById(@Parameter(description = "user id", required = true)
     @PathVariable UUID id);
 
     @Operation(summary = "Create user",
-            description = "create user by params in dto object")
-    @PostMapping("/users")
+            description = "create user by params in dto object", hidden = true)
+    @PostMapping
     UserDto create(@Parameter(description = "user", required = true)
     @RequestBody
     @Validated UserDto userDto);
 
     @Operation(summary = "Update user",
             description = "update user by params in dto object")
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     void updateUser(
             @Parameter(description = "user id", required = true)
             @RequestBody
@@ -58,7 +57,7 @@ public interface UserController {
 
     @Operation(summary = "Delete user",
             description = "delete user by id")
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     void deleteById(@Parameter(description = "user id", required = true)
     @PathVariable UUID id);
 }

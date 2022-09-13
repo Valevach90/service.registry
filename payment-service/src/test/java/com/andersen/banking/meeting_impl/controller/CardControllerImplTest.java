@@ -49,15 +49,11 @@ public class CardControllerImplTest {
         cardResponseDto = CardUnitTestGenerator.populateCardResponseDto();
     }
 
-    @Autowired
-    CardController cardController;
+    @Autowired CardController cardController;
 
-    @MockBean
-    CardService cardService;
-    @MockBean
-    CardMapper cardMapper;
-    @MockBean
-    TypeCardMapper typeCardMapper;
+    @MockBean CardService cardService;
+    @MockBean CardMapper cardMapper;
+    @MockBean TypeCardMapper typeCardMapper;
 
 
 
@@ -84,7 +80,8 @@ public class CardControllerImplTest {
         Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
         Mockito.when(cardService.findAll(pageable)).thenReturn(pageOfCards);
-        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(new CardResponseDto());
+        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class)))
+                .thenReturn(new CardResponseDto());
 
         Page<CardResponseDto> result = cardController.findAll(pageable);
 
@@ -104,15 +101,18 @@ public class CardControllerImplTest {
     void updateCard_ShouldThrowMapperException_WhenCardDtoISIncorrect() {
         Mockito.when(cardMapper.toCard(cardUpdateDto)).thenThrow(new MapperException());
 
-        Assertions.assertThrows(MapperException.class, () -> cardController.updateCard(cardUpdateDto));
+        Assertions.assertThrows(
+                MapperException.class, () -> cardController.updateCard(cardUpdateDto));
     }
 
     @Test
     void updateCard_ShouldThrowNotFoundException_WhenCardDtoISIncorrect() {
         Mockito.when(cardMapper.toCard(cardUpdateDto)).thenReturn(card);
-        Mockito.when(cardService.update(card)).thenThrow(new NotFoundException(Card.class, card.getId()));
+        Mockito.when(cardService.update(card))
+                .thenThrow(new NotFoundException(Card.class, card.getId()));
 
-        Assertions.assertThrows(NotFoundException.class, () -> cardController.updateCard(cardUpdateDto));
+        Assertions.assertThrows(
+                NotFoundException.class, () -> cardController.updateCard(cardUpdateDto));
     }
 
     @Test
@@ -143,7 +143,8 @@ public class CardControllerImplTest {
     void create_ShouldThrowMapperException_WhenCardDtoIsIncorrect() {
         Mockito.when(cardMapper.toCard(cardRegistrationDto)).thenThrow(new MapperException());
 
-        Assertions.assertThrows(MapperException.class, () -> cardController.create(cardRegistrationDto));
+        Assertions.assertThrows(
+                MapperException.class, () -> cardController.create(cardRegistrationDto));
     }
 
     @Test
@@ -158,7 +159,8 @@ public class CardControllerImplTest {
         addTypeCardInDto(cardResponseDto);
 
         Mockito.when(cardService.findAll(pageable)).thenReturn(pageOfCards);
-        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(cardResponseDto);
+        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class)))
+                .thenReturn(cardResponseDto);
 
         Page<CardResponseDto> result = cardController.findAll(pageable);
 
@@ -177,7 +179,8 @@ public class CardControllerImplTest {
         Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
         Mockito.when(cardService.findByOwnerId(uuid, pageable)).thenReturn(pageOfCards);
-        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(new CardResponseDto());
+        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class)))
+                .thenReturn(new CardResponseDto());
 
         Page<CardResponseDto> result = cardController.findAllByOwner(uuid, pageable);
 
@@ -195,25 +198,24 @@ public class CardControllerImplTest {
         Page<CardResponseDto> pageOfDto = new PageImpl<>(cardUpdateDtos, pageable, SIZE_PAGE);
         Page<Card> pageOfCards = new PageImpl<>(cards, pageable, SIZE_PAGE);
 
-        Mockito.when(cardService.findByOwnerIdExceptCard(OWNER_ID, CARD_ID, pageable)).thenReturn(pageOfCards);
-        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class))).thenReturn(new CardResponseDto());
+        Mockito.when(cardService.findByOwnerIdExceptCard(OWNER_ID, CARD_ID, pageable))
+                .thenReturn(pageOfCards);
+        Mockito.when(cardMapper.toCardResponseDto(Mockito.any(Card.class)))
+                .thenReturn(new CardResponseDto());
 
-        Page<CardResponseDto> result = cardController.findAllExceptChosenByOwnerId(OWNER_ID, CARD_ID, pageable);
+        Page<CardResponseDto> result =
+                cardController.findAllExceptChosenByOwnerId(OWNER_ID, CARD_ID, pageable);
 
         Assertions.assertEquals(pageOfDto, result);
     }
 
     private List<CardResponseDto> generateListOfCardDto() {
-        return Stream
-                .generate(CardResponseDto::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(CardResponseDto::new).limit(27).collect(Collectors.toList());
     }
 
     private List<CardResponseDto> generateListOfCardDtoWithTypeCard() {
 
-        return Stream
-                .generate(CardResponseDto::new)
+        return Stream.generate(CardResponseDto::new)
                 .limit(27)
                 .peek(this::addTypeCardInDto)
                 .collect(Collectors.toList());
@@ -227,15 +229,11 @@ public class CardControllerImplTest {
     }
 
     private List<Card> generateCards() {
-        return Stream
-                .generate(Card::new)
-                .limit(27)
-                .collect(Collectors.toList());
+        return Stream.generate(Card::new).limit(27).collect(Collectors.toList());
     }
 
     private List<Card> generateCardsWithNonDefaultTypeCard() {
-        return Stream
-                .generate(Card::new)
+        return Stream.generate(Card::new)
                 .limit(27)
                 .peek(c -> c.setTypeCard(populateTypeCard(new TypeCard())))
                 .collect(Collectors.toList());

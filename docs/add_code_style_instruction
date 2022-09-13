@@ -1,0 +1,29 @@
+	Google Java Style Guide
+
+	Google Java Style Guide link: https://google.github.io/styleguide/javaguide.html
+
+1)	Import code style file
+
+1.1)	Download 'intellij-java-google-style.xml' file
+	
+	https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml
+
+1.2)	Setting
+
+	File >> Setting (or Ctrl+Alt+S) >> Editor >> Code Style >> Java >> Scheme >> Show Scheme Actions >>
+	>> Import Scheme >> IntelliJ IDEA code style xml >> select 'intellij-java-google-style.xml'
+
+1.3)	Using
+
+	Code > Reformat Code (or Ctrl+Alt+L)
+
+
+2)	or install 'google-java-format' plugin
+
+2.1)	Open plugins window: File >> Setting >> Plugins (or CTRL+Shift+A)
+
+2.2)	Search for 'google-java-format'
+
+2.3)	Install plugin and restart IDE
+
+2.4)	Enable plugin executing action: Reformat with google-java-format (or Ctrl+Shift+A)

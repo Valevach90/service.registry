@@ -31,4 +31,3 @@ public interface AccountMapper {
         return balance.doubleValue() / 100;
     }
 }
-

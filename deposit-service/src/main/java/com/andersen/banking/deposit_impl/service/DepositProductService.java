@@ -1,5 +1,7 @@
 package com.andersen.banking.deposit_impl.service;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
@@ -24,7 +26,7 @@ public interface DepositProductService {
      * @param id id of deposit product
      * @return deposit product
      */
-    Optional<DepositProduct> findById(Long id);
+    Optional<DepositProduct> findById(UUID id);
 
     /**
      * Find all deposit products.
@@ -46,7 +48,7 @@ public interface DepositProductService {
      *
      * @param id id of deposit product to delete
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     /**
      * Get page of deposit products
@@ -65,4 +67,18 @@ public interface DepositProductService {
     Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
                                                         String depositName,
                                                         String currencyName);
+
+    /**
+     * Get deposit products filter
+     * with actual parameters values ranges
+     * */
+    DepositProductFilterDto getDepositProductAvailableSetting();
+
+    /**
+     * Get filtered deposit products
+     *
+     * @param depositProductFilterDto deposit product filter
+     * @param pageable page object
+     * */
+    Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable);
 }

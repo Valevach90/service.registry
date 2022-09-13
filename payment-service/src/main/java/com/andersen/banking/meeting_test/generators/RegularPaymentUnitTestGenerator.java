@@ -2,8 +2,8 @@ package com.andersen.banking.meeting_test.generators;
 
 import com.andersen.banking.meeting_api.dto.RegularPaymentRequestDto;
 import com.andersen.banking.meeting_api.dto.RegularPaymentResponseDto;
-import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_db.entities.Card;
+import com.andersen.banking.meeting_db.entities.RegularPayment;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +18,6 @@ public class RegularPaymentUnitTestGenerator {
     public static UUID SOURCE_CARD_ID = UUID.randomUUID();
 
     public static UUID RECEPIENT_CARD_ID = UUID.randomUUID();
-
-
 
     public static RegularPayment populateRegularPayment() {
         RegularPayment regularPayment = new RegularPayment();
@@ -36,7 +34,7 @@ public class RegularPaymentUnitTestGenerator {
         return regularPayment;
     }
 
-    public static RegularPaymentRequestDto populateRegularPaymentRequestDto () {
+    public static RegularPaymentRequestDto populateRegularPaymentRequestDto() {
         RegularPaymentRequestDto regularPaymentRequestDto = new RegularPaymentRequestDto();
 
         regularPaymentRequestDto.setDescription("Mobile phone payment");
@@ -50,7 +48,7 @@ public class RegularPaymentUnitTestGenerator {
         return regularPaymentRequestDto;
     }
 
-    public static RegularPaymentResponseDto populateRegularPaymentResponseDto () {
+    public static RegularPaymentResponseDto populateRegularPaymentResponseDto() {
         RegularPaymentResponseDto regularPaymentResponseDto = new RegularPaymentResponseDto();
 
         regularPaymentResponseDto.setId(PAYMENT_ID);

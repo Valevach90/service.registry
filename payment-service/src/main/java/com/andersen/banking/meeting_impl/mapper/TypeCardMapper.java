@@ -31,7 +31,7 @@ public interface TypeCardMapper {
      * @param typeCard
      * @return
      */
-    TypeCardUpdateDto typeCard2TypeCardUpdateDto (TypeCard typeCard);
+    TypeCardUpdateDto typeCard2TypeCardUpdateDto(TypeCard typeCard);
 
     /**
      * This method converts entity TypeCardUpdateDto to TypeCard

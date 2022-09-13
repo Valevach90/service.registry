@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public interface DepositController {
     @GetMapping("/{id}")
     DepositDto findById(
             @Parameter(description = "deposit id", required = true)
-            @PathVariable("id") Long id
+            @PathVariable("id") UUID id
     );
 
     @Operation(summary = "Get all deposit for current user",
@@ -54,7 +55,7 @@ public interface DepositController {
     )
     @GetMapping("/users/{id}")
     Page<DepositDto> findDepositsByUserId(
-            @Parameter(description = "user id", required = true) @PathVariable("id") Long userId,
+            @Parameter(description = "user id", required = true) @PathVariable("id") UUID userId,
             @ParameterObject @PageableDefault Pageable pageable
     );
 
@@ -80,6 +81,6 @@ public interface DepositController {
     @DeleteMapping("/{id}")
     void deleteById(
             @Parameter(description = "deposit id", required = true)
-            @PathVariable("id") Long id
+            @PathVariable("id") UUID id
     );
 }

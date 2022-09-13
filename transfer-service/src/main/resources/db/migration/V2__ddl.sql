@@ -46,7 +46,7 @@ CREATE TABLE transfer
     last_modified_date          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_by            VARCHAR(255) NOT NULL,
     deleted                     BOOLEAN      NOT NULL,
-    user_id                     BIGINT       NOT NULL,
+    user_id                     UUID       NOT NULL,
     source_payment_type_id      UUID         NOT NULL,
     source_number               VARCHAR(255) NOT NULL,
     destination_payment_type_id UUID         NOT NULL,

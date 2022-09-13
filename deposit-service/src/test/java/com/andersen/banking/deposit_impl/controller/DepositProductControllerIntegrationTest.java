@@ -1,5 +1,14 @@
 package com.andersen.banking.deposit_impl.controller;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.createCustomPageable;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.possibleCurrencyNames;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.andersen.banking.deposit_db.entities.Currency;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.entities.DepositType;
@@ -8,6 +17,10 @@ import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator;
 import com.andersen.banking.deposit_impl.service.DepositProductService;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,17 +30,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
-
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.createCustomPageable;
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.possibleCurrencyNames;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -59,7 +61,7 @@ public class DepositProductControllerIntegrationTest {
 
         DepositType depositType = new DepositType();
         depositType.setName("default deposit type");
-        depositType.setId(1L);
+        depositType.setId(UUID.randomUUID());
         depositTypeRepository.save(depositType);
 
         List<Currency> generatedCurrencies = Stream
@@ -72,7 +74,7 @@ public class DepositProductControllerIntegrationTest {
         Stream.generate(DepositServiceTestEntitiesGenerator::generateSemiEmptyDepositProduct)
                 .limit(LIMIT_FOR_INSERTABLE_ELEMENTS)
                 .forEach(generatedDepositProduct -> {
-                    generatedDepositProduct.setId(random.nextLong());
+                    generatedDepositProduct.setId(UUID.randomUUID());
                     generatedDepositProduct.setDepositName(depositNames.get(random.nextInt(depositNames.size())));
                     generatedDepositProduct.setType(depositType);
                     generatedDepositProduct.setCurrency(generatedCurrencies.get(random.nextInt(generatedCurrencies.size())));

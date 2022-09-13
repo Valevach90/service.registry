@@ -1,9 +1,11 @@
 package com.andersen.banking.deposit_api.controller;
 
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
+import com.andersen.banking.deposit_api.dto.DepositProductFilterDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public interface DepositProductController {
     @GetMapping(value = "/{id}")
     DepositProductDto findById(
             @Parameter(description = "deposit product id", required = true)
-            @PathVariable("id") Long id
+            @PathVariable("id") UUID id
     );
 
     @Operation(summary = "Get all deposit products",
@@ -58,7 +60,7 @@ public interface DepositProductController {
     @DeleteMapping("/{id}")
     void deleteById(
             @Parameter(description = "deposit product id", required = true)
-            @PathVariable("id") Long id
+            @PathVariable("id") UUID id
     );
 
 
@@ -74,4 +76,17 @@ public interface DepositProductController {
                                       @Parameter(description = "currency name")
                                       @RequestParam(value = "currency", required = false) String currency);
 
+    @Operation(summary = "Get deposit product available setting",
+            description = "get deposit product available setting")
+    @GetMapping("/filter")
+    DepositProductFilterDto getDepositProductAvailableSetting();
+
+    @Operation(summary = "Get filtered deposit products",
+            description = "get filtered deposit products")
+    @PostMapping("/filter")
+    Page<DepositProductDto> getFilteredDepositProducts(@ParameterObject
+                                                       @PageableDefault Pageable pageable,
+
+                                                       @RequestBody
+                                                       @Validated  DepositProductFilterDto depositProductFilterDto);
 }

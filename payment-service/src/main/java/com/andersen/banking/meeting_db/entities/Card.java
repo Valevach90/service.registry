@@ -7,10 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-/**
- * This class presents an entity, which will be stored in the database.
- */
-
+/** This class presents an entity, which will be stored in the database. */
 @Getter
 @Setter
 @Entity
@@ -22,13 +19,16 @@ public class Card {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(
+            cascade = {
+                CascadeType.MERGE,
+                CascadeType.REMOVE,
+                CascadeType.REFRESH,
+                CascadeType.DETACH
+            })
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 

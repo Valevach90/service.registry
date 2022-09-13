@@ -5,16 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import lombok.NoArgsConstructor;
 
 import static com.andersen.banking.meeting_impl.feign.OpenApiConstants.*;
 
-/**
- * Dto for user personal data.
- */
-
+/** Dto for user personal data. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

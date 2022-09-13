@@ -14,7 +14,7 @@ import java.util.UUID;
 public class TransferRequestDto {
 
     @NotNull
-    private Long userId;
+    private UUID userId;
 
     @NotBlank
     private String sourceNumber;
