@@ -11,4 +11,5 @@ include 'deposit-service'
 include 'transfer-service'
 include 'notification-service'
 include 'information-service'
+include 'credit-service'
 
