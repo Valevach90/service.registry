@@ -1,14 +1,17 @@
 package com.andersen.banking.meeting_test.generators;
 
-import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.CardRegistrationDto;
+import com.andersen.banking.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CardUnitTestGenerator {
@@ -55,10 +58,6 @@ public class CardUnitTestGenerator {
     public static CardRegistrationDto populateCardRegistrationDto() {
         CardRegistrationDto cardRegistrationDto = new CardRegistrationDto();
         cardRegistrationDto.setAccountId(ACCOUNT_ID);
-        cardRegistrationDto.setFirstTwelveNumbers("123456789012");
-        cardRegistrationDto.setLastFourNumbers("4567");
-        cardRegistrationDto.setValidFromDate(LocalDate.of(2021, 10, 23));
-        cardRegistrationDto.setExpireDate(LocalDate.of(2024, 10, 23));
         cardRegistrationDto.setHolderName("Ivanov Ivan Ivanovich");
         cardRegistrationDto.setPaymentSystem("VISA");
         cardRegistrationDto.setTypeName("SILVER");

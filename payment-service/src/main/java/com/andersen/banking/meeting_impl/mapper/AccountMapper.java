@@ -18,6 +18,7 @@ public interface AccountMapper {
     AccountDto toAccountDto(Account account);
 
     @Mapping(source = "balance", target = "balance", qualifiedByName = "convertToCents")
+    @Mapping(target = "accountNumber", ignore = true)
     Account toAccount(AccountDto accountDto);
 
     @Named("convertToCents")
