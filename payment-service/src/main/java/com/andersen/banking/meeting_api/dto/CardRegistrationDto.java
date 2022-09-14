@@ -25,6 +25,10 @@ public class CardRegistrationDto {
     @JsonProperty("account_id")
     private UUID accountId;
 
+    @NotNull
+    @JsonProperty("card_product_id")
+    private UUID cardProductId;
+
     @NotBlank
     @Schema(defaultValue = EXAMPLE_NAME, example = EXAMPLE_NAME)
     @Pattern(
@@ -43,4 +47,7 @@ public class CardRegistrationDto {
     @JsonProperty("type_name")
     @Schema(defaultValue = EXAMPLE_TYPECARD, example = EXAMPLE_TYPECARD)
     private String typeName;
+
+
+
 }

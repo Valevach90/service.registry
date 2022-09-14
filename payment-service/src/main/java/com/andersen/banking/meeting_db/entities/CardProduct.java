@@ -24,8 +24,8 @@ public class CardProduct {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "max_cashback")
-    private int maxCashback;
+    @Column(name = "cashback", nullable = false)
+    private int cashback;
 
     @Column(name = "price")
     private double price;

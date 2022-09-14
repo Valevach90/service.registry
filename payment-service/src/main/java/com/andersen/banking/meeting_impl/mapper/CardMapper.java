@@ -14,6 +14,7 @@ import org.mapstruct.Mapping;
 public interface CardMapper {
 
     @Mapping(target = "accountId", source = "account.id")
+    @Mapping(target = "cardProductId", source = "cardProduct.id")
     @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
     @Mapping(target = "typeName", source = "typeCard.typeName")
     @Mapping(target = "currency", source = "account.currency")
@@ -22,11 +23,13 @@ public interface CardMapper {
     CardResponseDto toCardResponseDto(Card card);
 
     @Mapping(target = "account.id", source = "accountId")
+    @Mapping(target = "cardProduct.id", source = "cardProductId")
     @Mapping(target = "typeCard.paymentSystem", source = "paymentSystem")
     @Mapping(target = "typeCard.typeName", source = "typeName")
     Card toCard(CardUpdateDto cardUpdateDto);
 
     @Mapping(target = "account.id", source = "accountId")
+    @Mapping(target = "cardProduct.id", source = "cardProductId")
     @Mapping(target = "typeCard.paymentSystem", source = "paymentSystem")
     @Mapping(target = "typeCard.typeName", source = "typeName")
     @Mapping(target = "validFromDate", ignore = true)

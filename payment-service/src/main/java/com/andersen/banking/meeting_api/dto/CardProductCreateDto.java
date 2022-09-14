@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_api.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,15 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "dto for card product")
-public class CardProductDto {
-
-    @NotNull
-    @JsonProperty("id")
-    private UUID id;
+public class CardProductCreateDto {
 
     @NotNull
     @JsonProperty("cashback")

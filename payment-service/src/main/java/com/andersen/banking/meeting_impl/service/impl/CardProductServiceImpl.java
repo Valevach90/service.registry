@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CardProductServiceImpl implements CardProductService {
 
-    private CardProductRepository cardProductRepository;
+    private final CardProductRepository cardProductRepository;
 
     @Override
     @Transactional

@@ -25,6 +25,10 @@ public class CardResponseDto {
     @JsonProperty("account_id")
     private UUID accountId;
 
+    @NotNull
+    @JsonProperty("card_product_id")
+    private UUID cardProductId;
+
     @NotBlank
     @JsonProperty("last_four_numbers")
     @Pattern(regexp = "[0-9]{4}", message = "last_four_numbers should contain exactly 4 digits")
@@ -64,4 +68,5 @@ public class CardResponseDto {
     @NotBlank
     @JsonProperty("currency")
     private String currency;
+
 }

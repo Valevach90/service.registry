@@ -4,11 +4,13 @@ import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpir
 
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
+import com.andersen.banking.meeting_db.entities.CardProduct;
 import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import com.andersen.banking.meeting_impl.service.CardProductService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.util.CardGenerator;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
@@ -34,6 +36,7 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final TypeCardRepository typeCardRepository;
     private final AccountService accountService;
+    private final CardProductService cardProductService;
 
     @Transactional(readOnly = true)
     @Override
@@ -65,9 +68,10 @@ public class CardServiceImpl implements CardService {
     public Card update(Card card) {
         log.debug("Trying to update card: {}", card);
 
-        UUID accountId = card.getAccount().getId();
         findById(card.getId());
-        card.setAccount(accountService.findById(accountId));
+        card.setAccount(accountService.findById(card.getAccount().getId()));
+        card.setCardProduct(cardProductService.findById(card.getCardProduct().getId()));
+
 
         setTypeCard(card);
         setCryptFirstNums(card);
@@ -92,18 +96,19 @@ public class CardServiceImpl implements CardService {
         return card;
     }
 
-    @Retryable(value = KeyAlreadyExistsException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Retryable(value = KeyAlreadyExistsException.class, backoff = @Backoff(delay = 1000))
     @Transactional
     @Override
     public Card create(Card card) {
         log.info("Creating card with params: [{}/{}]", card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName());
 
         Account account = accountService.findById(card.getAccount().getId());
+        CardProduct cardProduct = cardProductService.findById(card.getCardProduct().getId());
         String cardNumber = CardGenerator.generateCardNumber(card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName(),
                 account.getCurrency(), cardRepository.count());
         log.info("card number was generated: {}", cardNumber);
 
-        setUpCardInfo(card, account, cardNumber);
+        setUpCardInfo(card, account, cardProduct, cardNumber);
 
         //check if card already exists
         if (cardRepository.existsByFirstTwelveNumbersAndLastFourNumbers(card.getFirstTwelveNumbers(), card.getLastFourNumbers())) {
@@ -116,8 +121,9 @@ public class CardServiceImpl implements CardService {
         }
     }
 
-    private void setUpCardInfo(Card card, Account account, String cardNumber){
+    private void setUpCardInfo(Card card, Account account, CardProduct cardProduct, String cardNumber){
         card.setAccount(account);
+        card.setCardProduct(cardProduct);
         card.setValidFromDate(LocalDate.now());
         generateExpirationTime(card);
         card.setFirstTwelveNumbers(cardNumber.substring(0, 12));
