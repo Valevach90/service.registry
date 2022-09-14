@@ -4,6 +4,8 @@ import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.repository.AccountRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import com.andersen.banking.meeting_impl.util.AccountNumberGenerator;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 /** AccountService implementation */
 @Slf4j
@@ -27,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account account) {
         log.info("Creating account: {}", account);
 
+        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(), account.getCurrency(), account.getOwnerId()));
         Account savedAccount = accountRepository.save(account);
 
         log.info("Created account: {}", savedAccount);

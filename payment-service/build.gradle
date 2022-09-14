@@ -45,6 +45,8 @@ dependencies {
 	testImplementation 'org.testcontainers:testcontainers'
 	testRuntimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.retry:spring-retry:1.2.5.RELEASE'
+	implementation 'org.springframework:spring-aspects:5.3.22'
 }
 
 dependencyManagement {

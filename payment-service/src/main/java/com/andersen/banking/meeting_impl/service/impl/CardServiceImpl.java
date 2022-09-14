@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpirationTime;
+
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
@@ -8,16 +10,20 @@ import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.CardService;
+import com.andersen.banking.meeting_impl.util.CardGenerator;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
+import javax.management.openmbean.KeyAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /** CardService implementation. */
 @Slf4j
@@ -86,21 +92,39 @@ public class CardServiceImpl implements CardService {
         return card;
     }
 
+    @Retryable(value = KeyAlreadyExistsException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     @Transactional
     @Override
     public Card create(Card card) {
-        log.info("Creating card: {}", card);
+        log.info("Creating card with params: [{}/{}]", card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName());
 
         Account account = accountService.findById(card.getAccount().getId());
+        String cardNumber = CardGenerator.generateCardNumber(card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName(),
+                account.getCurrency(), cardRepository.count());
+        log.info("card number was generated: {}", cardNumber);
+
+        setUpCardInfo(card, account, cardNumber);
+
+        //check if card already exists
+        if (cardRepository.existsByFirstTwelveNumbersAndLastFourNumbers(card.getFirstTwelveNumbers(), card.getLastFourNumbers())) {
+            log.error("Card {} already exists", cardNumber);
+            throw new KeyAlreadyExistsException("Card already exists");
+        } else {
+            Card savedCard = cardRepository.save(card);
+            log.info("Created card: {}", savedCard);
+            return savedCard;
+        }
+    }
+
+    private void setUpCardInfo(Card card, Account account, String cardNumber){
         card.setAccount(account);
+        card.setValidFromDate(LocalDate.now());
+        generateExpirationTime(card);
+        card.setFirstTwelveNumbers(cardNumber.substring(0, 12));
+        card.setLastFourNumbers(cardNumber.substring(12, 16));
 
         setTypeCard(card);
         setCryptFirstNums(card);
-
-        Card savedCard = cardRepository.save(card);
-
-        log.info("Created card: {}", savedCard);
-        return savedCard;
     }
 
     @Override

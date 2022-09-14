@@ -1,5 +1,9 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import static com.andersen.banking.meeting_db.repositories.specifications.CitySpecification.containsName;
+import static com.andersen.banking.meeting_db.repositories.specifications.CitySpecification.hasCountry;
+import static org.springframework.data.jpa.domain.Specification.where;
+
 import com.andersen.banking.meeting_api.dto.*;
 import com.andersen.banking.meeting_db.repositories.*;
 import com.andersen.banking.meeting_impl.mapper.*;
@@ -46,6 +50,13 @@ public class InformationServiceImpl implements InformationService {
     public List<CityDto> getListCityDtoWithBankBranchesByCountryId(Long countryId) {
         log.debug("get only cities with bank branches by countryId : {}", countryId);
         return cityRepository.getOnlyCitiesWithBankBranches(countryId)
+                .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CityDto> getListCityDtoByCountryIdAndPartOfCityName(Long countryId, CityDtoForSearch cityPartName, Pageable pageable) {
+        log.debug("get cities by countryId : {} , and contains part of name {}", countryId, cityPartName);
+        return cityRepository.findAll(where(hasCountry(countryId)).and(containsName(cityPartName.getName())), pageable)
                 .stream().map(cityMapper::city2CityDto).collect(Collectors.toList());
     }
 

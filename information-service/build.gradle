@@ -1,4 +1,3 @@
-
 plugins {
     id 'org.springframework.boot' version "$springBootVersion"
     id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
@@ -24,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.springdoc:springdoc-openapi-ui:$springdocVersion"
+    implementation 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation "org.mapstruct:mapstruct:$mapStructVersion"
@@ -43,6 +43,7 @@ dependencies {
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:testcontainers'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 dependencyManagement {
@@ -50,4 +51,8 @@ dependencyManagement {
         mavenBom "org.testcontainers:testcontainers-bom:$testcontainersVersion"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
 }
