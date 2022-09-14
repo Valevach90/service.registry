@@ -6,14 +6,16 @@ import com.andersen.banking.deposit_db.entities.Deposit;
 import com.andersen.banking.deposit_impl.exceptions.NotFoundException;
 import com.andersen.banking.deposit_impl.mapping.DepositMapper;
 import com.andersen.banking.deposit_impl.service.DepositService;
+import com.andersen.banking.deposit_impl.util.JwtUtil;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 /**
  * Deposit controller implementation.
@@ -66,6 +68,7 @@ public class DepositControllerImpl implements DepositController {
         return allDepositDto;
     }
 
+    @Override
     public Page<DepositDto> findDepositsByUserId(UUID userId, Pageable pageable) {
         log.debug("Find all deposits for user {} and pageable: {}", userId, pageable);
 
@@ -74,6 +77,17 @@ public class DepositControllerImpl implements DepositController {
 
         log.debug("Found {} deposits", depositDtos.getContent().size());
         return depositDtos;
+    }
+
+    @Override
+    public Page<DepositDto> findDepositsByCurrentUserId(
+            Authentication authentication,
+            Pageable pageable) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String stringId = JwtUtil.extractIdFromToken(jwt);
+        log.debug("Find all deposits with authentication for user with id: {} and pageable: {}",
+                stringId, pageable);
+        return findDepositsByUserId(UUID.fromString(stringId), pageable);
     }
 
     @Override
