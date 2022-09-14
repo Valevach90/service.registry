@@ -83,9 +83,13 @@ public class DepositControllerImpl implements DepositController {
     public Page<DepositDto> findDepositsByCurrentUserId(
             Authentication authentication,
             Pageable pageable) {
-
+        if (authentication == null) {
+            throw new NotFoundException(Authentication.class);
+        }
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String stringId = JwtUtil.extractIdFromToken(jwt);
+        log.debug("Find all deposits with authentication for user with id: {} and pageable: {}",
+                stringId, pageable);
         return findDepositsByUserId(UUID.fromString(stringId), pageable);
     }
 
