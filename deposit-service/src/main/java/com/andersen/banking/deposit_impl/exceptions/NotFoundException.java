@@ -15,9 +15,4 @@ public class NotFoundException extends RuntimeException {
     public <T> NotFoundException(Class<T> exceptionType, String number) {
         super(String.format("Not found %s with number %s", exceptionType.getSimpleName(), number));
     }
-
-    public <T> NotFoundException(Class<T> exceptionType) {
-        super(String.format("Not found %s", exceptionType.getSimpleName()));
-    }
-
 }

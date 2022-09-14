@@ -44,7 +44,7 @@ public interface DepositController {
             description = "Get all deposits by current user from token"
     )
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/users")
+    @GetMapping("/user")
     Page<DepositDto> findDepositsByCurrentUserId(
             Authentication authentication,
             @ParameterObject @PageableDefault Pageable pageable
