@@ -1,5 +1,8 @@
-package com.andersen.banking;
+package com.andersen.banking.meeting_impl;
 
+import com.andersen.banking.meeting_api.CreditProductController;
+import com.andersen.banking.CreditProductService;
+import com.andersen.banking.meeting_api.CreditProductDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
