@@ -1,11 +1,21 @@
 package com.andersen.banking.deposit_impl.controller;
 
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateCurrency;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProduct;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositProductDto;
+import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.generateDepositType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.andersen.banking.deposit_api.dto.DepositProductDto;
 import com.andersen.banking.deposit_db.entities.DepositProduct;
 import com.andersen.banking.deposit_db.repositories.CurrencyRepository;
 import com.andersen.banking.deposit_db.repositories.DepositProductRepository;
 import com.andersen.banking.deposit_db.repositories.DepositTypeRepository;
 import com.andersen.banking.deposit_impl.generators.CustomPageImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,20 +28,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.andersen.banking.deposit_impl.generators.DepositServiceTestEntitiesGenerator.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DepositProductControllerH2IntegrationTest {
 
     private DepositProduct product;
     private DepositProductDto productDto;
-    private Long id;
+    private UUID id;
 
     @LocalServerPort
     private int port;
@@ -58,7 +61,7 @@ public class DepositProductControllerH2IntegrationTest {
         depositTypeRepository.save(generateDepositType());
         currencyRepository.save(generateCurrency());
 
-        product = generateDepositProduct();
+        product = productRepository.save(generateDepositProduct());
         productDto = generateDepositProductDto(product);
         id = product.getId();
 
@@ -68,9 +71,10 @@ public class DepositProductControllerH2IntegrationTest {
     @Test
     void create_whenOk_shouldReturnSavedDepositProductDto(){
         DepositProductDto response = restTemplate.postForObject(baseUrl, productDto, DepositProductDto.class);
+        productDto.setId(response.getId());
 
         assertEquals(productDto, response);
-        assertEquals(1, productRepository.findAll().size());
+        assertEquals(2, productRepository.findAll().size());
     }
 
     @Test
@@ -81,8 +85,8 @@ public class DepositProductControllerH2IntegrationTest {
     }
 
     @Test
-    void findById_whenOk_shouldReturnFoundDepositProductDto(){
-        productRepository.save(product);
+    void findById_whenOk_shouldReturnFoundDepositProductDto() {
+        UUID id = productRepository.save(product).getId();
 
         DepositProductDto response = restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, id);
 
@@ -92,9 +96,9 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void findById_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
-        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, id));
+        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, UUID.randomUUID()));
     }
 
     @Test
@@ -113,12 +117,12 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void update_whenOk(){
-        productRepository.save(product);
         product.setDepositName("SecondName");
+        productDto.setDepositName("SecondName");
 
-        restTemplate.put(baseUrl, product);
+        restTemplate.put(baseUrl, productDto);
 
-        DepositProduct response = productRepository.findById(1L).get();
+        DepositProduct response = productRepository.findById(product.getId()).get();
 
         assertEquals(product, response);
         assertEquals(1, productRepository.findAll().size());
@@ -126,17 +130,13 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void update_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
         assertThrows(Exception.class, () -> restTemplate.put(baseUrl, product));
     }
 
     @Test
     void delete_whenOk(){
-        assertEquals(0, productRepository.findAll().size());
-
-        productRepository.save(product);
-
         assertEquals(1, productRepository.findAll().size());
 
         restTemplate.delete(baseUrl + "/{id}", id);
@@ -146,8 +146,8 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void delete_whenNotFound_shouldThrowException(){
-        assertEquals(0, productRepository.findAll().size());
+        assertEquals(1, productRepository.findAll().size());
 
-        assertThrows(Exception.class, () -> restTemplate.delete(baseUrl + "/{id}", id));
+        assertThrows(Exception.class, () -> restTemplate.delete(baseUrl + "/{id}", UUID.randomUUID()));
     }
 }

@@ -1,6 +1,5 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_ACCOUNT_NUMBER;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BANKNAME;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CURRENCY;
@@ -10,13 +9,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
+import java.time.LocalDate;
+import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.util.UUID;
+import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,11 +24,6 @@ public class AccountDto {
     @Schema(hidden = true)
     @JsonProperty("id")
     private UUID id;
-
-    @NotBlank
-    @Schema(example = EXAMPLE_ACCOUNT_NUMBER, defaultValue = EXAMPLE_ACCOUNT_NUMBER)
-    @JsonProperty("account_number")
-    private String accountNumber;
 
     @NotNull
     @JsonProperty("open_date")

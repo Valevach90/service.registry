@@ -1,9 +1,12 @@
 package com.andersen.banking.deposit_api.dto;
 
+import static com.andersen.banking.deposit_api.utils.OpenApiConstants.*;
+
 import com.andersen.banking.deposit_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.UUID;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -17,10 +20,10 @@ import javax.validation.constraints.NotNull;
 @Schema(description = "dto for deposit product")
 public class DepositProductDto {
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_PRODUCT_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_PRODUCT_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("id")
     @NotNull(message = "Deposit product id can't be null.")
-    private Long id;
+    private UUID id;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_DEPOSIT_NAME, example = OpenApiConstants.EXAMPLE_DEPOSIT_NAME, defaultValue = OpenApiConstants.EXAMPLE_DEPOSIT_NAME)
     @JsonProperty("depositName")
@@ -45,12 +48,12 @@ public class DepositProductDto {
     @NotNull(message = "Maximal Term in Months can't be null.")
     private Integer maxTermMonths;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_MIN_AMOUNT, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_MIN_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("minAmount")
     @NotNull(message = "Minimal Amount can't be null.")
     private Long minAmount;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_MAX_AMOUNT, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
+    @Schema(description = OpenApiConstants.DESCRIPTION_MAX_AMOUNT, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("maxAmount")
     @NotNull(message = "Maximal Amount can't be null.")
     private Long maxAmount;
@@ -98,4 +101,8 @@ public class DepositProductDto {
     @JsonProperty("isActive")
     @NotNull(message = "Active option can't be null.")
     private Boolean isActive;
+
+    @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
+    @JsonProperty("description")
+    private String description;
 }

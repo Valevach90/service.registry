@@ -1,11 +1,13 @@
 package com.andersen.banking.deposit_db.entities;
 
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Deposit entity.
@@ -18,9 +20,10 @@ import java.util.List;
 public class Deposit {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "deposit_number", nullable = false)
     private String depositNumber;
@@ -77,7 +80,7 @@ public class Deposit {
     private Boolean isRevocable;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private UUID userId;
 
     @OneToMany(mappedBy = "deposit", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Transfer> transfers;

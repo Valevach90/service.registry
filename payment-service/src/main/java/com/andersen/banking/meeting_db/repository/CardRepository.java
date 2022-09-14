@@ -1,14 +1,13 @@
 package com.andersen.banking.meeting_db.repository;
 
 import com.andersen.banking.meeting_db.entities.Card;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /** JpaRepository, which works with Card entity. */
 public interface CardRepository extends JpaRepository<Card, UUID> {
@@ -29,4 +28,6 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
     Page<Card> findCardByAccount_OwnerId(UUID ownerId, Pageable pageable);
 
     Page<Card> findByAccount_OwnerIdAndAccount_IdNot(UUID ownerId, UUID id, Pageable pageable);
+
+    boolean existsByFirstTwelveNumbersAndLastFourNumbers(String firstTwelve, String lastFour);
 }

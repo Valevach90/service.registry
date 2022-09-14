@@ -1,9 +1,11 @@
 package com.andersen.banking.deposit_db.entities;
 
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Deposit Product entity which represents banking Deposit Products.
@@ -16,9 +18,10 @@ import javax.persistence.*;
 public class DepositProduct {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name ="id")
+    private UUID id;
 
     @Column(name = "deposit_name", nullable = false)
     private String depositName;
@@ -72,4 +75,7 @@ public class DepositProduct {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+
+    @Column(name = "description")
+    private String description;
 }
