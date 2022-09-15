@@ -34,4 +34,7 @@ springdoc:
     operationsSorter: method
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/feature/MRN-741_create_CRUD_operations_for_credit_products
