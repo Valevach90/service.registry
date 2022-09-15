@@ -25,46 +25,32 @@ public class CreditProductDTO {
     @NotNull(message = "Credit product id can't be null")
     private UUID uuid;
 
-
     private String name;
 
     private BigDecimal minSum;
 
-
     private BigDecimal maxSum;
-
-
 
     private Currency currency;
 
-
     private Double minLoanRate;
-
 
     private Double maxLoanRate;
 
-
     private Boolean needGuarantee;
-
 
     private Boolean earlyRepayment;
 
-
     private Integer minTerm;
-
 
     private Integer maxTerm;
 
-
     private String description;
-
 
     @Enumerated(EnumType.STRING)
     private CalculationMode calculationMode;
 
-
     private Integer gracePeriodMonth;
-
 
     private Boolean needIncomeStatement;
 }

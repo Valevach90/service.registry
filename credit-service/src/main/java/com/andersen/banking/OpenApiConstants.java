@@ -32,5 +32,4 @@ public class OpenApiConstants {
     public static final String EXAMPLE_RATE_DOUBLE = "0.54";
     public static final String EXAMPLE_CREDIT_PRODUCT = "Text of credit description";
     public static final String EXAMPLE_CALCULATION_MODE = "Differentiate";
-
 }
