@@ -1,6 +1,19 @@
 spring:
   application:
     name: credit-service
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+      maxLifetime: 300000
+      minimumIdle: 5
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=credit_service
+    username: psqluser
+    password: PoSPa$$woRd
+  flyway:
+    schemas: credit_service
+    user: psqluser
+    password: PoSPa$$woRd
 
 logging:
   level:
