@@ -21,14 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public interface CardControllerV2 {
 
     @Operation(
-            summary = "Get card by card id",
-            description = "Get card information by id")
-    @GetMapping("/{id}")
-    CardResponseDto findById(
-            Authentication authentication,
-            @Parameter(description = "card id", required = true) @PathVariable UUID id);
-
-    @Operation(
             summary = "Get all cards by user token",
             description = "Get page of cards by user token and a pageable settings")
     @GetMapping("/")
