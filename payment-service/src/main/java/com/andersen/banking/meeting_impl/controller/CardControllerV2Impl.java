@@ -30,7 +30,7 @@ public class CardControllerV2Impl implements CardControllerV2 {
     public Page<CardResponseDto> findAll(Authentication authentication, Pageable pageable) {
         log.info(
                 "Receiving request for getting all cards for user: {}",
-                authentication.getDetails());
+                authentication.getPrincipal());
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
 
@@ -43,4 +43,5 @@ public class CardControllerV2Impl implements CardControllerV2 {
 
         return result;
     }
+
 }

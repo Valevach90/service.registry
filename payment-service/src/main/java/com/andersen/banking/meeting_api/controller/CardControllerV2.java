@@ -23,7 +23,7 @@ public interface CardControllerV2 {
     @Operation(
             summary = "Get all cards by user token",
             description = "Get page of cards by user token and a pageable settings")
-    @GetMapping("/")
+    @GetMapping("")
     Page<CardResponseDto> findAll(
             Authentication authentication,
             @ParameterObject @PageableDefault Pageable pageable);
