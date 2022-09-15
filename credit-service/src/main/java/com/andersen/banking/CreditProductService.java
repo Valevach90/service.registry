@@ -1,6 +1,6 @@
 package com.andersen.banking;
 
-import com.andersen.banking.meeting_api.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductDTO;
 import java.util.List;
 import java.util.UUID;
 

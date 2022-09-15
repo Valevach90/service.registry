@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_db;
+package com.andersen.banking.meeting_db.entity;
 
 import java.util.UUID;
 import javax.persistence.Column;

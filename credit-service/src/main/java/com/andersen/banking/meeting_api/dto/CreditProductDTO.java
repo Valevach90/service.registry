@@ -1,14 +1,17 @@
-package com.andersen.banking.meeting_api;
+package com.andersen.banking.meeting_api.dto;
 
 import com.andersen.banking.CalculationMode;
-import com.andersen.banking.meeting_db.Currency;
+import com.andersen.banking.OpenApiConstants;
+import com.andersen.banking.meeting_db.entity.Currency;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.UUID;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -16,7 +19,10 @@ import lombok.Data;
 @Schema(description = "dto for credit product")
 public class CreditProductDTO {
 
-    @Id
+    @Schema(description = OpenApiConstants.DESCRIPTION_CREDIT_PRODUCT_ID, example =
+        OpenApiConstants.EXAMPLE_CREDIT_PRODUCT_ID)
+    @JsonProperty("id")
+    @NotNull(message = "Credit product id can't be null")
     private UUID uuid;
 
 
@@ -32,10 +38,10 @@ public class CreditProductDTO {
     private Currency currency;
 
 
-    private BigDecimal minLoanRate;
+    private Double minLoanRate;
 
 
-    private BigDecimal maxLoanRate;
+    private Double maxLoanRate;
 
 
     private Boolean needGuarantee;

@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_db;
+package com.andersen.banking.meeting_db.entity;
 
 import com.andersen.banking.CalculationMode;
 import java.math.BigDecimal;
@@ -43,10 +43,10 @@ public class CreditProduct {
     private Currency currency;
 
     @Column(name = "min_loan_rate")
-    private BigDecimal minLoanRate;
+    private Double minLoanRate;
 
     @Column(name = "max_loan_rate")
-    private BigDecimal maxLoanRate;
+    private Double maxLoanRate;
 
     @Column(name = "need_guarantee")
     private Boolean needGuarantee;
