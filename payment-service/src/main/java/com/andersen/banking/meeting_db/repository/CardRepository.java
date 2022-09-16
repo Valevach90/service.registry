@@ -19,7 +19,7 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
     @Query(
             value =
                     "SELECT c FROM Card c "
-                            + "JOIN c.typeCard tc "
+                            + "JOIN c.cardProduct.typeCard tc "
                             + "WHERE (:payment IS NULL OR tc.paymentSystem = :payment) "
                             + "   AND (:type IS NULL OR tc.typeName = :type)")
     Page<Card> findCardByPaymentSystemAndType(

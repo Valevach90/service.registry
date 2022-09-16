@@ -39,13 +39,13 @@ public class CardRegistrationDto {
     private String holderName;
 
     @NotNull
-    @Schema(defaultValue = EXAMPLE_PAYMENT_SYSTEM, example = EXAMPLE_PAYMENT_SYSTEM)
+    @Schema(hidden = true, defaultValue = EXAMPLE_PAYMENT_SYSTEM, example = EXAMPLE_PAYMENT_SYSTEM)
     @JsonProperty("payment_system")
     private String paymentSystem;
 
     @NotNull
     @JsonProperty("type_name")
-    @Schema(defaultValue = EXAMPLE_TYPECARD, example = EXAMPLE_TYPECARD)
+    @Schema(hidden = true, defaultValue = EXAMPLE_TYPECARD, example = EXAMPLE_TYPECARD)
     private String typeName;
 
 

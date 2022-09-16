@@ -58,10 +58,6 @@ public class Card {
     private String holderName;
 
     @ManyToOne
-    @JoinColumn(name = "type_card_id", referencedColumnName = "id")
-    private TypeCard typeCard;
-
-    @ManyToOne
     @JoinColumn(name = "card_product_id", referencedColumnName = "id")
     private CardProduct cardProduct;
 }

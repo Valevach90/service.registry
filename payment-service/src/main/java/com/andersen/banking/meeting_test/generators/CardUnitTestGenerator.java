@@ -7,6 +7,7 @@ import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
 import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
+import com.andersen.banking.meeting_db.entities.CardProduct;
 import com.andersen.banking.meeting_db.entities.TypeCard;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,18 +19,20 @@ public class CardUnitTestGenerator {
 
     private static final UUID CARD_ID = UUID.randomUUID();
     private static final UUID ACCOUNT_ID = UUID.randomUUID();
-    private static final UUID TYPE_ID = UUID.randomUUID();
+    private static final UUID CARD_PRODUCT_ID = UUID.randomUUID();
+
+    private static final UUID TYPE_CARD_ID = UUID.randomUUID();
 
     public static Card populateCard() {
         Card card = new Card();
         card.setId(CARD_ID);
         card.setAccount(populateAccount(new Account()));
+        card.setCardProduct(populateCardProduct(new CardProduct()));
         card.setValidFromDate(LocalDate.of(2021, 10, 23));
         card.setExpireDate(LocalDate.of(2024, 10, 23));
         card.setFirstTwelveNumbers("123456789012");
         card.setLastFourNumbers("4567");
         card.setHolderName("Ivanov Ivan Ivanovich");
-        card.setTypeCard(populateTypeCard(new TypeCard()));
 
         return card;
     }
@@ -73,8 +76,6 @@ public class CardUnitTestGenerator {
         cardResponseDto.setValidFromDate(LocalDate.of(2021, 10, 23));
         cardResponseDto.setExpireDate(LocalDate.of(2024, 10, 23));
         cardResponseDto.setHolderName("Ivanov Ivan Ivanovich");
-        cardResponseDto.setPaymentSystem("VISA");
-        cardResponseDto.setTypeName("SILVER");
         cardResponseDto.setBalance(0);
         cardResponseDto.setCurrency("BEL");
 
@@ -86,6 +87,17 @@ public class CardUnitTestGenerator {
         return account;
     }
 
+    public static CardProduct populateCardProduct(CardProduct cardProduct) {
+        cardProduct.setId(CARD_PRODUCT_ID);
+        cardProduct.setTypeCard(populateTypeCard());
+        cardProduct.setCashback(3);
+        cardProduct.setPrice(9.99);
+        cardProduct.setAdvantages("advantages test str");
+        cardProduct.setBankPartners("bank partners test str");
+        cardProduct.setLoyaltyProgram("loyalty program test str");
+        return cardProduct;
+    }
+
     public static Account populateAccountWithBalanceAndCurrency(Account a) {
         Account account = populateAccount(a);
         account.setBalance(0);
@@ -95,7 +107,7 @@ public class CardUnitTestGenerator {
     }
 
     public static TypeCard populateTypeCard(TypeCard typeCard) {
-        typeCard.setId(TYPE_ID);
+        typeCard.setId(TYPE_CARD_ID);
         typeCard.setPaymentSystem("VISA");
         typeCard.setTypeName("SILVER");
 
@@ -104,7 +116,7 @@ public class CardUnitTestGenerator {
 
     public static TypeCard populateTypeCard() {
         TypeCard typeCard = new TypeCard();
-        typeCard.setId(TYPE_ID);
+        typeCard.setId(TYPE_CARD_ID);
         typeCard.setPaymentSystem("VISA");
         typeCard.setTypeName("SILVER");
         return typeCard;
@@ -112,7 +124,7 @@ public class CardUnitTestGenerator {
 
     public static TypeCardResponseDto populateTypeCardResponseDto() {
         TypeCardResponseDto typeCardResponseDto = new TypeCardResponseDto();
-        typeCardResponseDto.setId(TYPE_ID);
+        typeCardResponseDto.setId(TYPE_CARD_ID);
         typeCardResponseDto.setPaymentSystem("VISA");
         typeCardResponseDto.setTypeName("SILVER");
         return typeCardResponseDto;
@@ -120,7 +132,7 @@ public class CardUnitTestGenerator {
 
     public static TypeCardUpdateDto populateTypeCardUpdateDto() {
         TypeCardUpdateDto typeCardUpdateDto = new TypeCardUpdateDto();
-        typeCardUpdateDto.setId(TYPE_ID);
+        typeCardUpdateDto.setId(TYPE_CARD_ID);
         typeCardUpdateDto.setPaymentSystem("VISA");
         typeCardUpdateDto.setTypeName("SILVER");
         return typeCardUpdateDto;

@@ -19,10 +19,13 @@ public class CardProductServiceImpl implements CardProductService {
 
     private final CardProductRepository cardProductRepository;
 
+
     @Override
     @Transactional
     public CardProduct create(CardProduct cardProduct) {
         log.info("creating card product: {}", cardProduct);
+
+
 
         CardProduct savedCardProduct = cardProductRepository.save(cardProduct);
 

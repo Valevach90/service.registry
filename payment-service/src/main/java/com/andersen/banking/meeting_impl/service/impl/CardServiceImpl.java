@@ -72,7 +72,6 @@ public class CardServiceImpl implements CardService {
         card.setAccount(accountService.findById(card.getAccount().getId()));
         card.setCardProduct(cardProductService.findById(card.getCardProduct().getId()));
 
-
         setTypeCard(card);
         setCryptFirstNums(card);
 
@@ -100,11 +99,11 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public Card create(Card card) {
-        log.info("Creating card with params: [{}/{}]", card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName());
+        log.info("Creating card with params: [{}/{}]", card.getCardProduct().getTypeCard().getPaymentSystem(), card.getCardProduct().getTypeCard().getTypeName());
 
         Account account = accountService.findById(card.getAccount().getId());
         CardProduct cardProduct = cardProductService.findById(card.getCardProduct().getId());
-        String cardNumber = CardGenerator.generateCardNumber(card.getTypeCard().getPaymentSystem(), card.getTypeCard().getTypeName(),
+        String cardNumber = CardGenerator.generateCardNumber(card.getCardProduct().getTypeCard().getPaymentSystem(), card.getCardProduct().getTypeCard().getTypeName(),
                 account.getCurrency(), cardRepository.count());
         log.info("card number was generated: {}", cardNumber);
 
@@ -181,13 +180,13 @@ public class CardServiceImpl implements CardService {
     }
 
     private void setTypeCard(Card card) {
-        TypeCard typeCard = card.getTypeCard();
+        TypeCard typeCard = card.getCardProduct().getTypeCard();
         TypeCard existingTypeCard =
                 typeCardRepository
                         .findByPaymentSystemAndTypeName(
                                 typeCard.getPaymentSystem(), typeCard.getTypeName())
                         .orElseThrow(() -> new NotFoundException(TypeCard.class, null));
-        card.setTypeCard(existingTypeCard);
+        card.getCardProduct().setTypeCard(existingTypeCard);
     }
 
     private void setCryptFirstNums(Card card) {

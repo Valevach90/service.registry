@@ -50,4 +50,22 @@ public class CardProductCreateDto {
             message = "loyalty_program should contain at least 3 symbols and not more than 255"
     )
     private String loyaltyProgram;
+
+    @NotBlank
+    @JsonProperty("payment_system")
+    @Size(
+            min = 3,
+            max = 20,
+            message = "payment_system should contain at least 3 symbols and not more than 20"
+    )
+    private String paymentSystem;
+
+    @NotBlank
+    @JsonProperty("type_name")
+    @Size(
+            min = 3,
+            max = 3,
+            message = "type_name should contain 3 symbols"
+    )
+    private String typeName;
 }
