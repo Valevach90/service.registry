@@ -32,7 +32,7 @@ build jars:
       - notification-service/build/libs/*.jar
       - information-service/build/libs/*.jar
       - config-service/build/libs/*.jar
-      - cresdit-service/build/libs/*.jar
+      - credit-service/build/libs/*.jar
       # - api-gateway/**/build/libs/*.jar
       # - '**/build/libs/*.jar'
     expire_in: 1 day
