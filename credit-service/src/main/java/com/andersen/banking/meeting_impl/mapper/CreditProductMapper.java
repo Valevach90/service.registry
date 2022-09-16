@@ -1,7 +1,6 @@
-package com.andersen.banking;
+package com.andersen.banking.meeting_impl.mapper;
 
-import com.andersen.banking.meeting_api.CreditProductDTO;
-import com.andersen.banking.meeting_db.CreditProduct;
+import com.andersen.banking.meeting_api.dto.CreditProductDTO;
 import java.util.List;
 import org.mapstruct.Mapper;
 

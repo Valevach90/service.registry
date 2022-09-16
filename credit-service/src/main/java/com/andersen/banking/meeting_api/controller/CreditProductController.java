@@ -1,6 +1,6 @@
-package com.andersen.banking.meeting_api;
+package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

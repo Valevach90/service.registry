@@ -1,6 +1,5 @@
-package com.andersen.banking.meeting_db;
+package com.andersen.banking.meeting_db.repository;
 
-import com.andersen.banking.meeting_api.CreditProductDTO;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

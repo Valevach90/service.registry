@@ -1,6 +1,5 @@
 package com.andersen.banking.meeting_db.entity;
 
-import com.andersen.banking.CalculationMode;
 import java.math.BigDecimal;
 import java.util.UUID;
 import javax.persistence.Column;

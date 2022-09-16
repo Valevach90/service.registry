@@ -1,8 +1,10 @@
-package com.andersen.banking;
+package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_api.CreditProductDTO;
-import com.andersen.banking.meeting_db.CreditProduct;
-import com.andersen.banking.meeting_db.CreditProductRepository;
+import com.andersen.banking.meeting_impl.exception.CreditProductNotFoundException;
+import com.andersen.banking.meeting_api.dto.CreditProductDTO;
+import com.andersen.banking.meeting_db.repository.CreditProductRepository;
+import com.andersen.banking.meeting_impl.mapper.CreditProductMapper;
+import com.andersen.banking.meeting_api.service.CreditProductService;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
