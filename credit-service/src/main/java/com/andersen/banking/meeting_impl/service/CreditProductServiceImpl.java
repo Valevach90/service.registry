@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.service;
 
+import com.andersen.banking.meeting_db.entity.CreditProduct;
 import com.andersen.banking.meeting_impl.exception.CreditProductNotFoundException;
 import com.andersen.banking.meeting_api.dto.CreditProductDTO;
 import com.andersen.banking.meeting_db.repository.CreditProductRepository;
@@ -23,6 +24,7 @@ public class CreditProductServiceImpl implements CreditProductService {
     @Override
     public CreditProductDTO createCreditProduct(CreditProductDTO creditProductDTO) {
         //ToDo такой продукт уже есть
+        //ToDo логирование
         CreditProduct creditProduct = creditProductMapper.toCreditProduct(creditProductDTO);
 
         CreditProduct savedCreditProduct = creditProductRepository.save(creditProduct);
