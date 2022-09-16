@@ -21,3 +21,5 @@ ALTER TABLE credit_products
     ADD CONSTRAINT FK_TRANSFER_ON_CURRENCY FOREIGN KEY (currency_id) REFERENCES currency (id);
 
 
+
+
