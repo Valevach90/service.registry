@@ -45,7 +45,7 @@ public interface CardProductController {
             description = "create card product by params in dto object")
     @PostMapping("/")
     CardProductDto create(
-            @Parameter(description = "card product", required = true) @RequestBody CardProductCreateDto cardProductCreateDto
+            @Parameter(description = "card product", required = true) @RequestBody @Validated CardProductCreateDto cardProductCreateDto
     );
 
 

@@ -1,8 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_NAME;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PAYMENT_SYSTEM;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TYPECARD;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,17 +35,4 @@ public class CardRegistrationDto {
                     "message = \"holder_name should have at least 3 and at maximum 30 characters\"")
     @JsonProperty("holder_name")
     private String holderName;
-
-    @NotNull
-    @Schema(hidden = true, defaultValue = EXAMPLE_PAYMENT_SYSTEM, example = EXAMPLE_PAYMENT_SYSTEM)
-    @JsonProperty("payment_system")
-    private String paymentSystem;
-
-    @NotNull
-    @JsonProperty("type_name")
-    @Schema(hidden = true, defaultValue = EXAMPLE_TYPECARD, example = EXAMPLE_TYPECARD)
-    private String typeName;
-
-
-
 }

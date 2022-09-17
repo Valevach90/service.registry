@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_db.entities.CardProduct;
 import com.andersen.banking.meeting_db.repository.CardProductRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.CardProductService;
+import com.andersen.banking.meeting_impl.service.TypeCardService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,16 @@ public class CardProductServiceImpl implements CardProductService {
 
     private final CardProductRepository cardProductRepository;
 
+    private final TypeCardService typeCardService;
+
 
     @Override
     @Transactional
     public CardProduct create(CardProduct cardProduct) {
         log.info("creating card product: {}", cardProduct);
 
-
+        cardProduct.setTypeCard(typeCardService
+                .findByPaymentSystemAndTypeName(cardProduct.getTypeCard().getPaymentSystem(), cardProduct.getTypeCard().getTypeName()));
 
         CardProduct savedCardProduct = cardProductRepository.save(cardProduct);
 
@@ -63,6 +67,8 @@ public class CardProductServiceImpl implements CardProductService {
         log.info("Trying to update card product: {}", updateCardProduct);
 
         findById(updateCardProduct.getId());
+        updateCardProduct.setTypeCard(typeCardService
+                .findByPaymentSystemAndTypeName(updateCardProduct.getTypeCard().getPaymentSystem(), updateCardProduct.getTypeCard().getTypeName()));
 
         CardProduct updatedCardProduct = cardProductRepository.save(updateCardProduct);
         log.info("Card product was updated: {}", updatedCardProduct);

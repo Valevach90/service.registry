@@ -58,11 +58,4 @@ public class CardUpdateDto {
     @JsonProperty("holder_name")
     private String holderName;
 
-    @NotNull
-    @JsonProperty("payment_system")
-    private String paymentSystem;
-
-    @NotNull
-    @JsonProperty("type_name")
-    private String typeName;
 }

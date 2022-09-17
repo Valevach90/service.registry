@@ -69,8 +69,8 @@ public class CardProductDto {
     @JsonProperty("type_name")
     @Size(
             min = 3,
-            max = 3,
-            message = "type_name should contain 3 symbols"
+            max = 20,
+            message = "type_name should contain at least 3 symbols and not more than 20"
     )
     private String typeName;
 }

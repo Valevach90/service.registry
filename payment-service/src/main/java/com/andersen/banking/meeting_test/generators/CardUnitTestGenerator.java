@@ -53,8 +53,6 @@ public class CardUnitTestGenerator {
         cardUpdateDto.setValidFromDate(LocalDate.of(2021, 10, 23));
         cardUpdateDto.setExpireDate(LocalDate.of(2024, 10, 23));
         cardUpdateDto.setHolderName("Ivanov Ivan Ivanovich");
-        cardUpdateDto.setPaymentSystem("VISA");
-        cardUpdateDto.setTypeName("SILVER");
         return cardUpdateDto;
     }
 
@@ -62,8 +60,6 @@ public class CardUnitTestGenerator {
         CardRegistrationDto cardRegistrationDto = new CardRegistrationDto();
         cardRegistrationDto.setAccountId(ACCOUNT_ID);
         cardRegistrationDto.setHolderName("Ivanov Ivan Ivanovich");
-        cardRegistrationDto.setPaymentSystem("VISA");
-        cardRegistrationDto.setTypeName("SILVER");
         return cardRegistrationDto;
     }
 

@@ -1,5 +1,10 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CASHBACK;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PAYMENT_SYSTEM;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PRICE;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TYPENAME;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,9 +24,11 @@ public class CardProductCreateDto {
 
     @NotNull
     @JsonProperty("cashback")
+    @Schema(defaultValue = EXAMPLE_CASHBACK, example = EXAMPLE_CASHBACK)
     private int cashback;
 
     @JsonProperty("price")
+    @Schema(defaultValue = EXAMPLE_PRICE, example = EXAMPLE_PRICE)
     private double price;
 
     @NotBlank
@@ -58,14 +65,16 @@ public class CardProductCreateDto {
             max = 20,
             message = "payment_system should contain at least 3 symbols and not more than 20"
     )
+    @Schema(defaultValue = EXAMPLE_PAYMENT_SYSTEM, example = EXAMPLE_PAYMENT_SYSTEM)
     private String paymentSystem;
 
     @NotBlank
     @JsonProperty("type_name")
     @Size(
             min = 3,
-            max = 3,
-            message = "type_name should contain 3 symbols"
+            max = 20,
+            message = "type_name should contain at least 3 symbols and not more than 20"
     )
+    @Schema(defaultValue = EXAMPLE_TYPENAME, example = EXAMPLE_TYPENAME)
     private String typeName;
 }

@@ -26,8 +26,6 @@ public interface CardMapper {
 
     @Mapping(target = "account.id", source = "accountId")
     @Mapping(target = "cardProduct.id", source = "cardProductId")
-    @Mapping(target = "cardProduct.typeCard.paymentSystem", ignore = true)
-    @Mapping(target = "cardProduct.typeCard.typeName", ignore = true)
     @Mapping(target = "validFromDate", ignore = true)
     @Mapping(target = "expireDate", ignore = true)
     @Mapping(target = "firstTwelveNumbers", ignore = true)
