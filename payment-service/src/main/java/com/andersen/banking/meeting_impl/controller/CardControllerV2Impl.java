@@ -34,10 +34,10 @@ public class CardControllerV2Impl implements CardControllerV2 {
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
 
-        UUID user_uuid = extractUUIDFromToken(jwt);
+        UUID userId = extractUUIDFromToken(jwt);
 
         Page<CardResponseDto> result =
-                cardService.findByOwnerId(user_uuid, pageable).map(cardMapper::toCardResponseDto);
+                cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
 
         log.info("Returning page of cards: {}", result.getContent());
 
