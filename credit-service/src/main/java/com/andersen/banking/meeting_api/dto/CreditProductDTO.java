@@ -8,9 +8,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for credit product")
 public class CreditProductDTO {
@@ -77,7 +81,7 @@ public class CreditProductDTO {
 
     @Schema(description = OpenApiConstants.DESCRIPTION_CREDIT_PRODUCT,
         example = OpenApiConstants.EXAMPLE_CREDIT_PRODUCT)
-    @JsonProperty("credit_product_description")
+    @JsonProperty("description")
     @NotNull(message = "Description of credit can't be null")
     private String description;
 

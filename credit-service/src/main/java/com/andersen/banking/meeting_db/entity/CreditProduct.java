@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name ="credit_products")
 public class CreditProduct {
 
     @Id
