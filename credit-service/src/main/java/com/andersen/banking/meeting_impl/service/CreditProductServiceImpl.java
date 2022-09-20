@@ -26,14 +26,21 @@ public class CreditProductServiceImpl implements CreditProductService {
 
     @Override
     public CreditProductDTO createCreditProduct(CreditProductDTO creditProductDTO) {
-        //ToDo логирование
+
+        log.info("Creating credit product: {}", creditProductDTO);
+
         CreditProduct creditProduct = creditProductMapper.toCreditProduct(creditProductDTO);
 
         if (creditProductRepository.findById(creditProduct.getUuid()).isPresent()) {
             throw new CreditProductAlreadyExistException(creditProduct.getUuid());
         }
 
-        return creditProductMapper.toCreditProductDTO(creditProductRepository.save(creditProduct));
+        CreditProductDTO creditProductDTOReturned = creditProductMapper.toCreditProductDTO(
+            creditProductRepository.save(creditProduct));
+
+        log.info("Created credit product: {}", creditProductDTOReturned);
+
+        return creditProductDTOReturned;
     }
 
     @Transactional(readOnly = true)
@@ -74,6 +81,8 @@ public class CreditProductServiceImpl implements CreditProductService {
         Optional<CreditProduct> creditProductOptional = creditProductRepository.
             findById(creditProduct.getUuid());
 
+        log.info("Updating credit product to: {}", creditProductOptional);
+
         if (creditProductOptional.isEmpty()) {
             throw new CreditProductNotFoundException(creditProduct.getUuid());
         }
@@ -85,6 +94,10 @@ public class CreditProductServiceImpl implements CreditProductService {
 
             CreditProduct creditProductReturned = creditProductRepository.save(
                 creditProductOptional.get());
+
+            log.info("Credit product: {} updated to version: {}", creditProductOptional,
+                creditProductReturned);
+
             return creditProductMapper.toCreditProductDTO(creditProductReturned);
         }
     }

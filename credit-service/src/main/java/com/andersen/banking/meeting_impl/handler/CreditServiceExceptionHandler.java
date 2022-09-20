@@ -1,4 +1,4 @@
-package com.andersen.banking;
+package com.andersen.banking.meeting_impl.handler;
 
 import com.andersen.banking.meeting_impl.exception.CreditProductAlreadyExistException;
 import com.andersen.banking.meeting_impl.exception.CreditProductNotFoundException;
