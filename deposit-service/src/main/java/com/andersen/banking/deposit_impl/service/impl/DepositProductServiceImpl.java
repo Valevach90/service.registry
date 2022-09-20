@@ -77,6 +77,7 @@ public class DepositProductServiceImpl implements DepositProductService {
                 .orElseThrow(() -> new NotFoundException(DepositProduct.class, id));
 
         depositProductRepository.deleteById(id);
+
         log.info("Deleted deposit product: {}", foundProduct);
     }
 

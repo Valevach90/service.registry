@@ -6,13 +6,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@ToString
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -101,4 +107,153 @@ public class CreditProductDTO {
         example = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("need_income_statement")
     private Boolean needIncomeStatement;
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getMinSum() {
+        return minSum;
+    }
+
+    public void setMinSum(BigDecimal minSum) {
+        this.minSum = minSum;
+    }
+
+    public BigDecimal getMaxSum() {
+        return maxSum;
+    }
+
+    public void setMaxSum(BigDecimal maxSum) {
+        this.maxSum = maxSum;
+    }
+
+    public CurrencyDTO getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(CurrencyDTO currency) {
+        this.currency = currency;
+    }
+
+    public BigDecimal getMinLoanRate() {
+        return minLoanRate;
+    }
+
+    public void setMinLoanRate(BigDecimal minLoanRate) {
+        this.minLoanRate = minLoanRate;
+    }
+
+    public BigDecimal getMaxLoanRate() {
+        return maxLoanRate;
+    }
+
+    public void setMaxLoanRate(BigDecimal maxLoanRate) {
+        this.maxLoanRate = maxLoanRate;
+    }
+
+    public Boolean getNeedGuarantee() {
+        return needGuarantee;
+    }
+
+    public void setNeedGuarantee(Boolean needGuarantee) {
+        this.needGuarantee = needGuarantee;
+    }
+
+    public Boolean getEarlyRepayment() {
+        return earlyRepayment;
+    }
+
+    public void setEarlyRepayment(Boolean earlyRepayment) {
+        this.earlyRepayment = earlyRepayment;
+    }
+
+    public Integer getMinTerm() {
+        return minTerm;
+    }
+
+    public void setMinTerm(Integer minTerm) {
+        this.minTerm = minTerm;
+    }
+
+    public Integer getMaxTerm() {
+        return maxTerm;
+    }
+
+    public void setMaxTerm(Integer maxTerm) {
+        this.maxTerm = maxTerm;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public CalculationMode getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(CalculationMode calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    public Integer getGracePeriodMonth() {
+        return gracePeriodMonth;
+    }
+
+    public void setGracePeriodMonth(Integer gracePeriodMonth) {
+        this.gracePeriodMonth = gracePeriodMonth;
+    }
+
+    public Boolean getNeedIncomeStatement() {
+        return needIncomeStatement;
+    }
+
+    public void setNeedIncomeStatement(Boolean needIncomeStatement) {
+        this.needIncomeStatement = needIncomeStatement;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CreditProductDTO that = (CreditProductDTO) o;
+        return Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name)
+            && Objects.equals(minSum, that.minSum) && Objects.equals(maxSum,
+            that.maxSum) && Objects.equals(currency, that.currency)
+            && Objects.equals(minLoanRate, that.minLoanRate) && Objects.equals(
+            maxLoanRate, that.maxLoanRate) && Objects.equals(needGuarantee,
+            that.needGuarantee) && Objects.equals(earlyRepayment, that.earlyRepayment)
+            && Objects.equals(minTerm, that.minTerm) && Objects.equals(maxTerm,
+            that.maxTerm) && Objects.equals(description, that.description)
+            && calculationMode == that.calculationMode && Objects.equals(gracePeriodMonth,
+            that.gracePeriodMonth) && Objects.equals(needIncomeStatement,
+            that.needIncomeStatement);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, name, minSum, maxSum, currency, minLoanRate, maxLoanRate,
+            needGuarantee, earlyRepayment, minTerm, maxTerm, description, calculationMode,
+            gracePeriodMonth, needIncomeStatement);
+    }
 }
