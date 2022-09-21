@@ -8,15 +8,10 @@ public class AuthServiceUtil {
     private AuthServiceUtil() {
     }
 
-    public static UUID extractUUIDFromToken(Jwt jwt) {
-        String id = extractEmailFromToken(jwt);
+    public static UUID extractIdFromToken(Jwt jwt) {
 
+        String id = jwt.getClaim("sub").toString();
         return UUID.fromString(id);
-    }
-
-    public static String extractIdFromToken(Jwt jwt) {
-
-        return jwt.getClaim("sub").toString();
     }
 
     public static String extractLoginFromToken(Jwt jwt) {

@@ -4,12 +4,14 @@ package com.andersen.banking.meeting_api.controller;
 import com.andersen.banking.meeting_api.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -114,8 +116,9 @@ public interface CardController {
     @Operation(
             summary = "Get all cards of current user",
             description = "get all cards of current user with id")
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/user")
-    Page<CardResponseDto> findAllByCurrentUser(
+    Page<CardResponseDto> findAllByCurrentUser(Authentication authentication,
             @ParameterObject
                     @PageableDefault(
                             sort = {"id"},
