@@ -15,6 +15,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Executor for deposit interest accrual.
+ */
+
 @Slf4j
 @RequiredArgsConstructor
 public class DepositInterestAccrualExecutor implements Job {
@@ -44,7 +48,7 @@ public class DepositInterestAccrualExecutor implements Job {
                 .orElseThrow(() -> new NotFoundException(Deposit.class, depositId));
 
         if (deposit.getAmount() >= startedPeriodAmount) {
-            deposit.setAmount(deposit.getAmount() + (deposit.getAmount()*deposit.getInterestRate()/100));
+            deposit.setAmount(deposit.getAmount() + (deposit.getAmount() * deposit.getInterestRate() / 100));
 
             log.info("Saving deposit after successful interest accrual {}", deposit);
             depositRepository.save(deposit);
@@ -52,10 +56,10 @@ public class DepositInterestAccrualExecutor implements Job {
             log.error("Interest accrual forbidden, amount is less than stated period amount {}", deposit);
         }
 
-        scheduleNextInterestAccrual(deposit);
+        scheduleTheNextInterestAccrual(deposit);
     }
 
-    private void scheduleNextInterestAccrual(Deposit deposit){
+    private void scheduleTheNextInterestAccrual(Deposit deposit){
 
         log.info("Trying to schedule the next interest accrual for deposit {}", deposit);
 
