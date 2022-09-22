@@ -57,7 +57,7 @@ public class Card {
     @Column(name = "holder_name", nullable = false, length = 30)
     private String holderName;
 
-    @Column(name = "is_active", columnDefinition = "boolean default true")
+    @Column(name = "is_active")
     private boolean isActive;
 
     @ManyToOne

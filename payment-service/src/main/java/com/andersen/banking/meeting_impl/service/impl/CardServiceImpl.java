@@ -81,13 +81,14 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public Card deleteById(UUID id) {
-        log.info("Trying to delete card with id: {}", id);
+        log.info("Trying to deactivate card with id: {}", id);
 
         Card card = findById(id);
+        card.setActive(false);
 
-        cardRepository.deleteById(id);
+        cardRepository.save(card);
 
-        log.info("Deleted card with id: {}", id);
+        log.info("Deactivated card with id: {}", id);
         return card;
     }
 
@@ -124,6 +125,7 @@ public class CardServiceImpl implements CardService {
         generateExpirationTime(card);
         card.setFirstTwelveNumbers(cardNumber.substring(0, 12));
         card.setLastFourNumbers(cardNumber.substring(12, 16));
+        card.setActive(true);
 
         setCryptFirstNums(card);
     }

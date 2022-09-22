@@ -108,7 +108,7 @@ public class CardControllerImpl implements CardController {
      * @return
      */
     @Override
-    public CardResponseDto deleteById(UUID id) {
+    public CardResponseDto deactivateById(UUID id) {
         log.trace("Receiving card id {}", id);
 
         Card deletedCard = cardService.deleteById(id);

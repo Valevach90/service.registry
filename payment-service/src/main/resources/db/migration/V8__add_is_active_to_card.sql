@@ -1,8 +1,8 @@
 ALTER TABLE payment_service.card
     ADD COLUMN is_active BOOLEAN;
 
-ALTER TABLE payment_service.card
-    SET is_active = TRUE WHERE is_active IS NULL;
+UPDATE payment_service.card
+    SET is_active = true WHERE is_active is null;
 
 ALTER TABLE payment_service.card
     ALTER COLUMN is_active SET NOT NULL;

@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_db.repository;
 
 import com.andersen.banking.meeting_db.entities.Card;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -30,4 +31,10 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
     Page<Card> findByAccount_OwnerIdAndAccount_IdNot(UUID ownerId, UUID id, Pageable pageable);
 
     boolean existsByFirstTwelveNumbersAndLastFourNumbers(String firstTwelve, String lastFour);
+
+    @Query(value = "SELECT * FROM card "
+            + "WHERE expire_date < CURRENT_DATE AND is_active = true"
+            + " for update skip locked "
+            + "LIMIT 10", nativeQuery = true)
+    List<Card> findCardsToDeactivate();
 }

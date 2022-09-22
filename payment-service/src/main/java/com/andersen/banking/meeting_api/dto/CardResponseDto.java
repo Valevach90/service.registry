@@ -61,4 +61,7 @@ public class CardResponseDto {
     @JsonProperty("currency")
     private String currency;
 
+    @JsonProperty("is_active")
+    private boolean isActive;
+
 }
