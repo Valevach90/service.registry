@@ -38,14 +38,14 @@ public class CardServiceImpl implements CardService {
     @Transactional(readOnly = true)
     @Override
     public Card findById(UUID id) {
-        log.debug("Find card by id: {}", id);
+        log.info("Find card by id: {}", id);
 
         Card card =
                 cardRepository
                         .findById(id)
                         .orElseThrow(() -> new NotFoundException(Card.class, id));
 
-        log.debug("Card with id {} successfully found", id);
+        log.info("Card with id {} successfully found", id);
         return card;
     }
 
@@ -63,7 +63,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public Card update(Card card) {
-        log.debug("Trying to update card: {}", card);
+        log.info("Trying to update card: {}", card);
 
         findById(card.getId());
         card.setAccount(accountService.findById(card.getAccount().getId()));
@@ -73,7 +73,7 @@ public class CardServiceImpl implements CardService {
 
         Card updatedCard = cardRepository.save(card);
 
-        log.debug("Return updated card: {}", updatedCard);
+        log.info("Return updated card: {}", updatedCard);
 
         return updatedCard;
     }

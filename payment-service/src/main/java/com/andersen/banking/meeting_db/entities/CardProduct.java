@@ -29,10 +29,10 @@ public class CardProduct {
     private UUID id;
 
     @Column(name = "cashback", nullable = false)
-    private int cashback;
+    private Integer cashback;
 
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "advantages", nullable = false)
     private String advantages;

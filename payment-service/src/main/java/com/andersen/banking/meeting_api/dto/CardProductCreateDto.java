@@ -25,11 +25,11 @@ public class CardProductCreateDto {
     @NotNull
     @JsonProperty("cashback")
     @Schema(defaultValue = EXAMPLE_CASHBACK, example = EXAMPLE_CASHBACK)
-    private int cashback;
+    private Integer cashback;
 
     @JsonProperty("price")
     @Schema(defaultValue = EXAMPLE_PRICE, example = EXAMPLE_PRICE)
-    private double price;
+    private Double price;
 
     @NotBlank
     @JsonProperty("advantages")

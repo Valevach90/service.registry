@@ -24,10 +24,10 @@ public class CardProductDto {
 
     @NotNull
     @JsonProperty("cashback")
-    private int cashback;
+    private Integer cashback;
 
     @JsonProperty("price")
-    private double price;
+    private Double price;
 
     @NotBlank
     @JsonProperty("advantages")

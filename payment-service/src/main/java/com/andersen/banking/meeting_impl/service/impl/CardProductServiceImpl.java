@@ -8,6 +8,10 @@ import com.andersen.banking.meeting_impl.service.TypeCardService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,15 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@CacheConfig(cacheNames = "cardProductCache")
 public class CardProductServiceImpl implements CardProductService {
 
     private final CardProductRepository cardProductRepository;
 
     private final TypeCardService typeCardService;
 
-
     @Override
     @Transactional
+    @CachePut(key = "#cardProduct.id")
     public CardProduct create(CardProduct cardProduct) {
         log.info("creating card product: {}", cardProduct);
 
@@ -51,6 +56,7 @@ public class CardProductServiceImpl implements CardProductService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable
     public CardProduct findById(UUID id) {
         log.info("Trying to find card product with id: {}", id);
 
@@ -63,6 +69,7 @@ public class CardProductServiceImpl implements CardProductService {
 
     @Override
     @Transactional
+    @CachePut(key = "#updateCardProduct.id")
     public CardProduct update(CardProduct updateCardProduct) {
         log.info("Trying to update card product: {}", updateCardProduct);
 
@@ -77,6 +84,7 @@ public class CardProductServiceImpl implements CardProductService {
 
     @Override
     @Transactional
+    @CacheEvict(key = "#id")
     public void deleteById(UUID id) {
         log.info("Trying to delete card product with id: {}", id);
 
