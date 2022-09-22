@@ -19,7 +19,7 @@ class CardMapperTest {
     void toCard_ShouldReturnCard_WhenCardRegistrationIsCorrect() {
         Card card = CardUnitTestGenerator.populateCard();
         card.setId(null);
-        card.getTypeCard().setId(null);
+        card.getCardProduct().getTypeCard().setId(null);
         Assertions.assertEquals(
                 card, cardMapper.toCard(CardUnitTestGenerator.populateCardRegistrationDto()));
     }
@@ -27,7 +27,7 @@ class CardMapperTest {
     @Test
     void toCard_ShouldReturnCard_WhenCardUpdateDtoIsCorrect() {
         Card card = CardUnitTestGenerator.populateCard();
-        card.getTypeCard().setId(null);
+        card.getCardProduct().getTypeCard().setId(null);
         Assertions.assertEquals(
                 card, cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));
     }
@@ -43,22 +43,22 @@ class CardMapperTest {
     @Test
     void convertCardTypeToDto() {
         Card card = CardUnitTestGenerator.populateCard();
-        TypeCard typeCard = card.getTypeCard();
+        TypeCard typeCard = card.getCardProduct().getTypeCard();
         typeCard.setId(null);
         Assertions.assertEquals(
                 typeCard,
-                cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()).getTypeCard());
+                cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()).getCardProduct().getTypeCard());
         Assertions.assertEquals(
                 typeCard,
                 cardMapper
                         .toCard(CardUnitTestGenerator.populateCardRegistrationDto())
-                        .getTypeCard());
+                        .getCardProduct().getTypeCard());
     }
 
     @Test
     void convertDtoToCard() {
         Card card = CardUnitTestGenerator.populateCard();
-        TypeCard typeCard = card.getTypeCard();
+        TypeCard typeCard = card.getCardProduct().getTypeCard();
         typeCard.setId(null);
         Assertions.assertEquals(
                 card, cardMapper.toCard(CardUnitTestGenerator.populateCardUpdateDto()));

@@ -1,11 +1,9 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.Card;
-import com.andersen.banking.meeting_db.entities.TypeCard;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.UUID;
 
 /** This interface presents the basic contract for service, which works with Card entity. */
 public interface CardService {
@@ -68,22 +66,6 @@ public interface CardService {
      * @return
      */
     Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable);
-
-    /**
-     * This method returns TypeCardResponseDto entity with the given id.
-     *
-     * @param id
-     * @return
-     */
-    TypeCard getTypeCard(UUID id);
-
-    /**
-     * This method updates the given card type and returns updated version.
-     *
-     * @param typeCard
-     * @return
-     */
-    TypeCard updateTypeCard(TypeCard typeCard);
 
     /**
      * This method returns page of cards by owner_id.

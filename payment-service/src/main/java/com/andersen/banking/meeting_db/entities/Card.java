@@ -61,6 +61,6 @@ public class Card {
     private boolean isActive;
 
     @ManyToOne
-    @JoinColumn(name = "type_card_id", referencedColumnName = "id")
-    private TypeCard typeCard;
+    @JoinColumn(name = "card_product_id", referencedColumnName = "id")
+    private CardProduct cardProduct;
 }

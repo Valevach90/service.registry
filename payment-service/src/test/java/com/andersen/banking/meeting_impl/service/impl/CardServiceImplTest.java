@@ -1,5 +1,8 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateCard;
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
+
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
@@ -8,6 +11,11 @@ import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.CardService;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,16 +23,11 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.data.domain.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateCard;
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @SpringBootTest(classes = CardServiceImpl.class)
 public class CardServiceImplTest {
@@ -53,7 +56,9 @@ public class CardServiceImplTest {
         receivedCard = populateCard();
     }
 
-    @Test
+/*
+                    !Need create typeCardServiceImpl Test
+    @Disabled
     void update_ShouldReturnTypeCardResponseDto_WhenReceivedTypeCardIsCorrect() {
         Mockito.when(typeCardRepository.findById(receivedTypeCard.getId()))
                 .thenReturn(Optional.of(receivedTypeCard));
@@ -62,7 +67,7 @@ public class CardServiceImplTest {
         Assertions.assertEquals(returnedTypeCard, result);
     }
 
-    @Test
+    @Disabled
     void update_ShouldThrowNotFoundException_WhenReceivedTypeCardHasIncorrectId() {
         Mockito.when(typeCardRepository.findById(receivedTypeCard.getId()))
                 .thenThrow(new NotFoundException(Card.class, receivedTypeCard.getId()));
@@ -70,7 +75,7 @@ public class CardServiceImplTest {
                 NotFoundException.class, () -> cardService.updateTypeCard(receivedTypeCard));
     }
 
-    @Test
+    @Disabled
     void getTypeCard_ShouldReturnTypeCardResponseDto_WhenIdIsCorrect() {
         Mockito.when(typeCardRepository.findById(TYPE_CARD_ID))
                 .thenReturn(Optional.of(returnedTypeCard));
@@ -78,12 +83,13 @@ public class CardServiceImplTest {
         Assertions.assertEquals(returnedTypeCard, result);
     }
 
-    @Test
+    @Disabled
     void getTypeCard_ShouldThrowNotFoundException_WhenIdIsIncorrect() {
         Assertions.assertThrows(
                 NotFoundException.class, () -> cardService.getTypeCard(TYPE_CARD_ID));
     }
 
+*/
     @Test
     void findById_ShouldReturnCard_WhenIdIsCorrect() {
         Mockito.when(cardRepository.findById(ID)).thenReturn(Optional.of(returnedCard));
@@ -116,7 +122,7 @@ public class CardServiceImplTest {
                 .thenReturn(Optional.of(receivedCard));
         Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
-        TypeCard typeCard = returnedCard.getTypeCard();
+        TypeCard typeCard = returnedCard.getCardProduct().getTypeCard();
         Mockito.when(
                         typeCardRepository.findByPaymentSystemAndTypeName(
                                 typeCard.getPaymentSystem(), typeCard.getTypeName()))
@@ -154,7 +160,7 @@ public class CardServiceImplTest {
                 .thenReturn(populateAccount(new Account()));
         Mockito.when(cardRepository.save(receivedCard)).thenReturn(returnedCard);
 
-        TypeCard typeCard = returnedCard.getTypeCard();
+        TypeCard typeCard = returnedCard.getCardProduct().getTypeCard();
         Mockito.when(
                         typeCardRepository.findByPaymentSystemAndTypeName(
                                 typeCard.getPaymentSystem(), typeCard.getTypeName()))
@@ -170,8 +176,8 @@ public class CardServiceImplTest {
 
         List<Card> filtered =
                 generateCardsWithTypeCard().stream()
-                        .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
-                        .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
+                        .filter(c -> c.getCardProduct().getTypeCard().getTypeName().equals(checkType))
+                        .filter(c -> c.getCardProduct().getTypeCard().getPaymentSystem().equals(checkPayment))
                         .collect(Collectors.toList());
 
         Pageable pageable = createPageable();
@@ -193,7 +199,7 @@ public class CardServiceImplTest {
 
         List<Card> filtered =
                 generateCardsWithTypeCard().stream()
-                        .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+                        .filter(c -> c.getCardProduct().getTypeCard().getTypeName().equals(checkType))
                         .collect(Collectors.toList());
 
         Pageable pageable = createPageable();
@@ -262,12 +268,12 @@ public class CardServiceImplTest {
         List<Card> collect =
                 Stream.generate(Card::new)
                         .limit(5)
-                        .peek(c -> c.setTypeCard(createTypeCard("MASTERCARDS")))
+                        .peek(c -> c.getCardProduct().setTypeCard(createTypeCard("MASTERCARDS")))
                         .collect(Collectors.toList());
         List<Card> addOtherType =
                 Stream.generate(Card::new)
                         .limit(5)
-                        .peek(c -> c.setTypeCard(createTypeCard("VISAS")))
+                        .peek(c -> c.getCardProduct().setTypeCard(createTypeCard("VISAS")))
                         .toList();
         collect.addAll(addOtherType);
         return collect;

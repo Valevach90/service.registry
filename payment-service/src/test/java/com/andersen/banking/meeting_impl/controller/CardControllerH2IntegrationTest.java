@@ -1,5 +1,9 @@
 package com.andersen.banking.meeting_impl.controller;
 
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCard;
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCardResponseDto;
+import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.populateTypeCardUpdateDto;
+
 import com.andersen.banking.meeting_api.dto.CardResponseDto;
 import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
 import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
@@ -13,7 +17,17 @@ import com.andersen.banking.meeting_impl.controller.util.RestResponsePage;
 import com.andersen.banking.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
 import com.andersen.banking.meeting_test.generators.AccountUnitTestGenerator;
-import org.junit.jupiter.api.*;
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -25,15 +39,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -133,7 +138,7 @@ public class CardControllerH2IntegrationTest {
 
         List<Card> expected = generateCards()
                 .stream()
-                .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
+                .filter(c -> c.getCardProduct().getTypeCard().getTypeName().equals(checkType))
                 .collect(Collectors.toList());
 
         Assertions.assertEquals(expected.size(), result);
@@ -149,8 +154,8 @@ public class CardControllerH2IntegrationTest {
 
         List<Card> expected = generateCards()
                 .stream()
-                .filter(c -> c.getTypeCard().getTypeName().equals(checkType))
-                .filter(c -> c.getTypeCard().getPaymentSystem().equals(checkPayment))
+                .filter(c -> c.getCardProduct().getTypeCard().getTypeName().equals(checkType))
+                .filter(c -> c.getCardProduct().getTypeCard().getPaymentSystem().equals(checkPayment))
                 .collect(Collectors.toList());
 
         Assertions.assertEquals(expected.size(), result);
@@ -205,7 +210,7 @@ public class CardControllerH2IntegrationTest {
                 .peek(c -> {
                     populateCard(c);
                     c.setAccount(account1);
-                    c.setTypeCard(createTypeCard("MASTERCARDS"));
+                    c.getCardProduct().setTypeCard(createTypeCard("MASTERCARDS"));
                 })
                 .collect(Collectors.toList());
         List<Card> addOtherAccountAndType = Stream
@@ -214,7 +219,7 @@ public class CardControllerH2IntegrationTest {
                 .peek(c -> {
                     populateCard(c);
                     c.setAccount(account2);
-                    c.setTypeCard(createTypeCard("VISAS"));
+                    c.getCardProduct().setTypeCard(createTypeCard("VISAS"));
                 })
                 .collect(Collectors.toList());
         List<Card> addOtherAccountAndTypeMore = Stream
@@ -223,7 +228,7 @@ public class CardControllerH2IntegrationTest {
                 .peek(c -> {
                     populateCard(c);
                     c.setAccount(account3);
-                    c.setTypeCard(createTypeCard("MASTERCARDSPLAT"));
+                    c.getCardProduct().setTypeCard(createTypeCard("MASTERCARDSPLAT"));
                 })
                 .collect(Collectors.toList());
 

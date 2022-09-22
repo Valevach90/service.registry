@@ -2,15 +2,14 @@ package com.andersen.banking.meeting_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.time.LocalDate;
+import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /** This class presents an entity, which is available via CardController endpoints. */
 @Data
@@ -26,6 +25,10 @@ public class CardUpdateDto {
     @NotNull
     @JsonProperty("account_id")
     private UUID accountId;
+
+    @NotNull
+    @JsonProperty("card_product_id")
+    private UUID cardProductId;
 
     @NotBlank
     @JsonProperty("first_twelve_numbers")
@@ -55,11 +58,4 @@ public class CardUpdateDto {
     @JsonProperty("holder_name")
     private String holderName;
 
-    @NotNull
-    @JsonProperty("payment_system")
-    private String paymentSystem;
-
-    @NotNull
-    @JsonProperty("type_name")
-    private String typeName;
 }

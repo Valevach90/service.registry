@@ -1,13 +1,17 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,6 +19,7 @@ import java.util.UUID;
 @Table(name = "type_card")
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class TypeCard {
 
     @Id
