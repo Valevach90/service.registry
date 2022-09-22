@@ -17,7 +17,7 @@ public class DeactivationScheduler {
 
     private final CardRepository cardRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     @Scheduled(cron = "${scheduler.card}")
     public void deactivateExpiredCards(){
         List<Card> cardsToDeactivate = cardRepository.findCardsToDeactivate();
