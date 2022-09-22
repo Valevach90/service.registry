@@ -25,7 +25,6 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_INCOME_STATEMENT = "Need guarantee for credit or not";
 
     public static final String EXAMPLE_ID = "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11";
-    public static final String EXAMPLE_ID_NULL = "null";
     public static final String EXAMPLE_CREDIT_PRODUCT_NAME = "Family mortgage";
     public static final String EXAMPLE_MONTHS_INTEGER = "11";
     public static final String EXAMPLE_BOOLEAN = "false";

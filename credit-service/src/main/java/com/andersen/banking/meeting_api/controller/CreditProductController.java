@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.dto.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,13 +24,13 @@ public interface CreditProductController {
     @Operation(summary = "Create credit product",
         description = "create credit product by params in dto object")
     @PostMapping
-    CreditProductDTO create(@RequestBody CreditProductDTO creditProductDTO);
+    CreditProductResponseDTO create(@RequestBody CreditProductRequestDTO creditProductDTO);
 
     @Operation(summary = "Get credit product",
         description = "get credit product by id"
     )
     @GetMapping(value = "/{id}")
-    CreditProductDTO getById(
+    CreditProductResponseDTO getById(
         @Parameter(description = "credit product id", required = true)
         @PathVariable("id") UUID id
     );
@@ -38,14 +39,14 @@ public interface CreditProductController {
         description = "get ist of all credit products"
     )
     @GetMapping
-    List<CreditProductDTO> getAll();
+    List<CreditProductResponseDTO> getAll();
 
     @Operation(summary = "Update credit product",
         description = "update credit product by params in dto object")
     @PutMapping(value = "/{id}")
-    CreditProductDTO update(
+    CreditProductResponseDTO update(
         @PathVariable("id") UUID id,
-        @RequestBody CreditProductDTO creditProductDTO
+        @RequestBody CreditProductRequestDTO creditProductDTO
     );
 
     @Operation(summary = "Delete credit product",

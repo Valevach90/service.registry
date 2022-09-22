@@ -1,8 +1,9 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.CreditProductController;
+import com.andersen.banking.meeting_api.dto.CreditProductRequestDTO;
 import com.andersen.banking.meeting_api.service.CreditProductService;
-import com.andersen.banking.meeting_api.dto.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class CreditProductControllerImpl implements CreditProductController {
     private final CreditProductService creditProductService;
 
     @Override
-    public CreditProductDTO create(CreditProductDTO creditProductDTO) {
+    public CreditProductResponseDTO create(CreditProductRequestDTO creditProductDTO) {
 
         log.info("Creating credit product: " + creditProductDTO);
 
@@ -25,7 +26,7 @@ public class CreditProductControllerImpl implements CreditProductController {
     }
 
     @Override
-    public CreditProductDTO getById(UUID id) {
+    public CreditProductResponseDTO getById(UUID id) {
 
         log.info("Find credit product by id: " + id);
 
@@ -33,7 +34,7 @@ public class CreditProductControllerImpl implements CreditProductController {
     }
 
     @Override
-    public List<CreditProductDTO> getAll() {
+    public List<CreditProductResponseDTO> getAll() {
 
         log.info("Find all credit product");
 
@@ -41,7 +42,7 @@ public class CreditProductControllerImpl implements CreditProductController {
     }
 
     @Override
-    public CreditProductDTO update(UUID id, CreditProductDTO creditProductDTO) {
+    public CreditProductResponseDTO update(UUID id, CreditProductRequestDTO creditProductDTO) {
 
         log.info("Change credit product: " + creditProductDTO);
 

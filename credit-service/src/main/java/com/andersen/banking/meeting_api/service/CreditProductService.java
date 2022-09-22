@@ -1,18 +1,19 @@
 package com.andersen.banking.meeting_api.service;
 
-import com.andersen.banking.meeting_api.dto.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductRequestDTO;
 import java.util.List;
 import java.util.UUID;
 
 public interface CreditProductService {
 
-    CreditProductDTO createCreditProduct(CreditProductDTO creditProductDTO);
+    CreditProductResponseDTO createCreditProduct(CreditProductRequestDTO creditProductDTO);
 
-    CreditProductDTO getCreditProductById(UUID id);
+    CreditProductResponseDTO getCreditProductById(UUID id);
 
-    List<CreditProductDTO> getListOfCreditProducts();
+    List<CreditProductResponseDTO> getListOfCreditProducts();
 
-    CreditProductDTO updateCreditProduct(UUID id, CreditProductDTO creditProductDTO);
+    CreditProductResponseDTO updateCreditProduct(UUID id, CreditProductRequestDTO creditProductDTO);
 
     void deleteCreditProductById(UUID id);
 }

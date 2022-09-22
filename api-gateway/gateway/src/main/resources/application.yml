@@ -78,6 +78,8 @@ springdoc:
         url: /information-service/api-docs
       - name: deposit-service
         url: /deposit-service/api-docs
+      - name: credit-service
+        url: /credit-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM

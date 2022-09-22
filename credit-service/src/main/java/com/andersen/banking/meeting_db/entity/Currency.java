@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString
+@Data
 @Entity
 @Table(name = "currency")
 @NoArgsConstructor
@@ -25,37 +25,4 @@ public class Currency {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Currency currency = (Currency) o;
-        return Objects.equals(id, currency.id) && Objects.equals(name,
-            currency.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 }

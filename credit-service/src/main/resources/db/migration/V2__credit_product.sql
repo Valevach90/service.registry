@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS credit_products
     grace_period_month    INTEGER,
     need_income_statement BOOLEAN
 );
+
 ALTER TABLE credit_products
     ADD CONSTRAINT FK_TRANSFER_ON_CURRENCY FOREIGN KEY (currency_id) REFERENCES currency (id);
 

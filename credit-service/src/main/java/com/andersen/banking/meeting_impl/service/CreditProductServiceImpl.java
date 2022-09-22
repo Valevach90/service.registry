@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_api.dto.CreditProductDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductRequestDTO;
 import com.andersen.banking.meeting_api.service.CreditProductService;
 import com.andersen.banking.meeting_db.entity.CreditProduct;
 import com.andersen.banking.meeting_db.repository.CreditProductRepository;
@@ -26,7 +27,7 @@ public class CreditProductServiceImpl implements CreditProductService {
     private final CurrencyMapper currencyMapper;
 
     @Override
-    public CreditProductDTO createCreditProduct(CreditProductDTO productDTO) {
+    public CreditProductResponseDTO createCreditProduct(CreditProductRequestDTO productDTO) {
 
         log.info("Creating credit product: {}", productDTO);
 
@@ -43,7 +44,7 @@ public class CreditProductServiceImpl implements CreditProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public CreditProductDTO getCreditProductById(UUID id) {
+    public CreditProductResponseDTO getCreditProductById(UUID id) {
 
         log.info("Find credit product by id: {}", id);
 
@@ -57,7 +58,7 @@ public class CreditProductServiceImpl implements CreditProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CreditProductDTO> getListOfCreditProducts() {
+    public List<CreditProductResponseDTO> getListOfCreditProducts() {
 
         log.info("Getting credit products");
 
@@ -69,7 +70,7 @@ public class CreditProductServiceImpl implements CreditProductService {
     }
 
     @Override
-    public CreditProductDTO updateCreditProduct(UUID id, CreditProductDTO productDTO) {
+    public CreditProductResponseDTO updateCreditProduct(UUID id, CreditProductRequestDTO productDTO) {
 
         log.info("Updating credit product to: {}", productDTO);
 
@@ -111,7 +112,7 @@ public class CreditProductServiceImpl implements CreditProductService {
             orElseThrow(() -> new CreditProductNotFoundException(id));
     }
 
-    private void setAttributes(CreditProduct product, CreditProductDTO creditProductDTO) {
+    private void setAttributes(CreditProduct product,  CreditProductRequestDTO creditProductDTO) {
         product.setName(creditProductDTO.getName());
         product.setMinSum(creditProductDTO.getMinSum());
         product.setMaxSum(creditProductDTO.getMaxSum());
