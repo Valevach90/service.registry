@@ -60,7 +60,6 @@ public class Card {
     @Column(name = "is_active", columnDefinition = "boolean default true")
     private boolean isActive;
 
-
     @ManyToOne
     @JoinColumn(name = "type_card_id", referencedColumnName = "id")
     private TypeCard typeCard;

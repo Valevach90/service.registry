@@ -24,6 +24,7 @@ public interface CardMapper {
     @Mapping(target = "account.id", source = "accountId")
     @Mapping(target = "typeCard.paymentSystem", source = "paymentSystem")
     @Mapping(target = "typeCard.typeName", source = "typeName")
+    @Mapping(target = "active", ignore = true)
     Card toCard(CardUpdateDto cardUpdateDto);
 
     @Mapping(target = "account.id", source = "accountId")
@@ -33,6 +34,7 @@ public interface CardMapper {
     @Mapping(target = "expireDate", ignore = true)
     @Mapping(target = "firstTwelveNumbers", ignore = true)
     @Mapping(target = "lastFourNumbers", ignore = true)
+    @Mapping(target = "active", ignore = true)
     @Mapping(target = "id", ignore = true)
     Card toCard(CardRegistrationDto cardDto);
 
