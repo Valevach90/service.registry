@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ public class DeactivationScheduler {
 
     private final CardRepository cardRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Scheduled(cron = "${scheduler.card}")
     public void deactivateExpiredCards(){
         List<Card> cardsToDeactivate = cardRepository.findCardsToDeactivate();
