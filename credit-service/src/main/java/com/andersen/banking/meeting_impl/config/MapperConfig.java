@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
     componentModel = "spring",
     nullValueCheckStrategy = NullValueCheckStrategy.ON_IMPLICIT_CONVERSION,
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-    unmappedTargetPolicy = ReportingPolicy.ERROR,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
     unexpectedValueMappingException = MapperException.class
 )
 public interface MapperConfig {

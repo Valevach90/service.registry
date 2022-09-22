@@ -1,7 +1,8 @@
 package com.andersen.banking.meeting_api.dto;
 
-import com.andersen.banking.meeting_db.entity.CalculationMode;
 import com.andersen.banking.meeting_api.utils.OpenApiConstants;
+import com.andersen.banking.meeting_db.entity.CalculationMode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,15 +11,11 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
+
 @ToString
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,9 +23,9 @@ import lombok.ToString;
 public class CreditProductDTO {
 
     @Schema(description = OpenApiConstants.DESCRIPTION_CREDIT_PRODUCT_ID,
-        example = OpenApiConstants.EXAMPLE_ID)
+        example = OpenApiConstants.EXAMPLE_ID_NULL)
     @JsonProperty("id")
-    @NotNull(message = "Credit product id can't be null")
+    @JsonIgnore
     private UUID uuid;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_CREDIT_PRODUCT_NAME,
@@ -56,21 +53,25 @@ public class CreditProductDTO {
     @Schema(description = OpenApiConstants.DESCRIPTION_MIN_LOAN_RATE,
         example = OpenApiConstants.EXAMPLE_RATE_DOUBLE)
     @JsonProperty("min_loan_rate")
+    @NotNull
     private BigDecimal minLoanRate;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_MAX_LOAN_RATE,
         example = OpenApiConstants.EXAMPLE_RATE_DOUBLE)
     @JsonProperty("max_loan_rate")
+    @NotNull
     private BigDecimal maxLoanRate;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_NEED_GUARANTEE,
         example = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("need_guarantee")
+    @NotNull
     private Boolean needGuarantee;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_EARLY_REPAYMENT,
         example = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("early_repayment")
+    @NotNull
     private Boolean earlyRepayment;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_MIN_TERM,
@@ -93,7 +94,7 @@ public class CreditProductDTO {
 
 
     @Schema(description = OpenApiConstants.DESCRIPTION_CALCULATION_MODE,
-    example = OpenApiConstants.EXAMPLE_CALCULATION_MODE)
+        example = OpenApiConstants.EXAMPLE_CALCULATION_MODE)
     @JsonProperty("calculation_mode")
     @NotNull(message = "Calculation mode can't be null")
     private CalculationMode calculationMode;
@@ -101,20 +102,14 @@ public class CreditProductDTO {
     @Schema(description = OpenApiConstants.DESCRIPTION_GRACE_PERIOD,
         example = OpenApiConstants.EXAMPLE_MONTHS_INTEGER)
     @JsonProperty("grace_period_month")
+    @NotNull
     private Integer gracePeriodMonth;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_INCOME_STATEMENT,
         example = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("need_income_statement")
+    @NotNull
     private Boolean needIncomeStatement;
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     public String getName() {
         return name;
@@ -237,7 +232,7 @@ public class CreditProductDTO {
             return false;
         }
         CreditProductDTO that = (CreditProductDTO) o;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(name, that.name)
+        return Objects.equals(name, that.name)
             && Objects.equals(minSum, that.minSum) && Objects.equals(maxSum,
             that.maxSum) && Objects.equals(currency, that.currency)
             && Objects.equals(minLoanRate, that.minLoanRate) && Objects.equals(
@@ -252,7 +247,7 @@ public class CreditProductDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, minSum, maxSum, currency, minLoanRate, maxLoanRate,
+        return Objects.hash(name, minSum, maxSum, currency, minLoanRate, maxLoanRate,
             needGuarantee, earlyRepayment, minTerm, maxTerm, description, calculationMode,
             gracePeriodMonth, needIncomeStatement);
     }

@@ -14,26 +14,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
+
+@ToString
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name ="credit_products")
+@Table(name = "credit_products")
 public class CreditProduct {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name ="id")
+    @Column(name = "id")
     private UUID uuid;
 
-    @Column(name = "product_name",nullable = false)
+    @Column(name = "product_name", nullable = false)
     private String name;
 
     @Column(name = "min_sum")
@@ -47,10 +46,10 @@ public class CreditProduct {
     private Currency currency;
 
     @Column(name = "min_loan_rate")
-    private Double minLoanRate;
+    private BigDecimal minLoanRate;
 
     @Column(name = "max_loan_rate")
-    private Double maxLoanRate;
+    private BigDecimal maxLoanRate;
 
     @Column(name = "need_guarantee")
     private Boolean needGuarantee;
@@ -117,19 +116,19 @@ public class CreditProduct {
         this.currency = currency;
     }
 
-    public Double getMinLoanRate() {
+    public BigDecimal getMinLoanRate() {
         return minLoanRate;
     }
 
-    public void setMinLoanRate(Double minLoanRate) {
+    public void setMinLoanRate(BigDecimal minLoanRate) {
         this.minLoanRate = minLoanRate;
     }
 
-    public Double getMaxLoanRate() {
+    public BigDecimal getMaxLoanRate() {
         return maxLoanRate;
     }
 
-    public void setMaxLoanRate(Double maxLoanRate) {
+    public void setMaxLoanRate(BigDecimal maxLoanRate) {
         this.maxLoanRate = maxLoanRate;
     }
 
@@ -224,26 +223,5 @@ public class CreditProduct {
         return Objects.hash(uuid, name, minSum, maxSum, currency, minLoanRate, maxLoanRate,
             needGuarantee, earlyRepayment, minTerm, maxTerm, description, calculationMode,
             gracePeriodMonth, needIncomeStatement);
-    }
-
-    @Override
-    public String toString() {
-        return "CreditProduct{" +
-            "uuid=" + uuid +
-            ", name='" + name + '\'' +
-            ", minSum=" + minSum +
-            ", maxSum=" + maxSum +
-            ", currency=" + currency +
-            ", minLoanRate=" + minLoanRate +
-            ", maxLoanRate=" + maxLoanRate +
-            ", needGuarantee=" + needGuarantee +
-            ", earlyRepayment=" + earlyRepayment +
-            ", minTerm=" + minTerm +
-            ", maxTerm=" + maxTerm +
-            ", description='" + description + '\'' +
-            ", calculationMode=" + calculationMode +
-            ", gracePeriodMonth=" + gracePeriodMonth +
-            ", needIncomeStatement=" + needIncomeStatement +
-            '}';
     }
 }

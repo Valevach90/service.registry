@@ -27,5 +27,4 @@ public class CreditServiceExceptionHandler {
         log.trace("Caught CreditServiceException: {}", exception.toString());
         return exception.getLocalizedMessage();
     }
-
 }

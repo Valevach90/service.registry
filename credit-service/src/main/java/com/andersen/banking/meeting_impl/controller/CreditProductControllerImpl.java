@@ -41,11 +41,11 @@ public class CreditProductControllerImpl implements CreditProductController {
     }
 
     @Override
-    public void update(CreditProductDTO creditProductDTO) {
+    public CreditProductDTO update(UUID id, CreditProductDTO creditProductDTO) {
 
         log.info("Change credit product: " + creditProductDTO);
 
-        creditProductService.updateCreditProduct(creditProductDTO);
+        return creditProductService.updateCreditProduct(id, creditProductDTO);
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface CreditProductService {
 
     List<CreditProductDTO> getListOfCreditProducts();
 
-    CreditProductDTO updateCreditProduct(CreditProductDTO creditProductDTO);
+    CreditProductDTO updateCreditProduct(UUID id, CreditProductDTO creditProductDTO);
 
     void deleteCreditProductById(UUID id);
 }

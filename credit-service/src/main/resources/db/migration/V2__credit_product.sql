@@ -1,4 +1,4 @@
- CREATE TABLE IF NOT EXISTS credit_products
+CREATE TABLE IF NOT EXISTS credit_products
 (
     id                    UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
     product_name          VARCHAR(255)                               NOT NULL,
@@ -16,7 +16,6 @@
     grace_period_month    INTEGER,
     need_income_statement BOOLEAN
 );
-
-
-
+ALTER TABLE credit_products
+    ADD CONSTRAINT FK_TRANSFER_ON_CURRENCY FOREIGN KEY (currency_id) REFERENCES currency (id);
 

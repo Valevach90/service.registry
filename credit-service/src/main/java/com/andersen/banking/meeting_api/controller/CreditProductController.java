@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Validated
 @Tag(name = "Credit Product Controller", description = "work with credit products")
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/credit-products")
 public interface CreditProductController {
 
     @Operation(summary = "Create credit product",
@@ -42,8 +42,11 @@ public interface CreditProductController {
 
     @Operation(summary = "Update credit product",
         description = "update credit product by params in dto object")
-    @PutMapping
-    void update(@RequestBody CreditProductDTO creditProductDTO);
+    @PutMapping(value = "/{id}")
+    CreditProductDTO update(
+        @PathVariable("id") UUID id,
+        @RequestBody CreditProductDTO creditProductDTO
+    );
 
     @Operation(summary = "Delete credit product",
         description = "delete credit product by id")
@@ -52,6 +55,4 @@ public interface CreditProductController {
         @Parameter(description = "credit product id", required = true)
         @PathVariable("id") UUID id
     );
-
-
 }

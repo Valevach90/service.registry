@@ -7,8 +7,8 @@ import com.andersen.banking.meeting_db.repository.CreditProductRepository;
 import com.andersen.banking.meeting_impl.exception.CreditProductAlreadyExistException;
 import com.andersen.banking.meeting_impl.exception.CreditProductNotFoundException;
 import com.andersen.banking.meeting_impl.mapper.CreditProductMapper;
+import com.andersen.banking.meeting_impl.mapper.CurrencyMapper;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,45 +23,40 @@ public class CreditProductServiceImpl implements CreditProductService {
 
     private final CreditProductRepository creditProductRepository;
     private final CreditProductMapper creditProductMapper;
+    private final CurrencyMapper currencyMapper;
 
     @Override
-    public CreditProductDTO createCreditProduct(CreditProductDTO creditProductDTO) {
+    public CreditProductDTO createCreditProduct(CreditProductDTO productDTO) {
 
-        log.info("Creating credit product: {}", creditProductDTO);
+        log.info("Creating credit product: {}", productDTO);
 
-        CreditProduct creditProduct = creditProductMapper.toCreditProduct(creditProductDTO);
+        var creditProductEntity = creditProductMapper.toCreditProduct(productDTO);
 
-        if (creditProductRepository.findById(creditProduct.getUuid()).isPresent()) {
-            throw new CreditProductAlreadyExistException(creditProduct.getUuid());
-        }
+        var creditProduct = creditProductRepository.save(creditProductEntity);
 
-        CreditProductDTO creditProductDTOReturned = creditProductMapper.toCreditProductDTO(
-            creditProductRepository.save(creditProduct));
+        var creditProductDTO = creditProductMapper.toCreditProductDTO(creditProduct);
 
-        log.info("Created credit product: {}", creditProductDTOReturned);
+        log.info("Created credit product: {}", creditProductDTO);
 
-        return creditProductDTOReturned;
+        return creditProductDTO;
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public CreditProductDTO getCreditProductById(UUID id) {
 
         log.info("Find credit product by id: {}", id);
 
-        Optional<CreditProduct> creditProductOptional = creditProductRepository.findById(id);
+        var creditProduct = getById(id);
+        var creditProductDto = creditProductMapper.toCreditProductDTO(creditProduct);
 
-        if (creditProductOptional.isEmpty()) {
-            throw new CreditProductNotFoundException(id);
-        } else {
-            log.info("Credit product with id {} successfully found", id);
+        log.info("Credit product with id {} successfully found", id);
 
-            return creditProductMapper.toCreditProductDTO(creditProductOptional.get());
-        }
+        return creditProductDto;
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public List<CreditProductDTO> getListOfCreditProducts() {
 
         log.info("Getting credit products");
@@ -74,32 +69,22 @@ public class CreditProductServiceImpl implements CreditProductService {
     }
 
     @Override
-    public CreditProductDTO updateCreditProduct(CreditProductDTO creditProductDTO) {
+    public CreditProductDTO updateCreditProduct(UUID id, CreditProductDTO productDTO) {
 
-        CreditProduct creditProduct = creditProductMapper.toCreditProduct(creditProductDTO);
+        log.info("Updating credit product to: {}", productDTO);
 
-        Optional<CreditProduct> creditProductOptional = creditProductRepository.
-            findById(creditProduct.getUuid());
+        var creditProduct = getById(id);
 
-        log.info("Updating credit product to: {}", creditProductOptional);
+        setAttributes(creditProduct, productDTO);
 
-        if (creditProductOptional.isEmpty()) {
-            throw new CreditProductNotFoundException(creditProduct.getUuid());
-        }
-        if (creditProductRepository.findAll().stream().anyMatch(
-            product -> product.equals(creditProduct))) {
-            throw new CreditProductAlreadyExistException(creditProduct.getUuid());
-        } else {
-            setAttributes(creditProductOptional, creditProduct);
+        var creditProductDTO = creditProductMapper.toCreditProductDTO(
+            creditProductRepository.save(creditProduct)
+        );
 
-            CreditProduct creditProductReturned = creditProductRepository.save(
-                creditProductOptional.get());
+        log.info("Credit product: {} updated to version: {}", creditProduct,
+            creditProductDTO);
 
-            log.info("Credit product: {} updated to version: {}", creditProductOptional,
-                creditProductReturned);
-
-            return creditProductMapper.toCreditProductDTO(creditProductReturned);
-        }
+        return creditProductDTO;
     }
 
     @Override
@@ -107,34 +92,39 @@ public class CreditProductServiceImpl implements CreditProductService {
 
         log.info("Deleting credit product with id: {}", id);
 
-        Optional<CreditProduct> creditProductOptional = creditProductRepository.findById(id);
-        if (creditProductOptional.isEmpty()) {
-            throw new CreditProductNotFoundException(id);
-        } else {
-            creditProductRepository.deleteById(id);
+        var creditProduct = getById(id);
 
-            log.info("Deleted credit product: {}", creditProductOptional.get());
+        creditProductRepository.delete(creditProduct);
+
+        log.info("Deleted credit product: {}", creditProduct);
+    }
+
+    private void assertIfExistCreditProduct(UUID id) {
+        var creditProduct = creditProductRepository.findById(id);
+        if (creditProduct.isPresent()) {
+            throw new CreditProductAlreadyExistException(id);
         }
     }
 
-    private void setAttributes(Optional<CreditProduct> creditProductOptional,
-        CreditProduct creditProduct) {
-        if (creditProductOptional.isPresent()) {
-            creditProductOptional.get().setName(creditProduct.getName());
-            creditProductOptional.get().setMinSum(creditProduct.getMinSum());
-            creditProductOptional.get().setMaxSum(creditProduct.getMaxSum());
-            creditProductOptional.get().setCurrency(creditProduct.getCurrency());
-            creditProductOptional.get().setMinLoanRate(creditProduct.getMinLoanRate());
-            creditProductOptional.get().setMaxLoanRate(creditProduct.getMaxLoanRate());
-            creditProductOptional.get().setNeedGuarantee(creditProduct.getNeedGuarantee());
-            creditProductOptional.get().setEarlyRepayment(creditProduct.getEarlyRepayment());
-            creditProductOptional.get().setMinTerm(creditProduct.getMinTerm());
-            creditProductOptional.get().setMaxTerm(creditProduct.getMaxTerm());
-            creditProductOptional.get().setDescription(creditProduct.getDescription());
-            creditProductOptional.get().setCalculationMode(creditProduct.getCalculationMode());
-            creditProductOptional.get().setGracePeriodMonth(creditProduct.getGracePeriodMonth());
-            creditProductOptional.get()
-                .setNeedIncomeStatement(creditProduct.getNeedIncomeStatement());
-        }
+    private CreditProduct getById(UUID id) {
+        return creditProductRepository.findById(id).
+            orElseThrow(() -> new CreditProductNotFoundException(id));
+    }
+
+    private void setAttributes(CreditProduct product, CreditProductDTO creditProductDTO) {
+        product.setName(creditProductDTO.getName());
+        product.setMinSum(creditProductDTO.getMinSum());
+        product.setMaxSum(creditProductDTO.getMaxSum());
+        product.setCurrency(currencyMapper.toCurrency(creditProductDTO.getCurrency()));
+        product.setMinLoanRate(creditProductDTO.getMinLoanRate());
+        product.setMaxLoanRate(creditProductDTO.getMaxLoanRate());
+        product.setNeedGuarantee(creditProductDTO.getNeedGuarantee());
+        product.setEarlyRepayment(creditProductDTO.getEarlyRepayment());
+        product.setMinTerm(creditProductDTO.getMinTerm());
+        product.setMaxTerm(creditProductDTO.getMaxTerm());
+        product.setDescription(creditProductDTO.getDescription());
+        product.setCalculationMode(creditProductDTO.getCalculationMode());
+        product.setGracePeriodMonth(creditProductDTO.getGracePeriodMonth());
+        product.setNeedIncomeStatement(creditProductDTO.getNeedIncomeStatement());
     }
 }

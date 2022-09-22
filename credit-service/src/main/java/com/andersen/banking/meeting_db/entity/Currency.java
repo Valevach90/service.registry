@@ -9,8 +9,9 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-
+@ToString
 @Entity
 @Table(name = "currency")
 @NoArgsConstructor
@@ -56,13 +57,5 @@ public class Currency {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Currency{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            '}';
     }
 }
