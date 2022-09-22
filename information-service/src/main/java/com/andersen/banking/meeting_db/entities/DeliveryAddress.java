@@ -24,15 +24,15 @@ public class DeliveryAddress {
 
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+    private DeliveryCountry country;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
-    private City city;
+    private DeliveryCity city;
 
     @ManyToOne
     @JoinColumn(name = "street_id", nullable = false)
-    private Street street;
+    private DeliveryStreet street;
 
     @Column(name = "house", nullable = false)
     private String house;

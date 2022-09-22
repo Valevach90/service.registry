@@ -26,15 +26,15 @@ public class DeliveryAddressDto {
 
     @NotBlank
     @JsonProperty("country")
-    private String country;
+    private DeliveryCountryDto country;
 
     @NotBlank
     @JsonProperty("city")
-    private String city;
+    private DeliveryCityDto city;
 
     @NotBlank
     @JsonProperty("street")
-    private String street;
+    private DeliveryStreetDto street;
 
     @NotBlank
     @JsonProperty("house")

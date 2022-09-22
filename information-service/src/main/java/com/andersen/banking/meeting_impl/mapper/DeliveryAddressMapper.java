@@ -11,13 +11,13 @@ import org.mapstruct.ReportingPolicy;
 public interface DeliveryAddressMapper {
 
 
-    @Mapping(source = "country", target = "country.name")
+/*    @Mapping(source = "country", target = "country.name")
     @Mapping(source = "city", target = "city.name")
-    @Mapping(source = "street", target = "street.name")
+    @Mapping(source = "street", target = "street.name")*/
     DeliveryAddress toDeliveryAddress(DeliveryAddressDto addressDto);
 
-    @Mapping(source = "country.name", target = "country")
+/*    @Mapping(source = "country.name", target = "country")
     @Mapping(source = "city.name", target = "city")
-    @Mapping(source = "street.name", target = "street")
+    @Mapping(source = "street.name", target = "street")*/
     DeliveryAddressDto toDeliveryAddressDto(DeliveryAddress address);
 }
