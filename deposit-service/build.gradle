@@ -43,6 +43,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka-test'
 	testRuntimeOnly 'com.h2database:h2'
 	implementation "org.springframework.cloud:spring-cloud-starter-config:$springConfigVersion"
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 }
 
 dependencyManagement {
