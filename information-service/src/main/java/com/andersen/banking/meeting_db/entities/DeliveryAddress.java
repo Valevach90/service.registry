@@ -22,11 +22,17 @@ public class DeliveryAddress {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "city", nullable = false)
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
 
-    @Column(name = "street", nullable = false)
-    private String street;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
+
+    @ManyToOne
+    @JoinColumn(name = "street_id", nullable = false)
+    private Street street;
 
     @Column(name = "house", nullable = false)
     private String house;

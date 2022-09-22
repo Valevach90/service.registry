@@ -25,6 +25,10 @@ public class DeliveryAddressDto {
     private UUID id;
 
     @NotBlank
+    @JsonProperty("country")
+    private String country;
+
+    @NotBlank
     @JsonProperty("city")
     private String city;
 

@@ -10,11 +10,36 @@ INSERT INTO delivery_type (type_name)
 VALUES ('COURIER'),
        ('BRANCH');
 
+CREATE TABLE delivery_country
+(
+    id                    UUID DEFAULT gen_random_uuid() NOT NULL,
+    name                  VARCHAR(30)                    NOT NULL,
+
+    CONSTRAINT pk_delivery_country PRIMARY KEY (id)
+);
+
+CREATE TABLE delivery_city
+(
+    id                    UUID DEFAULT gen_random_uuid() NOT NULL,
+    name                  VARCHAR(30)                    NOT NULL,
+
+    CONSTRAINT pk_delivery_city PRIMARY KEY (id)
+);
+
+CREATE TABLE delivery_street
+(
+    id                    UUID DEFAULT gen_random_uuid() NOT NULL,
+    name                  VARCHAR(30)                    NOT NULL,
+
+    CONSTRAINT pk_delivery_street PRIMARY KEY (id)
+);
+
 CREATE TABLE delivery_address
 (
     id                    UUID DEFAULT gen_random_uuid() NOT NULL,
-    city                  VARCHAR(45)                    NOT NULL,
-    street                VARCHAR(45)                    NOT NULL,
+    country_id            UUID                           NOT NULL,
+    city_id               UUID                           NOT NULL,
+    street_id             UUID                           NOT NULL,
     house                 VARCHAR(5)                     NOT NULL,
     building              VARCHAR(5)                             ,
     flat                  VARCHAR(5)                             ,
@@ -41,3 +66,10 @@ ALTER TABLE delivery_order
     ADD CONSTRAINT fk_delivery_order_on_delivery_type FOREIGN KEY (delivery_type_id) REFERENCES delivery_type (id);
 ALTER TABLE delivery_order
     ADD CONSTRAINT fk_delivery_order_on_delivery_address FOREIGN KEY (delivery_address_id) REFERENCES delivery_address (id);
+
+ALTER TABLE delivery_address
+    ADD CONSTRAINT fk_delivery_address_on_delivery_country FOREIGN KEY (country_id) REFERENCES delivery_country (id);
+ALTER TABLE delivery_address
+    ADD CONSTRAINT fk_delivery_address_on_delivery_city FOREIGN KEY (city_id) REFERENCES delivery_city (id);
+ALTER TABLE delivery_address
+    ADD CONSTRAINT fk_delivery_address_on_delivery_street FOREIGN KEY (street_id) REFERENCES delivery_street (id);
