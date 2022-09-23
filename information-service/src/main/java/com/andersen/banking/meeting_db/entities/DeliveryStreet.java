@@ -21,7 +21,6 @@ public class DeliveryStreet {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-
     @Column(nullable = false, name = "name")
     private String name;
 }

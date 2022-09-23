@@ -6,7 +6,7 @@ import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
+@Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DeliveryCountryMapper {
 
     DeliveryCountry toDeliveryCountry(DeliveryCountryDto deliveryCountryDto);
