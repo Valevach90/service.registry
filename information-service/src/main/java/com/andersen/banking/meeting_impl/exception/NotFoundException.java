@@ -1,7 +1,5 @@
 package com.andersen.banking.meeting_impl.exception;
 
-import java.util.UUID;
-
 /**
  * Not Found Exception.
  */
