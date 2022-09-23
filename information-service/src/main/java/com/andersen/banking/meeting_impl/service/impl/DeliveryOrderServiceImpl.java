@@ -64,7 +64,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
         Optional<DeliveryOrder> deliveryOrder = deliveryOrderRepository.findById(id);
 
         DeliveryOrderDto deliveryOrderDto = deliveryOrderMapper.toDeliveryOrderDto(deliveryOrder.orElseThrow(
-                () -> new NotFoundException(DeliveryOrder.class, "order id", id)));
+                () -> new NotFoundException(deliveryOrder.getClass().getSimpleName(), "order id", id.toString())));
 
         log.info("Found delivery order: {}", deliveryOrderDto);
         return deliveryOrderDto;
@@ -110,7 +110,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
         Optional<DeliveryOrder> deliveryOrder = deliveryOrderRepository.findByCardId(cardId);
 
         DeliveryOrderDto deliveryOrderDto = deliveryOrderMapper.toDeliveryOrderDto(deliveryOrder.orElseThrow(
-                () -> new NotFoundException(DeliveryOrder.class, "card id", cardId)));
+                () -> new NotFoundException(deliveryOrder.getClass().getSimpleName(), "card id", cardId.toString())));
 
         log.info("Found delivery order: {}", deliveryOrderDto);
         return deliveryOrderDto;
