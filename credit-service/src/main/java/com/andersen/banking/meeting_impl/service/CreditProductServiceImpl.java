@@ -1,14 +1,13 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
 import com.andersen.banking.meeting_api.dto.CreditProductRequestDTO;
+import com.andersen.banking.meeting_api.dto.CreditProductResponseDTO;
 import com.andersen.banking.meeting_api.service.CreditProductService;
+import com.andersen.banking.meeting_api.service.CurrencyService;
 import com.andersen.banking.meeting_db.entity.CreditProduct;
 import com.andersen.banking.meeting_db.repository.CreditProductRepository;
-import com.andersen.banking.meeting_impl.exception.CreditProductAlreadyExistException;
 import com.andersen.banking.meeting_impl.exception.CreditProductNotFoundException;
 import com.andersen.banking.meeting_impl.mapper.CreditProductMapper;
-import com.andersen.banking.meeting_impl.mapper.CurrencyMapper;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class CreditProductServiceImpl implements CreditProductService {
 
     private final CreditProductRepository creditProductRepository;
     private final CreditProductMapper creditProductMapper;
-    private final CurrencyMapper currencyMapper;
+    private final CurrencyService currencyService;
 
     @Override
     public CreditProductResponseDTO createCreditProduct(CreditProductRequestDTO productDTO) {
@@ -33,6 +32,7 @@ public class CreditProductServiceImpl implements CreditProductService {
 
         var creditProductEntity = creditProductMapper.toCreditProduct(productDTO);
 
+        setCurrency(productDTO.getCurrencyId(),creditProductEntity);
         var creditProduct = creditProductRepository.save(creditProductEntity);
 
         var creditProductDTO = creditProductMapper.toCreditProductDTO(creditProduct);
@@ -70,14 +70,15 @@ public class CreditProductServiceImpl implements CreditProductService {
     }
 
     @Override
-    public CreditProductResponseDTO updateCreditProduct(UUID id, CreditProductRequestDTO productDTO) {
+    public CreditProductResponseDTO updateCreditProduct(UUID id,
+        CreditProductRequestDTO productDTO) {
 
         log.info("Updating credit product to: {}", productDTO);
 
         var creditProduct = getById(id);
 
-        setAttributes(creditProduct, productDTO);
-
+        creditProductMapper.updateCreditProduct(productDTO, creditProduct);
+        setCurrency(productDTO.getCurrencyId(),creditProduct);
         var creditProductDTO = creditProductMapper.toCreditProductDTO(
             creditProductRepository.save(creditProduct)
         );
@@ -100,32 +101,13 @@ public class CreditProductServiceImpl implements CreditProductService {
         log.info("Deleted credit product: {}", creditProduct);
     }
 
-    private void assertIfExistCreditProduct(UUID id) {
-        var creditProduct = creditProductRepository.findById(id);
-        if (creditProduct.isPresent()) {
-            throw new CreditProductAlreadyExistException(id);
-        }
-    }
-
     private CreditProduct getById(UUID id) {
         return creditProductRepository.findById(id).
             orElseThrow(() -> new CreditProductNotFoundException(id));
     }
 
-    private void setAttributes(CreditProduct product,  CreditProductRequestDTO creditProductDTO) {
-        product.setName(creditProductDTO.getName());
-        product.setMinSum(creditProductDTO.getMinSum());
-        product.setMaxSum(creditProductDTO.getMaxSum());
-        product.setCurrency(currencyMapper.toCurrency(creditProductDTO.getCurrency()));
-        product.setMinLoanRate(creditProductDTO.getMinLoanRate());
-        product.setMaxLoanRate(creditProductDTO.getMaxLoanRate());
-        product.setNeedGuarantee(creditProductDTO.getNeedGuarantee());
-        product.setEarlyRepayment(creditProductDTO.getEarlyRepayment());
-        product.setMinTerm(creditProductDTO.getMinTerm());
-        product.setMaxTerm(creditProductDTO.getMaxTerm());
-        product.setDescription(creditProductDTO.getDescription());
-        product.setCalculationMode(creditProductDTO.getCalculationMode());
-        product.setGracePeriodMonth(creditProductDTO.getGracePeriodMonth());
-        product.setNeedIncomeStatement(creditProductDTO.getNeedIncomeStatement());
+    private void setCurrency(UUID currencyId,CreditProduct creditProduct){
+        var currency = currencyService.getCurrencyById(currencyId);
+        creditProduct.setCurrency(currency);
     }
 }

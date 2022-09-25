@@ -47,6 +47,10 @@ spring:
           uri: lb://notification-service
           predicates:
             - Path=/api/v1/notifications/**
+        - id: credit-service
+          uri: lb://credit-service
+          predicates:
+              - Path=/api/v1/credit-products/**
   security:
     oauth2:
       resourceserver:
