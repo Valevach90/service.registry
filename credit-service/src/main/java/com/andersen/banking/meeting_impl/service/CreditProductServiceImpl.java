@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CreditProductServiceImpl implements CreditProductService {
 
     private final CreditProductRepository creditProductRepository;
