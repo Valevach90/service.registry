@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.TransferLog;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 
 import java.util.UUID;
 
@@ -24,6 +24,23 @@ public interface TransferLogService {
     TransferLog findById(UUID id);
 
     /**
+     * Assume transferLog's status in database.
+     *
+     * @param id of the transferLog
+     * @param status transaction
+     * @return boolean
+     */
+    boolean isExistStatus(UUID id, int status);
+
+    /**
+     * Assume transferLog in database.
+     *
+     * @param id of the transferLog
+     * @return boolean
+     */
+    boolean isExist(UUID id);
+
+    /**
      * Update transferLog.
      *
      * @param transferLog update transferLog
@@ -34,12 +51,12 @@ public interface TransferLogService {
     /**
      * Create transferLog according to request kafka message and status.
      *
-     * @param requestKafkaTransferMessage message
+     * @param requestTransferMessage message
      * @throws com.andersen.banking.meeting_impl.exception.TransferLogAlreadyExistsException
      * @return TransferLog
      */
     TransferLog createTransferLogAccordingToRequestKafkaMessage(
-            RequestKafkaTransferMessage requestKafkaTransferMessage);
+            RequestTransferMessage requestTransferMessage);
 
     void changeTransferLogStatus(UUID id, int status);
 }

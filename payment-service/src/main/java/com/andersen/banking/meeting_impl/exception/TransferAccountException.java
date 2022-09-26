@@ -7,7 +7,7 @@ public class TransferAccountException extends RuntimeException {
     public TransferAccountException(UUID transferId) {
         super(
                 String.format(
-                        "Can't transfer money between cards. The problem with transfer :  %d. Description: ",
+                        "Can't transfer money between cards. The problem with transfer :  %s. Description: ",
                         transferId));
     }
 }

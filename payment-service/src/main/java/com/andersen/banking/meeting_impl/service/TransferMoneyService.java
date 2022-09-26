@@ -1,25 +1,15 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_db.entities.Account;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public interface TransferMoneyService {
 
     /**
-     * @param requestKafkaTransferMessage
-     * @param source
-     * @param target
-     */
-    void doFilterBeforeTransfer(
-            RequestKafkaTransferMessage requestKafkaTransferMessage,
-            Account source,
-            Account target);
-
-    /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
      * @return
      */
-    ImmutablePair<Boolean, StringBuffer> executeTransfer(
-            RequestKafkaTransferMessage requestKafkaTransferMessage);
+    ResponseTransferMessage executeTransfer(
+            RequestTransferMessage requestTransferMessage);
 }

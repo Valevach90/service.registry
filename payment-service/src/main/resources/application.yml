@@ -4,6 +4,17 @@ server:
 spring:
   application:
     name: payment-service
+
+  cloud:
+    stream:
+      function:
+        definition: paymentProcessor
+      bindings:
+        paymentProcessor-in-0:
+          destination: transfer-event
+        paymentProcessor-out-0:
+          destination: transfer-back-event
+
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://database-psql:5432/postgres?currentSchema=payment_service
@@ -20,11 +31,9 @@ spring:
     password: PoSPa$$woRd
 
   kafka:
-    groupId: payment-service
-    bootstrapAddress: 10.10.14.68:19092
-    transfer_request_topic_name: transfer_to_payment_request
-    transfer_response_topic_name: transfer_response
-    maxRetryAttempts: 3
+    bootstrap-servers: 10.10.14.68:19092
+    consumer:
+      group-id: payment-service
 
 
 logging:

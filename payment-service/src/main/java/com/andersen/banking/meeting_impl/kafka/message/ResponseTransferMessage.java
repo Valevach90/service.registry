@@ -1,26 +1,27 @@
 package com.andersen.banking.meeting_impl.kafka.message;
 
+import java.util.UUID;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-import java.util.UUID;
-
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseKafkaTransferMessage {
-
+public class ResponseTransferMessage {
 
     @NotNull
     private UUID transferId;
 
     @NotNull
-    private boolean result;
+    private Integer status;
 
     private String statusDescription;
 
+    private String service;
 }

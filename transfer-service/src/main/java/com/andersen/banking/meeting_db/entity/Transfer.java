@@ -46,6 +46,9 @@ public class Transfer extends BaseEntity {
     @Column(name = "status", nullable = false)
     private int status;
 
+    @Column(name = "service")
+    private String service;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

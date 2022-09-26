@@ -1,16 +1,17 @@
 package com.andersen.banking.meeting_impl.service.impl;
+
 import com.andersen.banking.meeting_db.entities.Transfer;
 import com.andersen.banking.meeting_db.repositories.TransferRepository;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.service.TransferService;
+import java.sql.Timestamp;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -24,7 +25,7 @@ public class TransferServiceImpl implements TransferService {
     public Transfer create(Transfer transfer) {
         log.info("Creating transfer: {}", transfer);
 
-        transfer.setTransferId(null);
+        transfer.setTime(new Timestamp(System.currentTimeMillis()));
 
         Transfer savedTransfer = transferRepository.save(transfer);
 
@@ -33,14 +34,28 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Transfer> findById(UUID id) {
+    public Transfer findById(UUID id) {
         log.info("Find transfer by id: {}", id);
 
-        Optional<Transfer> transfer = transferRepository.findById(id);
+        Transfer transfer = transferRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Transfer.class, id));
 
         log.info("Found transfer by id: {}", transfer);
         return transfer;
+    }
+
+    @Override
+    public boolean isExist(UUID id) {
+        log.info("Check transfer exist with id {}", id);
+
+        return transferRepository.existsById(id);
+    }
+
+    @Override
+    public boolean isExistStatus(UUID id, int status) {
+        log.info("Check transfer exist with id {}", id);
+
+        return transferRepository.existsByTransferIdAndStatus(id, status);
     }
 
     @Override
@@ -62,9 +77,22 @@ public class TransferServiceImpl implements TransferService {
         Transfer foundTransfer = transferRepository.findById(transfer.getTransferId())
                 .orElseThrow(() -> new NotFoundException(Transfer.class, transfer.getTransferId()));
 
+        transfer.setTime(new Timestamp(System.currentTimeMillis()));
         transferRepository.save(transfer);
 
         log.info("Transfer: {} updated to version: {}", foundTransfer, transfer);
+    }
+
+    @Override
+    public void changeTransferStatus(UUID id, int status) {
+        log.info("Changing status for transferLog : {} to {}", id, status);
+        Transfer transfer = findById(id);
+        transfer.setStatus(status);
+        transfer.setTime(new Timestamp(System.currentTimeMillis()));
+        transferRepository.save(transfer);
+
+        log.info("Return result of status for transferLog : {} to {}", id, status);
+
     }
 
     @Override

@@ -1,10 +1,11 @@
 package com.andersen.banking.meeting_impl.service;
+
 import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.Optional;
 
 /**
  * Service for working with Deposit Products.
@@ -51,34 +52,31 @@ public interface DepositProductService {
     void deleteById(UUID id);
 
     /**
-     * Get page of deposit products
-     * filtered by their name and currency
+     * Get page of deposit products filtered by their name and currency
+     * <p>
+     * If one of the parameters is absent, returns page searched with the specified parameter
+     * <p>
+     * If both parameters are absent, returns all deposit products
      *
-     * If one of the parameters is absent, returns
-     * page searched with the specified parameter
-     *
-     * If both parameters are absent, returns all
-     * deposit products
-     *
-     * @param pageable page object
-     * @param depositName name of a deposit product
+     * @param pageable     page object
+     * @param depositName  name of a deposit product
      * @param currencyName name of currency
-     * */
+     */
     Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
-                                                        String depositName,
-                                                        String currencyName);
+            String depositName,
+            String currencyName);
 
     /**
-     * Get deposit products filter
-     * with actual parameters values ranges
-     * */
+     * Get deposit products filter with actual parameters values ranges
+     */
     DepositProductFilterDto getDepositProductAvailableSetting();
 
     /**
      * Get filtered deposit products
      *
      * @param depositProductFilterDto deposit product filter
-     * @param pageable page object
-     * */
-    Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable);
+     * @param pageable                page object
+     */
+    Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto,
+            Pageable pageable);
 }

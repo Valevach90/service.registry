@@ -108,7 +108,4 @@ public class DepositDto {
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
     private UUID userId;
-
-    @JsonProperty(value = "transfersDto", access = JsonProperty.Access.READ_ONLY)
-    private List<TransferDto> transfersDto;
 }

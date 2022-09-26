@@ -18,9 +18,13 @@ public class KafkaProperties {
 
     private int maxRetryAttempts;
 
-    private String payment_transfer_request_topic_name;
+    private String paymentTransferRequestTopicName;
 
-    private String deposit_transfer_request_topic_name;
+    private String depositTransferRequestTopicName;
 
-    private String transfer_response_topic_name;
+    private String transferResponseTopicName;
+
+    private String paymentDepositTransferRequestTopicName;
+
+    private String depositPaymentTransferRequestTopicName;
 }

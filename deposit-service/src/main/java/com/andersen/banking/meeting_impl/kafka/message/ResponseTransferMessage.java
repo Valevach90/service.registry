@@ -1,24 +1,23 @@
 package com.andersen.banking.meeting_impl.kafka.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
+import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import java.util.UUID;
-
 @Data
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponseKafkaTransferMessage {
+public class ResponseTransferMessage {
 
     @NotNull
-    @JsonProperty("transferId")
     private UUID transferId;
 
     @NotNull
-    @JsonProperty("result")
-    private Boolean result;
+    private Integer status;
 
-    @JsonProperty("statusDescription")
     private String statusDescription;
+
+    private String service;
 }

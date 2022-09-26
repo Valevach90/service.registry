@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-/** AccountService implementation */
+/**
+ * AccountService implementation
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,8 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account account) {
         log.info("Creating account: {}", account);
 
-        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(), account.getCurrency(), account.getOwnerId()));
+        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(),
+                account.getCurrency(), account.getOwnerId()));
         Account savedAccount = accountRepository.save(account);
 
         log.info("Created account: {}", savedAccount);
@@ -95,42 +98,31 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional
     public boolean transfer(Account source, Account target, long amount) throws RuntimeException {
 
-        log.info("Trying to transfer money from : {} to : {}.", source.getAccountNumber(), target.getAccountNumber());
+        log.info("Trying to transfer money from : {} to : {}.", source.getAccountNumber(),
+                target.getAccountNumber());
 
-        if (source.getCurrency().equals(target.getCurrency())) {
+        long sourceBalanceAfterWithdraw = source.getBalance() - amount;
+        long targetBalanceAfterWithdraw = target.getBalance() + amount;
 
-            long sourceBalanceAfterWithdraw = source.getBalance() - amount;
-            long targetBalanceAfterWithdraw = target.getBalance() + amount;
+        if (sourceBalanceAfterWithdraw >= 0L) {
 
-            if (sourceBalanceAfterWithdraw >= 0L) {
+            source.setBalance(sourceBalanceAfterWithdraw);
+            target.setBalance(targetBalanceAfterWithdraw);
 
-                source.setBalance(sourceBalanceAfterWithdraw);
-                target.setBalance(targetBalanceAfterWithdraw);
+            accountRepository.save(source);
+            accountRepository.save(target);
 
-                accountRepository.save(source);
-                accountRepository.save(target);
-                accountRepository.flush();
-
-                log.info("Transfer money from : {} to : {} successfully completed.",
-                        source.getAccountNumber(), target.getAccountNumber());
-
-                return true;
-            } else {
-
-                log.info("Transfer money from : {} to : {} not completed. Have not enough money on source account.",
-                        source.getAccountNumber(), target.getAccountNumber());
-
-                return false;
-            }
-
-        } else {
-
-            log.info("Transfer money from : {} to : {} not completed. Has different currencies.",
+            log.info("Transfer money from : {} to : {} successfully completed.",
                     source.getAccountNumber(), target.getAccountNumber());
 
+            return true;
+        } else {
+            log.info(
+                    "Transfer money from : {} to : {} not completed. Have not enough money on source account.",
+                    source.getAccountNumber(), target.getAccountNumber());
             return false;
         }
     }
