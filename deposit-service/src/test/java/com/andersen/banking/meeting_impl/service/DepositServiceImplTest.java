@@ -8,7 +8,6 @@ import com.andersen.banking.meeting_db.repositories.DepositRepository;
 import com.andersen.banking.meeting_db.repositories.TransferRepository;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.generators.DepositServiceTestEntitiesGenerator;
-import com.andersen.banking.meeting_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
 import com.andersen.banking.meeting_impl.mapping.DepositMapper;
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.impl.DepositServiceImpl;

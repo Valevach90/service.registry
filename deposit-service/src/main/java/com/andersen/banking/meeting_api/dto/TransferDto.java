@@ -28,10 +28,6 @@ public class TransferDto {
     @NotNull(message = "User id can't be null.")
     private UUID userId;
 
-    @Schema(description = DESCRIPTION_DEPOSIT_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
-    @JsonProperty("deposit")
-    private DepositDto deposit;
-
     @Schema(description = DESCRIPTION_SOURCE_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
     @JsonProperty("sourceNumber")
     @NotNull(message = "Source Number can't be null.")
@@ -70,7 +66,7 @@ public class TransferDto {
     @Schema(description = DESCRIPTION_RESULT_OF_TRANSFER, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN)
     @JsonProperty("result")
     @NotNull(message = "Result of transfer can't be null.")
-    private Boolean result;
+    private Integer status;
 
     @Schema(description = DESCRIPTION_STATUS_OF_TRANSFER, example = EXAMPLE_TRANSFER_STATUS_DESCRIPTION, defaultValue = EXAMPLE_TRANSFER_STATUS_DESCRIPTION)
     @JsonProperty("statusDescription")

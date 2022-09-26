@@ -5,17 +5,9 @@ import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 
 
 public interface TransferManager {
-
     /**
      * @param transferRequestDto
      * @return
      */
     TransferResponseDto run(TransferRequestDto transferRequestDto);
-
-    /**
-     * @param transferRequestDto
-     * @return
-     */
-    TransferExecutor getExecutor(TransferRequestDto transferRequestDto);
-
 }

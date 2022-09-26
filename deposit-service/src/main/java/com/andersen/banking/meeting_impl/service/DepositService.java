@@ -1,12 +1,12 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
 import com.andersen.banking.meeting_db.entities.Deposit;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 /**
  * Service for working with Deposits.
@@ -66,5 +66,5 @@ public interface DepositService {
      *
      * @param message request transfer message to make transfer
      */
-    void makeTransfer(RequestKafkaTransferMessage message);
+    ResponseTransferMessage makeTransfer(RequestTransferMessage message);
 }

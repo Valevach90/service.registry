@@ -1,7 +1,6 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
-import com.andersen.banking.meeting_api.dto.responce.TransferResponseDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.Currency;
 import com.andersen.banking.meeting_db.entity.PaymentType;
@@ -17,15 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -48,18 +44,21 @@ public class TransferServiceImpl implements TransferService {
 
 
     @Override
-    @Cacheable
-    @Transactional(readOnly = true)
-    public TransferResponseDto findById(UUID id) throws NotFoundException {
+    public Transfer findById(UUID id) throws NotFoundException {
         log.debug("Finding transfer by id: {}", id);
 
         Transfer transfer = transferRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Transfer.class, id));
-        TransferResponseDto responseDto = transferMapper.transfer2transferResponseDto(transfer);
 
         log.debug("Transfer with id {} was successfully found", id);
 
-        return responseDto;
+        return transfer;
+    }
+
+    @Override
+    public boolean isEqualStatus(UUID id, int status) throws NotFoundException {
+        log.info("Check status in database for transfer {}", id);
+        return transferRepository.existsByIdAndStatus(id, status);
     }
 
 
@@ -70,15 +69,23 @@ public class TransferServiceImpl implements TransferService {
     @Override
     @Transactional
     public void changeTransferStatus(UUID id, int status) {
+        changeTransferStatus(id, status, null);
+    }
+
+    @Override
+    @Transactional
+    public void changeTransferStatus(UUID id, int status, String service) {
+
         log.info("Changing status for transferLog : {} to {}", id, status);
 
         Transfer transfer = transferRepository.getById(id);
         transfer.setStatus(status);
+        if (service != null) {
+            transfer.setService(service);
+        }
         transferRepository.save(transfer);
 
         log.info("Return result of status for transferLog : {} to {}", id, status);
-
-
     }
 
     /**
@@ -118,7 +125,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     @Cacheable(value = "transfers", key = "#userId")
     @Transactional(readOnly = true)
-    public List<TransferResponseDto> findByUserId(UUID userId, Pageable pageable) {
+    public Page<Transfer> findByUserId(UUID userId, Pageable pageable) {
 
         log.info("Finding transfers for userId: {}", userId);
 
@@ -126,6 +133,13 @@ public class TransferServiceImpl implements TransferService {
 
         log.info("Found transfers : {}", transfers);
 
-        return transfers.stream().map(transferMapper::transfer2transferResponseDto).collect(Collectors.toList());
+        return transfers;
+    }
+
+    @Override
+    public String getService(UUID id) {
+        log.info("Get service for transfer");
+        Transfer transfer = findById(id);
+        return transfer.getService();
     }
 }

@@ -1,8 +1,8 @@
 package com.andersen.banking.meeting_impl.service;
 import com.andersen.banking.meeting_db.entities.Transfer;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,7 +25,24 @@ public interface TransferService {
      * @param id id of transfer
      * @return transfer
      */
-    Optional<Transfer> findById(UUID id);
+    Transfer findById(UUID id);
+
+    /**
+     * Check transfer is exist.
+     *
+     * @param id id of transfer
+     * @return boolean
+     */
+    boolean isExist(UUID id);
+
+    /**
+     * Check transfer is exist status.
+     *
+     * @param id id of transfer
+     * @param status status transaction
+     * @return boolean
+     */
+    boolean isExistStatus(UUID id, int status);
 
     /**
      * Find all transfers.
@@ -41,6 +58,14 @@ public interface TransferService {
      * @param transfer transfer to update
      */
     void update(Transfer transfer);
+
+    /**
+     * Change transfer log status
+     *
+     * @param id
+     * @param status
+     */
+    void changeTransferStatus(UUID id, int status);
 
     /**
      * Delete transfer by id.

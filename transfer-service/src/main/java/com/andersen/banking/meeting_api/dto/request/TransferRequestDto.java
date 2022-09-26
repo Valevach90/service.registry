@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_api.dto.request;
 
+import com.andersen.banking.meeting_api.dto.StatusTransfer;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,9 @@ public class TransferRequestDto {
 
     @NotNull
     private UUID currencyId;
+
+    @Schema(hidden = true)
+    private StatusTransfer statusTransfer;
 
     private String comment;
 

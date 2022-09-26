@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +48,7 @@ public interface TransferMoneyController {
     @Operation(summary = "Create request on transfer money",
             description = "create request on transfer money with params in dto object")
     @PostMapping("")
-    TransferResponseDto create(
+    ResponseEntity<TransferResponseDto> create(
             @RequestBody
             @Validated TransferRequestDto transferRequestDto
     );

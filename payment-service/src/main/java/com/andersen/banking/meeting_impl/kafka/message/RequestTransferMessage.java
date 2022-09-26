@@ -1,21 +1,18 @@
 package com.andersen.banking.meeting_impl.kafka.message;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
-@Data
-@Builder
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestKafkaTransferMessage {
+public class RequestTransferMessage {
 
     @NotNull
     private UUID transferId;
@@ -38,7 +35,9 @@ public class RequestKafkaTransferMessage {
     @NotNull
     private Long amount;
 
+    @NotNull
+    private Integer status;
+
     @NotBlank
     private String currencyName;
-
 }

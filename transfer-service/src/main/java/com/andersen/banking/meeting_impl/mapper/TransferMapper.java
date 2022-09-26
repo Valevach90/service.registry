@@ -6,6 +6,7 @@ import com.andersen.banking.meeting_db.entity.Currency;
 import com.andersen.banking.meeting_db.entity.PaymentType;
 import com.andersen.banking.meeting_db.entity.Transfer;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
+import com.andersen.banking.meeting_api.dto.StatusTransfer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -20,5 +21,4 @@ public interface TransferMapper {
     TransferResponseDto transfer2transferResponseDto(Transfer transfer);
 
     Transfer transferRequestDto2Transfer(TransferRequestDto transferRequestDto, PaymentType sourcePaymentType, PaymentType destinationPaymentType, Currency currency);
-
 }

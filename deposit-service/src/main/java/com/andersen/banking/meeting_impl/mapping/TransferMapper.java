@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.mapping;
 
 import com.andersen.banking.meeting_api.dto.TransferDto;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_db.entities.Transfer;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
@@ -15,17 +15,14 @@ import java.util.List;
 @Mapper(config = MapperConfig.class)
 public interface TransferMapper {
 
-    @Mapping(target = "deposit", ignore = true)
     TransferDto toTransferDto(Transfer transfer);
 
-    @Mapping(target = "deposit", ignore = true)
     Transfer toTransfer(TransferDto transferDto);
 
-    @Mapping(target = "deposit", ignore = true)
     @Mapping(target = "time", ignore = true)
-    @Mapping(target = "result", ignore = true)
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "statusDescription", ignore = true)
-    Transfer toTransfer(RequestKafkaTransferMessage message);
+    Transfer toTransfer(RequestTransferMessage message);
 
     List<Transfer> toTransfersDto(List<TransferDto> transfersDto);
 
