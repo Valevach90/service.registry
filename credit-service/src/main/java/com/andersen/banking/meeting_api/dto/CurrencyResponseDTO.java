@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
-
+@Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "currency response dto")
