@@ -47,6 +47,10 @@ spring:
           uri: lb://notification-service
           predicates:
             - Path=/api/v1/notifications/**
+        - id: credit-service
+          uri: lb://credit-service
+          predicates:
+              - Path=/api/v1/credit-products/**
   security:
     oauth2:
       resourceserver:
@@ -78,6 +82,8 @@ springdoc:
         url: /information-service/api-docs
       - name: deposit-service
         url: /deposit-service/api-docs
+      - name: credit-service
+        url: /credit-service/api-docs
     oauth:
       clientId: api-gateway
       clientSecret: 1Z05bi95GmFzBpyfDIiGRNeBZ8tHPWBM
