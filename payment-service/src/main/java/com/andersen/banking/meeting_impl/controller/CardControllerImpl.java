@@ -111,7 +111,7 @@ public class CardControllerImpl implements CardController {
     public CardResponseDto deactivateById(UUID id) {
         log.trace("Receiving card id {}", id);
 
-        Card deletedCard = cardService.deleteById(id);
+        Card deletedCard = cardService.deactivateById(id);
 
         log.trace("Returning deleted card with id: {}", id);
         return cardMapper.toCardResponseDto(deletedCard);

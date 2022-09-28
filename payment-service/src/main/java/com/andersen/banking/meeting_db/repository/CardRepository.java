@@ -17,6 +17,8 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
 
     Page<Card> getCardByAccountId(UUID id, Pageable pageable);
 
+    List<Card> findAllByAccount_Id(UUID id);
+
     @Query(
             value =
                     "SELECT c FROM Card c "

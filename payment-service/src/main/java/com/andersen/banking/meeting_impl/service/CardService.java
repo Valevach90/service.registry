@@ -38,7 +38,7 @@ public interface CardService {
      * @param id
      * @return
      */
-    Card deleteById(UUID id);
+    Card deactivateById(UUID id);
 
     /**
      * This method registers new Card.

@@ -1,10 +1,9 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.Account;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.UUID;
 
 public interface AccountService {
 
@@ -50,12 +49,12 @@ public interface AccountService {
     Account update(Account updateAccount);
 
     /**
-     * This method deletes the Account with the given id.
+     * This method deactivates the Account with the given id.
      *
      * @param id
      * @return Account
      */
-    Account deleteById(UUID id);
+    Account deactivateById(UUID id);
 
     /**
      * This method transfers money between an accounts with the given amount and currency of money and.

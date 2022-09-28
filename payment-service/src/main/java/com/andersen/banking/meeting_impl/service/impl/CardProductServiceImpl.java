@@ -8,6 +8,7 @@ import com.andersen.banking.meeting_impl.service.TypeCardService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -26,6 +27,8 @@ public class CardProductServiceImpl implements CardProductService {
     private final CardProductRepository cardProductRepository;
 
     private final TypeCardService typeCardService;
+
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional

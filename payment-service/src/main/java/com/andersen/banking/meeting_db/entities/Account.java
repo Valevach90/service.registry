@@ -1,11 +1,18 @@
 package com.andersen.banking.meeting_db.entities;
 
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
@@ -41,4 +48,7 @@ public class Account {
 
     @Column(name = "balance", nullable = false)
     private long balance;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 }

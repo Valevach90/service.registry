@@ -80,7 +80,7 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
-    public Card deleteById(UUID id) {
+    public Card deactivateById(UUID id) {
         log.info("Trying to deactivate card with id: {}", id);
 
         Card card = findById(id);

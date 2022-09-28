@@ -7,26 +7,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class DeactivationScheduler {
+public class CardDeactivationScheduler {
 
     private final CardRepository cardRepository;
 
     @Transactional
     @Scheduled(cron = "${scheduler.card}")
-    public void deactivateExpiredCards(){
+    public void deactivateExpiredCards() {
+        log.info("CardDeactivationScheduler started working");
         List<Card> cardsToDeactivate = cardRepository.findCardsToDeactivate();
-        if (!cardsToDeactivate.isEmpty()) {
+
+        while (!cardsToDeactivate.isEmpty()) {
             deactivateListOfCards(cardsToDeactivate);
-            deactivateExpiredCards();
-        } else {
-            log.info("All cards with expired duration were deactivated");
+            cardsToDeactivate = cardRepository.findCardsToDeactivate();
         }
+        log.info("CardDeactivationScheduler ended working");
     }
 
     private void deactivateListOfCards(List<Card> cardsToDeactivate){
