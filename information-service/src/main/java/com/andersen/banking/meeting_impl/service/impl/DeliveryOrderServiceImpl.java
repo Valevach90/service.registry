@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Delivery order service implementation.
@@ -42,6 +43,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     private final DeliveryTypeMapper deliveryTypeMapper;
 
     @Override
+    @Transactional
     public DeliveryOrderDto create(DeliveryOrderCreateRequestDto orderCreateRequest) {
         log.info("Creating delivery order: {}", orderCreateRequest);
 
@@ -58,6 +60,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DeliveryOrderDto findById(UUID id) {
         log.info("Find delivery order by id: {}", id);
 
@@ -71,6 +74,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DeliveryOrderDto> findAll(Pageable pageable) {
         log.info("Find all delivery orders for pageable: {}", pageable);
 
@@ -82,6 +86,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DeliveryTypeDto> findAllDeliveryTypes(Pageable pageable) {
         log.info("Find all delivery types for pageable: {}", pageable);
 
@@ -93,6 +98,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DeliveryOrderDto> findDeliveryOrderByUserId(UUID userId, Pageable pageable) {
         log.info("Find delivery orders by user id: {}", userId);
 
@@ -104,6 +110,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DeliveryOrderDto findDeliveryOrderByCardId(UUID cardId) {
         log.info("Find delivery order by card id: {}", cardId);
 
@@ -117,6 +124,7 @@ public class DeliveryOrderServiceImpl implements DeliveryOrderService {
     }
 
     @Override
+    @Transactional
     public void update(DeliveryOrderDto deliveryOrderDto) {
         log.info("Updating delivery order: {}", deliveryOrderDto);
 

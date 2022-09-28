@@ -24,4 +24,8 @@ public class DeliveryCityDto {
     @NotBlank
     @JsonProperty("name")
     private String name;
+
+    @NotBlank
+    @JsonProperty("country")
+    private DeliveryCountryDto country;
 }

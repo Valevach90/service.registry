@@ -25,10 +25,6 @@ public class DeliveryAddressDto {
     private UUID id;
 
     @NotBlank
-    @JsonProperty("country")
-    private DeliveryCountryDto country;
-
-    @NotBlank
     @JsonProperty("city")
     private DeliveryCityDto city;
 

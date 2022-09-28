@@ -23,10 +23,6 @@ public class DeliveryAddress {
     private UUID id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "country_id", nullable = false)
-    private DeliveryCountry country;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "city_id", nullable = false)
     private DeliveryCity city;
 
