@@ -9,12 +9,12 @@ import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
 import com.andersen.banking.service.registry.meeting_db.repositories.PassportRepository;
-import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.AddressMapper;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.PersonalDataService;
+import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PersonalDataServiceImpl implements PersonalDataService {
 
-
-    private final UserRepository userRepository;
     private final PassportRepository passportRepository;
     private final AddressRepository addressRepository;
+
+    private final UserService userService;
 
     private final UserMapper userMapper;
     private final PassportMapper passportMapper;
@@ -40,8 +40,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     public PersonalDataDto getPersonalData(String email) {
         log.info("Find user personal data by user email: {}", email);
 
-        UserDto userDto = userMapper.toUserDto(userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(User.class, email)));
+        UserDto userDto = userMapper.toUserDto(userService.findByEmail(email));
 
         PassportDto passportDto = passportMapper.toPassportDto(
                 passportRepository.findByUserId(userDto.getId())
@@ -67,14 +66,13 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         Passport updatedPassport = passportMapper.toPassport(updatedPersonalDataDto.getPassport());
         Address updatedAddress = addressMapper.toAddress(updatedPersonalDataDto.getAddress());
 
-        userRepository.findById(updatedUser.getId())
-                .orElseThrow(() -> new NotFoundException(User.class, updatedUser.getId()));
+        userService.findById(updatedUser.getId());
         passportRepository.findById(updatedPassport.getId())
                 .orElseThrow(() -> new NotFoundException(Passport.class, updatedPassport.getId()));
         addressRepository.findById(updatedAddress.getId())
                 .orElseThrow(() -> new NotFoundException(Address.class, updatedAddress.getId()));
 
-        userRepository.save(updatedUser);
+        userService.update(updatedUser);
         passportRepository.save(updatedPassport);
         addressRepository.save(updatedAddress);
 

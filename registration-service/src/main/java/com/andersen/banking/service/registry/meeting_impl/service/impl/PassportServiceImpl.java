@@ -88,7 +88,7 @@ public class PassportServiceImpl implements PassportService {
         Passport foundPassport = passportRepository.findById(passport.getId())
                 .orElseThrow(() -> new NotFoundException(Passport.class, passport.getId()));
 
-        passport.setUser(foundPassport.getUser());
+        passport.setUserId(foundPassport.getUserId());
         passport.setAddress(foundPassport.getAddress());
 
         passportRepository.save(passport);
@@ -126,10 +126,9 @@ public class PassportServiceImpl implements PassportService {
 
         Address address = addressService.findById(addressId)
                 .orElseThrow(() -> new NotFoundException(Address.class, addressId));
-        User user = userService.findById(userId)
-                .orElseThrow(() -> new NotFoundException(User.class, userId));
+        User user = userService.findById(userId);
         passport.setAddress(address);
-        passport.setUser(user);
+        passport.setUserId(user.getId());
 
         passport.setId(null);
 

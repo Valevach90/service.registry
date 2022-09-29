@@ -2,7 +2,6 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
-import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import java.util.List;
@@ -20,14 +19,9 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
 
-    private final UserRepository userRepository;
-
     @Override
     public Address create(Address address) {
         log.debug("Creating new address: {}", address);
-
-        UUID userId = address.getUser().getId();
-        address.setUser(userRepository.getById(userId));
 
         address.setId(null);
 
@@ -79,7 +73,7 @@ public class AddressServiceImpl implements AddressService {
         Address address = addressRepository.findById(updatedAddress.getId())
                 .orElseThrow(() -> new NotFoundException(Address.class, updatedAddress.getId()));
 
-        updatedAddress.setUser(address.getUser());
+        updatedAddress.setUserId(address.getUserId());
 
         addressRepository.save(updatedAddress);
 

@@ -1,5 +1,6 @@
 package com.andersen.banking.service.registry.meeting_db.entities;
 
+import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,9 +28,8 @@ public class Address {
     private Long id;
 
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
-    private User user;
+    private UUID userId;
 
     @Column(name = "zip_code")
     private Integer zipCode;

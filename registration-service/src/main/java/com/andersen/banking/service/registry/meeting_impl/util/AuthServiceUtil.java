@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_impl.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -10,6 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class AuthServiceUtil {
+
+    private static final int RANDOM_NUM_ORIGIN = 48;
+    private static final int RANDOM_NUM_BOUND = 122;
 
     private AuthServiceUtil() {
     }
@@ -105,5 +109,15 @@ public class AuthServiceUtil {
                 "api-gateway");
         List<Object> roles = stringObjectMap.get("roles");
         return roles.contains("USER");
+    }
+
+    public static String generateRandomPassword(int len) {
+        SecureRandom random = new SecureRandom();
+        return random.ints(RANDOM_NUM_ORIGIN, RANDOM_NUM_BOUND + 1)
+                .filter(i -> Character.isAlphabetic(i) || Character.isDigit(i))
+                .limit(len)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint,
+                        StringBuilder::append)
+                .toString();
     }
 }

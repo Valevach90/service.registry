@@ -1,91 +1,255 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.generateRandomPassword;
+
+import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation;
+import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation.Credentials;
+import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentationResponse;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
-import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
+import com.andersen.banking.service.registry.meeting_db.entities.User.UserBuilder;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
-import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
+import com.andersen.banking.service.registry.meeting_impl.service.AdminService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
-import java.util.Optional;
+import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
+import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final KeycloakProperties keycloak;
+
+    private final AdminService adminService;
+
+    private final ObjectMapper mapper;
+
+    private final WebClient client = WebClient.create();
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<User> findById(UUID id) {
-        log.debug("Find user by id: {}", id);
+    public User create(User user) {
+        log.info("creating user: {}", user);
 
-        Optional<User> result = userRepository.findById(id);
+        UserRepresentation userRepresentation = setParameter(user);
+        setTemporaryPassword(userRepresentation);
 
-        log.debug("Return address: {}", result);
-        return result;
+        String token = adminService.obtainAccessToken();
 
+        client.method(HttpMethod.POST)
+                .uri(KeycloakUrlUtil.getUrlForUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRepresentation)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        Object[] users = client.method(HttpMethod.GET)
+                .uri(KeycloakUrlUtil.getUrlForGetUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        user.getUsername()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRepresentation)
+                .retrieve()
+                .bodyToMono(Object[].class)
+                .block();
+
+        User savedUser = Arrays.stream(users)
+                .map(object -> mapper.convertValue(object, UserRepresentationResponse.class))
+                .map(this::getParameter)
+                .findFirst()
+                .orElseThrow(() -> {
+                    throw new NotFoundException(User.class, user.getUsername());
+                });
+
+        savedUser.setPassword(userRepresentation.getCredentials()[0].getValue());
+
+        log.info("created user: {}", savedUser);
+        return savedUser;
     }
 
     @Override
-    @Transactional(readOnly = true)
+    public User findById(UUID id) {
+        log.debug("Find user by id: {}", id);
+
+        String token = adminService.obtainAccessToken();
+
+        Object user = client.method(HttpMethod.GET)
+                .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id.toString()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
+        User findUser = getParameter(mapper.convertValue(user,
+                UserRepresentationResponse.class));
+
+        log.debug("Return user: {}", findUser);
+        return findUser;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        log.debug("Find user by email: {}", email);
+
+        String token = adminService.obtainAccessToken();
+
+        Object user = client.method(HttpMethod.GET)
+                .uri(KeycloakUrlUtil.getUrlForGetUserEmail(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        email
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
+        User findUser = getParameter(mapper.convertValue(user,
+                UserRepresentationResponse.class));
+
+        log.debug("Return user: {}", findUser);
+        return findUser;
+    }
+
+    @Override
     public Page<User> findAll(Pageable pageable) {
         log.info("Find all users for pageable: {}", pageable);
 
-        Page<User> allUsers = userRepository.findAll(pageable);
+        String token = adminService.obtainAccessToken();
+
+        Object[] users = client.method(HttpMethod.GET)
+                .uri(KeycloakUrlUtil.getUrlForUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Object[].class)
+                .block();
+
+        List<User> findUsers = Arrays.stream(users)
+                .map(object -> mapper.convertValue(object, UserRepresentationResponse.class))
+                .map(this::getParameter)
+                .toList();
+
+        Page<User> allUsers = new PageImpl<>(findUsers, pageable, findUsers.size());
 
         log.info("Found {} users", allUsers.getContent().size());
         return allUsers;
     }
 
     @Override
-    @Transactional
-    public void update(User updatedUser) {
-        log.debug("Trying to update user: {}", updatedUser);
+    public void update(User user) {
+        log.debug("Trying to update user: {}", user);
 
-        userRepository.findById(updatedUser.getId())
-                .orElseThrow(() -> new NotFoundException(User.class, updatedUser.getId()));
+        String token = adminService.obtainAccessToken();
 
-        userRepository.save(updatedUser);
+        UserRepresentation userRepresentation = setParameter(user);
 
-        log.debug("Return updated User: {}", updatedUser);
+        client.method(HttpMethod.PUT)
+                .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        user.getId().toString()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRepresentation)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        log.debug("Return updated User: {}", user);
     }
 
     @Override
-    @Transactional
     public void deleteById(UUID id) {
         log.info("deleting user with id: {}", id);
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(User.class, id));
+        String token = adminService.obtainAccessToken();
 
-        userRepository.deleteById(id);
+        Object user = client.method(HttpMethod.DELETE)
+                .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        id.toString()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .block();
 
         log.info("deleted user: {} with id: {}", user, id);
     }
 
-    @Override
-    @Transactional
-    public User create(User user) {
-        log.info("creating user: {}", user);
-        validateUserEmailUniqueness(user);
-
-        //todo
-        User savedUser = userRepository.save(user);
-
-        log.info("created user: {}", savedUser);
-        return savedUser;
+    private UserRepresentation setParameter(User user) {
+        HashMap<String, String> attributes = new HashMap<>();
+        attributes.put("phone", user.getPhone());
+        if (user.getPatronymic() != null) {
+            attributes.put("patronymic", user.getPatronymic());
+        }
+        return UserRepresentation.builder()
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .attributes(attributes)
+                .username(user.getUsername())
+                .enabled(true)
+                .build();
     }
 
-    private void validateUserEmailUniqueness(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new ValidationException("User with provided email already exists");
+    private User getParameter(UserRepresentationResponse userRep) {
+        UserBuilder builder = User.builder()
+                .id(userRep.getId())
+                .username(userRep.getUsername())
+                .firstName(userRep.getFirstName())
+                .lastName(userRep.getLastName())
+                .email(userRep.getEmail());
+        if (userRep.getAttributes() != null) {
+            builder.phone(userRep.getAttributes().getPhone()[0]);
+            if (userRep.getAttributes().getPatronymic() != null) {
+                builder.patronymic(userRep.getAttributes().getPatronymic()[0]);
+            }
         }
+        return builder.build();
+    }
+
+    private void setTemporaryPassword(UserRepresentation userRepresentation) {
+        userRepresentation.setCredentials(
+                new Credentials[]{
+                        Credentials.builder()
+                                .type("password")
+                                .value(generateRandomPassword(10))
+                                .temporary("true")
+                                .build()
+                }
+        );
     }
 }

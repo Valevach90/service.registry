@@ -12,9 +12,7 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapperConfig.class)
 public interface AddressMapper {
 
-    @Mapping(target = "userId", source = "user.id")
     AddressDto toAddressDto(Address address);
 
-    @Mapping(target = "user.id", source = "userId")
     Address toAddress(AddressDto event);
 }
