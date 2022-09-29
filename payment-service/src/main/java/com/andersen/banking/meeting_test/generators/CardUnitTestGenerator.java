@@ -96,7 +96,7 @@ public class CardUnitTestGenerator {
 
     public static Account populateAccountWithBalanceAndCurrency(Account a) {
         Account account = populateAccount(a);
-        account.setBalance(0);
+        account.setBalance(0L);
         account.setCurrency("BEL");
 
         return account;

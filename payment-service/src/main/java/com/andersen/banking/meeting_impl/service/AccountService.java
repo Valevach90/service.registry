@@ -57,6 +57,14 @@ public interface AccountService {
     Account deactivateById(UUID id);
 
     /**
+     * This method deactivates some amount of accounts that were expired. Returns true if deactivated some cards.
+     *
+     * @param
+     * @return
+     */
+    boolean deactivateSomeExpiredAccounts();
+
+    /**
      * This method transfers money between an accounts with the given amount and currency of money and.
      *
      * @param source

@@ -15,26 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class AccountDeactivationScheduler {
 
-    private final AccountRepository accountRepository;
-
     private final AccountService accountService;
 
     @Transactional
     @Scheduled(cron = "${scheduler.card}")
     public void deactivateExpiredAccounts() {
         log.info("AccountDeactivationScheduler started working");
-        List<Account> accountsToDeactivate = accountRepository.findAccountsToDeactivate();
 
-        while (!accountsToDeactivate.isEmpty()) {
-            deactivateListOfAccounts(accountsToDeactivate);
-            accountsToDeactivate = accountRepository.findAccountsToDeactivate();
+        boolean accountsWereDeactivated = accountService.deactivateSomeExpiredAccounts();
+
+        while (accountsWereDeactivated) {
+            accountsWereDeactivated = accountService.deactivateSomeExpiredAccounts();
         }
+
         log.info("AccountDeactivationScheduler ended working");
     }
 
-    private void deactivateListOfAccounts(List<Account> accountsToDeactivate) {
-        accountsToDeactivate.forEach(account -> {
-            accountService.deactivateById(account.getId());
-        });
-    }
 }

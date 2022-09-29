@@ -96,6 +96,23 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    public boolean deactivateSomeExpiredAccounts() {
+        List<Account> accountsToDeactivate = accountRepository.findAccountsToDeactivate();
+
+        if (!accountsToDeactivate.isEmpty()) {
+            accountsToDeactivate.forEach(account -> {
+                account.setActive(false);
+                deactivateAllCardsByAccountId(account.getId());
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
     public Account deactivateById(UUID id) {
         log.info("Trying to deactivate account with id: {}", id);
 

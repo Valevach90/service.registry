@@ -28,8 +28,6 @@ public class CardProductServiceImpl implements CardProductService {
 
     private final TypeCardService typeCardService;
 
-    private final CacheManager cacheManager;
-
     @Override
     @Transactional
     @CachePut(key = "#cardProduct.id")

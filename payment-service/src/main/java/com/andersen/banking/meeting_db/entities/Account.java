@@ -47,7 +47,7 @@ public class Account {
     private String bankName;
 
     @Column(name = "balance", nullable = false)
-    private long balance;
+    private Long balance;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;

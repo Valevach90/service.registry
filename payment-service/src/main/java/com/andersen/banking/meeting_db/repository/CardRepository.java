@@ -35,7 +35,7 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
     boolean existsByFirstTwelveNumbersAndLastFourNumbers(String firstTwelve, String lastFour);
 
     @Query(value = "SELECT * FROM card "
-            + "WHERE expire_date < CURRENT_DATE AND is_active = true"
+            + "WHERE is_active = true AND expire_date < CURRENT_DATE"
             + " for update skip locked "
             + "LIMIT 10", nativeQuery = true)
     List<Card> findCardsToDeactivate();

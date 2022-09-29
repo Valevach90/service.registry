@@ -13,6 +13,7 @@ import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.util.CardGenerator;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.management.openmbean.KeyAlreadyExistsException;
@@ -76,6 +77,24 @@ public class CardServiceImpl implements CardService {
         log.info("Return updated card: {}", updatedCard);
 
         return updatedCard;
+    }
+
+    @Transactional
+    @Override
+    public boolean deactivateSomeExpiredCards() {
+        List<Card> cardsToDeactivate = cardRepository.findCardsToDeactivate();
+
+        if (!cardsToDeactivate.isEmpty()) {
+            cardsToDeactivate.forEach(card -> {
+                card.setActive(false);
+                log.info("Card with id: {} duration has expired. It was successfully deactivated", card.getId());
+            });
+            cardRepository.saveAll(cardsToDeactivate);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Transactional

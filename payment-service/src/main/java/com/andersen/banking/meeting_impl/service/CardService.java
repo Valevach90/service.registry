@@ -33,12 +33,20 @@ public interface CardService {
     Card update(Card card);
 
     /**
-     * This method deletes the Card with the given id and the returns deleted entity.
+     * This method deactivates the Card with the given id and the returns deleted entity.
      *
      * @param id
      * @return
      */
     Card deactivateById(UUID id);
+
+    /**
+     * This method deactivates some amount of cards that were expired. Returns true if deactivated some cards.
+     *
+     * @param
+     * @return
+     */
+    boolean deactivateSomeExpiredCards();
 
     /**
      * This method registers new Card.
