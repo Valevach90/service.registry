@@ -228,4 +228,23 @@ public class DepositServiceImpl implements DepositService {
 
         return response;
     }
+
+    @Transactional
+    public Deposit accrualDepositInterest(UUID depositId, Long startedPeriodAmount) {
+
+        log.info("Trying accrual of interest for deposit with id: {}", depositId);
+
+        Deposit deposit = depositRepository.findById(depositId)
+                .orElseThrow(() -> new NotFoundException(Deposit.class, depositId));
+
+        if (deposit.getAmount() >= startedPeriodAmount) {
+            deposit.setAmount(deposit.getAmount() + (deposit.getAmount() * deposit.getInterestRate() / 100));
+
+            log.info("Saving deposit after successful interest accrual {}", deposit);
+            depositRepository.save(deposit);
+        } else {
+            log.error("Interest accrual forbidden, amount is less than stated period amount {}", deposit);
+        }
+        return deposit;
+    }
 }

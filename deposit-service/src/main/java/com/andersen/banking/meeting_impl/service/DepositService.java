@@ -67,4 +67,13 @@ public interface DepositService {
      * @param message request transfer message to make transfer
      */
     void makeTransfer(RequestKafkaTransferMessage message);
+
+    /**
+     * Accrual of deposit interest
+     *
+     * @param depositId id of deposit to interest accrual
+     * @param startedPeriodAmount amount of deposit at start of accrual period
+     * @return deposit after the interest accrual
+     */
+    Deposit accrualDepositInterest(UUID depositId, Long startedPeriodAmount);
 }
