@@ -3,12 +3,14 @@ package com.andersen.banking.service.registry.meeting_api.controller;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,21 +38,22 @@ public interface UserController {
 
     @Operation(summary = "Get user by user id",
             description = "get user information by id")
-    @GetMapping("/{id}")
-    UserDto findById(@Parameter(description = "user id", required = true)
-    @PathVariable UUID id);
+    @GetMapping("/find")
+    @SecurityRequirement(name = "Bearer Authentication")
+    UserDto findUser(Authentication authentication);
 
     @Operation(summary = "Create user",
-            description = "create user by params in dto object", hidden = true)
+            description = "create user by params in dto object")
     @PostMapping
     UserDto create(@Parameter(description = "user", required = true)
-    @RequestBody
-    @Validated UserDto userDto);
+    @RequestBody @Validated UserDto userDto);
 
     @Operation(summary = "Update user",
             description = "update user by params in dto object")
-    @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PutMapping
     void updateUser(
+            Authentication authentication,
             @Parameter(description = "user id", required = true)
             @RequestBody
             @Validated UserDto userDto);

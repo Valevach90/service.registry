@@ -19,7 +19,7 @@ public class PassportGenerator {
     public Passport generatePassport(User user, Address address) {
         var passport = new Passport();
         var now = LocalDate.now();
-        passport.setUser(user);
+        passport.setUserId(user.getId());
         passport.setAddress(address);
         passport.setSerialNumber(String.valueOf(faker.number().numberBetween(10, 99)));
         passport.setPassportCode(String.valueOf(faker.number().numberBetween(1000000, 9999999)));

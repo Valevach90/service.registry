@@ -12,11 +12,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapperConfig.class)
 public interface PassportMapper {
 
-    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "addressId", source = "address.id")
     PassportDto toPassportDto(Passport passport);
 
-    @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "address.id", source = "addressId")
     Passport toPassport(PassportDto passportDto);
 }

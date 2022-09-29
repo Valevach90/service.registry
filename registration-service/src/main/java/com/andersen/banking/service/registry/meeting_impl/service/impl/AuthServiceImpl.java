@@ -1,21 +1,19 @@
 package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractAccessTokenFromJson;
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.prepareBodyToGetAccessToken;
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.preparePasswordInJson;
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.prepareRoleInJson;
 import static com.andersen.banking.service.registry.meeting_impl.util.ValidationUtil.isPasswordValid;
 
 import com.andersen.banking.service.registry.meeting_api.dto.TokenDto;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
+import com.andersen.banking.service.registry.meeting_impl.service.AdminService;
 import com.andersen.banking.service.registry.meeting_impl.service.AuthService;
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
-import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakAdminProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakClientProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakProperties;
 import com.andersen.banking.service.registry.meeting_impl.util.properties.KeycloakRoleProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -27,24 +25,21 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private KeycloakProperties keycloak;
+    private final KeycloakProperties keycloak;
 
-    @Autowired
-    private KeycloakRoleProperties role;
+    private final KeycloakRoleProperties role;
 
-    @Autowired
-    private KeycloakAdminProperties admin;
+    private final AdminService adminService;
 
-    @Autowired
-    private KeycloakClientProperties clientProp;
+    private final KeycloakClientProperties clientProp;
 
-    private WebClient client = WebClient.create();
+    private final WebClient client = WebClient.create();
 
     public void addRoleUnauthorized(String id) {
-        String token = obtainAccessToken();
+        String token = adminService.obtainAccessToken();
 
         log.debug("Add UNAUTHORIZED role to user, user id: " + id);
 
@@ -68,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     public void addRoleUser(String id) {
 
-        String token = obtainAccessToken();
+        String token = adminService.obtainAccessToken();
 
         log.debug("Add USER role to user, user id: " + id);
 
@@ -107,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
     public void addRoleAdmin(String id) {
 
-        String token = obtainAccessToken();
+        String token = adminService.obtainAccessToken();
 
         log.debug("Add ADMIN role to user, user id: " + id);
 
@@ -129,31 +124,10 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Add ADMIN role to user success, user id: " + id);
     }
 
-    public void addUser(String userInJson) {
-
-        String token = obtainAccessToken();
-
-        log.debug("Add user: " + userInJson);
-
-        String response = client.post()
-                .uri(KeycloakUrlUtil.getUrlForAddUser(
-                        keycloak.getAuthServerUrl(),
-                        keycloak.getRealm()
-                ))
-                .headers(header -> header.setBearerAuth(token))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(userInJson))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        log.debug("Add user success");
-    }
-
     @Override
     public void resetPassword(String id, String newPassword) {
 
-        String token = obtainAccessToken();
+        String token = adminService.obtainAccessToken();
 
         log.debug("Setting new password: user id {}, password {}", id, newPassword);
         if (isPasswordValid(newPassword)) {
@@ -220,23 +194,5 @@ public class AuthServiceImpl implements AuthService {
                 .block();
     }
 
-    private String obtainAccessToken() {
 
-        log.debug("Get access token, admin username" + admin.getUsername());
-
-        String response = client.post()
-                .uri(KeycloakUrlUtil.getUrlForToken(
-                        keycloak.getAuthServerUrl(),
-                        keycloak.getRealm()
-                ))
-                .body(BodyInserters.fromFormData(prepareBodyToGetAccessToken(
-                        admin.getUsername(), admin.getPassword(), admin.getGrantType(),
-                        admin.getClientId())))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        log.debug("Return access token, admin username" + admin.getUsername());
-        return extractAccessTokenFromJson(response);
-    }
 }

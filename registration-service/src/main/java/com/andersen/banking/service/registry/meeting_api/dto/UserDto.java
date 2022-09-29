@@ -15,6 +15,8 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
@@ -38,6 +40,9 @@ public class UserDto {
     @Schema(description = DESCRIPTION_USER_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID, hidden = true)
     @JsonProperty("id")
     private UUID id;
+
+    @Schema(hidden = true)
+    private String username;
 
     @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
     @JsonProperty("first_name")
@@ -68,4 +73,7 @@ public class UserDto {
     @Pattern(regexp = "[0-9]{10,12}", message = "Invalid phone number.")
     private String phone;
 
+    @JsonInclude(Include.NON_NULL)
+    @Schema(hidden = true)
+    private String password;
 }

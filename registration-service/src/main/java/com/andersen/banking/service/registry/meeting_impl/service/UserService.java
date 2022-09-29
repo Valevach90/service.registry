@@ -16,7 +16,7 @@ public interface UserService {
      * @param id Id of user
      * @return User
      */
-    Optional<User> findById(UUID id);
+    User findById(UUID id);
 
     /**
      * Find all users.
@@ -47,4 +47,12 @@ public interface UserService {
      * @return passport
      */
     User create(User user);
+
+    /**
+     * Find user with helping email
+     *
+     * @param email
+     * @return
+     */
+    User findByEmail(String email);
 }

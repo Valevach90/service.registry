@@ -18,7 +18,7 @@ public class AddressGenerator {
     public Address generateAddress(User user) {
         var address = new Address();
         address.setId(counter.getAndIncrement());
-        address.setUser(user);
+        address.setUserId(user.getId());
         address.setZipCode(random.nextInt(999_999));
         address.setCountry(countryWithLimitLenght(faker.address().country()));
         address.setRegion(faker.hobbit().location());
