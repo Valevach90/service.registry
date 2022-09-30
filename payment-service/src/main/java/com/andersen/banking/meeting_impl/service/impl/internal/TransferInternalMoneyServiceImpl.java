@@ -11,9 +11,9 @@ import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.R
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.TransferMoneyRequestFilter;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
-import com.andersen.banking.meeting_impl.util.TransferUtil;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -27,21 +27,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
 
+    private static final int LAST_FOUR_NUMBERS_CARD = 4;
+
+    private static final int DEDUCTIBLE_AMOUNT = -1;
+
     private final TransferMoneyRequestFilter transferMoneyRequestFilter;
 
     private final CardRepository cardRepository;
 
     private final AccountService accountService;
-
-    private static final int LAST_FOUR_NUMBERS_CARD = 4;
-
-    /*
-        stages:
-        - get source and target accounts
-        - filter values in the request message in relation of accounts
-        - if not exception => transfer money
-        - return pair of the result and comment of the result.
-     */
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RuntimeException.class)
@@ -52,26 +46,23 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
         ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder()
                 .transferId(transferId);
 
-        try {
+        ImmutablePair<Account, Account> accounts =
+                getSrcAndDestAccountUsingRequestTransferMessage(message);
 
-            ImmutablePair<Account, Account> accounts = getSourceAndTargetAccountUsingRequestKafkaTransferMessage(
-                    message);
+        Account sourceAccount = accounts.left;
+        Account targetAccount = accounts.right;
 
-            Account sourceAccount = accounts.left;
-            Account targetAccount = accounts.right;
-
-            doFilterBeforeTransfer(message, sourceAccount, targetAccount);
-            boolean transferResult = accountService.transfer(sourceAccount, targetAccount,
-                    message.getAmount());
-            if (transferResult) {
-                log.info("Successfully transfer money. Transfer id : {}", transferId);
-                builder.statusDescription(StatusDescription.BETWEEN_CARDS.getDescription());
-            }
-            builder.status(TransferUtil.setTransactionalStatus(transferResult));
-        } catch (Exception e) {
-            log.info("Transfer operation failed. Transfer id : {}. Reason : {}", transferId,
-                    e.getMessage());
-            builder.status(TransferUtil.setTransactionalStatus(false));
+        doFilterBeforeTransfer(message, sourceAccount, targetAccount);
+        boolean isTransferSourceResult = accountService
+                .changeAccountBalance(sourceAccount.getId(), message.getAmount());
+        if (isTransferSourceResult) {
+            accountService.changeAccountBalance(targetAccount.getId(), message.getAmount() * DEDUCTIBLE_AMOUNT);
+            log.info("Successfully transfer money. Transfer id : {}", transferId);
+            builder.statusDescription(StatusDescription.BETWEEN_CARDS.getDescription());
+            builder.status(Status.STATUS_COMMITTED);
+        } else {
+            log.info("Transfer operation failed. Transfer id : {}.", transferId);
+            builder.status(Status.STATUS_ROLLEDBACK);
             builder.statusDescription(StatusDescription.FAILED.getDescription());
         }
         return builder.build();
@@ -82,7 +73,7 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
         Method return pair of source and target accounts by card information in the request message (card numbers).
      */
 
-    ImmutablePair<Account, Account> getSourceAndTargetAccountUsingRequestKafkaTransferMessage(
+    private ImmutablePair<Account, Account> getSrcAndDestAccountUsingRequestTransferMessage(
             RequestTransferMessage requestTransferMessage) {
 
         String requestSrcCardNumber = requestTransferMessage.getSourceNumber();

@@ -1,10 +1,9 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.Account;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.UUID;
 
 public interface AccountService {
 
@@ -58,14 +57,12 @@ public interface AccountService {
     Account deleteById(UUID id);
 
     /**
-     * This method transfers money between an accounts with the given amount and currency of money and.
+     * This method changes the account balance value. If the balance is positive,
+     * then it subtracts this value from the account, if it is negative, then it adds.
      *
-     * @param source
-     * @param target
+     * @param accountId
      * @param amount
      * @return true or false
      */
-
-    boolean transfer(Account source, Account target, long amount);
-
+    boolean changeAccountBalance(UUID accountId, long amount);
 }

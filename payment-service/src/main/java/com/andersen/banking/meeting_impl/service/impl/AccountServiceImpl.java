@@ -6,12 +6,12 @@ import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.util.AccountNumberGenerator;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+
+    private final ReentrantLock lock = new ReentrantLock();
 
     @Override
     @Transactional
@@ -38,7 +40,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Account findById(UUID id) {
         log.debug("Finding account by id: {}", id);
 
@@ -52,7 +53,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<Account> findAll(Pageable pageable) {
         log.info("Find all accounts for pageable: {}", pageable);
 
@@ -63,7 +63,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<Account> findByOwnerId(UUID id, Pageable pageable) {
         log.info("Trying to find accounts with ownerId: {}", id);
 
@@ -99,32 +98,32 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public boolean transfer(Account source, Account target, long amount) throws RuntimeException {
+    public boolean changeAccountBalance(UUID accountId, long amount) {
+        log.info("Try to {} amount for account with id: {}",
+                amount >= 0 ? "subtract" : "add", accountId);
+        try {
+            lock.lock();
+            Account account = findById(accountId);
+            long balanceAfter = account.getBalance() - amount;
 
-        log.info("Trying to transfer money from : {} to : {}.", source.getAccountNumber(),
-                target.getAccountNumber());
+            if (balanceAfter >= 0L) {
 
-        long sourceBalanceAfterWithdraw = source.getBalance() - amount;
-        long targetBalanceAfterWithdraw = target.getBalance() + amount;
+                account.setBalance(balanceAfter);
 
-        if (sourceBalanceAfterWithdraw >= 0L) {
+                accountRepository.save(account);
 
-            source.setBalance(sourceBalanceAfterWithdraw);
-            target.setBalance(targetBalanceAfterWithdraw);
+                log.info("Change amount in: {} successfully completed.",
+                        account.getAccountNumber());
 
-            accountRepository.save(source);
-            accountRepository.save(target);
-
-            log.info("Transfer money from : {} to : {} successfully completed.",
-                    source.getAccountNumber(), target.getAccountNumber());
-
-            return true;
-        } else {
-            log.info(
-                    "Transfer money from : {} to : {} not completed. Have not enough money on source account.",
-                    source.getAccountNumber(), target.getAccountNumber());
-            return false;
+                return true;
+            } else {
+                log.info(
+                        "Change amount in: {} not completed. Have not enough money on source account.",
+                        account.getAccountNumber());
+                return false;
+            }
+        } finally {
+            lock.unlock();
         }
     }
-
 }
