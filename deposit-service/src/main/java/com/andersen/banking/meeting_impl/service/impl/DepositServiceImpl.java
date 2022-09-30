@@ -11,6 +11,8 @@ import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.R
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
 import com.andersen.banking.meeting_impl.service.TransferService;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Status;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepositServiceImpl implements DepositService {
 
     private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
+    private static final Integer LENGTH_OF_DEPOSIT_NUMBER = 16;
 
     private final DepositRepository depositRepository;
 
@@ -40,6 +43,8 @@ public class DepositServiceImpl implements DepositService {
         log.info("Creating deposit: {}", deposit);
 
         deposit.setId(null);
+        deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.getNumberOfDeposits() + 1)));
+        deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
 
         Deposit savedDeposit = depositRepository.save(deposit);
 

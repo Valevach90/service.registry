@@ -78,4 +78,7 @@ public class DepositProduct {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "full_description")
+    private String full_description;
 }

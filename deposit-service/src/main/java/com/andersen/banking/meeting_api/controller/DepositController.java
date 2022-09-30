@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_api.controller;
 
+import com.andersen.banking.meeting_api.dto.DepositCreateRequestDto;
 import com.andersen.banking.meeting_api.dto.DepositDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ public interface DepositController {
     @PostMapping
     DepositDto create(
             @RequestBody
-            @Validated DepositDto depositDto
+            @Validated DepositCreateRequestDto depositDto
     );
 
     @Operation(summary = "Get deposit",

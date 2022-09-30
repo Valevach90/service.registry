@@ -105,4 +105,8 @@ public class DepositProductDto {
     @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
     @JsonProperty("description")
     private String description;
+
+    @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
+    @JsonProperty("fullDescription")
+    private String fullDescription;
 }
