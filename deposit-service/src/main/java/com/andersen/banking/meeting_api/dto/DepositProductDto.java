@@ -103,8 +103,8 @@ public class DepositProductDto {
     private Boolean isActive;
 
     @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("shortDescription")
+    private String shortDescription;
 
     @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
     @JsonProperty("fullDescription")

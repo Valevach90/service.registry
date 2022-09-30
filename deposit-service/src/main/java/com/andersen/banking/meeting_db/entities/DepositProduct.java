@@ -77,8 +77,8 @@ public class DepositProduct {
     private Boolean isActive;
 
     @Column(name = "description")
-    private String description;
+    private String shortDescription;
 
     @Column(name = "full_description")
-    private String full_description;
+    private String fullDescription;
 }
