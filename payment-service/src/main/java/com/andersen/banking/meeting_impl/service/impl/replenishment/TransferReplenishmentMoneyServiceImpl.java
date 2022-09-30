@@ -4,7 +4,6 @@ import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.repository.CardRepository;
-import com.andersen.banking.meeting_impl.exception.NotEnoughMoneyOnAccountException;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
@@ -12,7 +11,6 @@ import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.R
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.TransferMoneyRequestFilter;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
-import com.andersen.banking.meeting_impl.util.TransferUtil;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Status;
@@ -28,10 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyService {
 
+    private static final int LAST_FOUR_NUMBERS_CARD = 4;
     private final TransferMoneyRequestFilter transferMoneyRequestFilter;
-
     private final CardRepository cardRepository;
-
     private final AccountService accountService;
 
     @Override
@@ -44,22 +41,22 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
         ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder()
                 .transferId(transferId);
 
-        try {
+        Account sourceAccount = getSourceAccount(requestTransferMessage);
 
-            Account sourceAccount = getSourceAccount(requestTransferMessage);
+        doFilterBeforeTransfer(requestTransferMessage, sourceAccount);
 
-            doFilterBeforeTransfer(requestTransferMessage, sourceAccount);
+        boolean isTransferred = accountService.changeAccountBalance(sourceAccount.getId(),
+                requestTransferMessage.getAmount());
+        if (!isTransferred) {
+            log.info("Transfer operation failed. Transfer id : {}.", transferId);
 
-            debit(sourceAccount, requestTransferMessage.getAmount());
-            log.info("Successfully transfer money. Transfer id : {}", transferId);
-            builder.statusDescription(StatusDescription.GET_FROM_CARD.getDescription());
-
-            builder.status(Status.STATUS_COMMITTING);
-        } catch (Exception e) {
-            log.info("Transfer operation failed. Transfer id : {}. Reason : {}", transferId,
-                    e.getMessage());
             builder.statusDescription(StatusDescription.FAILED.getDescription());
-            builder.status(TransferUtil.setTransactionalStatus(false));
+            builder.status(Status.STATUS_ROLLING_BACK);
+        } else {
+            log.info("Successfully transfer money. Transfer id : {}", transferId);
+
+            builder.statusDescription(StatusDescription.GET_FROM_CARD.getDescription());
+            builder.status(Status.STATUS_COMMITTING);
         }
 
         builder.service("payment");
@@ -70,7 +67,7 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
 
         String requestDestNum = requestTransferMessage.getSourceNumber();
         log.info("Getting cards by request destination nums = {}", requestDestNum);
-        int srcHash = requestDestNum.length() - 4;
+        int srcHash = requestDestNum.length() - LAST_FOUR_NUMBERS_CARD;
 
         Optional<Card> optionalCardSrc = cardRepository
                 .findByFirstTwelveNumbersAndLastFourNumbers(
@@ -97,16 +94,6 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
          */
         transferMoneyRequestFilter.checkOnEnoughMoneyOnSrcAccount(
                 requestTransferMessage, source);
-    }
-
-    private void debit(Account sourceAccount, long amount) {
-        long balance = sourceAccount.getBalance();
-        long savingBalance = balance - amount;
-        if (savingBalance < 0) {
-            throw new NotEnoughMoneyOnAccountException(sourceAccount.getId());
-        }
-        sourceAccount.setBalance(savingBalance);
-        accountService.update(sourceAccount);
     }
 }
 
