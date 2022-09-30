@@ -9,7 +9,7 @@ CREATE USER MAPPING FOR ${setusername}
     SERVER foreign_server
     OPTIONS (user '${username}', password '${password}');
 
-CREATE FOREIGN TABLE foreign_table (
+CREATE FOREIGN TABLE foreign_table_att (
     name varchar(255),
     value varchar(255),
     user_id varchar(36),
@@ -18,17 +18,33 @@ CREATE FOREIGN TABLE foreign_table (
     SERVER foreign_server
     OPTIONS (schema_name '${schemaname}', table_name '${tablenameattribute}');
 
-INSERT INTO foreign_table (name, value, user_id)
+CREATE FOREIGN TABLE foreign_table_user_entity (
+    id varchar(36)
+    )
+    SERVER foreign_server
+    OPTIONS (schema_name '${schemaname}', table_name '${tablenameattribute}');
+
+
+INSERT INTO foreign_table_att (name, value, user_id)
 SELECT 'phone', phone, id
 FROM public.users
-WHERE phone NOTNULL;
+WHERE phone NOTNULL AND EXISTS(
+        SELECT id
+        FROM foreign_table_user_entity ftue
+        WHERE users.id = ftue.id::uuid
+    );
 
-INSERT INTO foreign_table (name, value, user_id)
+INSERT INTO foreign_table_att (name, value, user_id)
 SELECT 'patronymic', patronymic, id
 FROM postgres.public.users
-WHERE patronymic NOTNULL;
+WHERE patronymic NOTNULL AND EXISTS(
+    SELECT id
+    FROM foreign_table_user_entity ftue
+    WHERE users.id = ftue.id::uuid
+    );
 
-DROP FOREIGN TABLE foreign_table;
+DROP FOREIGN TABLE foreign_table_att;
+DROP FOREIGN TABLE foreign_table_user_entity;
 DROP USER MAPPING FOR ${setusername} SERVER foreign_server;
 DROP SERVER foreign_server;
 DROP EXTENSION postgres_fdw;
