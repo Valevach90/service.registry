@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
         String token = adminService.obtainAccessToken();
 
-        Object user = client.method(HttpMethod.GET)
+        Object[] users = client.method(HttpMethod.GET)
                 .uri(KeycloakUrlUtil.getUrlForGetUserEmail(
                         keycloak.getAuthServerUrl(),
                         keycloak.getRealm(),
@@ -127,9 +127,9 @@ public class UserServiceImpl implements UserService {
                 .headers(header -> header.setBearerAuth(token))
                 .contentType(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Object.class)
+                .bodyToMono(Object[].class)
                 .block();
-        User findUser = getParameter(mapper.convertValue(user,
+        User findUser = getParameter(mapper.convertValue(users[0],
                 UserRepresentationResponse.class));
 
         log.debug("Return user: {}", findUser);
