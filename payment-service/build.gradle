@@ -46,6 +46,8 @@ dependencies {
 	implementation 'org.springframework.retry:spring-retry:1.2.5.RELEASE'
 	implementation 'org.springframework:spring-aspects:5.3.22'
 
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
 
