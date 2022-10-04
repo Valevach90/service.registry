@@ -19,7 +19,7 @@ public class AccountUnitTestGenerator {
         account.setOwnerId(OWNER_ID);
         account.setCurrency("BEL");
         account.setBankName("Tinkoff");
-        account.setBalance(0);
+        account.setBalance(0L);
 
         return account;
     }

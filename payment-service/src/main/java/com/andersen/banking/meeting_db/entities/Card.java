@@ -1,11 +1,21 @@
 package com.andersen.banking.meeting_db.entities;
 
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 /** This class presents an entity, which will be stored in the database. */
 @Getter
@@ -47,7 +57,10 @@ public class Card {
     @Column(name = "holder_name", nullable = false, length = 30)
     private String holderName;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @ManyToOne
-    @JoinColumn(name = "type_card_id", referencedColumnName = "id")
-    private TypeCard typeCard;
+    @JoinColumn(name = "card_product_id", referencedColumnName = "id")
+    private CardProduct cardProduct;
 }

@@ -49,12 +49,20 @@ public interface AccountService {
     Account update(Account updateAccount);
 
     /**
-     * This method deletes the Account with the given id.
+     * This method deactivates the Account with the given id.
      *
      * @param id
      * @return Account
      */
-    Account deleteById(UUID id);
+    Account deactivateById(UUID id);
+
+    /**
+     * This method deactivates some amount of accounts that were expired. Returns true if deactivated some cards.
+     *
+     * @param
+     * @return
+     */
+    boolean deactivateSomeExpiredAccounts();
 
     /**
      * This method changes the account balance value. If the balance is positive,

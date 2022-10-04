@@ -1,6 +1,5 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_ACCOUNT_NUMBER;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BANKNAME;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CURRENCY;
@@ -19,22 +18,8 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Schema(description = "dto for accounts")
-public class AccountDto {
-
-    @NotNull
-    @JsonProperty("id")
-    private UUID id;
-
-    @NotNull
-    @Schema(example = EXAMPLE_ACCOUNT_NUMBER, defaultValue = EXAMPLE_ACCOUNT_NUMBER)
-    @JsonProperty("account_number")
-    private String accountNumber;
-
-    @NotNull
-    @JsonProperty("open_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate openDate;
+@Schema(description = "create dto for accounts")
+public class AccountRegistrationDto {
 
     @NotNull
     @JsonProperty(value = "close_date")
@@ -65,7 +50,4 @@ public class AccountDto {
     @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     @JsonProperty("balance")
     private double balance;
-
-    @JsonProperty("is_active")
-    private boolean isActive;
 }

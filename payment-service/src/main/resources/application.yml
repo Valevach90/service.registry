@@ -2,6 +2,10 @@ server:
   port: 8182
 
 spring:
+  task:
+    scheduling:
+      pool:
+        size: 4
   application:
     name: payment-service
 
@@ -75,3 +79,6 @@ eureka:
 keycloak:
   uri:
     jwks: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
+
+scheduler:
+  card: "0 0 0 * * *"

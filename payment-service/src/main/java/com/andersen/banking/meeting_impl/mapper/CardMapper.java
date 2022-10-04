@@ -14,29 +14,28 @@ import org.mapstruct.Mapping;
 public interface CardMapper {
 
     @Mapping(target = "accountId", source = "account.id")
-    @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
-    @Mapping(target = "typeName", source = "typeCard.typeName")
+    @Mapping(target = "cardProductId", source = "cardProduct.id")
     @Mapping(target = "currency", source = "account.currency")
     @Mapping(target = "balance", source = "account.balance")
     @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
     CardResponseDto toCardResponseDto(Card card);
 
     @Mapping(target = "account.id", source = "accountId")
-    @Mapping(target = "typeCard.paymentSystem", source = "paymentSystem")
-    @Mapping(target = "typeCard.typeName", source = "typeName")
+    @Mapping(target = "cardProduct.id", source = "cardProductId")
+    @Mapping(target = "active", ignore = true)
     Card toCard(CardUpdateDto cardUpdateDto);
 
     @Mapping(target = "account.id", source = "accountId")
-    @Mapping(target = "typeCard.paymentSystem", source = "paymentSystem")
-    @Mapping(target = "typeCard.typeName", source = "typeName")
+    @Mapping(target = "cardProduct.id", source = "cardProductId")
     @Mapping(target = "validFromDate", ignore = true)
     @Mapping(target = "expireDate", ignore = true)
     @Mapping(target = "firstTwelveNumbers", ignore = true)
     @Mapping(target = "lastFourNumbers", ignore = true)
+    @Mapping(target = "active", ignore = true)
     @Mapping(target = "id", ignore = true)
     Card toCard(CardRegistrationDto cardDto);
 
     @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
-    @Mapping(target = "paymentSystem", source = "typeCard.paymentSystem")
+    @Mapping(target = "paymentSystem", source = "cardProduct.typeCard.paymentSystem")
     CardCredResponseDto toCardCredResponseDto(Card card);
 }

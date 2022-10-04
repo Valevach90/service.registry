@@ -2,16 +2,16 @@ package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.AccountController;
 import com.andersen.banking.meeting_api.dto.AccountDto;
+import com.andersen.banking.meeting_api.dto.AccountRegistrationDto;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_impl.mapper.AccountMapper;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 /** Implementation class for AccountController */
 @Slf4j
@@ -25,15 +25,15 @@ public class AccountControllerImpl implements AccountController {
     /**
      * Controller to register new Account entity.
      *
-     * @param accountDto - AccountDto to register
+     * @param accountResponseDto - AccountDto to register
      * @return accountDto - created AccountDto
      */
     @Override
-    public AccountDto create(AccountDto accountDto) {
-        log.trace("Receiving request for creating account: {}", accountDto);
+    public AccountDto create(AccountRegistrationDto accountRegistrationDto) {
+        log.trace("Receiving request for creating account: {}", accountRegistrationDto);
 
-        Account account2Create = accountMapper.toAccount(accountDto);
-        AccountDto savedAccount = accountMapper.toAccountDto(accountService.create(account2Create));
+        Account account2Create = accountMapper.toAccount(accountRegistrationDto);
+        AccountDto savedAccount = accountMapper.toAccountResponseDto(accountService.create(account2Create));
 
         log.trace("Returning created account: {}", savedAccount);
         return savedAccount;
@@ -50,7 +50,7 @@ public class AccountControllerImpl implements AccountController {
         log.trace("Receiving request for all accounts");
 
         Page<AccountDto> accountDtoPage =
-                accountService.findAll(pageable).map(accountMapper::toAccountDto);
+                accountService.findAll(pageable).map(accountMapper::toAccountResponseDto);
 
         log.trace("Returning list of accounts: {}", accountDtoPage.getContent());
         return accountDtoPage;
@@ -68,7 +68,7 @@ public class AccountControllerImpl implements AccountController {
         log.trace("Receiving request for account with ownerId: {}", id);
 
         Page<AccountDto> accountDtoPage =
-                accountService.findByOwnerId(id, pageable).map(accountMapper::toAccountDto);
+                accountService.findByOwnerId(id, pageable).map(accountMapper::toAccountResponseDto);
 
         log.trace("Returning page of accounts: {}", accountDtoPage.getContent());
         return accountDtoPage;
@@ -84,7 +84,7 @@ public class AccountControllerImpl implements AccountController {
     public AccountDto findById(UUID id) {
         log.trace("Receiving account id: {}", id);
 
-        AccountDto accountDto = accountMapper.toAccountDto(accountService.findById(id));
+        AccountDto accountDto = accountMapper.toAccountResponseDto(accountService.findById(id));
 
         log.trace("Returning account with id: {}", id);
         return accountDto;
@@ -102,7 +102,7 @@ public class AccountControllerImpl implements AccountController {
 
         Account account2Update = accountMapper.toAccount(accountDto);
         AccountDto updatedAccountDto =
-                accountMapper.toAccountDto(accountService.update(account2Update));
+                accountMapper.toAccountResponseDto(accountService.update(account2Update));
 
         log.trace("Returning updated account: {}", updatedAccountDto);
         return updatedAccountDto;
@@ -115,13 +115,13 @@ public class AccountControllerImpl implements AccountController {
      * @return deletedAccountDto - deleted entity dto
      */
     @Override
-    public AccountDto deleteById(UUID id) {
+    public AccountDto deactivateById(UUID id) {
         log.trace("Receiving account id: {}", id);
 
-        Account deletedAccount = accountService.deleteById(id);
-        AccountDto deletedAccountDto = accountMapper.toAccountDto(deletedAccount);
+        Account accountToDeactivate = accountService.deactivateById(id);
+        AccountDto deactivatedAccountDto = accountMapper.toAccountResponseDto(accountToDeactivate);
 
         log.trace("Returning deleted account with id: {}", id);
-        return deletedAccountDto;
+        return deactivatedAccountDto;
     }
 }

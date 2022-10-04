@@ -3,7 +3,12 @@ package com.andersen.banking.meeting_impl.controller;
 import static com.andersen.banking.meeting_impl.util.AuthServiceUtil.extractIdFromToken;
 
 import com.andersen.banking.meeting_api.controller.CardController;
-import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.CardCredResponseDto;
+import com.andersen.banking.meeting_api.dto.CardRegistrationDto;
+import com.andersen.banking.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
@@ -11,6 +16,8 @@ import com.andersen.banking.meeting_impl.feign.RegistrationClient;
 import com.andersen.banking.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.meeting_impl.service.CardService;
+import com.andersen.banking.meeting_impl.service.TypeCardService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
-
 /** Implementation class for CardController. */
 @Slf4j
 @RestController
@@ -32,6 +37,7 @@ import java.util.UUID;
 public class CardControllerImpl implements CardController {
 
     private final CardService cardService;
+    private final TypeCardService typeCardService;
     private final CardMapper cardMapper;
     private final TypeCardMapper typeCardMapper;
 
@@ -106,10 +112,10 @@ public class CardControllerImpl implements CardController {
      * @return
      */
     @Override
-    public CardResponseDto deleteById(UUID id) {
+    public CardResponseDto deactivateById(UUID id) {
         log.trace("Receiving card id {}", id);
 
-        Card deletedCard = cardService.deleteById(id);
+        Card deletedCard = cardService.deactivateById(id);
 
         log.trace("Returning deleted card with id: {}", id);
         return cardMapper.toCardResponseDto(deletedCard);
@@ -118,14 +124,14 @@ public class CardControllerImpl implements CardController {
     /**
      * End-point to register new Card.
      *
-     * @param cardDto
+     * @param cardRegistrationDto
      * @return
      */
     @Override
-    public CardResponseDto create(CardRegistrationDto cardDto) {
-        log.trace("Receiving request for creating card card: {}", cardDto);
+    public CardResponseDto create(CardRegistrationDto cardRegistrationDto) {
+        log.trace("Receiving request for creating card card: {}", cardRegistrationDto);
 
-        Card cardToCreate = cardMapper.toCard(cardDto);
+        Card cardToCreate = cardMapper.toCard(cardRegistrationDto);
 
         CardResponseDto cardResponseDto =
                 cardMapper.toCardResponseDto(cardService.create(cardToCreate));
@@ -156,7 +162,7 @@ public class CardControllerImpl implements CardController {
     @Override
     public TypeCardResponseDto findTypeCardById(UUID id) {
         log.info("Find card type by id : {}", id);
-        return typeCardMapper.typeCard2TypeCardResponseDto(cardService.getTypeCard(id));
+        return typeCardMapper.typeCard2TypeCardResponseDto(typeCardService.findById(id));
     }
 
     /**
@@ -170,7 +176,7 @@ public class CardControllerImpl implements CardController {
         log.info("Receiving card type : {}", typeCardUpdateDto);
         TypeCard typeCard = typeCardMapper.typeCardUpdateDto2TypeCard(typeCardUpdateDto);
 
-        return typeCardMapper.typeCard2TypeCardResponseDto(cardService.updateTypeCard(typeCard));
+        return typeCardMapper.typeCard2TypeCardResponseDto(typeCardService.update(typeCard));
     }
 
     /**

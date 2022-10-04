@@ -38,3 +38,6 @@ out/
 
 ### Mapper Impl ###
 !**/src/main/generated/**
+
+
+payment-service/src/main/resources/application-local.yml

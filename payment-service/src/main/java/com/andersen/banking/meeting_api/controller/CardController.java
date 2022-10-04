@@ -1,11 +1,17 @@
 package com.andersen.banking.meeting_api.controller;
 
 
-import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.CardCredResponseDto;
+import com.andersen.banking.meeting_api.dto.CardRegistrationDto;
+import com.andersen.banking.meeting_api.dto.CardResponseDto;
+import com.andersen.banking.meeting_api.dto.CardUpdateDto;
+import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
+import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +19,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /** Interface that presents basic endpoints for working with Card entity. */
 @Tag(name = "Card controllers", description = "Endpoints to work with Card entity.")
@@ -50,9 +62,9 @@ public interface CardController {
             @Parameter(description = "card id", required = true) @RequestBody @Validated
                     CardUpdateDto cardUpdateDto);
 
-    @Operation(summary = "Delete card", description = "delete card by id")
+    @Operation(summary = "Deactivate card", description = "deactivate card by id")
     @DeleteMapping("/{id}")
-    CardResponseDto deleteById(
+    CardResponseDto deactivateById(
             @Parameter(description = "card id", required = true) @PathVariable UUID id);
 
     @Operation(summary = "Create card", description = "create card by params in dto object")

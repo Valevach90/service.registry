@@ -1,10 +1,14 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_db.entities.Account;
+import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.repository.AccountRepository;
+import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.util.AccountNumberGenerator;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final CardRepository cardRepository;
+
     private final ReentrantLock lock = new ReentrantLock();
 
     @Override
@@ -31,12 +37,17 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account account) {
         log.info("Creating account: {}", account);
 
-        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(),
-                account.getCurrency(), account.getOwnerId()));
+        setUpAdditionalAccountInfo(account);
         Account savedAccount = accountRepository.save(account);
 
         log.info("Created account: {}", savedAccount);
         return savedAccount;
+    }
+
+    private void setUpAdditionalAccountInfo(Account account) {
+        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(), account.getCurrency(), account.getOwnerId()));
+        account.setOpenDate(LocalDate.now());
+        account.setActive(true);
     }
 
     @Override
@@ -86,14 +97,43 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account deleteById(UUID id) {
-        log.info("Trying to delete account with id: {}", id);
+    public boolean deactivateSomeExpiredAccounts() {
+        List<Account> accountsToDeactivate = accountRepository.findAccountsToDeactivate();
 
-        Account deletedAccount = findById(id);
-        accountRepository.deleteById(id);
+        if (!accountsToDeactivate.isEmpty()) {
+            accountsToDeactivate.forEach(account -> {
+                account.setActive(false);
+                deactivateAllCardsByAccountId(account.getId());
+            });
 
-        log.info("Deleted account with id: {}", id);
-        return deletedAccount;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public Account deactivateById(UUID id) {
+        log.info("Trying to deactivate account with id: {}", id);
+
+        Account accountToDeactivate = findById(id);
+        accountToDeactivate.setActive(false);
+
+        deactivateAllCardsByAccountId(id);
+        accountRepository.save(accountToDeactivate);
+
+        log.info("Deactivated account with id: {}", id);
+        return accountToDeactivate;
+    }
+
+    private void deactivateAllCardsByAccountId(UUID accountId) {
+        List<Card> cardsToDeactivate = cardRepository.findAllByAccount_Id(accountId);
+        cardsToDeactivate.forEach(card -> {
+            card.setActive(false);
+            log.info("Card with id: {} was successfully deactivated", card.getId());
+        });
+        cardRepository.saveAll(cardsToDeactivate);
     }
 
     @Override

@@ -4,16 +4,18 @@ import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpir
 
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
-import com.andersen.banking.meeting_db.entities.TypeCard;
+import com.andersen.banking.meeting_db.entities.CardProduct;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.aop.LogAnnotation;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import com.andersen.banking.meeting_impl.service.CardProductService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.util.CardGenerator;
 import com.andersen.banking.meeting_impl.util.CryptWithSHA;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.management.openmbean.KeyAlreadyExistsException;
@@ -33,8 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
-    private final TypeCardRepository typeCardRepository;
     private final AccountService accountService;
+    private final CardProductService cardProductService;
 
     @Transactional(readOnly = true)
     @Override
@@ -58,9 +60,9 @@ public class CardServiceImpl implements CardService {
     public Card update(Card card) {
         UUID accountId = card.getAccount().getId();
         findById(card.getId());
-        card.setAccount(accountService.findById(accountId));
+        card.setAccount(accountService.findById(card.getAccount().getId()));
+        card.setCardProduct(cardProductService.findById(card.getCardProduct().getId()));
 
-        setTypeCard(card);
         setCryptFirstNums(card);
         return cardRepository.save(card);
     }
@@ -68,27 +70,45 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     @LogAnnotation(before = true, after = true)
-    public Card deleteById(UUID id) {
+    public Card deactivateById(UUID id) {
         Card card = findById(id);
-        cardRepository.deleteById(id);
-        return card;
+        card.setActive(false);
+
+        return cardRepository.save(card);
     }
 
-    @Retryable(value = KeyAlreadyExistsException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Transactional
+    @Override
+    public boolean deactivateSomeExpiredCards() {
+        List<Card> cardsToDeactivate = cardRepository.findCardsToDeactivate();
+
+        if (!cardsToDeactivate.isEmpty()) {
+            cardsToDeactivate.forEach(card -> {
+                card.setActive(false);
+            });
+            cardRepository.saveAll(cardsToDeactivate);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Retryable(value = KeyAlreadyExistsException.class, backoff = @Backoff(delay = 1000))
     @Transactional
     @Override
     @LogAnnotation(before = true, after = true)
     public Card create(Card card) {
         Account account = accountService.findById(card.getAccount().getId());
-        String cardNumber = CardGenerator.generateCardNumber(card.getTypeCard().getPaymentSystem(),
-                card.getTypeCard().getTypeName(),
+        CardProduct cardProduct = cardProductService.findById(card.getCardProduct().getId());
+
+        String cardNumber = CardGenerator.generateCardNumber(cardProduct.getTypeCard().getPaymentSystem(), cardProduct.getTypeCard().getTypeName(),
                 account.getCurrency(), cardRepository.count());
 
-        setUpCardInfo(card, account, cardNumber);
+        setUpCardInfo(card, account, cardProduct, cardNumber);
 
         //check if card already exists
-        if (cardRepository.existsByFirstTwelveNumbersAndLastFourNumbers(
-                card.getFirstTwelveNumbers(), card.getLastFourNumbers())) {
+        if (cardRepository.existsByFirstTwelveNumbersAndLastFourNumbers(card.getFirstTwelveNumbers(), card.getLastFourNumbers())) {
             throw new KeyAlreadyExistsException("Card already exists");
         } else {
             Card savedCard = cardRepository.save(card);
@@ -96,14 +116,15 @@ public class CardServiceImpl implements CardService {
         }
     }
 
-    private void setUpCardInfo(Card card, Account account, String cardNumber) {
+    private void setUpCardInfo(Card card, Account account, CardProduct cardProduct, String cardNumber){
         card.setAccount(account);
+        card.setCardProduct(cardProduct);
         card.setValidFromDate(LocalDate.now());
         generateExpirationTime(card);
         card.setFirstTwelveNumbers(cardNumber.substring(0, 12));
         card.setLastFourNumbers(cardNumber.substring(12, 16));
+        card.setActive(true);
 
-        setTypeCard(card);
         setCryptFirstNums(card);
     }
 
@@ -117,38 +138,6 @@ public class CardServiceImpl implements CardService {
     @LogAnnotation(before = true, after = true)
     public Page<Card> findAllByTypeCard(String payment, String type, Pageable pageable) {
         return cardRepository.findCardByPaymentSystemAndType(payment, type, pageable);
-    }
-
-    @Override
-    @LogAnnotation(before = true, after = true)
-    public TypeCard getTypeCard(UUID id) {
-        return findTypeCardById(id);
-    }
-
-    @Override
-    @LogAnnotation(before = true, after = true)
-    public TypeCard updateTypeCard(TypeCard typeCard) {
-        TypeCard updatedTypeCard = findTypeCardById(typeCard.getId());
-        updatedTypeCard.setTypeName(typeCard.getTypeName());
-        updatedTypeCard.setPaymentSystem(typeCard.getPaymentSystem());
-        return typeCardRepository.save(updatedTypeCard);
-
-    }
-
-    private TypeCard findTypeCardById(UUID id) {
-        return typeCardRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException(TypeCard.class, id));
-    }
-
-    private void setTypeCard(Card card) {
-        TypeCard typeCard = card.getTypeCard();
-        TypeCard existingTypeCard =
-                typeCardRepository
-                        .findByPaymentSystemAndTypeName(
-                                typeCard.getPaymentSystem(), typeCard.getTypeName())
-                        .orElseThrow(() -> new NotFoundException(TypeCard.class, null));
-        card.setTypeCard(existingTypeCard);
     }
 
     private void setCryptFirstNums(Card card) {

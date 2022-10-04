@@ -25,6 +25,10 @@ public class CardResponseDto {
     @JsonProperty("account_id")
     private UUID accountId;
 
+    @NotNull
+    @JsonProperty("card_product_id")
+    private UUID cardProductId;
+
     @NotBlank
     @JsonProperty("last_four_numbers")
     @Pattern(regexp = "[0-9]{4}", message = "last_four_numbers should contain exactly 4 digits")
@@ -49,14 +53,6 @@ public class CardResponseDto {
             message = "holder_name should have at least 3 and at maximum 30 characters")
     private String holderName;
 
-    @NotNull
-    @JsonProperty("payment_system")
-    private String paymentSystem;
-
-    @NotNull
-    @JsonProperty("type_name")
-    private String typeName;
-
     @NotBlank
     @JsonProperty("balance")
     private long balance;
@@ -64,4 +60,8 @@ public class CardResponseDto {
     @NotBlank
     @JsonProperty("currency")
     private String currency;
+
+    @JsonProperty("is_active")
+    private boolean isActive;
+
 }

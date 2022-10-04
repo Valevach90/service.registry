@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.mapper;
 
 import com.andersen.banking.meeting_api.dto.AccountDto;
+import com.andersen.banking.meeting_api.dto.AccountRegistrationDto;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
@@ -15,11 +16,16 @@ import org.mapstruct.ReportingPolicy;
 public interface AccountMapper {
 
     @Mapping(source = "balance", target = "balance", qualifiedByName = "convertFromCents")
-    AccountDto toAccountDto(Account account);
+    AccountDto toAccountResponseDto(Account account);
 
     @Mapping(source = "balance", target = "balance", qualifiedByName = "convertToCents")
-    @Mapping(target = "accountNumber", ignore = true)
     Account toAccount(AccountDto accountDto);
+
+    @Mapping(source = "balance", target = "balance", qualifiedByName = "convertToCents")
+    @Mapping(target = "openDate", ignore = true)
+    @Mapping(target = "accountNumber", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    Account toAccount(AccountRegistrationDto accountRegistrationDto);
 
     @Named("convertToCents")
     static Long convertToCents(Double balance) {
