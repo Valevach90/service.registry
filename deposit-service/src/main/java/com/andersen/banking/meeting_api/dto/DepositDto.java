@@ -1,10 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.utils.OpenApiConstants.DESCRIPTION_CARD_NUMBER;
-import static com.andersen.banking.meeting_api.utils.OpenApiConstants.EXAMPLE_STRING_NUMBER;
-
 import com.andersen.banking.meeting_api.utils.OpenApiConstants;
-import com.andersen.banking.meeting_db.entities.LinkedCard;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -106,5 +102,5 @@ public class DepositDto {
     private UUID userId;
 
     @JsonProperty("linkedCards")
-    private List<LinkedCard> linkedCards;
+    private List<LinkedCardDto> linkedCards;
 }
