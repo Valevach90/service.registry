@@ -12,6 +12,7 @@ import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
 import com.andersen.banking.meeting_impl.service.TransferService;
 import java.sql.Date;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +41,13 @@ public class DepositServiceImpl implements DepositService {
     private final TransferMapper transferMapper;
 
     @Override
+    @Retryable(value = SQLIntegrityConstraintViolationException.class, backoff = @Backoff(delay = 1000))
     @Transactional
     public Deposit create(Deposit deposit) {
         log.info("Creating deposit: {}", deposit);
 
         deposit.setId(null);
-        deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.getNumberOfDeposits() + 1)));
+        deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.count() + 1)));
         deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
 
         Deposit savedDeposit = depositRepository.save(deposit);

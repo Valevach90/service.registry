@@ -1,9 +1,12 @@
 package com.andersen.banking.meeting_api.dto;
 
 import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
+
+import com.andersen.banking.meeting_db.entities.LinkedCard;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -52,18 +55,10 @@ public class DepositCreateRequestDto {
     @NotNull(message = "Fixed Interest Option can't be null.")
     private Boolean fixedInterest;
 
-    @Schema(description = DESCRIPTION_SOURCE_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
-    @JsonProperty("replenishmentSourceNumber")
-    private String replenishmentSourceNumber;
-
     @Schema(description = DESCRIPTION_SUBSEQUENT_REPLENISHMENT, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN)
     @JsonProperty("subsequentReplenishment")
     @NotNull(message = "Subsequent Replenishment Option can't be null.")
     private Boolean subsequentReplenishment;
-
-    @Schema(description = DESCRIPTION_DESTINATION_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
-    @JsonProperty("withdrawalDestinationNumber")
-    private String withdrawalDestinationNumber;
 
     @Schema(description = DESCRIPTION_EARLY_WITHDRAWAL, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN)
     @JsonProperty("earlyWithdrawal")
@@ -89,4 +84,7 @@ public class DepositCreateRequestDto {
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
     private UUID userId;
+
+    @JsonProperty("linkedCards")
+    private List<LinkedCard> linkedCards;
 }

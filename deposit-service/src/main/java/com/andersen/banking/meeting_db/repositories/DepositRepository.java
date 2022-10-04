@@ -13,7 +13,4 @@ public interface DepositRepository extends JpaRepository<Deposit, UUID> {
     Page<Deposit> findDepositByUserId(UUID userId, Pageable pageable);
 
     Optional<Deposit> findByDepositNumber(String depositNumber);
-
-    @Query("SELECT count(*) FROM Deposit")
-    Integer getNumberOfDeposits();
 }

@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,9 +77,8 @@ public class DepositProduct {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "description")
-    private String shortDescription;
-
-    @Column(name = "full_description")
-    private String fullDescription;
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "depositProduct",
+            cascade = CascadeType.ALL)
+    private List<DepositProductDescription> descriptions;
 }

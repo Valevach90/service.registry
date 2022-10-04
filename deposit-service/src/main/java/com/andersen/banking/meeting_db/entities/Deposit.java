@@ -58,14 +58,8 @@ public class Deposit {
     @Column(name = "fixed_interest", nullable = false)
     private Boolean fixedInterest;
 
-    @Column(name = "replenishment_source_number", nullable = false)
-    private String replenishmentSourceNumber;
-
     @Column(name = "subsequent_replenishment", nullable = false)
     private Boolean subsequentReplenishment;
-
-    @Column(name = "withdrawal_destination_number")
-    private String withdrawalDestinationNumber;
 
     @Column(name = "early_withdrawal", nullable = false)
     private Boolean earlyWithdrawal;
@@ -81,4 +75,9 @@ public class Deposit {
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "deposit",
+            cascade = CascadeType.ALL)
+    private List<LinkedCard> linkedCards;
 }
