@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
+import static com.andersen.banking.meeting_impl.util.AuthServiceUtil.extractIdFromToken;
+
 import com.andersen.banking.meeting_api.controller.CardController;
 import com.andersen.banking.meeting_api.dto.CardCredResponseDto;
 import com.andersen.banking.meeting_api.dto.CardRegistrationDto;
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -218,14 +222,21 @@ public class CardControllerImpl implements CardController {
      * @return
      */
     @Override
-    public Page<CardResponseDto> findAllByCurrentUser(Pageable pageable) {
+    public Page<CardResponseDto> findAllByCurrentUser(Authentication authentication,
+            Pageable pageable) {
 
-        log.trace("Receiving request for getting all cards by owner");
-        UUID userId = registrationClient.getUserPersonalData().getUser().getId();
+        log.info(
+                "Receiving request for getting all cards for user: {}",
+                authentication.getPrincipal());
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+
+        UUID userId = extractIdFromToken(jwt);
+
         Page<CardResponseDto> result =
                 cardService.findByOwnerId(userId, pageable).map(cardMapper::toCardResponseDto);
 
-        log.trace("Returning page of cards: {}", result.getContent());
+        log.info("Returning page of cards: {}", result.getContent());
 
         return result;
     }

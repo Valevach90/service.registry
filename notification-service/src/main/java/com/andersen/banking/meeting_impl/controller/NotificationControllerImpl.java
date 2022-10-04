@@ -91,11 +91,12 @@ public class NotificationControllerImpl implements NotificationController {
 
         log.trace("Find notification by email: {}", email);
 
-        Optional<RegistrationNotification> notification = notificationService.getNotification(email);
+        RegistrationNotification notification = notificationService.getNotification(email)
+                .orElseThrow(
+                        () -> new NotFoundException(RegistrationNotification.class, email));
 
-        RegistrationNotificationDto registrationNotificationDto = notificationMapper.toNotificationDto(
-                notification.orElseThrow(
-                        () -> new NotFoundException(RegistrationNotification.class, email)));
+        RegistrationNotificationDto registrationNotificationDto = notificationMapper
+                .toNotificationDto(notification);
 
         log.trace("Found notification: {}", registrationNotificationDto);
 

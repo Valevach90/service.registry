@@ -13,7 +13,6 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapperConfig.class)
 public interface DepositMapper {
 
-    @Mapping(target = "transfersDto", source = "transfers")
     DepositDto toDepositDto(Deposit deposit);
 
     @InheritInverseConfiguration

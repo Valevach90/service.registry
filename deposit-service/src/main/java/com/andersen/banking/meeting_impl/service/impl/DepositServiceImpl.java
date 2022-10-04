@@ -1,26 +1,25 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
-import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
 import com.andersen.banking.meeting_db.entities.Deposit;
+import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.entities.Transfer;
 import com.andersen.banking.meeting_db.repositories.DepositRepository;
-import com.andersen.banking.meeting_db.repositories.TransferRepository;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
-import com.andersen.banking.meeting_impl.kafka.TransferMoneyServiceKafkaResponseProducer;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.ResponseTransferMessageBuilder;
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
-
+import com.andersen.banking.meeting_impl.service.TransferService;
+import java.util.Optional;
+import java.util.UUID;
+import javax.transaction.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -31,11 +30,9 @@ public class DepositServiceImpl implements DepositService {
 
     private final DepositRepository depositRepository;
 
-    private final TransferRepository transferRepository;
+    private final TransferService transferService;
 
     private final TransferMapper transferMapper;
-
-    private final TransferMoneyServiceKafkaResponseProducer transferMoneyServiceKafkaResponseProducer;
 
     @Override
     @Transactional
@@ -63,7 +60,7 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     public Page<Deposit> findDepositByUserId(UUID userId, Pageable pageable) {
-        log.info("Find all deposits for user {} and pageable: {}",userId , pageable);
+        log.info("Find all deposits for user {} and pageable: {}", userId, pageable);
 
         Page<Deposit> pageOfDeposits = depositRepository.findDepositByUserId(userId, pageable);
 
@@ -94,6 +91,7 @@ public class DepositServiceImpl implements DepositService {
 
         log.info("Deposit: {} updated to version: {}", foundDeposit, deposit);
     }
+
     @Override
     @Transactional
     public void deleteById(UUID id) {
@@ -108,46 +106,85 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    @Transactional (rollbackFor = NotFoundException.class)
-    public void makeTransfer(RequestKafkaTransferMessage message) {
+    @Transactional(rollbackFor = NotFoundException.class)
+    public ResponseTransferMessage makeTransfer(RequestTransferMessage message) {
         log.info("Trying make transfer using message: {}", message);
-
-        if (Objects.nonNull(message) && isFirstTransferAttempt(message.getTransferId())) {
+        ResponseTransferMessage resp;
+        if (!transferService.isExist(message.getTransferId())) {
 
             Transfer transfer = transferMapper.toTransfer(message);
 
             try {
-                if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE) && message.getDestinationType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
-                    transfer.setResult(transferBetweenDeposits(message));
+                if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)
+                        && message.getDestinationType()
+                        .equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                    transfer.setStatus(setStatusInt(transferBetweenDeposits(message)));
+                    transfer.setStatusDescription(StatusDescription.DEPOSIT.getDescription());
 
-                } else if (message.getDestinationType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
-                    transfer.setResult(replenishDeposit(message));
+                } else if (message.getDestinationType()
+                        .equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
+                    transfer.setStatus(setStatusInt(replenishDeposit(message)));
+                    transfer.setStatusDescription(StatusDescription.REPLENISHMENT.getDescription());
 
                 } else if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
-                    transfer.setResult(withdrawalDeposit(message));
+                    transfer.setStatus(setStatusInt(withdrawalDeposit(message)));
+                    transfer.setStatusDescription(StatusDescription.WITHDRAWAL.getDescription());
                 }
-            } catch (NotFoundException exception){
-                transfer.setResult(false);
-                transfer.setStatusDescription(exception.getMessage());
+            } catch (NotFoundException exception) {
+                transfer.setStatus(setStatusInt(false));
+                transfer.setStatusDescription(StatusDescription.FAILED.getDescription());
             }
 
             log.info("Saving transfer: {}", transfer);
-            //transferRepository.save(transfer);
+
+            transferService.create(transfer);
 
             log.info("Sending response message: {}", transfer);
-            createAndSendResponse(transfer);
+            resp = createResponse(transfer);
 
         } else {
-            log.info("Transfer with id equal to transfer id from request message {} already exists", message);
+
+            log.info("Transfer with id equal to transfer id from request message {} already exists",
+                    message);
+            ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder();
+
+            Integer status = message.getStatus();
+            if (status == Status.STATUS_ROLLING_BACK) {
+                builder.status(rollingBackTransfer(message));
+                builder.statusDescription(StatusDescription.ROLLED_BACK.getDescription());
+            } else if (status == Status.STATUS_ACTIVE) {
+                builder.status(Status.STATUS_UNKNOWN);
+                builder.statusDescription(StatusDescription.EXIST.getDescription());
+            }
+            resp = builder.build();
         }
+        return resp;
+    }
+
+    private int rollingBackTransfer(RequestTransferMessage message) {
+        Long amount = message.getAmount();
+        int status = Status.STATUS_UNKNOWN;
+
+        message.setAmount(amount * (-1));
+        if (message.getDestinationType()
+                .equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
+            status = setStatusInt(replenishDeposit(message));
+
+        } else if (message.getSourceType().equalsIgnoreCase(TRANSFER_WITH_DEPOSIT_TYPE)) {
+            status = setStatusInt(withdrawalDeposit(message));
+        }
+        return status == Status.STATUS_COMMITTED ? Status.STATUS_ROLLEDBACK
+                : Status.STATUS_NO_TRANSACTION;
     }
 
     @Transactional
-    public Boolean transferBetweenDeposits(RequestKafkaTransferMessage message) {
+    public Boolean transferBetweenDeposits(RequestTransferMessage message) {
         log.info("Trying make transfer between deposits, transfer request message: {}", message);
 
-        Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
-                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
+        Deposit destinationDeposit = depositRepository.findByDepositNumber(
+                        message.getDestinationNumber())
+                .orElseThrow(
+                        () -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
         Deposit sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber())
                 .orElseThrow(() -> new NotFoundException(Deposit.class, message.getSourceNumber()));
 
@@ -164,17 +201,21 @@ public class DepositServiceImpl implements DepositService {
             log.info("Withdrawal successful for transfer request message: {}", message);
             return true;
         } else {
-            log.error("Withdrawal failed (source deposit has not enough money), transfer request message: {}", message);
+            log.error(
+                    "Withdrawal failed (source deposit has not enough money), transfer request message: {}",
+                    message);
             return false;
         }
     }
 
     @Transactional
-    public Boolean replenishDeposit(RequestKafkaTransferMessage message) {
+    public Boolean replenishDeposit(RequestTransferMessage message) {
         log.info("Trying replenish deposit using message: {}", message);
 
-        Deposit destinationDeposit = depositRepository.findByDepositNumber(message.getDestinationNumber())
-                .orElseThrow(() -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
+        Deposit destinationDeposit = depositRepository.findByDepositNumber(
+                        message.getDestinationNumber())
+                .orElseThrow(
+                        () -> new NotFoundException(Deposit.class, message.getDestinationNumber()));
 
         destinationDeposit.setAmount(destinationDeposit.getAmount() + message.getAmount());
 
@@ -186,7 +227,7 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Transactional
-    public Boolean withdrawalDeposit(RequestKafkaTransferMessage message) {
+    public Boolean withdrawalDeposit(RequestTransferMessage message) {
         log.info("Trying withdrawal deposit using message: {}", message);
 
         Deposit sourceDeposit = depositRepository.findByDepositNumber(message.getSourceNumber())
@@ -202,30 +243,39 @@ public class DepositServiceImpl implements DepositService {
             log.info("Withdrawal successful for message: {}", message);
             return true;
         } else {
-            log.error("Withdrawal failed (source deposit has not enough money), transfer request message: {}", message);
+            log.error(
+                    "Withdrawal failed (source deposit has not enough money), transfer request message: {}",
+                    message);
             return false;
         }
     }
 
-    private Boolean isFirstTransferAttempt(UUID transferId) {
-        if (transferRepository.findById(transferId).isPresent()) {
-            return false;
-        }
-        return true;
-    }
-
-    private ResponseKafkaTransferMessage createAndSendResponse(Transfer transfer) {
+    private ResponseTransferMessage createResponse(Transfer transfer) {
         log.info("Creating response message based on result of transfer: {}", transfer);
 
-        ResponseKafkaTransferMessage response = new ResponseKafkaTransferMessage();
+        ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder();
+        if (transfer.getSourceType().equalsIgnoreCase(transfer.getDestinationType())) {
+            builder.status(transfer.getStatus());
+        } else {
+            builder.service("deposit");
+            if (transfer.getStatus() == Status.STATUS_COMMITTED) {
+                builder.status(Status.STATUS_COMMITTING);
+            } else {
+                builder.status(Status.STATUS_ROLLING_BACK);
+            }
+        }
 
-        response.setTransferId(transfer.getTransferId());
-        response.setResult(transfer.getResult());
-        response.setStatusDescription(transfer.getStatusDescription());
+        ResponseTransferMessage response = builder
+                .transferId(transfer.getTransferId())
+                .statusDescription(transfer.getStatusDescription())
+                .build();
 
         log.info("Sending response message with transfer result to Transfer service: {}", response);
-        transferMoneyServiceKafkaResponseProducer.sendResponse(response);
 
         return response;
+    }
+
+    private int setStatusInt(boolean value) {
+        return value ? Status.STATUS_COMMITTED : Status.STATUS_ROLLEDBACK;
     }
 }

@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.kafka;
 
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
-import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.request.RequestTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
     private String responseTopic;
 
     @Autowired
-    private KafkaTemplate<String, ResponseKafkaTransferMessage> kafkaTemplate;
+    private KafkaTemplate<String, ResponseTransferMessage> kafkaTemplate;
 
     @Test
     public void sender_whenOk() throws InterruptedException, ExecutionException {
@@ -34,17 +34,17 @@ public class TransferMoneyToDepositWithEmbeddedKafkaIntegrationTests {
         String sourceDepositNumber = "0001";
         String destinationDepositNumber = "0002";
 
-        RequestKafkaTransferMessage request = generateRequestTransferKafkaMessage(sourceDepositNumber, destinationDepositNumber);
-        ResponseKafkaTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
+        RequestTransferMessage request = generateRequestTransferKafkaMessage(sourceDepositNumber, destinationDepositNumber);
+        ResponseTransferMessage response = generateResponseKafkaTransferMessage_WithSuccessfulResult(request);
 
-        ListenableFuture<SendResult<String, ResponseKafkaTransferMessage>> future = kafkaTemplate.send(responseTopic, response);
+        ListenableFuture<SendResult<String, ResponseTransferMessage>> future = kafkaTemplate.send(responseTopic, response);
 
         Thread.sleep(10000);
 
-        future.addCallback(new ListenableFutureCallback<SendResult<String, ResponseKafkaTransferMessage>>() {
+        future.addCallback(new ListenableFutureCallback<SendResult<String, ResponseTransferMessage>>() {
 
             @Override
-            public void onSuccess(SendResult<String, ResponseKafkaTransferMessage> result) {
+            public void onSuccess(SendResult<String, ResponseTransferMessage> result) {
                 System.out.println("Response sent successful with offset = " + result.getRecordMetadata().offset());
             }
 

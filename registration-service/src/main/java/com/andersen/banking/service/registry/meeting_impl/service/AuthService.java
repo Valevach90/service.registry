@@ -35,13 +35,6 @@ public interface AuthService {
     void addRoleAdmin(String id);
 
     /**
-     * Add user
-     *
-     * @param userInJson
-     */
-    void addUser(String userInJson);
-
-    /**
      * Set up new password
      *
      * @param id
@@ -49,7 +42,18 @@ public interface AuthService {
      */
     void resetPassword(String id, String newPassword);
 
+    /**
+     * Endpoint for refresh token
+     *
+     * @param refreshToken
+     * @return
+     */
     TokenDto refreshToken(String refreshToken);
 
+    /**
+     * Endpoint for logout user
+     *
+     * @param refreshToken
+     */
     void logoutUser(String refreshToken);
 }

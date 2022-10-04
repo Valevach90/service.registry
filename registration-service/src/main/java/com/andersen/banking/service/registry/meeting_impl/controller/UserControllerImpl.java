@@ -1,9 +1,12 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractEmailFromToken;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractIdFromToken;
+import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractLoginFromToken;
+
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
-import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import java.util.UUID;
@@ -11,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
+
     private final UserMapper userMapper;
 
     @Override
@@ -33,12 +39,13 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserDto findById(UUID id) {
-        log.trace("Find user by Id: {}", id);
+    public UserDto findUser(Authentication authentication) {
 
-        UserDto result = userService.findById(id)
-                .map(userMapper::toUserDto)
-                .orElseThrow(() -> new NotFoundException(User.class, id));
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID id = UUID.fromString(extractIdFromToken(jwt));
+        log.debug("Find user for authentication user with id {}", id);
+
+        UserDto result = userMapper.toUserDto(userService.findById(id));
 
         log.trace("Return userDto: {}", result);
 
@@ -60,9 +67,10 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void updateUser(UserDto userDto) {
+    public void updateUser(Authentication authentication, UserDto userDto) {
         log.trace("Try to update user: {}", userDto);
 
+        setAttributes(authentication, userDto);
         User addressUpdated = userMapper.toUser(userDto);
         userService.update(addressUpdated);
 
@@ -76,5 +84,13 @@ public class UserControllerImpl implements UserController {
         userService.deleteById(id);
 
         log.trace("Deleted user with id: {}", id);
+    }
+
+    private void setAttributes(Authentication authentication, UserDto userDto) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID id = UUID.fromString(extractIdFromToken(jwt));
+        userDto.setId(id);
+        userDto.setEmail(extractEmailFromToken(jwt));
+        userDto.setUsername(extractLoginFromToken(jwt));
     }
 }

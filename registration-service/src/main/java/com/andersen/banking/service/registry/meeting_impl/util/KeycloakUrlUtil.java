@@ -1,18 +1,45 @@
 package com.andersen.banking.service.registry.meeting_impl.util;
 
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class KeycloakUrlUtil {
 
-    private KeycloakUrlUtil() {
+
+    public static String getUrlForCurrentUser(
+            String keyCloakUrl, String realm, String userId) {
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
+                .pathSegment(userId)
+                .toUriString();
+    }
+
+    public static String getUrlForUser(String keyCloakUrl, String realm) {
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
+                .toUriString();
+    }
+
+    public static String getUrlForGetUser(String keyCloakUrl, String realm, String username) {
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
+                .queryParam("exact", "true")
+                .queryParam("username", username)
+                .toUriString();
+    }
+
+    public static String getUrlForGetUserEmail(String keyCloakUrl, String realm, String email) {
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
+                .queryParam("exact", "true")
+                .queryParam("email", email)
+                .toUriString();
     }
 
     public static String getUrlForChangeRole(
             String keyCloakUrl, String realm, String userId, String clientId) {
-        return getUriComponentsBuilderUser(keyCloakUrl, realm)
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
                 .pathSegment(userId)
                 .pathSegment("role-mappings")
                 .pathSegment("clients")
@@ -20,13 +47,8 @@ public class KeycloakUrlUtil {
                 .toUriString();
     }
 
-    public static String getUrlForAddUser(String keyCloakUrl, String realm) {
-        return getUriComponentsBuilderUser(keyCloakUrl, realm)
-                .toUriString();
-    }
-
     public static String getUrlForResetPassword(String keyCloakUrl, String realm, String userId) {
-        return getUriComponentsBuilderUser(keyCloakUrl, realm)
+        return getUriComponentsBuilderAdminUser(keyCloakUrl, realm)
                 .pathSegment(userId)
                 .pathSegment("reset-password")
                 .toUriString();
@@ -50,7 +72,9 @@ public class KeycloakUrlUtil {
                 .toUriString();
     }
 
-    private static UriComponentsBuilder getUriComponentsBuilderUser(String keyCloakUrl, String realm) {
+
+    private static UriComponentsBuilder getUriComponentsBuilderAdminUser(String keyCloakUrl,
+            String realm) {
         return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
                 .pathSegment("auth")
                 .pathSegment("admin")
@@ -59,7 +83,8 @@ public class KeycloakUrlUtil {
                 .pathSegment("users");
     }
 
-    private static UriComponentsBuilder getUriComponentsBuilderOpenidConnect(String keyCloakUrl, String realm) {
+    private static UriComponentsBuilder getUriComponentsBuilderOpenidConnect(String keyCloakUrl,
+            String realm) {
         return UriComponentsBuilder.fromHttpUrl(keyCloakUrl)
                 .pathSegment("auth")
                 .pathSegment("realms")

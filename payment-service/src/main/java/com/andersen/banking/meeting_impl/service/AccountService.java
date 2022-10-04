@@ -65,14 +65,12 @@ public interface AccountService {
     boolean deactivateSomeExpiredAccounts();
 
     /**
-     * This method transfers money between an accounts with the given amount and currency of money and.
+     * This method changes the account balance value. If the balance is positive,
+     * then it subtracts this value from the account, if it is negative, then it adds.
      *
-     * @param source
-     * @param target
+     * @param accountId
      * @param amount
      * @return true or false
      */
-
-    boolean transfer(Account source, Account target, long amount);
-
+    boolean changeAccountBalance(UUID accountId, long amount);
 }

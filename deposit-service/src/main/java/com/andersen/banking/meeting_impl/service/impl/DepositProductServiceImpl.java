@@ -1,10 +1,12 @@
 package com.andersen.banking.meeting_impl.service.impl;
+
 import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
 import com.andersen.banking.meeting_impl.exceptions.FilterAccessException;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.service.DepositProductService;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -81,7 +82,8 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    public Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable, String depositName, String currencyName) {
+    public Page<DepositProduct> searchByDepositNameAndCurrency(Pageable pageable,
+            String depositName, String currencyName) {
         log.info("Searching deposits with name {} and with currency {}", depositName, currencyName);
 
         Page<DepositProduct> pageOfProducts = depositProductRepository
@@ -105,11 +107,13 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    public Page<DepositProduct> getFilteredDepositProduct(DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
+    public Page<DepositProduct> getFilteredDepositProduct(
+            DepositProductFilterDto depositProductFilterDto, Pageable pageable) {
 
         try {
             log.info("Getting filtered deposit products using filter: {}", depositProductFilterDto);
-            return depositProductRepository.getDepositProductsByFilter(depositProductFilterDto, pageable);
+            return depositProductRepository.getDepositProductsByFilter(depositProductFilterDto,
+                    pageable);
 
         } catch (IllegalAccessException e) {
             log.error("Failed to get filtered deposit product: {}", e.getMessage());

@@ -39,14 +39,14 @@ class TransferManagerImplTest {
 
 
     @Mock
-    TransferExecutorInternalService transferExecutorInternalService;
+    TransferExecutorImpl transferExecutorImpl;
 
     @Test
     void run_ShouldReturnResponseDto_WhenMessageSent() {
         when(transferRequestDto.getSourcePaymentTypeId()).thenReturn(paymentTypeId);
         when(transferRequestDto.getDestinationPaymentTypeId()).thenReturn(paymentTypeId);
         when(transferMoneyValidator.validate(transferRequestDto, validators)).thenReturn(true);
-        when(transferExecutorInternalService.execute(transferRequestDto)).thenReturn(transferResponseDto);
+        when(transferExecutorImpl.execute(transferRequestDto)).thenReturn(transferResponseDto);
 
         TransferResponseDto actual = transferManager.run(transferRequestDto);
 
@@ -72,7 +72,7 @@ class TransferManagerImplTest {
         TransferExecutor transferExecutor = transferManager.getExecutor(transferRequestDto);
 
         assertNotNull(transferExecutor);
-        assertEquals(transferExecutor, transferExecutorInternalService);
+        assertEquals(transferExecutor, transferExecutorImpl);
     }
 
     @Test

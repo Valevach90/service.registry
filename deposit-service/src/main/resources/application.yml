@@ -1,6 +1,17 @@
 spring:
   application:
     name: deposit-service
+
+  cloud:
+    stream:
+      function:
+        definition: depositProcessor
+      bindings:
+        depositProcessor-in-0:
+          destination: transfer-event
+        depositProcessor-out-0:
+          destination: transfer-back-event
+
   datasource:
     hikari:
       maximum-pool-size: 5
@@ -24,19 +35,9 @@ spring:
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
   kafka:
-    groupId: my_group
-    bootstrapAddress: 10.10.14.68:19092
-    topicTransferRequest: transfer_to_deposit_request
-    topicTransferResponse: transfer_response
-    maxRetryAttempts: 3
+    bootstrap-servers: 10.10.14.68:19092
     consumer:
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring:
-          deserializer:
-            value:
-              delegate:
-                class: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: payment-service
 
 eureka:
   instance:

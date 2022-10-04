@@ -81,7 +81,4 @@ public class Deposit {
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
-
-    @OneToMany(mappedBy = "deposit", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Transfer> transfers;
 }

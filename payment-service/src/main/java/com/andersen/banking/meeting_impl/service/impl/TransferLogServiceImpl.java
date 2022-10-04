@@ -5,16 +5,15 @@ import com.andersen.banking.meeting_db.repository.TransferLogRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.exception.TransferAccountException;
 import com.andersen.banking.meeting_impl.exception.TransferLogAlreadyExistsException;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.service.TransferLogService;
+import java.util.UUID;
+import javax.transaction.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.transaction.Status;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -49,6 +48,18 @@ public class TransferLogServiceImpl implements TransferLogService {
     }
 
     @Override
+    public boolean isExist(UUID id) {
+        log.info("Check transfer exist with id {}", id);
+        return transferLogRepository.existsById(id);
+    }
+
+    @Override
+    public boolean isExistStatus(UUID id, int status) {
+        log.info("Check transfer exist with id {}", id);
+        return transferLogRepository.existsByIdAndStatus(id, status);
+    }
+
+    @Override
     @Transactional
     public TransferLog update(TransferLog transferLog) {
         log.debug("Trying to update transferLog: {}", transferLog);
@@ -62,19 +73,20 @@ public class TransferLogServiceImpl implements TransferLogService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public TransferLog createTransferLogAccordingToRequestKafkaMessage(
-            RequestKafkaTransferMessage requestKafkaTransferMessage)
-            throws TransferLogAlreadyExistsException {
+            RequestTransferMessage requestTransferMessage)
+            throws TransferAccountException {
 
-        TransferLog transferLog = new TransferLog();
-        transferLog.setId(requestKafkaTransferMessage.getTransferId());
-        transferLog.setSourceNumber(requestKafkaTransferMessage.getSourceNumber());
-        transferLog.setSourcePaymentType(requestKafkaTransferMessage.getSourceType());
-        transferLog.setDestinationNumber(requestKafkaTransferMessage.getDestinationNumber());
-        transferLog.setDestinationPaymentType(requestKafkaTransferMessage.getDestinationType());
-        transferLog.setAmount(requestKafkaTransferMessage.getAmount());
-        transferLog.setStatus(Status.STATUS_ACTIVE);
-        transferLog.setCurrency(requestKafkaTransferMessage.getCurrencyName());
-        transferLog.setUserId(requestKafkaTransferMessage.getUserId());
+        TransferLog transferLog = TransferLog.builder()
+                .id(requestTransferMessage.getTransferId())
+                .sourceNumber(requestTransferMessage.getSourceNumber())
+                .sourcePaymentType(requestTransferMessage.getSourceType())
+                .destinationNumber(requestTransferMessage.getDestinationNumber())
+                .destinationPaymentType(requestTransferMessage.getDestinationType())
+                .amount(requestTransferMessage.getAmount())
+                .status(Status.STATUS_ACTIVE)
+                .currency(requestTransferMessage.getCurrencyName())
+                .userId(requestTransferMessage.getUserId())
+                .build();
 
         if (!transferLogRepository.existsById(transferLog.getId())) {
             log.info("Creating transferLog: {}", transferLog);
@@ -87,7 +99,8 @@ public class TransferLogServiceImpl implements TransferLogService {
     }
 
     @Override
-    public void changeTransferLogStatus(UUID id, int status) throws NotFoundException{
+    @Transactional
+    public void changeTransferLogStatus(UUID id, int status) throws NotFoundException {
         log.info("Changing status for transferLog : {} to {}", id, status);
         TransferLog transferLog = findById(id);
         transferLog.setStatus(status);

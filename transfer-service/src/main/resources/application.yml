@@ -11,6 +11,18 @@ spring:
         maximum-pool-size: 5
         maxLifetime: 300000
         minimumIdle: 5
+  cloud:
+    stream:
+      function:
+        definition: transferSupplier;eventConsumer
+      bindings:
+        transferSupplier-out-0:
+          destination: transfer-event
+          consumer:
+            max-attempts: 2
+        eventConsumer-in-0:
+          destination: transfer-back-event
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -36,12 +48,9 @@ spring:
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
   kafka:
-    groupId: payment-service
-    bootstrapAddress: 10.10.14.68:19092
-    payment_transfer_request_topic_name: transfer_to_payment_request
-    deposit_transfer_request_topic_name: transfer_to_deposit_request
-    transfer_response_topic_name: transfer_response
-    maxRetryAttempts: 3
+    bootstrap-servers: 10.10.14.68:19092
+    consumer:
+      group-id: payment-service
 
 eureka:
   instance:

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.repositories.AddressRepository;
-import com.andersen.banking.service.registry.meeting_db.repositories.UserRepository;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_test.generators.AddressGenerator;
 import com.andersen.banking.service.registry.meeting_test.generators.UserGenerator;

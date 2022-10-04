@@ -1,8 +1,8 @@
 package com.andersen.banking.meeting_impl.generators;
 
 import com.andersen.banking.meeting_api.dto.*;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
-import com.andersen.banking.meeting_impl.kafka.message.ResponseKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.request.RequestTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import com.andersen.banking.meeting_db.entities.*;
 import com.andersen.banking.meeting_db.entities.Currency;
 import org.springframework.data.domain.*;
@@ -279,9 +279,9 @@ public class DepositServiceTestEntitiesGenerator {
         return transferDto;
     }
 
-    public static RequestKafkaTransferMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
+    public static RequestTransferMessage generateRequestTransferKafkaMessage(String sourceNumber, String destinationNumber) {
 
-        RequestKafkaTransferMessage message = new RequestKafkaTransferMessage();
+        RequestTransferMessage message = new RequestTransferMessage();
 
         message.setTransferId(TRANSFER_UUID);
         message.setUserId(ID);
@@ -295,9 +295,10 @@ public class DepositServiceTestEntitiesGenerator {
         return message;
     }
 
-    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(RequestKafkaTransferMessage request){
+    public static ResponseTransferMessage generateResponseKafkaTransferMessage_WithSuccessfulResult(
+            RequestTransferMessage request){
 
-        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+        ResponseTransferMessage message = new ResponseTransferMessage();
 
         message.setTransferId(request.getTransferId());
         message.setResult(true);
@@ -305,9 +306,10 @@ public class DepositServiceTestEntitiesGenerator {
         return message;
     }
 
-    public static ResponseKafkaTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(RequestKafkaTransferMessage request){
+    public static ResponseTransferMessage generateResponseKafkaTransferMessage_WithUnsuccessfulResult(
+            RequestTransferMessage request){
 
-        ResponseKafkaTransferMessage message = new ResponseKafkaTransferMessage();
+        ResponseTransferMessage message = new ResponseTransferMessage();
 
         message.setTransferId(request.getTransferId());
         message.setResult(false);

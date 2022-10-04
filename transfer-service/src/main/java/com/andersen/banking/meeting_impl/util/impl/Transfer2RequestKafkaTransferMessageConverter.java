@@ -1,38 +1,43 @@
 package com.andersen.banking.meeting_impl.util.impl;
 
 import com.andersen.banking.meeting_db.entity.Transfer;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.util.Converter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Transfer2RequestKafkaTransferMessageConverter implements Converter<RequestKafkaTransferMessage, Transfer> {
+public class Transfer2RequestKafkaTransferMessageConverter implements
+        Converter<RequestTransferMessage, Transfer> {
+
+    private static final String CARD = "CARD";
+
+    private static final String DEPOSIT = "DEPOSIT";
 
     /**
      * @param transfer
      * @return
      */
-
     @Override
-    public RequestKafkaTransferMessage convert(Transfer transfer) throws RuntimeException{
+    public RequestTransferMessage convert(Transfer transfer) throws RuntimeException {
 
         log.info("Converting to RequestKafkaTransferMessage transfer : {}", transfer);
 
-        RequestKafkaTransferMessage requestKafkaTransferMessage = RequestKafkaTransferMessage.builder()
+        RequestTransferMessage requestTransferMessage = RequestTransferMessage.builder()
                 .transferId(transfer.getId())
                 .userId(transfer.getUserId())
                 .currencyName(transfer.getCurrency().getName())
                 .amount(transfer.getAmount())
                 .sourceNumber(transfer.getSourceNumber())
-                .sourceType(transfer.getSourcePaymentType().getName())
                 .destinationNumber(transfer.getDestinationNumber())
-                .destinationType(transfer.getDestinationPaymentType().getName())
+                .sourceType(transfer.getSourcePaymentType().getName())
+                .destinationType(
+                        transfer.getDestinationPaymentType().getName())
+                .status(transfer.getStatus())
                 .build();
-
         log.info("Converted to RequestKafkaTransferMessage transfer : {}", transfer);
 
-        return requestKafkaTransferMessage;
+        return requestTransferMessage;
     }
 }

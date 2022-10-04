@@ -59,7 +59,7 @@ class UserControllerImplTest {
                 .when(userMapper.toUserDto(user.get()))
                 .thenReturn(userDto);
 
-        var result = userController.findById(UUID_ID);
+        var result = userController.findUser(UUID_ID);
 
         assertEquals(userDto, result);
     }

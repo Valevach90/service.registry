@@ -1,46 +1,49 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.Account;
-import com.andersen.banking.meeting_impl.kafka.message.RequestKafkaTransferMessage;
+import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 
 public interface TransferMoneyRequestFilter {
 
     /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
+     * @param account
      */
-    void checkOnEqualsPaymentTypes(RequestKafkaTransferMessage requestKafkaTransferMessage);
+    void checkOnEqualsCurrency(
+            RequestTransferMessage requestTransferMessage,
+            Account account);
 
     /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
      * @param srcAccount
      * @param destAccount
      */
     void checkOnEqualsCurrency(
-            RequestKafkaTransferMessage requestKafkaTransferMessage,
+            RequestTransferMessage requestTransferMessage,
             Account srcAccount,
             Account destAccount);
 
     /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
      * @param srcAccount
      * @param destAccount
      */
     void checkOnEqualsAccountsNumber(
-            RequestKafkaTransferMessage requestKafkaTransferMessage,
+            RequestTransferMessage requestTransferMessage,
             Account srcAccount,
             Account destAccount);
 
     /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
      * @param srcAccount
      */
     void checkOnEqualsUserIdAndAccountOwnerId(
-            RequestKafkaTransferMessage requestKafkaTransferMessage, Account srcAccount);
+            RequestTransferMessage requestTransferMessage, Account srcAccount);
 
     /**
-     * @param requestKafkaTransferMessage
+     * @param requestTransferMessage
      * @param account
      */
     void checkOnEnoughMoneyOnSrcAccount(
-            RequestKafkaTransferMessage requestKafkaTransferMessage, Account account);
+            RequestTransferMessage requestTransferMessage, Account account);
 }
