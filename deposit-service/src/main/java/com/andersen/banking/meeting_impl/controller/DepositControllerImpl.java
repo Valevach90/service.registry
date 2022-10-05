@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.DepositController;
 import com.andersen.banking.meeting_api.dto.DepositDto;
+import com.andersen.banking.meeting_api.dto.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.mapping.DepositMapper;
@@ -58,11 +59,11 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public Page<DepositDto> findAll(Pageable pageable) {
+    public Page<DepositRequestDto> findAll(Pageable pageable) {
         log.debug("Find all deposits for pageable: {}", pageable);
 
-        Page<DepositDto> allDepositDto = depositService.findAll(pageable)
-                .map(depositMapper::toDepositDto);
+        Page<DepositRequestDto> allDepositDto = depositService.findAll(pageable)
+                .map(depositMapper::toDepositRequest);
 
         log.debug("Found {} deposits", allDepositDto.getContent().size());
         return allDepositDto;
