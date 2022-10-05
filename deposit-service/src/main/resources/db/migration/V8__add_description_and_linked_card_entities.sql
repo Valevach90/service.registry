@@ -5,7 +5,7 @@ ALTER TABLE deposits
 ALTER TABLE deposits
     DROP COLUMN withdrawal_destination_number;
 
-CREATE TABLE linked_cards
+CREATE TABLE IF NOT EXISTS linked_cards
 (
     id                   UUID DEFAULT gen_random_uuid() NOT NULL,
     first_twelve_numbers VARCHAR(64)                    NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE linked_cards
         REFERENCES deposits (id) ON DELETE CASCADE
 );
 
-CREATE TABLE deposit_product_descriptions
+CREATE TABLE IF NOT EXISTS deposit_product_descriptions
 (
     id                   UUID DEFAULT gen_random_uuid() NOT NULL,
     short_description    VARCHAR(100)                   NOT NULL,

@@ -32,8 +32,7 @@ public class LinkedCard {
     @Column(name = "last_four_numbers", nullable = false, length = 4)
     private String lastFourNumbers;
 
-    @ManyToOne(fetch= FetchType.LAZY,
-            cascade= CascadeType.ALL)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="deposit_id")
     private Deposit deposit;
 }
