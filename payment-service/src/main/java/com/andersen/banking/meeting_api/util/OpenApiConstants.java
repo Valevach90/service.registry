@@ -25,5 +25,5 @@ public class OpenApiConstants {
 
     public static final String EXAMPLE_DATE = "2022-11-21";
 
-    public static final String EXAMPLE_FREQUENCY = "0Y_0M_0D";
+    public static final String EXAMPLE_FREQUENCY = "0Y_0M_0W_0D";
 }
