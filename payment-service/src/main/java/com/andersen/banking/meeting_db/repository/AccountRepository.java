@@ -12,8 +12,8 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
     Page<Account> findAccountByOwnerId(UUID id, Pageable pageable);
 
     @Query(value = "SELECT * FROM account "
-            + "WHERE is_active = true AND close_date < CURRENT_DATE"
-            + " for update skip locked "
+            + "WHERE is_active = true AND close_date < CURRENT_DATE "
+            + "for update skip locked "
             + "LIMIT 10", nativeQuery = true)
     List<Account> findAccountsToDeactivate();
 }

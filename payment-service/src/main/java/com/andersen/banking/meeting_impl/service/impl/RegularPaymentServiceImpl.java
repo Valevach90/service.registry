@@ -1,15 +1,20 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.FrequencyDto;
-import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_db.repository.RegularPaymentRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
+import com.andersen.banking.meeting_impl.feign.TransferClient;
+import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
+import com.andersen.banking.meeting_impl.feign.dto.TransferResponseDto;
+import com.andersen.banking.meeting_impl.service.CardProductService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.service.RegularPaymentService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -19,6 +24,9 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
 
     private final RegularPaymentRepository regularPaymentRepository;
     private final CardService cardService;
+    private final TransferClient transferClient;
+
+    private final CardProductService cardProductService;
 
     @Transactional
     @Override
@@ -46,6 +54,30 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
 
         log.info("Updated regular payment: {}", updatedRegularPayment);
         return updatedRegularPayment;
+    }
+
+
+    @Transactional(propagation = Propagation.NESTED)
+    public void executeSomeAmountOfRegularPayments() {
+        List<RegularPayment> regularPaymentsToExecute = regularPaymentRepository.findRegularPaymentsToExecute();
+
+        regularPaymentsToExecute.forEach(this::executeRegularPayment);
+    }
+
+    @Transactional
+    public void executeRegularPayment(RegularPayment regularPayment) {
+        TransferResponseDto transferResponseDto = transferClient.createTransfer();
+    }
+
+    private TransferRequestDto getTransferRequestDtoByRegularPayment(RegularPayment regularPayment) {
+        TransferRequestDto.builder()
+                .userId(regularPayment.getSourceCard().getAccount().getOwnerId())
+                .sourceNumber(regularPayment.getSourceCard().getFirstTwelveNumbers() + regularPayment.getSourceCard().getLastFourNumbers())
+                .sourcePaymentTypeId(cardProductService.findById(regularPayment.getSourceCard().getCardProduct().getId())
+                        .getTypeCard().getId())
+                .destinationNumber(regularPayment.getRecipientCard().getFirstTwelveNumbers() + regularPayment.getRecipientCard().getLastFourNumbers())
+                .amount(regularPayment.getAmount())
+
     }
 
     private void setUpNextDate(RegularPayment regularPayment) {
