@@ -1,10 +1,12 @@
 package com.andersen.banking.meeting_api.controller;
 
+import com.andersen.banking.meeting_api.dto.AccountChangesResponseDto;
 import com.andersen.banking.meeting_api.dto.AccountDto;
 import com.andersen.banking.meeting_api.dto.AccountRegistrationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/** Interface that presents basic endpoints for working with Account entity. */
+/**
+ * Interface that presents basic endpoints for working with Account entity.
+ */
 @Tag(name = "Account controller", description = "work with accounts")
 @RequestMapping(value = "/api/v1/accounts")
 public interface AccountController {
@@ -56,5 +60,10 @@ public interface AccountController {
     @Operation(summary = "Deactivate account", description = "deactivate account by id")
     @DeleteMapping("/{id}")
     AccountDto deactivateById(
+            @Parameter(description = "account id", required = true) @PathVariable UUID id);
+
+    @Operation(summary = "Get changes account", description = "Get changes account by id, their create, update and delete")
+    @GetMapping("/changes/{id}")
+    List<AccountChangesResponseDto> changes(
             @Parameter(description = "account id", required = true) @PathVariable UUID id);
 }

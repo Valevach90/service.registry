@@ -1,9 +1,13 @@
 package com.andersen.banking.meeting_impl.service;
 
+import com.andersen.banking.meeting_api.dto.AccountChangesResponseDto;
 import com.andersen.banking.meeting_db.entities.Account;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
 
 public interface AccountService {
 
@@ -73,4 +77,12 @@ public interface AccountService {
      * @return true or false
      */
     boolean changeAccountBalance(UUID accountId, long amount);
+
+    /**
+     * This method get all changes account by id
+     *
+     * @param id
+     * @return list changes for account as {@code AccountChangesResponseDto}
+     */
+    List<AccountChangesResponseDto> changes(UUID id);
 }
