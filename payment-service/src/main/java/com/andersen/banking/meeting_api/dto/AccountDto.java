@@ -64,7 +64,7 @@ public class AccountDto {
     @NotNull
     @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     @JsonProperty("balance")
-    private double balance;
+    private Long balance;
 
     @JsonProperty("is_active")
     private boolean isActive;
