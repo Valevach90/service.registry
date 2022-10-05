@@ -5,6 +5,7 @@ import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpir
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.CardProduct;
+import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.aop.LogAnnotation;
@@ -58,7 +59,6 @@ public class CardServiceImpl implements CardService {
     @Override
     @LogAnnotation(before = true, after = true)
     public Card update(Card card) {
-        UUID accountId = card.getAccount().getId();
         findById(card.getId());
         card.setAccount(accountService.findById(card.getAccount().getId()));
         card.setCardProduct(cardProductService.findById(card.getCardProduct().getId()));
