@@ -94,11 +94,9 @@ public class CreditProductServiceImpl implements CreditProductService {
 
         log.info("Deleting credit product with id: {}", id);
 
-        var creditProduct = getById(id);
+        creditProductRepository.deleteById(id);
 
-        creditProductRepository.delete(creditProduct);
-
-        log.info("Deleted credit product: {}", creditProduct);
+        log.info("Credit product with id {} successfully deleted", id);
     }
 
     private CreditProduct getById(UUID id) {
