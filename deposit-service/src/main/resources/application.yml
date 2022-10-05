@@ -39,6 +39,14 @@ spring:
     consumer:
       group-id: payment-service
 
+  task:
+    scheduling:
+      pool:
+        size: 4
+
+scheduler:
+  deposit: "0 0 0 * * *"
+
 eureka:
   instance:
     instance-id: ${spring.application.name}-${random.uuid}
