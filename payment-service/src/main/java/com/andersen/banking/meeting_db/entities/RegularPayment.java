@@ -24,11 +24,11 @@ public class RegularPayment {
     @Column(name = "payment_description", nullable = false)
     private String description;
 
-    @Column(name = "first_date", nullable = false)
-    private LocalDate firstDate;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(name = "last_date", nullable = false)
-    private LocalDate lastDate;
+    @Column(name = "next_date", nullable = false)
+    private LocalDate nextDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")

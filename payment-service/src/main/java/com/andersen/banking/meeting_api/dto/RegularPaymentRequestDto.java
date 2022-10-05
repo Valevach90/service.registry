@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,6 +13,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_DATE;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_FREQUENCY;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,19 +32,12 @@ public class RegularPaymentRequestDto {
 
     @Schema(
             description = "Regular payment start date",
-            example = "2022-09-21",
-            defaultValue = "2022-09-21")
-    @JsonProperty("first_date")
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
+    @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private LocalDate firstDate;
-
-    @Schema(
-            description = "Regular payment last date",
-            example = "2023-09-21",
-            defaultValue = "2023-09-21")
-    @JsonProperty("last_date")
-    @NotNull
-    private LocalDate lastDate;
+    private LocalDate startDate;
 
     @JsonProperty("source_card_id")
     @NotNull
@@ -56,8 +53,8 @@ public class RegularPaymentRequestDto {
 
     @Schema(
             description = "Frequency of sending payments",
-            example = "monthly",
-            defaultValue = "monthly")
+            example = EXAMPLE_FREQUENCY,
+            defaultValue = EXAMPLE_FREQUENCY)
     @JsonProperty("frequency")
     @NotNull
     private String frequency;

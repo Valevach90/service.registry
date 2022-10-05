@@ -36,7 +36,7 @@ class RegularPaymentMapperTest {
 
     private void checkForEqualsRequest(RegularPayment first, RegularPaymentRequestDto second) {
         assertEquals(first.getDescription(), second.getDescription());
-        assertEquals(first.getFirstDate(), second.getFirstDate());
+        assertEquals(first.getFirstDate(), second.getStartDate());
         assertEquals(first.getLastDate(), second.getLastDate());
         assertEquals(first.getSourceCard().getId(), second.getSourceCardId());
         assertEquals(first.getRecipientCard().getId(), second.getRecipientCardId());
@@ -47,8 +47,8 @@ class RegularPaymentMapperTest {
     private void checkForEqualsResponse(RegularPaymentResponseDto first, RegularPayment second) {
         assertEquals(first.getId(), second.getId());
         assertEquals(first.getDescription(), second.getDescription());
-        assertEquals(first.getFirstDate(), second.getFirstDate());
-        assertEquals(first.getLastDate(), second.getLastDate());
+        assertEquals(first.getStartDate(), second.getFirstDate());
+        assertEquals(first.getNextDate(), second.getLastDate());
         assertEquals(first.getSourceCardId(), second.getSourceCard().getId());
         assertEquals(first.getRecipientCardId(), second.getRecipientCard().getId());
         assertEquals(first.getAmount(), second.getAmount());

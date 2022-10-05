@@ -29,6 +29,7 @@ public class CardGenerator {
     appendUniqueNumbers(cardNumberBuilder, countAllCardCreated + 1);
     appendCheckDigit(cardNumberBuilder);
 
+    log.info("card number was generated: {}", cardNumberBuilder);
     return cardNumberBuilder.toString();
   }
 

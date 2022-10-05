@@ -13,6 +13,7 @@ public interface RegularPaymentMapper {
 
     @Mapping(source = "sourceCardId", target = "sourceCard.id")
     @Mapping(source = "recipientCardId", target = "recipientCard.id")
+    @Mapping(target = "nextDate", ignore = true)
     @Mapping(target = "id", ignore = true)
     RegularPayment toRegularPayment(RegularPaymentRequestDto regularPaymentRequestDto);
 

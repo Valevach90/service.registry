@@ -34,4 +34,6 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         log.info("Created regular payment: {}", savedRegularPayment);
         return savedRegularPayment;
     }
+
+
 }

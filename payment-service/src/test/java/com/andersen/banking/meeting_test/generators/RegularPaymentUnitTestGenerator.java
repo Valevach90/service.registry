@@ -24,8 +24,8 @@ public class RegularPaymentUnitTestGenerator {
 
         regularPayment.setId(PAYMENT_ID);
         regularPayment.setDescription("Mobile phone payment");
-        regularPayment.setFirstDate(LocalDate.of(2022, 9, 1));
-        regularPayment.setLastDate(LocalDate.of(2023, 9, 1));
+        regularPayment.setStartDate(LocalDate.of(2022, 9, 1));
+        regularPayment.setNextDate(LocalDate.of(2023, 9, 1));
         regularPayment.setSourceCard(populateSourceCard());
         regularPayment.setRecipientCard(populateRecipientCard());
         regularPayment.setAmount(500L);
@@ -38,8 +38,7 @@ public class RegularPaymentUnitTestGenerator {
         RegularPaymentRequestDto regularPaymentRequestDto = new RegularPaymentRequestDto();
 
         regularPaymentRequestDto.setDescription("Mobile phone payment");
-        regularPaymentRequestDto.setFirstDate(LocalDate.of(2022, 9, 1));
-        regularPaymentRequestDto.setLastDate(LocalDate.of(2023, 9, 1));
+        regularPaymentRequestDto.setStartDate(LocalDate.of(2022, 9, 1));
         regularPaymentRequestDto.setSourceCardId(SOURCE_CARD_ID);
         regularPaymentRequestDto.setRecipientCardId(RECEPIENT_CARD_ID);
         regularPaymentRequestDto.setAmount(500L);
@@ -53,8 +52,8 @@ public class RegularPaymentUnitTestGenerator {
 
         regularPaymentResponseDto.setId(PAYMENT_ID);
         regularPaymentResponseDto.setDescription("Mobile phone payment");
-        regularPaymentResponseDto.setFirstDate(LocalDate.of(2022, 9, 1));
-        regularPaymentResponseDto.setLastDate(LocalDate.of(2023, 9, 1));
+        regularPaymentResponseDto.setStartDate(LocalDate.of(2022, 9, 1));
+        regularPaymentResponseDto.setNextDate(LocalDate.of(2023, 9, 1));
         regularPaymentResponseDto.setSourceCardId(SOURCE_CARD_ID);
         regularPaymentResponseDto.setRecipientCardId(RECEPIENT_CARD_ID);
         regularPaymentResponseDto.setAmount(500L);

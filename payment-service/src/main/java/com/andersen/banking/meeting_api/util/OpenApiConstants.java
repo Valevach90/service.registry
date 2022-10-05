@@ -22,4 +22,8 @@ public class OpenApiConstants {
     public static final String EXAMPLE_PRICE = "9.99";
 
     public static final String EXAMPLE_CASHBACK = "3";
+
+    public static final String EXAMPLE_DATE = "2022-11-21";
+
+    public static final String EXAMPLE_FREQUENCY = "0Y_0M_0D";
 }
