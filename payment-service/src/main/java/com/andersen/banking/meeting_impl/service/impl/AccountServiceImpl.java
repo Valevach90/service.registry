@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.AccountChangesResponseDto;
 import com.andersen.banking.meeting_db.entities.Account;
+import com.andersen.banking.meeting_db.entities.AccountRevision;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.repository.AccountRepository;
 import com.andersen.banking.meeting_db.repository.CardRepository;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +49,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void setUpAdditionalAccountInfo(Account account) {
-        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(), account.getCurrency(), account.getOwnerId()));
+        account.setAccountNumber(AccountNumberGenerator.generateAccountNumber(account.getBankName(),
+                account.getCurrency(), account.getOwnerId()));
         account.setOpenDate(LocalDate.now());
         account.setActive(true);
     }
@@ -88,7 +93,8 @@ public class AccountServiceImpl implements AccountService {
     public Account update(Account account) {
         log.debug("Trying to update account: {}", account);
 
-        findById(account.getId());
+        Account savedAccount = findById(account.getId());
+        account.setAccountNumber(savedAccount.getAccountNumber());
         Account updateAccount = accountRepository.save(account);
 
         log.debug("Return updated account: {}", updateAccount);
@@ -165,5 +171,32 @@ public class AccountServiceImpl implements AccountService {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public List<AccountChangesResponseDto> changes(UUID id) {
+        log.info("Get all changes for account with id: {}", id);
+        return accountRepository.findRevisions(id)
+                .get()
+                .toList().stream()
+                .map(this::getResponse)
+                .toList();
+    }
+
+    private AccountChangesResponseDto getResponse(Revision<Integer, Account> revision) {
+        Account entity = revision.getEntity();
+        RevisionMetadata<Integer> metadata = revision.getMetadata();
+        AccountRevision delegate = metadata.getDelegate();
+        return AccountChangesResponseDto.builder()
+                .id(entity.getId())
+                .ownerId(entity.getOwnerId())
+                .openDate(entity.getOpenDate())
+                .closeDate(entity.getCloseDate())
+                .bankName(entity.getBankName())
+                .balance(entity.getBalance())
+                .currency(entity.getCurrency())
+                .revisionType(metadata.getRevisionType().toString())
+                .timestamp(delegate.getTimestamp())
+                .build();
     }
 }

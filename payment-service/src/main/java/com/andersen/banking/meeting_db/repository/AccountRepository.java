@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.history.RevisionRepository;
 
-public interface AccountRepository extends JpaRepository<Account, UUID> {
+public interface AccountRepository extends JpaRepository<Account, UUID>,
+        RevisionRepository<Account, UUID, Integer> {
+
     Page<Account> findAccountByOwnerId(UUID id, Pageable pageable);
 
     @Query(value = "SELECT * FROM account "
