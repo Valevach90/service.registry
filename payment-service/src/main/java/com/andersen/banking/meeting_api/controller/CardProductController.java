@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Interface that presents basic endpoints for working with CardProduct entity. */
 @Tag(name = "Card product controller", description = "Endpoints to work with Card product")
-@RequestMapping(value = "/api/v1/cardProducts")
+@RequestMapping(value = "/api/v1/card_products")
 @RestController
 public interface CardProductController {
 

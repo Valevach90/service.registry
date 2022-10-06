@@ -30,7 +30,7 @@ spring:
         - id: payment-service
           uri: lb://payment-service
           predicates:
-            - Path=/api/v1/cards/**
+            - Path=/api/v1/cards/**, /api/v1/card_products/**
         - id: registration-service
           uri: lb://registration-service
           predicates:
