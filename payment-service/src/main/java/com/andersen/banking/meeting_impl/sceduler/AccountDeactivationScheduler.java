@@ -17,7 +17,6 @@ public class AccountDeactivationScheduler {
 
     private final AccountService accountService;
 
-    @Transactional
     @Scheduled(cron = "${scheduler.card}")
     public void deactivateExpiredAccounts() {
         log.info("AccountDeactivationScheduler started working");

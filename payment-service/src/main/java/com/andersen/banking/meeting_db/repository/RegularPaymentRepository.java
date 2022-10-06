@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface RegularPaymentRepository extends JpaRepository<RegularPayment, UUID> {
 
     @Query(value = "SELECT * FROM regular_payment "
-            + "WHERE next_date < CURRENT_DATE "
+            + "WHERE next_date <= CURRENT_DATE "
             + "for update skip locked "
             + "LIMIT 10", nativeQuery = true)
     List<RegularPayment> findRegularPaymentsToExecute();
