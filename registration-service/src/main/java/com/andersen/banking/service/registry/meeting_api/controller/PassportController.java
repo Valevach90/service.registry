@@ -1,10 +1,15 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
+
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
+import javax.annotation.security.RolesAllowed;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,6 +61,8 @@ public interface PassportController {
             description = "get page of all users passport"
     )
     @GetMapping(value = "/all")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @RolesAllowed({ADMIN, EMPLOYEE})
     Page<PassportDto> findAll(
             @ParameterObject
             @PageableDefault Pageable pageable

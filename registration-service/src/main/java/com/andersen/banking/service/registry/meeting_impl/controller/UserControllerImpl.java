@@ -6,6 +6,7 @@ import static com.andersen.banking.service.registry.meeting_impl.util.AuthServic
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_api.dto.UserRequestDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
@@ -67,11 +68,11 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void updateUser(Authentication authentication, UserDto userDto) {
-        log.trace("Try to update user: {}", userDto);
+    public void updateUser(Authentication authentication, UserRequestDto userRequestDto) {
+        log.trace("Try to update user: {}", userRequestDto);
 
-        setAttributes(authentication, userDto);
-        User addressUpdated = userMapper.toUser(userDto);
+        setAttributes(authentication, userRequestDto);
+        User addressUpdated = userMapper.requestDtoToUser(userRequestDto);
         userService.update(addressUpdated);
 
         log.trace("Updated user success");
@@ -86,11 +87,10 @@ public class UserControllerImpl implements UserController {
         log.trace("Deleted user with id: {}", id);
     }
 
-    private void setAttributes(Authentication authentication, UserDto userDto) {
+    private void setAttributes(Authentication authentication, UserRequestDto userRequestDto) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         UUID id = UUID.fromString(extractIdFromToken(jwt));
-        userDto.setId(id);
-        userDto.setEmail(extractEmailFromToken(jwt));
-        userDto.setUsername(extractLoginFromToken(jwt));
+        userRequestDto.setId(id);
+        userRequestDto.setUsername(extractLoginFromToken(jwt));
     }
 }
