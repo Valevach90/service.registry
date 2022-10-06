@@ -49,5 +49,5 @@ public class AccountRegistrationDto {
     @NotNull
     @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     @JsonProperty("balance")
-    private double balance;
+    private Long balance;
 }
