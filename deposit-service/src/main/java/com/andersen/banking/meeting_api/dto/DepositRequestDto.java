@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -65,18 +66,10 @@ public class DepositRequestDto {
     @NotNull(message = "Fixed Interest Option")
     private Boolean fixedInterest;
 
-    @Schema(description = OpenApiConstants.DESCRIPTION_SOURCE_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
-    @JsonProperty("replenishmentSourceNumber")
-    private String replenishmentSourceNumber;
-
     @Schema(description = OpenApiConstants.DESCRIPTION_SUBSEQUENT_REPLENISHMENT, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("subsequentReplenishment")
     @NotNull(message = "Subsequent Replenishment Option")
     private Boolean subsequentReplenishment;
-
-    @Schema(description = OpenApiConstants.DESCRIPTION_DESTINATION_NUMBER, example = OpenApiConstants.EXAMPLE_STRING_NUMBER, defaultValue = OpenApiConstants.EXAMPLE_STRING_NUMBER)
-    @JsonProperty("withdrawalDestinationNumber")
-    private String withdrawalDestinationNumber;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_EARLY_WITHDRAWAL, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
     @JsonProperty("earlyWithdrawal")
@@ -106,4 +99,7 @@ public class DepositRequestDto {
     @Schema(description = OpenApiConstants.DESCRIPTION_CAPITALIZATION)
     @JsonProperty("Deposit status")
     private Boolean isActive;
+
+    @JsonProperty("linkedCards")
+    private List<LinkedCardDto> linkedCards;
 }
