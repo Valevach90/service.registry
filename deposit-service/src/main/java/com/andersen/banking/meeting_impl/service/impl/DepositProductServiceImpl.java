@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
+import com.andersen.banking.meeting_db.entities.DepositProductDescription;
 import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
 import com.andersen.banking.meeting_impl.exceptions.FilterAccessException;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
@@ -28,6 +29,9 @@ public class DepositProductServiceImpl implements DepositProductService {
         log.info("Creating deposit product: {}", product);
 
         product.setId(null);
+        for (DepositProductDescription desc : product.getDescriptions()){
+            desc.setDepositProduct(product);
+        }
 
         DepositProduct savedProduct = depositProductRepository.save(product);
 

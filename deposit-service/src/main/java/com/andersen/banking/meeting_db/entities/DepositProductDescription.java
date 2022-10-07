@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 @Data
@@ -33,6 +34,7 @@ public class DepositProductDescription {
     private String fullDescription;
 
     @ManyToOne(fetch= FetchType.LAZY, optional = false)
-    @JoinColumn(name = "deposit_product_id")
+    @JoinColumn(name = "deposit_product_id", referencedColumnName = "id")
+    @ToString.Exclude
     private DepositProduct depositProduct;
 }
