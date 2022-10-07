@@ -1,11 +1,10 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
-
 import com.andersen.banking.meeting_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 
@@ -102,7 +101,6 @@ public class DepositProductDto {
     @NotNull(message = "Active option can't be null.")
     private Boolean isActive;
 
-    @Schema(description = DESCRIPTION_DEPOSIT_PRODUCT, example = EXAMPLE_PRODUCT_DESCRIPTION, defaultValue = EXAMPLE_PRODUCT_DESCRIPTION)
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("descriptions")
+    private List<DepositProductDescriptionDto> descriptions;
 }

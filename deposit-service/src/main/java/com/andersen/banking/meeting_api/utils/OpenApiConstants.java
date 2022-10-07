@@ -54,7 +54,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_IS_CUSTOMIZABLE = "Customization option";
     public static final String DESCRIPTION_IS_ACTIVE = "Activation option";
     public static final String DESCRIPTION_RESULT_OF_TRANSFER = "Result of transfer";
-    public static final String DESCRIPTION_SOURCE_NUMBER = "Source Number for Replenishment";
+    public static final String DESCRIPTION_CARD_NUMBER = "Card Number for Replenishment";
     public static final String DESCRIPTION_SOURCE_TYPE = "Type of Source for Replenishment";
     public static final String DESCRIPTION_DESTINATION_NUMBER = "Destination Number for Withdrawal";
     public static final String DESCRIPTION_DESTINATION_TYPE = "Type of Destination for Withdrawal";
