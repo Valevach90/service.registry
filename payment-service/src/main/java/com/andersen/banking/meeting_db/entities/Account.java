@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -21,6 +22,7 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Audited
 public class Account {
 
     @Id

@@ -11,6 +11,7 @@ import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.R
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
 import com.andersen.banking.meeting_impl.service.TransferService;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Status;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepositServiceImpl implements DepositService {
 
     private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
+    private static final Integer LENGTH_OF_DEPOSIT_NUMBER = 16;
 
     private final DepositRepository depositRepository;
 
@@ -35,16 +39,21 @@ public class DepositServiceImpl implements DepositService {
     private final TransferMapper transferMapper;
 
     @Override
+    @Retryable(value = SQLIntegrityConstraintViolationException.class, backoff = @Backoff(delay = 1000))
     @Transactional
     public Deposit create(Deposit deposit) {
         log.info("Creating deposit: {}", deposit);
 
         deposit.setId(null);
+        deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.count() + 1)));
+        deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
+        deposit.setIsActive(true);
 
         Deposit savedDeposit = depositRepository.save(deposit);
 
         log.info("Created deposit: {}", savedDeposit);
         return savedDeposit;
+
     }
 
     @Override

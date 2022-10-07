@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -28,6 +29,14 @@ public class CardResponseDto {
     @NotNull
     @JsonProperty("card_product_id")
     private UUID cardProductId;
+
+    @NotNull
+    @JsonProperty("payment_system")
+    private String paymentSystem;
+
+    @NotNull
+    @JsonProperty("type_name")
+    private String typeName;
 
     @NotBlank
     @JsonProperty("last_four_numbers")
@@ -63,5 +72,7 @@ public class CardResponseDto {
 
     @JsonProperty("is_active")
     private boolean isActive;
+
+
 
 }

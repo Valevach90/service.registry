@@ -1,11 +1,13 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.AccountController;
+import com.andersen.banking.meeting_api.dto.AccountChangesResponseDto;
 import com.andersen.banking.meeting_api.dto.AccountDto;
 import com.andersen.banking.meeting_api.dto.AccountRegistrationDto;
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_impl.mapper.AccountMapper;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Implementation class for AccountController */
+/**
+ * Implementation class for AccountController
+ */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +29,7 @@ public class AccountControllerImpl implements AccountController {
     /**
      * Controller to register new Account entity.
      *
-     * @param accountResponseDto - AccountDto to register
+     * @param accountRegistrationDto - AccountDto to register
      * @return accountDto - created AccountDto
      */
     @Override
@@ -33,7 +37,8 @@ public class AccountControllerImpl implements AccountController {
         log.trace("Receiving request for creating account: {}", accountRegistrationDto);
 
         Account account2Create = accountMapper.toAccount(accountRegistrationDto);
-        AccountDto savedAccount = accountMapper.toAccountResponseDto(accountService.create(account2Create));
+        AccountDto savedAccount = accountMapper.toAccountResponseDto(
+                accountService.create(account2Create));
 
         log.trace("Returning created account: {}", savedAccount);
         return savedAccount;
@@ -59,7 +64,7 @@ public class AccountControllerImpl implements AccountController {
     /**
      * End-point to find page of accounts with ownerId
      *
-     * @param id - ownerId
+     * @param id       - ownerId
      * @param pageable
      * @return accountPageDto
      */
@@ -123,5 +128,17 @@ public class AccountControllerImpl implements AccountController {
 
         log.trace("Returning deleted account with id: {}", id);
         return deactivatedAccountDto;
+    }
+
+    /**
+     * Endpoint for getting changes account by id
+     *
+     * @param id - Account {@code UUID} id
+     * @return - list by all changes with this account as {@code AccountChangesResponseDto}
+     */
+    @Override
+    public List<AccountChangesResponseDto> changes(UUID id) {
+        log.info("Controller account for getting changes for account with id: {}", id);
+        return accountService.changes(id);
     }
 }

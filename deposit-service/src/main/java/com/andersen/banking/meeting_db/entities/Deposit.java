@@ -1,12 +1,21 @@
 package com.andersen.banking.meeting_db.entities;
 
-import java.util.UUID;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -58,14 +67,8 @@ public class Deposit {
     @Column(name = "fixed_interest", nullable = false)
     private Boolean fixedInterest;
 
-    @Column(name = "replenishment_source_number", nullable = false)
-    private String replenishmentSourceNumber;
-
     @Column(name = "subsequent_replenishment", nullable = false)
     private Boolean subsequentReplenishment;
-
-    @Column(name = "withdrawal_destination_number")
-    private String withdrawalDestinationNumber;
 
     @Column(name = "early_withdrawal", nullable = false)
     private Boolean earlyWithdrawal;
@@ -81,4 +84,12 @@ public class Deposit {
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "deposit",
+            cascade = CascadeType.ALL)
+    private List<LinkedCard> linkedCards = new ArrayList<>();
 }

@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,11 +28,11 @@ public class DepositProduct {
     @Column(name = "deposit_name", nullable = false)
     private String depositName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "deposit_type_id", nullable = false)
     private DepositType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
 
@@ -76,6 +78,8 @@ public class DepositProduct {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "description")
-    private String description;
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "depositProduct",
+            cascade = CascadeType.ALL)
+    private List<DepositProductDescription> descriptions = new ArrayList<>();
 }

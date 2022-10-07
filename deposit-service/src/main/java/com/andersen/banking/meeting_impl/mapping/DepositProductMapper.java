@@ -4,11 +4,12 @@ import com.andersen.banking.meeting_api.dto.DepositProductDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Mapper for deposit product.
  */
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DepositProductMapper {
 
     DepositProductDto toDepositProductDto(DepositProduct depositProduct);
