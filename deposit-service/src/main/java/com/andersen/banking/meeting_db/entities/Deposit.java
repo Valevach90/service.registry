@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -79,5 +80,6 @@ public class Deposit {
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "deposit",
             cascade = CascadeType.ALL)
-    private List<LinkedCard> linkedCards;
+    private List<LinkedCard> linkedCards = new ArrayList<>();
+
 }

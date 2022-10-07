@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
-@Table(name = "deposit_descriptions")
+@Table(name = "deposit_product_descriptions")
 @NoArgsConstructor
 public class DepositProductDescription {
 
@@ -32,8 +32,7 @@ public class DepositProductDescription {
     @Column(name = "full_description")
     private String fullDescription;
 
-    @ManyToOne(fetch= FetchType.LAZY,
-            cascade= CascadeType.ALL)
-    @JoinColumn(name="deposit_product_id")
+    @ManyToOne(fetch= FetchType.LAZY, optional = false)
+    @JoinColumn(name = "deposit_product_id")
     private DepositProduct depositProduct;
 }

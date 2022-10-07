@@ -101,6 +101,6 @@ public class DepositProductDto {
     @NotNull(message = "Active option can't be null.")
     private Boolean isActive;
 
-    @JsonProperty("description")
-    private List<DepositProductDescriptionDto> description;
+    @JsonProperty("descriptions")
+    private List<DepositProductDescriptionDto> descriptions;
 }

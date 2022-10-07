@@ -7,7 +7,7 @@ ALTER TABLE deposits
 
 CREATE TABLE IF NOT EXISTS linked_cards
 (
-    id                   UUID DEFAULT gen_random_uuid() NOT NULL,
+    id                   UUID                           NOT NULL,
     first_twelve_numbers VARCHAR(64)                    NOT NULL,
     last_four_numbers    VARCHAR(4)                     NOT NULL,
     deposit_id           UUID                           NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS deposit_product_descriptions
     full_description     VARCHAR(500)                           ,
     deposit_product_id   UUID                           NOT NULL,
 
-        CONSTRAINT pk_linked_card PRIMARY KEY (id),
+        CONSTRAINT pk_deposit_product_descriptions PRIMARY KEY (id),
         CONSTRAINT fk_description_on_deposit_product FOREIGN KEY (deposit_product_id)
             REFERENCES deposit_products (id) ON DELETE CASCADE
 );

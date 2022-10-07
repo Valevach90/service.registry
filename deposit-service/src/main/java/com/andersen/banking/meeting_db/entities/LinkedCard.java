@@ -22,8 +22,6 @@ public class LinkedCard {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name ="id")
     private UUID id;
 
     @Column(name = "first_twelve_numbers", nullable = false, length = 64)
