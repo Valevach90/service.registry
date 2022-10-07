@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_db.entities.Deposit;
+import com.andersen.banking.meeting_db.entities.LinkedCard;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.entities.Transfer;
 import com.andersen.banking.meeting_db.repositories.DepositRepository;
@@ -32,6 +33,8 @@ public class DepositServiceImpl implements DepositService {
     private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
     private static final Integer LENGTH_OF_DEPOSIT_NUMBER = 16;
 
+    private static final Long MILLIS_IN_MONTH = 2592000000L;
+
     private final DepositRepository depositRepository;
 
     private final TransferService transferService;
@@ -47,7 +50,12 @@ public class DepositServiceImpl implements DepositService {
         deposit.setId(null);
         deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.count() + 1)));
         deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
+        deposit.setCloseDate(new java.sql.Date(System.currentTimeMillis() + MILLIS_IN_MONTH * deposit.getTermMonths()));
         deposit.setIsActive(true);
+
+        for (LinkedCard cards : deposit.getLinkedCards()){
+            cards.setDeposit(deposit);
+        }
 
         Deposit savedDeposit = depositRepository.save(deposit);
 

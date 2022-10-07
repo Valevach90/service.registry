@@ -90,6 +90,6 @@ public class Deposit {
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "deposit",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST})
     private List<LinkedCard> linkedCards = new ArrayList<>();
 }
