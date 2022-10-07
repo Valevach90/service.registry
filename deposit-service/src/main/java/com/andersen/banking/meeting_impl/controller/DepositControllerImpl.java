@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.DepositController;
+import com.andersen.banking.meeting_api.dto.DepositCreateRequestDto;
 import com.andersen.banking.meeting_api.dto.DepositDto;
 import com.andersen.banking.meeting_api.dto.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
@@ -32,7 +33,7 @@ public class DepositControllerImpl implements DepositController {
 
 
     @Override
-    public DepositDto create(DepositDto depositDto) {
+    public DepositDto create(DepositCreateRequestDto depositDto) {
         log.debug("Creating deposit: {}", depositDto);
 
         Deposit deposit = depositMapper.toDeposit(depositDto);

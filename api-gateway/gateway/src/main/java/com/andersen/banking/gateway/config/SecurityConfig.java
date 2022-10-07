@@ -34,7 +34,6 @@ public class SecurityConfig {
     };
     private static final String[] AUTH_ADMIN = {
             "/api/v1/products",
-            "/api/v1/products/**"
     };
     private static final String[] AUTH_ROLES = {
             "ADMIN", "EMPLOYEE"

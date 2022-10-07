@@ -28,7 +28,7 @@ public class TransferDto {
     @NotNull(message = "User id can't be null.")
     private UUID userId;
 
-    @Schema(description = DESCRIPTION_SOURCE_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
+    @Schema(description = DESCRIPTION_CARD_NUMBER, example = EXAMPLE_STRING_NUMBER, defaultValue = EXAMPLE_STRING_NUMBER)
     @JsonProperty("sourceNumber")
     @NotNull(message = "Source Number can't be null.")
     private String sourceNumber;
