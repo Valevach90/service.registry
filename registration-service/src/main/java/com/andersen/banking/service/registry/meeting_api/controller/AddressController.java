@@ -1,11 +1,16 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
+
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.security.RolesAllowed;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +34,8 @@ public interface AddressController {
     @Operation(summary = "Get all Addresses",
             description = "get all Addresses information")
     @GetMapping
+    @SecurityRequirement(name = "Bearer Authentication")
+    @RolesAllowed({ADMIN, EMPLOYEE})
     List<AddressDto> findAll();
 
     @Operation(summary = "Get address by user id",

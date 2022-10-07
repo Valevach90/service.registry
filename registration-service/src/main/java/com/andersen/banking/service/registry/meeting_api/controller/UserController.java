@@ -1,11 +1,16 @@
 package com.andersen.banking.service.registry.meeting_api.controller;
 
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
+import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
+
 import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_api.dto.UserRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
+import javax.annotation.security.RolesAllowed;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +37,8 @@ public interface UserController {
     @Operation(summary = "Get all users",
             description = "get all users information")
     @GetMapping
+    @SecurityRequirement(name = "Bearer Authentication")
+    @RolesAllowed({ADMIN, EMPLOYEE})
     Page<UserDto> findAll(
             @ParameterObject
             @PageableDefault Pageable pageable);
@@ -45,6 +52,8 @@ public interface UserController {
     @Operation(summary = "Create user",
             description = "create user by params in dto object")
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
+    @RolesAllowed({ADMIN, EMPLOYEE})
     UserDto create(@Parameter(description = "user", required = true)
     @RequestBody @Validated UserDto userDto);
 
@@ -56,7 +65,7 @@ public interface UserController {
             Authentication authentication,
             @Parameter(description = "user id", required = true)
             @RequestBody
-            @Validated UserDto userDto);
+            @Validated UserRequestDto userDto);
 
     @Operation(summary = "Delete user",
             description = "delete user by id")
