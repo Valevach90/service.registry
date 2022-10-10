@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_api.dto;
+package com.andersen.banking.meeting_impl.feign.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

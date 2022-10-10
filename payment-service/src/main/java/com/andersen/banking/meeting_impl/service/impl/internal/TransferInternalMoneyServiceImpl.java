@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.service.impl.internal;
 
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
+import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
@@ -9,11 +10,14 @@ import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.ResponseTransferMessageBuilder;
 import com.andersen.banking.meeting_impl.service.AccountService;
+import com.andersen.banking.meeting_impl.service.RegularPaymentService;
 import com.andersen.banking.meeting_impl.service.TransferMoneyRequestFilter;
 import com.andersen.banking.meeting_impl.service.TransferMoneyService;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Status;
+
+import com.andersen.banking.meeting_impl.util.RegularPaymentUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -37,10 +41,13 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
 
     private final AccountService accountService;
 
+    private final RegularPaymentService regularPaymentService;
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RuntimeException.class)
     public ResponseTransferMessage executeTransfer(
             RequestTransferMessage message) {
+        log.info("Getting instanse: {}", message.getRegularId());
         final UUID transferId = message.getTransferId();
 
         ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder()
@@ -52,16 +59,37 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
         Account sourceAccount = accounts.left;
         Account targetAccount = accounts.right;
 
-        doFilterBeforeTransfer(message, sourceAccount, targetAccount);
-        boolean isTransferSourceResult = accountService
-                .changeAccountBalance(sourceAccount.getId(), message.getAmount());
+        boolean filtered = true;
+        try {
+            doFilterBeforeTransfer(message, sourceAccount, targetAccount);
+        } catch (RuntimeException e) {
+            filtered = false;
+        }
+
+        boolean isTransferSourceResult;
+        if (filtered) {
+            isTransferSourceResult = accountService
+                    .changeAccountBalance(sourceAccount.getId(), message.getAmount());
+        } else {
+            isTransferSourceResult = false;
+        }
+
         if (isTransferSourceResult) {
             accountService.changeAccountBalance(targetAccount.getId(), message.getAmount() * DEDUCTIBLE_AMOUNT);
+
             log.info("Successfully transfer money. Transfer id : {}", transferId);
             builder.statusDescription(StatusDescription.BETWEEN_CARDS.getDescription());
             builder.status(Status.STATUS_COMMITTED);
         } else {
             log.info("Transfer operation failed. Transfer id : {}.", transferId);
+
+            if (message.getRegularId() != null) {
+                log.info("Backing up regular payment with id {}", message.getRegularId());
+                RegularPayment regularPayment = regularPaymentService.findById(message.getRegularId());
+                RegularPaymentUtil.backUpNextDate(regularPayment);
+                regularPaymentService.update(regularPayment);
+            }
+
             builder.status(Status.STATUS_ROLLEDBACK);
             builder.statusDescription(StatusDescription.FAILED.getDescription());
         }

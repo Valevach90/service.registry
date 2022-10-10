@@ -5,7 +5,7 @@ spring:
   task:
     scheduling:
       pool:
-        size: 4
+        size: 10
   application:
     name: payment-service
 
@@ -82,3 +82,5 @@ keycloak:
 
 scheduler:
   card: "0 0 0 * * *"
+  account: "0 0 0 * * *"
+  regular: "0 0 * * * *"

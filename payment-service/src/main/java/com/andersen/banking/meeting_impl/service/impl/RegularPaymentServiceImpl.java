@@ -1,32 +1,26 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.meeting_api.dto.CurrencyDto;
-import com.andersen.banking.meeting_api.dto.FrequencyDto;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_db.repository.RegularPaymentRepository;
+import com.andersen.banking.meeting_impl.aop.LogAnnotation;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.feign.TransferClient;
+import com.andersen.banking.meeting_impl.feign.dto.CurrencyDto;
+import com.andersen.banking.meeting_impl.feign.dto.PaymentTypeDto;
 import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
-import com.andersen.banking.meeting_impl.feign.dto.TransferResponseDto;
-import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
-import com.andersen.banking.meeting_impl.service.CardProductService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.service.RegularPaymentService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.andersen.banking.meeting_impl.service.TransferMoneyService;
-import com.andersen.banking.meeting_impl.service.impl.internal.TransferInternalMoneyServiceImpl;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.errors.TransactionAbortedException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.transaction.Status;
+import static com.andersen.banking.meeting_impl.util.RegularPaymentUtil.setUpNextDate;
 
 @Slf4j
 @Service
@@ -36,48 +30,73 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
     private final RegularPaymentRepository regularPaymentRepository;
     private final CardService cardService;
     private final TransferClient transferClient;
-    private final CardProductService cardProductService;
-
-    private final TransferInternalMoneyServiceImpl transferInternalMoneyService;
 
     private Map<String, UUID> currencyMap;
 
+    private Map<String, UUID> paymentTypeMap;
+
     @Transactional
     @Override
+    @LogAnnotation(before = true, after = true)
     public RegularPayment create(RegularPayment regularPayment) {
-        log.info("Creating regular payment: {}", regularPayment);
-
         regularPayment.setSourceCard(cardService.findById(regularPayment.getSourceCard().getId()));
         regularPayment.setRecipientCard(cardService.findById(regularPayment.getRecipientCard().getId()));
+
         regularPayment.setNextDate(regularPayment.getStartDate());
 
-        RegularPayment savedRegularPayment = regularPaymentRepository.save(regularPayment);
+        return regularPaymentRepository.save(regularPayment);
+    }
 
-        log.info("Created regular payment: {}", savedRegularPayment);
-        return savedRegularPayment;
+    @Override
+    @LogAnnotation(before = true, after = true)
+    public RegularPayment findById(UUID id) {
+        return regularPaymentRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(RegularPayment.class, id));
     }
 
     @Transactional
+    @Override
+    @LogAnnotation(before = true, after = true)
     public RegularPayment update(RegularPayment regularPaymentToUpdate) {
-        log.info("Updating regular payment: {}", regularPaymentToUpdate);
-
         regularPaymentRepository.findById(regularPaymentToUpdate.getId())
                         .orElseThrow(() -> new NotFoundException(RegularPayment.class, regularPaymentToUpdate.getId()));
 
-        RegularPayment updatedRegularPayment = regularPaymentRepository.save(regularPaymentToUpdate);
-
-        log.info("Updated regular payment: {}", updatedRegularPayment);
-        return updatedRegularPayment;
+        return regularPaymentRepository.save(regularPaymentToUpdate);
     }
 
-    public void setUpCurrencyMap() {
+
+    public void startRegularSchedulerWork() {
+        setUpCurrencyMap();
+        setUpPaymentTypeMap();
+
+        boolean paymentsWereDone = executeSomeAmountOfRegularPayments();
+
+        while (paymentsWereDone) {
+            paymentsWereDone = executeSomeAmountOfRegularPayments();
+        }
+    }
+
+    private void setUpCurrencyMap() {
+        log.info("Setting up currency map from transfer service");
+
         currencyMap = transferClient.getAllCurrencies().stream()
                 .collect(Collectors.toMap(CurrencyDto::getName, CurrencyDto::getId));
+
+        log.info("Currency map was initialized: {}", currencyMap);
     }
 
-    @Transactional(propagation = Propagation.NESTED)
+    private void setUpPaymentTypeMap() {
+        log.info("Setting up currency map from transfer service");
+
+        paymentTypeMap = transferClient.getAllPaymentTypes().stream()
+                        .collect(Collectors.toMap(PaymentTypeDto::getName, PaymentTypeDto::getId));
+
+        log.info("Currency map was initialized: {}", paymentTypeMap);
+    }
+
+    @Transactional
     public boolean executeSomeAmountOfRegularPayments() {
-        setUpCurrencyMap();
         List<RegularPayment> regularPaymentsToExecute = regularPaymentRepository.findRegularPaymentsToExecute();
 
         if (!regularPaymentsToExecute.isEmpty()) {
@@ -87,69 +106,28 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         } else {
             return false;
         }
-
     }
 
-    @Transactional
     public void executeRegularPayment(RegularPayment regularPayment) {
-        TransferResponseDto transferResponseDto = transferClient.createTransfer(getTransferRequestDto(regularPayment));
+        log.info("Creating transfer by regular payment id: {}", regularPayment.getId());
 
-        if (transferInternalMoneyService.executeTransfer(getTransferRequestForExecution(transferResponseDto, regularPayment))
-                .getStatus() == Status.STATUS_COMMITTED) {
-            setUpNextDate(regularPayment);
-            regularPaymentRepository.save(regularPayment);
-        } else {
-            throw new TransactionAbortedException("Transaction with rolled back");
-        }
+        transferClient.createTransfer(getTransferRequestDto(regularPayment));
+        setUpNextDate(regularPayment);
+        regularPaymentRepository.save(regularPayment);
     }
 
     private TransferRequestDto getTransferRequestDto(RegularPayment regularPayment) {
         return TransferRequestDto.builder()
+                .regularId(regularPayment.getId())
                 .userId(regularPayment.getSourceCard().getAccount().getOwnerId())
                 .sourceNumber(regularPayment.getSourceCard().getFirstTwelveNumbers() + regularPayment.getSourceCard().getLastFourNumbers())
-                .sourcePaymentTypeId(cardProductService.findById(regularPayment.getSourceCard().getCardProduct().getId())
-                        .getTypeCard().getId())
+                .sourcePaymentTypeId(paymentTypeMap.get("CARD"))
                 .destinationNumber(regularPayment.getRecipientCard().getFirstTwelveNumbers() + regularPayment.getRecipientCard().getLastFourNumbers())
+                .destinationPaymentTypeId(paymentTypeMap.get("CARD"))
                 .amount(regularPayment.getAmount())
                 .currencyId(currencyMap.get(regularPayment.getSourceCard().getAccount().getCurrency()))
                 .comment("Regular payment")
                 .build();
-    }
-
-    private RequestTransferMessage getTransferRequestForExecution(TransferResponseDto response, RegularPayment regularPayment) {
-        return RequestTransferMessage.builder()
-                .transferId(response.getId())
-                .userId(regularPayment.getSourceCard().getAccount().getOwnerId())
-                .sourceNumber(response.getSourceNumber())
-                .sourceType(response.getSourcePaymentTypeName())
-                .destinationNumber(response.getDestinationNumber())
-                .destinationType(response.getDestinationPaymentTypeName())
-                .amount(response.getAmount())
-                .status(response.getStatus())
-                .currencyName(response.getCurrencyName())
-                .build();
-    }
-
-
-    private void setUpNextDate(RegularPayment regularPayment) {
-        FrequencyDto frequencyDto = parseFrequency(regularPayment.getFrequency());
-
-        regularPayment.setNextDate(regularPayment.getNextDate()
-                .plusYears(frequencyDto.getYears())
-                .plusMonths(frequencyDto.getMounts())
-                .plusMonths(frequencyDto.getWeeks())
-                .plusMonths(frequencyDto.getDays())
-        );
-    }
-
-    private FrequencyDto parseFrequency(String frequency) {
-        String[] frequencies = frequency.split("_");
-        Long years = Long.parseLong(frequencies[0].substring(0, frequencies[0].length() -1));
-        Long mounts = Long.parseLong(frequencies[1].substring(0, frequencies[1].length() -1));
-        Long weeks = Long.parseLong(frequencies[2].substring(0, frequencies[2].length() -1));
-        Long days = Long.parseLong(frequencies[3].substring(0, frequencies[3].length() -1));
-
-        return new FrequencyDto(years, mounts, weeks, days);
     }
 
 

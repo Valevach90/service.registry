@@ -39,4 +39,6 @@ public class RequestTransferMessage {
 
     @NotBlank
     private String currencyName;
+
+    private UUID regularId;
 }

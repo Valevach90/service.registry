@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 public class FrequencyDto {
 
-    private Long days;
-    private Long weeks;
-    private Long mounts;
     private Long years;
+    private Long mounts;
+    private Long weeks;
+    private Long days;
+
 }

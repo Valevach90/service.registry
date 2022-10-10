@@ -14,15 +14,11 @@ public class RegularPaymentScheduler {
 
     private final RegularPaymentServiceImpl regularPaymentService;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "${scheduler.regular}")
     public void executeRegularPayments() {
         log.info("RegularPaymentScheduler started working");
 
-        boolean paymentsWereDone = regularPaymentService.executeSomeAmountOfRegularPayments();
-
-        while (paymentsWereDone) {
-            paymentsWereDone = regularPaymentService.executeSomeAmountOfRegularPayments();
-        }
+        regularPaymentService.startRegularSchedulerWork();
 
         log.info("RegularPaymentScheduler ended working");
     }

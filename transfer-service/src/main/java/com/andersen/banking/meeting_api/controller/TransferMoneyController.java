@@ -49,8 +49,8 @@ public interface TransferMoneyController {
             description = "create request on transfer money with params in dto object")
     @PostMapping("")
     ResponseEntity<TransferResponseDto> create(
-            @RequestBody
-            @Validated TransferRequestDto transferRequestDto
+            @RequestBody @Validated
+            TransferRequestDto transferRequestDto
     );
 
 

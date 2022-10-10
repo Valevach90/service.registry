@@ -39,6 +39,9 @@ public class TransferRequestDto {
     @Schema(hidden = true)
     private StatusTransfer statusTransfer;
 
+    @Schema(hidden = true)
+    private UUID regularId;
+
     private String comment;
 
 }
