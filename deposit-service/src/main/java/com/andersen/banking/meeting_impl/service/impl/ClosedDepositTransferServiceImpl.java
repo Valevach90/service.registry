@@ -13,9 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Slf4j
+@Service
 public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferService {
 
     private Map<String, UUID> currencyMap;
