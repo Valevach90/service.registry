@@ -66,6 +66,12 @@ public class TransferMoneyTopicListenerImpl implements TransferMoneyTopicListene
             }
         }
 
+        if(message.getSourceType().equalsIgnoreCase(DEPOSIT)) {
+            if(message.getDestinationType().equalsIgnoreCase(CARD)) {
+                return transferMoneyMediatorMap.get("transferReplenishmentMoneyMediatorImpl");
+            }
+        }
+
         throw new DifferentTransferTypeException(transferId);
     }
 }
