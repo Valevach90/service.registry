@@ -22,13 +22,13 @@ public class CardCredResponseDto {
     private UUID id;
 
     @NotBlank
+    @JsonProperty("first_twelve")
+    private String firstTwelveNumbers;
+
+    @NotBlank
     @JsonProperty("last_four_numbers")
     @Pattern(regexp = "[0-9]{4}", message = "last_four_numbers should contain exactly 4 digits")
     private String lastFourNumbers;
-
-    @NotBlank
-    @JsonProperty("first_twelve_numbers_hash")
-    private String firstTwelveNumbersHash;
 
     @NotBlank
     @JsonProperty("holder_name")
@@ -40,4 +40,8 @@ public class CardCredResponseDto {
     @NotNull
     @JsonProperty("payment_system")
     private String paymentSystem;
+
+    @NotNull
+    @JsonProperty("type_name")
+    private String typeName;
 }

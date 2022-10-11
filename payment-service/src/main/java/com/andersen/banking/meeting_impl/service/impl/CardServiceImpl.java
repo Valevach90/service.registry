@@ -5,20 +5,23 @@ import static com.andersen.banking.meeting_impl.util.CardGenerator.generateExpir
 import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.CardProduct;
-import com.andersen.banking.meeting_db.entities.TypeCard;
 import com.andersen.banking.meeting_db.repository.CardRepository;
-import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.aop.LogAnnotation;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.AccountService;
 import com.andersen.banking.meeting_impl.service.CardProductService;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.util.CardGenerator;
-import com.andersen.banking.meeting_impl.util.CryptWithSHA;
+import com.andersen.banking.meeting_impl.util.Crypter;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +41,8 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final AccountService accountService;
     private final CardProductService cardProductService;
+
+    private final Crypter crypt;
 
     @Transactional(readOnly = true)
     @Override
@@ -142,7 +147,7 @@ public class CardServiceImpl implements CardService {
 
     private void setCryptFirstNums(Card card) {
         String firstTwelveNums = card.getFirstTwelveNumbers();
-        card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
+        card.setFirstTwelveNumbers(crypt.encrypt(firstTwelveNums));
     }
 
     @Transactional(readOnly = true)
@@ -168,8 +173,8 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional(readOnly = true)
     @LogAnnotation(before = true, after = true)
-    public Card findByNums(String twelveNums, String fourNums) {
-        String hash = CryptWithSHA.getCrypt(twelveNums);
+    public Card findByNotHashedNums(String twelveNums, String fourNums) {
+        String hash = crypt.encrypt(twelveNums);
         Optional<Card> card =
                 cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(hash, fourNums);
 
@@ -178,5 +183,17 @@ public class CardServiceImpl implements CardService {
         } else {
             throw new NotFoundException(Card.class);
         }
+    }
+
+    @Override
+    @LogAnnotation(before = true, after = true)
+    public Card findByHashedNums(String twelveHashedNums, String fourNums)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        Card card = cardRepository.findByFirstTwelveNumbersAndLastFourNumbers(twelveHashedNums, fourNums)
+                .orElseThrow(() -> new NotFoundException(Card.class));
+
+        card.setFirstTwelveNumbers(crypt.decrypt(twelveHashedNums));
+
+        return card;
     }
 }

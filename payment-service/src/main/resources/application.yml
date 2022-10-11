@@ -1,6 +1,9 @@
 server:
   port: 8182
 
+encrypt:
+  secret: superSecretKey
+
 spring:
   task:
     scheduling:
