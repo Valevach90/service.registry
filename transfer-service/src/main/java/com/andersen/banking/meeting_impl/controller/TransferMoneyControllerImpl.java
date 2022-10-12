@@ -10,8 +10,12 @@ import com.andersen.banking.meeting_db.entity.Transfer;
 import com.andersen.banking.meeting_api.dto.StatusTransfer;
 import com.andersen.banking.meeting_impl.mapper.TransferMapper;
 import com.andersen.banking.meeting_impl.service.*;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
+@CacheConfig(cacheNames = "transferCache")
 @RestController
 @RequiredArgsConstructor
 public class TransferMoneyControllerImpl implements TransferMoneyController {
@@ -34,20 +39,20 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
     private final CurrencyService currencyService;
 
-    private final TransferMoneyValidator transferMoneyValidator;
-
-
     @Override
+    @Cacheable(value = "transfers", key = "#userId.toString()")
     public List<TransferResponseDto> findAllByUserId(UUID userId, Pageable pageable) {
         log.info("Find all transfers by user_id: {}", userId);
-        return transferService.findByUserId(userId, pageable).stream()
+        List<TransferResponseDto> transferResponseDtos = transferService
+                .findByUserId(userId, pageable).stream()
                 .map(transferMapper::transfer2transferResponseDto)
                 .toList();
+        return new ArrayList<>(transferResponseDtos);
     }
 
     @Override
-    public TransferResponseDto findById(UUID transferId, UUID userId) {
-        log.info("Find transfer by id : {} for user_id: {}", transferId, userId);
+    public TransferResponseDto findById(UUID transferId) {
+        log.info("Find transfer by id : {}", transferId);
         Transfer transfer = transferService.findById(transferId);
         return transferMapper.transfer2transferResponseDto(transfer);
     }
@@ -59,6 +64,7 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     }
 
     @Override
+    @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()")
     public ResponseEntity<TransferResponseDto> create(TransferRequestDto transferRequestDto) {
         log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
         transferRequestDto.setStatusTransfer(StatusTransfer.PREPARING);

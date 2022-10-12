@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Interface that presents basic endpoints for working with Card entity. */
+/**
+ * Interface that presents basic endpoints for working with Card entity.
+ */
 @Tag(name = "Card controllers", description = "Endpoints to work with Card entity.")
 @RequestMapping(value = "/api/v1/cards")
 @RestController
@@ -42,7 +44,9 @@ public interface CardController {
 
     @Operation(summary = "Get all cards", description = "get page cards information")
     @GetMapping("/")
-    Page<CardResponseDto> findAll(@ParameterObject @PageableDefault Pageable pageable);
+    Page<CardResponseDto> findAll(@ParameterObject @PageableDefault(
+            sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable);
 
     @Operation(
             summary = "Get all cards by account_id ",
@@ -51,16 +55,16 @@ public interface CardController {
     Page<CardResponseDto> findAllByAccountId(
             @Parameter(description = "account id", required = true) @PathVariable UUID id,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @Operation(summary = "Update card", description = "update card by params in dto object")
     @PutMapping("/{id}")
     CardResponseDto updateCard(
             @Parameter(description = "card id", required = true) @RequestBody @Validated
-                    CardUpdateDto cardUpdateDto);
+            CardUpdateDto cardUpdateDto);
 
     @Operation(summary = "Deactivate card", description = "deactivate card by id")
     @DeleteMapping("/{id}")
@@ -71,7 +75,7 @@ public interface CardController {
     @PostMapping("/")
     CardResponseDto create(
             @Parameter(description = "card", required = true) @RequestBody @Validated
-                    CardRegistrationDto cardDto);
+            CardRegistrationDto cardDto);
 
     @Operation(summary = "Get all cards by type_card ", description = "get page cards by type_card")
     @GetMapping("/search/")
@@ -79,10 +83,10 @@ public interface CardController {
             @RequestParam(required = false) String payment,
             @RequestParam(required = false) String type,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @Operation(
             summary = "Get type card by card id",
@@ -97,7 +101,7 @@ public interface CardController {
     @PutMapping("/types/{id}")
     TypeCardResponseDto updateTypeCard(
             @Parameter(description = "card id", required = true) @RequestBody @Validated
-                    TypeCardUpdateDto typeCardUpdateDto);
+            TypeCardUpdateDto typeCardUpdateDto);
 
     @Operation(
             summary = "Get all cards of owner",
@@ -106,10 +110,10 @@ public interface CardController {
     Page<CardResponseDto> findAllByOwner(
             @Parameter(description = "owner id", required = true) @PathVariable UUID id,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @Operation(
             summary = "Get all cards of owner except already chosen card",
@@ -118,12 +122,12 @@ public interface CardController {
     Page<CardResponseDto> findAllExceptChosenByOwnerId(
             @Parameter(description = "owner id", required = true) @PathVariable UUID ownerId,
             @Parameter(description = "already chosen card id", required = true) @PathVariable
-                    UUID cardId,
+            UUID cardId,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @Operation(
             summary = "Get all cards of current user",
@@ -132,10 +136,10 @@ public interface CardController {
     @GetMapping("/user")
     Page<CardResponseDto> findAllByCurrentUser(Authentication authentication,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @Operation(
             summary = "Get all cards of current user except already chosen card",
@@ -143,15 +147,15 @@ public interface CardController {
     @GetMapping("/user/{cardId}")
     Page<CardResponseDto> findAllExceptChosenByCurrentUser(
             @Parameter(description = "already chosen card id", required = true) @PathVariable
-                    UUID cardId,
+            UUID cardId,
             @ParameterObject
-                    @PageableDefault(
-                            sort = {"id"},
-                            direction = Sort.Direction.DESC)
-                    Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC)
+            Pageable pageable);
 
     @GetMapping("/numbers")
     CardCredResponseDto findCardByCardNumber(
-            @RequestParam(required = true, name = "first_twelve") String twelveNums,
-            @RequestParam(required = true, name = "last_four") String fourNums);
+            @RequestParam(name = "first_twelve") String twelveNums,
+            @RequestParam(name = "last_four") String fourNums);
 }

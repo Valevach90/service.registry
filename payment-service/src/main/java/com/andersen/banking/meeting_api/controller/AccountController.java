@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +37,9 @@ public interface AccountController {
 
     @Operation(summary = "Get all accounts", description = "get page of account's information")
     @GetMapping("/")
-    Page<AccountDto> findAll(@ParameterObject @PageableDefault Pageable pageable);
+    Page<AccountDto> findAll(@ParameterObject @PageableDefault(
+            sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable);
 
     @Operation(
             summary = "Get accounts with ownerId",
@@ -44,7 +47,9 @@ public interface AccountController {
     @GetMapping("/owners/{id}")
     Page<AccountDto> findByOwnerId(
             @Parameter(description = "ownerId", required = true) @PathVariable("id") UUID id,
-            Pageable pageable);
+            @ParameterObject @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC) Pageable pageable);
 
     @Operation(summary = "Get account by id", description = "get account information by id")
     @GetMapping("/{id}")

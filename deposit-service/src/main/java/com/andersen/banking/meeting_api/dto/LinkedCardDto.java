@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,13 +21,16 @@ public class LinkedCardDto {
 
     @NotNull
     @JsonProperty("id")
+    @Schema(description = DESCRIPTION_CARD_ID, example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID id;
 
     @NotBlank
     @JsonProperty("firstTwelveNumbers")
+    @Schema(description = DESCRIPTION_CARD_FIRST_NUMBER, example = EXAMPLE_HASH_FIRST_NUMBER_CARD, defaultValue = EXAMPLE_HASH_FIRST_NUMBER_CARD)
     private String firstTwelveNumbers;
 
     @NotBlank
     @JsonProperty("lastFourNumbers")
+    @Schema(description = DESCRIPTION_CARD_LAST_NUMBER, example = EXAMPLE_LAST_NUMBER_CARD, defaultValue = EXAMPLE_LAST_NUMBER_CARD)
     private String lastFourNumbers;
 }

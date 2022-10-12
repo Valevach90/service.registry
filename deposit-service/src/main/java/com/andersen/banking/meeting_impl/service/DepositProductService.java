@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.service;
 
-import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestCreateDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,10 +18,10 @@ public interface DepositProductService {
     /**
      * Create new deposit product.
      *
-     * @param product deposit product to create
+     * @param depositProductRequestDto deposit product to create
      * @return deposit product
      */
-    DepositProduct create(DepositProduct product);
+    DepositProduct create(DepositProductRequestCreateDto depositProductRequestDto);
 
     /**
      * Find deposit product by id.
@@ -42,7 +44,7 @@ public interface DepositProductService {
      *
      * @param product deposit product to update
      */
-    void update(DepositProduct product);
+    void update(DepositProductRequestDto product);
 
     /**
      * Delete deposit product by id.

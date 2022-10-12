@@ -1,12 +1,18 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
-import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestCreateDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_db.entities.DepositProductDescription;
+import com.andersen.banking.meeting_db.repositories.CurrencyRepository;
 import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
+import com.andersen.banking.meeting_db.repositories.DepositTypeRepository;
 import com.andersen.banking.meeting_impl.exceptions.FilterAccessException;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.meeting_impl.mapping.DepositProductMapper;
 import com.andersen.banking.meeting_impl.service.DepositProductService;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +28,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepositProductServiceImpl implements DepositProductService {
 
     private final DepositProductRepository depositProductRepository;
+    private final CurrencyRepository currencyRepository;
+    private final DepositTypeRepository depositTypeRepository;
+
+    private final DepositProductMapper depositProductMapper;
 
     @Override
     @Transactional
-    public DepositProduct create(DepositProduct product) {
-        log.info("Creating deposit product: {}", product);
+    public DepositProduct create(DepositProductRequestCreateDto depositProductRequestDto) {
+        log.info("Creating deposit product: {}", depositProductRequestDto);
 
-        product.setId(null);
-        for (DepositProductDescription desc : product.getDescriptions()){
-            desc.setDepositProduct(product);
-        }
+        DepositProduct product = depositProductMapper.toDepositProduct(
+                depositProductRequestDto);
+
+        product.setType(depositTypeRepository.getById(depositProductRequestDto.getTypeId()));
+        product.setCurrency(currencyRepository.getById(depositProductRequestDto.getCurrencyId()));
+
+        product.getDescriptions().forEach(description -> description.setDepositProduct(product));
 
         DepositProduct savedProduct = depositProductRepository.save(product);
 
@@ -63,11 +76,16 @@ public class DepositProductServiceImpl implements DepositProductService {
 
     @Override
     @Transactional
-    public void update(DepositProduct product) {
-        log.info("Updating deposit product: {}", product);
+    public void update(DepositProductRequestDto depositProductRequestDto) {
+        log.info("Updating deposit product: {}", depositProductRequestDto);
+
+        DepositProduct product = depositProductMapper.toDepositProduct(depositProductRequestDto);
 
         DepositProduct foundProduct = depositProductRepository.findById(product.getId())
                 .orElseThrow(() -> new NotFoundException(DepositProduct.class, product.getId()));
+
+        product.setCurrency(currencyRepository.getById(depositProductRequestDto.getCurrencyId()));
+        product.setType(depositTypeRepository.getById(depositProductRequestDto.getTypeId()));
 
         depositProductRepository.save(product);
         log.info("Deposit product: {} updated to version: {}", foundProduct, product);

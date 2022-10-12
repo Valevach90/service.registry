@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_api.dto;
 
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CASHBACK;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_DESCRIPTION;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PAYMENT_SYSTEM;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PRICE;
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TYPENAME;
@@ -38,6 +39,7 @@ public class CardProductCreateDto {
             max = 255,
             message = "advantages should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String advantages;
 
     @NotBlank
@@ -47,6 +49,7 @@ public class CardProductCreateDto {
             max = 255,
             message = "bank_partners should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String bankPartners;
 
     @NotBlank
@@ -56,6 +59,7 @@ public class CardProductCreateDto {
             max = 255,
             message = "loyalty_program should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String loyaltyProgram;
 
     @NotBlank

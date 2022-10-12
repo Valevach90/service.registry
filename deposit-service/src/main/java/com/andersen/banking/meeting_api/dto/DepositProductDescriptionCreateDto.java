@@ -5,7 +5,6 @@ import static com.andersen.banking.meeting_api.utils.OpenApiConstants.EXAMPLE_DE
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -16,10 +15,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "dto for deposit product description")
-public class DepositProductDescriptionDto {
-
-    @JsonProperty("id")
-    private UUID id;
+public class DepositProductDescriptionCreateDto {
 
     @NotBlank
     @JsonProperty("shortDescription")

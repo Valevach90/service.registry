@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_api.controller;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
 
+import com.andersen.banking.service.registry.meeting_api.dto.AddressCreateDto;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +30,7 @@ public interface AddressController {
     @Operation(summary = "Create address",
             description = "Create address")
     @PostMapping
-    AddressDto create(@RequestBody AddressDto addressDto);
+    AddressDto create(@RequestBody AddressCreateDto addressDto);
 
     @Operation(summary = "Get all Addresses",
             description = "get all Addresses information")

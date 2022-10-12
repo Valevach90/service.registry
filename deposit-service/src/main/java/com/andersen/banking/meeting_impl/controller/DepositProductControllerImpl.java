@@ -1,12 +1,21 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.DepositProductController;
-import com.andersen.banking.meeting_api.dto.DepositProductDto;
-import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
+import com.andersen.banking.meeting_api.dto.CurrencyDto;
+import com.andersen.banking.meeting_api.dto.DepositTypeDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestCreateDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.meeting_impl.mapping.CurrencyMapper;
 import com.andersen.banking.meeting_impl.mapping.DepositProductMapper;
+import com.andersen.banking.meeting_impl.mapping.DepositTypeMapper;
+import com.andersen.banking.meeting_impl.service.CurrenciesService;
 import com.andersen.banking.meeting_impl.service.DepositProductService;
+import com.andersen.banking.meeting_impl.service.DepositTypeService;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,41 +34,45 @@ import java.util.Optional;
 public class DepositProductControllerImpl implements DepositProductController {
 
     private final DepositProductService depositProductService;
+    private final CurrenciesService currenciesService;
+    private final DepositTypeService depositTypeService;
 
     private final DepositProductMapper depositProductMapper;
+    private final CurrencyMapper currencyMapper;
+    private final DepositTypeMapper depositTypeMapper;
 
     @Override
-    public DepositProductDto create(DepositProductDto depositProductDto) {
-        log.debug("Creating deposit product: {}", depositProductDto);
+    public DepositProductResponseDto create(DepositProductRequestCreateDto depositProductRequestDto) {
+        log.debug("Creating deposit product: {}", depositProductRequestDto);
 
-        DepositProduct depositProduct = depositProductMapper.toDepositProduct(depositProductDto);
+        DepositProduct savedDepositProduct = depositProductService.create(depositProductRequestDto);
 
-        DepositProduct savedDepositProduct = depositProductService.create(depositProduct);
+        DepositProductResponseDto savedDepositProductResponseDto =
+                depositProductMapper.toDepositProductDto(savedDepositProduct);
 
-        DepositProductDto savedDepositProductDto = depositProductMapper.toDepositProductDto(savedDepositProduct);
-
-        log.debug("Created deposit product: {}", savedDepositProductDto);
-        return savedDepositProductDto;
+        log.debug("Created deposit product: {}", savedDepositProductResponseDto);
+        return savedDepositProductResponseDto;
     }
 
     @Override
-    public DepositProductDto findById(UUID id) {
+    public DepositProductResponseDto findById(UUID id) {
         log.debug("Find deposit product by id: {}", id);
 
         Optional<DepositProduct> depositProduct = depositProductService.findById(id);
 
-        DepositProductDto depositProductDto = depositProductMapper.toDepositProductDto(depositProduct.orElseThrow(
+        DepositProductResponseDto depositProductResponseDto =
+                depositProductMapper.toDepositProductDto(depositProduct.orElseThrow(
                 () -> new NotFoundException(DepositProduct.class, id)));
 
-        log.debug("Found deposit product by id: {}", depositProductDto);
-        return depositProductDto;
+        log.debug("Found deposit product by id: {}", depositProductResponseDto);
+        return depositProductResponseDto;
     }
 
     @Override
-    public Page<DepositProductDto> findAll(Pageable pageable) {
+    public Page<DepositProductResponseDto> findAll(Pageable pageable) {
         log.debug("Find all deposit products for pageable: {}", pageable);
 
-        Page<DepositProductDto> allDepositProductDto = depositProductService.findAll(pageable)
+        Page<DepositProductResponseDto> allDepositProductDto = depositProductService.findAll(pageable)
                 .map(depositProductMapper::toDepositProductDto);
 
         log.debug("Found {} deposit products", allDepositProductDto.getContent().size());
@@ -67,13 +80,28 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public void update(DepositProductDto depositProductDto) {
-        log.debug("Updating deposit product: {}", depositProductDto);
+    public List<CurrencyDto> findCurrencies() {
+        log.debug("Try to get list of currency.");
+        return currenciesService.findAll().stream()
+                .map(currencyMapper::toCurrencyDto)
+                .toList();
+    }
 
-        DepositProduct depositProduct = depositProductMapper.toDepositProduct(depositProductDto);
-        depositProductService.update(depositProduct);
+    @Override
+    public List<DepositTypeDto> findDepositType() {
+        log.debug("Try to get list of deposit type.");
+        return depositTypeService.findAll().stream()
+                .map(depositTypeMapper::toDepositTypeDto)
+                .toList();
+    }
 
-        log.debug("Updated deposit product: {}", depositProductDto);
+    @Override
+    public void update(DepositProductRequestDto depositProductRequestDto) {
+        log.debug("Updating deposit product: {}", depositProductRequestDto);
+
+        depositProductService.update(depositProductRequestDto);
+
+        log.debug("Updated deposit product: {}", depositProductRequestDto);
     }
 
     @Override
@@ -86,11 +114,11 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public Page<DepositProductDto> findByDepositNameAndCurrency(Pageable pageable, String depositName, String currency) {
+    public Page<DepositProductResponseDto> findByDepositNameAndCurrency(Pageable pageable, String depositName, String currency) {
         log.debug("Searching deposit products with name = {}, with currency = {} for pageable = {}",
                 depositName, currency, pageable);
 
-        Page<DepositProductDto> foundProducts = depositProductService
+        Page<DepositProductResponseDto> foundProducts = depositProductService
                 .searchByDepositNameAndCurrency(pageable, depositName, currency)
                 .map(depositProductMapper::toDepositProductDto);
 
@@ -109,10 +137,10 @@ public class DepositProductControllerImpl implements DepositProductController {
     }
 
     @Override
-    public Page<DepositProductDto> getFilteredDepositProducts(Pageable pageable, DepositProductFilterDto depositProductFilterDto) {
+    public Page<DepositProductResponseDto> getFilteredDepositProducts(Pageable pageable, DepositProductFilterDto depositProductFilterDto) {
         log.info("Trying to get filtered deposit products using filter: {}", depositProductFilterDto);
 
-        Page<DepositProductDto> foundProducts = depositProductService
+        Page<DepositProductResponseDto> foundProducts = depositProductService
                 .getFilteredDepositProduct(depositProductFilterDto, pageable)
                 .map(depositProductMapper::toDepositProductDto);
 

@@ -1,12 +1,12 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
-import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractEmailFromToken;
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractIdFromToken;
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.extractLoginFromToken;
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
-import com.andersen.banking.service.registry.meeting_api.dto.UserRequestDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserCreateResponseDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserRequestDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
@@ -29,10 +29,10 @@ public class UserControllerImpl implements UserController {
     private final UserMapper userMapper;
 
     @Override
-    public Page<UserDto> findAll(Pageable pageable) {
+    public Page<UserResponseDto> findAll(Pageable pageable) {
         log.trace("Find all users");
 
-        Page<UserDto> result = userService.findAll(pageable)
+        Page<UserResponseDto> result = userService.findAll(pageable)
                 .map(userMapper::toUserDto);
 
         log.trace("Return list of userDto: {}", result.getContent());
@@ -40,13 +40,13 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserDto findUser(Authentication authentication) {
+    public UserResponseDto findUser(Authentication authentication) {
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
         UUID id = UUID.fromString(extractIdFromToken(jwt));
         log.debug("Find user for authentication user with id {}", id);
 
-        UserDto result = userMapper.toUserDto(userService.findById(id));
+        UserResponseDto result = userMapper.toUserDto(userService.findById(id));
 
         log.trace("Return userDto: {}", result);
 
@@ -54,17 +54,17 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserDto create(UserDto userDto) {
-        log.debug("Try to create user: {}", userDto);
+    public UserResponseDto create(UserCreateResponseDto userResponseDto) {
+        log.debug("Try to create user: {}", userResponseDto);
 
-        User user = userMapper.toUser(userDto);
+        User user = userMapper.toUser(userResponseDto);
 
         User savedUser = userService.create(user);
 
-        UserDto savedUserDto = userMapper.toUserDto(savedUser);
+        UserResponseDto savedUserResponseDto = userMapper.toUserDto(savedUser);
 
-        log.debug("created user: {}", savedUserDto);
-        return savedUserDto;
+        log.debug("created user: {}", savedUserResponseDto);
+        return savedUserResponseDto;
     }
 
     @Override

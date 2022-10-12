@@ -1,6 +1,7 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.AddressController;
+import com.andersen.banking.service.registry.meeting_api.dto.AddressCreateDto;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
@@ -25,7 +26,7 @@ public class AddressControllerImpl implements AddressController {
     private final AddressMapper addressMapper;
 
     @Override
-    public AddressDto create(AddressDto addressDto) {
+    public AddressDto create(AddressCreateDto addressDto) {
         log.debug("Try to create address: {}", addressDto);
 
         Address address = addressMapper.toAddress(addressDto);

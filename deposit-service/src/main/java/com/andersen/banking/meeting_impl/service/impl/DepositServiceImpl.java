@@ -1,14 +1,19 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_db.entities.LinkedCard;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.entities.Transfer;
+import com.andersen.banking.meeting_db.repositories.CurrencyRepository;
+import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
 import com.andersen.banking.meeting_db.repositories.DepositRepository;
+import com.andersen.banking.meeting_db.repositories.DepositTypeRepository;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.ResponseTransferMessageBuilder;
+import com.andersen.banking.meeting_impl.mapping.DepositMapper;
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
 import com.andersen.banking.meeting_impl.service.TransferService;
@@ -36,10 +41,14 @@ public class DepositServiceImpl implements DepositService {
     private static final Long MILLIS_IN_MONTH = 2592000000L;
 
     private final DepositRepository depositRepository;
+    private final DepositProductRepository depositProductRepository;
+    private final CurrencyRepository currencyRepository;
+    private final DepositTypeRepository depositTypeRepository;
 
     private final TransferService transferService;
 
     private final TransferMapper transferMapper;
+    private final DepositMapper depositMapper;
 
     @Override
     @Retryable(value = SQLIntegrityConstraintViolationException.class, backoff = @Backoff(delay = 1000))
@@ -98,8 +107,13 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional
-    public void update(Deposit deposit) {
-        log.info("Updating deposit: {}", deposit);
+    public void update(DepositRequestDto depositRequestDto) {
+        log.info("Updating deposit: {}", depositRequestDto);
+
+        Deposit deposit = depositMapper.toDeposit(depositRequestDto);
+        deposit.setDepositProduct(depositProductRepository.getById(depositRequestDto.getProductId()));
+        deposit.setCurrency(currencyRepository.getById(depositRequestDto.getCurrencyId()));
+        deposit.setType(depositTypeRepository.getById(depositRequestDto.getTypeId()));
 
         Deposit foundDeposit = depositRepository.findById(deposit.getId())
                 .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getId()));

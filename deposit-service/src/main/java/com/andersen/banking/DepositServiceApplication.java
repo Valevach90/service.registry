@@ -8,7 +8,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @EnableEurekaClient
 public class DepositServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DepositServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DepositServiceApplication.class, args);
+    }
 }
