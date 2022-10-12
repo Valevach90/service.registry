@@ -29,7 +29,7 @@ public class CardProductCreateDto {
 
     @JsonProperty("price")
     @Schema(defaultValue = EXAMPLE_PRICE, example = EXAMPLE_PRICE)
-    private Double price;
+    private Long price;
 
     @NotBlank
     @JsonProperty("advantages")

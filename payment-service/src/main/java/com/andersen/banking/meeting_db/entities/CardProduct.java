@@ -33,7 +33,7 @@ public class CardProduct {
     private Integer cashback;
 
     @Column(name = "price")
-    private Double price;
+    private Long price;
 
     @Column(name = "advantages", nullable = false)
     private String advantages;

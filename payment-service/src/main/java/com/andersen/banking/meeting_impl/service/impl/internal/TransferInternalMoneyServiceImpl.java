@@ -44,7 +44,7 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
     private final RegularPaymentService regularPaymentService;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RuntimeException.class)
+    @Transactional(propagation = Propagation.REQUIRED)
     public ResponseTransferMessage executeTransfer(
             RequestTransferMessage message) {
         log.info("Getting instanse: {}", message.getRegularId());
@@ -84,8 +84,9 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
             log.info("Transfer operation failed. Transfer id : {}.", transferId);
 
             if (message.getRegularId() != null) {
-                log.info("Backing up regular payment with id {}", message.getRegularId());
+                log.info("Backing up and deactivating regular payment with id {}", message.getRegularId());
                 RegularPayment regularPayment = regularPaymentService.findById(message.getRegularId());
+                regularPayment.setIsActive(false);
                 RegularPaymentUtil.backUpNextDate(regularPayment);
                 regularPaymentService.update(regularPayment);
             }

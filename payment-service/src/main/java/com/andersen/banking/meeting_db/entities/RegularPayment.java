@@ -53,4 +53,7 @@ public class RegularPayment {
 
     @Column(name = "frequency", nullable = false)
     private String frequency;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 }

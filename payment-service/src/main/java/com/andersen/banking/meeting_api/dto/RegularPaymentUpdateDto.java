@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,11 +21,8 @@ import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_FRE
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegularPaymentResponseDto {
+public class RegularPaymentUpdateDto {
 
-    @JsonProperty("id")
-    @NotNull
-    private UUID id;
 
     @NotBlank
     @Pattern(
@@ -33,13 +31,14 @@ public class RegularPaymentResponseDto {
     @JsonProperty("description")
     private String description;
 
+    @Schema(
+            description = "Regular payment start date",
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
     @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate startDate;
-
-    @JsonProperty("next_date")
-    @NotNull
-    private LocalDate nextDate;
 
     @JsonProperty("source_card_id")
     @NotNull
@@ -53,9 +52,13 @@ public class RegularPaymentResponseDto {
     @NotNull
     private Long amount;
 
+    @Schema(
+            description = "Frequency of sending payments",
+            example = EXAMPLE_FREQUENCY,
+            defaultValue = EXAMPLE_FREQUENCY)
+    @JsonProperty("frequency")
     @NotNull
     private String frequency;
-
 
     @JsonProperty("is_active")
     @NotNull

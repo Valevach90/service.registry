@@ -35,7 +35,7 @@ public class AccountChangesResponseDto {
     @NotNull
     @JsonProperty(value = "close_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate closeDate = null;
+    private LocalDate closeDate;
 
     @NotNull
     @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)

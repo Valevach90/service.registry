@@ -72,7 +72,7 @@ public class CardServiceImpl implements CardService {
     @LogAnnotation(before = true, after = true)
     public Card deactivateById(UUID id) {
         Card card = findById(id);
-        card.setActive(false);
+        card.setIsActive(false);
 
         return cardRepository.save(card);
     }
@@ -84,7 +84,7 @@ public class CardServiceImpl implements CardService {
 
         if (!cardsToDeactivate.isEmpty()) {
             cardsToDeactivate.forEach(card -> {
-                card.setActive(false);
+                card.setIsActive(false);
             });
             cardRepository.saveAll(cardsToDeactivate);
 
@@ -123,7 +123,7 @@ public class CardServiceImpl implements CardService {
         generateExpirationTime(card);
         card.setFirstTwelveNumbers(cardNumber.substring(0, 12));
         card.setLastFourNumbers(cardNumber.substring(12, 16));
-        card.setActive(true);
+        card.setIsActive(true);
 
         setCryptFirstNums(card);
     }

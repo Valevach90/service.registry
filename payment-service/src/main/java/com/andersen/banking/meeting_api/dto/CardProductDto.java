@@ -27,7 +27,7 @@ public class CardProductDto {
     private Integer cashback;
 
     @JsonProperty("price")
-    private Double price;
+    private Long price;
 
     @NotBlank
     @JsonProperty("advantages")

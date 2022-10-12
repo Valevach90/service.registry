@@ -58,6 +58,7 @@ public class CardUpdateDto {
     @JsonProperty("holder_name")
     private String holderName;
 
+    @NotNull
     @JsonProperty("is_active")
-    private boolean isActive;
+    private Boolean isActive;
 }
