@@ -1,4 +1,4 @@
-package com.andersen.banking.service.registry.meeting_api.dto;
+package com.andersen.banking.service.registry.meeting_api.dto.user;
 
 
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_EMAIL;
@@ -6,11 +6,15 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_LAST_NAME;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PATRONYMIC;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PHONE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_USERNAME;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_USER_ID;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_EMAIL;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_FIRST_NAME;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_LAST_NAME;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PATRONYMIC;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_PHONE;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_USERNAME;
+import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,14 +37,10 @@ import lombok.NoArgsConstructor;
 @Schema(description = "dto for user")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDto {
+public class UserCreateResponseDto {
 
-    @Schema(hidden = true)
-    @JsonProperty("id")
-    private UUID id;
-
-    @Schema(hidden = true)
-    @JsonProperty("username")
+    @NotNull(message = "Username can't be null.")
+    @Schema(description = DESCRIPTION_USERNAME, example = EXAMPLE_USERNAME, defaultValue = EXAMPLE_USERNAME)
     private String username;
 
     @Schema(description = DESCRIPTION_FIRST_NAME, example = EXAMPLE_FIRST_NAME, defaultValue = EXAMPLE_FIRST_NAME)
@@ -71,8 +71,4 @@ public class UserRequestDto {
     @NotNull(message = "Phone number can't be null.")
     @Pattern(regexp = "[0-9]{10,12}", message = "Invalid phone number.")
     private String phone;
-
-    @JsonInclude(Include.NON_NULL)
-    @Schema(hidden = true)
-    private String password;
 }

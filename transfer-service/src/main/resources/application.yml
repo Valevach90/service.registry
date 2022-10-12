@@ -32,6 +32,15 @@ spring:
     user: psqluser
     password: PoSPa$$woRd
 
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
   redis:
     host: 10.10.14.31
     port: 30002

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,14 +39,17 @@ public interface CardProductController {
             summary = "Get all card products",
             description = "get card products information")
     @GetMapping("/")
-    Page<CardProductDto> findAll(@ParameterObject @PageableDefault Pageable pageable);
+    Page<CardProductDto> findAll(@ParameterObject @PageableDefault(
+            sort = {"id"},
+            direction = Sort.Direction.DESC) Pageable pageable);
 
     @Operation(
             summary = "Create card product",
             description = "create card product by params in dto object")
     @PostMapping("/")
     CardProductDto create(
-            @Parameter(description = "card product", required = true) @RequestBody @Validated CardProductCreateDto cardProductCreateDto
+            @Parameter(description = "card product", required = true)
+            @RequestBody @Validated CardProductCreateDto cardProductCreateDto
     );
 
 
@@ -54,7 +58,8 @@ public interface CardProductController {
             description = "update card by param in dto object")
     @PutMapping("/")
     CardProductDto update(
-            @Parameter(description = "card product id", required = true) @RequestBody @Validated CardProductDto cardProductDto
+            @Parameter(description = "card product id", required = true)
+            @RequestBody @Validated CardProductDto cardProductDto
     );
 
     @Operation(

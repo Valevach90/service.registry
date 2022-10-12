@@ -1,6 +1,7 @@
 package com.andersen.banking.service.registry.meeting_impl.controller;
 
 import com.andersen.banking.service.registry.meeting_api.controller.PassportController;
+import com.andersen.banking.service.registry.meeting_api.dto.PassportCreateDto;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
@@ -94,7 +95,7 @@ public class PassportControllerImpl implements PassportController {
     }
 
     @Override
-    public PassportDto create(PassportDto passportDto) {
+    public PassportDto create(PassportCreateDto passportDto) {
         log.debug("creating passport: {}", passportDto);
 
         Passport passport = passportMapper.toPassport(passportDto);

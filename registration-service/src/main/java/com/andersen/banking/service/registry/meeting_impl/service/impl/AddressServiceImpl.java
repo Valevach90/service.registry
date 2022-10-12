@@ -23,8 +23,6 @@ public class AddressServiceImpl implements AddressService {
     public Address create(Address address) {
         log.debug("Creating new address: {}", address);
 
-        address.setId(null);
-
         Address saveAddress = addressRepository.save(address);
 
         log.debug("Created new address: {}", saveAddress);

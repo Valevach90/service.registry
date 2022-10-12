@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +30,7 @@ public class RegularPaymentResponseDto {
             regexp = "[a-zA-Z- ]{3,30}",
             message = "description should have at least 3 and at maximum 30 characters")
     @JsonProperty("description")
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String description;
 
     @Schema(
@@ -48,20 +51,23 @@ public class RegularPaymentResponseDto {
 
     @JsonProperty("source_card_id")
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID sourceCardId;
 
     @JsonProperty("recipient_card_id")
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID recipientCardId;
 
     @JsonProperty("amount")
     @NotNull
+    @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     private Long amount;
 
     @Schema(
-            description = "Frequency of sending payments",
-            example = "monthly",
-            defaultValue = "monthly")
+            description = EXAMPLE_DESCRIPTION_FREQUENCY,
+            example = EXAMPLE_FREQUENCY,
+            defaultValue = EXAMPLE_FREQUENCY)
     @JsonProperty("frequency")
     @NotNull
     private String frequency;

@@ -1,7 +1,8 @@
-package com.andersen.banking.meeting_api.dto;
+package com.andersen.banking.meeting_api.dto.deposit;
 
 import static com.andersen.banking.meeting_api.utils.OpenApiConstants.*;
 
+import com.andersen.banking.meeting_api.dto.LinkedCardDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;

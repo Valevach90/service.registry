@@ -1,7 +1,10 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,13 +20,16 @@ public class TypeCardResponseDto {
 
     @NotNull
     @JsonProperty("id")
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID id;
 
     @NotNull
     @JsonProperty("payment_system")
+    @Schema(example = EXAMPLE_PAYMENT_SYSTEM, defaultValue = EXAMPLE_PAYMENT_SYSTEM)
     private String paymentSystem;
 
     @NotNull
     @JsonProperty("type_name")
+    @Schema(example = EXAMPLE_TYPENAME, defaultValue = EXAMPLE_TYPENAME)
     private String typeName;
 }

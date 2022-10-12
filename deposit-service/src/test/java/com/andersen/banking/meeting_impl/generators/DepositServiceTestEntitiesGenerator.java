@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.generators;
 
 import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
 import com.andersen.banking.meeting_impl.kafka.message.request.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import com.andersen.banking.meeting_db.entities.*;
@@ -131,8 +133,8 @@ public class DepositServiceTestEntitiesGenerator {
         return product;
     }
 
-    public static DepositProductDto generateDepositProductDto(DepositProduct product) {
-        DepositProductDto productDto = new DepositProductDto();
+    public static DepositProductResponseDto generateDepositProductDto(DepositProduct product) {
+        DepositProductResponseDto productDto = new DepositProductResponseDto();
 
         productDto.setId(product.getId());
         productDto.setDepositName(product.getDepositName());
@@ -328,15 +330,15 @@ public class DepositServiceTestEntitiesGenerator {
         return pageOfProducts;
     }
 
-    public static Page<DepositProductDto> generatePageOfDepositProductsDto(Page<DepositProduct> pageOfDepositProducts) {
+    public static Page<DepositProductResponseDto> generatePageOfDepositProductsDto(Page<DepositProduct> pageOfDepositProducts) {
         Pageable pageable = pageOfDepositProducts.getPageable();
 
-        List<DepositProductDto> listOfProductsDto = Stream
-                .generate(DepositProductDto::new)
+        List<DepositProductResponseDto> listOfProductsDto = Stream
+                .generate(DepositProductResponseDto::new)
                 .limit(pageable.getPageSize())
                 .collect(Collectors.toList());
 
-        Page<DepositProductDto> pageOfProductsDto = new PageImpl<>(listOfProductsDto, pageable, PAGE_SIZE);
+        Page<DepositProductResponseDto> pageOfProductsDto = new PageImpl<>(listOfProductsDto, pageable, PAGE_SIZE);
 
         return pageOfProductsDto;
     }

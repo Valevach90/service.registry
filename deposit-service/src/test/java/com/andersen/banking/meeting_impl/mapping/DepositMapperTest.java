@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_impl.mapping;
 
-import com.andersen.banking.meeting_api.dto.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

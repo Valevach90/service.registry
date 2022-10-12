@@ -4,6 +4,7 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_USER;
 
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +27,7 @@ public class PersonalDataDto {
     @Schema(description = DESCRIPTION_USER)
     @JsonProperty("user")
     @NotNull(message = "User can't be null.")
-    UserDto user;
+    UserResponseDto user;
 
     @Schema(description = DESCRIPTION_PASSPORT)
     @JsonProperty("passport")

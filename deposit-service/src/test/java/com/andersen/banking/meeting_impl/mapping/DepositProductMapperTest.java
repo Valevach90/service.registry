@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_impl.mapping;
 
-import com.andersen.banking.meeting_api.dto.DepositProductDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DepositProductMapperTest {
 
     private DepositProduct product;
-    private DepositProductDto productDto;
+    private DepositProductResponseDto productDto;
 
     @Autowired
     DepositProductMapper depositProductMapper;
@@ -34,7 +34,7 @@ public class DepositProductMapperTest {
 
     @Test
     void toDepositProductDto_whenOk_shouldReturnDepositProductDto(){
-        DepositProductDto result = depositProductMapper.toDepositProductDto(product);
+        DepositProductResponseDto result = depositProductMapper.toDepositProductDto(product);
 
         assertEquals(productDto, result);
     }

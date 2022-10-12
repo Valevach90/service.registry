@@ -130,8 +130,6 @@ public class PassportServiceImpl implements PassportService {
         passport.setAddress(address);
         passport.setUserId(user.getId());
 
-        passport.setId(null);
-
         Passport savedPassport = passportRepository.save(passport);
 
         log.info("created passport: {}", savedPassport);

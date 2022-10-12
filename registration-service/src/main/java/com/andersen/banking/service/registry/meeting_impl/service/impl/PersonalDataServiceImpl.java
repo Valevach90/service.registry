@@ -3,7 +3,7 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 import com.andersen.banking.service.registry.meeting_api.dto.AddressDto;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import com.andersen.banking.service.registry.meeting_api.dto.PersonalDataDto;
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
@@ -40,17 +40,17 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     public PersonalDataDto getPersonalData(String email) {
         log.info("Find user personal data by user email: {}", email);
 
-        UserDto userDto = userMapper.toUserDto(userService.findByEmail(email));
+        UserResponseDto userResponseDto = userMapper.toUserDto(userService.findByEmail(email));
 
         PassportDto passportDto = passportMapper.toPassportDto(
-                passportRepository.findByUserId(userDto.getId())
-                        .orElseThrow(() -> new NotFoundException(Passport.class, userDto.getId())));
+                passportRepository.findByUserId(userResponseDto.getId())
+                        .orElseThrow(() -> new NotFoundException(Passport.class, userResponseDto.getId())));
 
         AddressDto addressDto = addressMapper.toAddressDto(
-                addressRepository.findAddressByUserId(userDto.getId())
-                        .orElseThrow(() -> new NotFoundException(Address.class, userDto.getId())));
+                addressRepository.findAddressByUserId(userResponseDto.getId())
+                        .orElseThrow(() -> new NotFoundException(Address.class, userResponseDto.getId())));
 
-        PersonalDataDto personalDataDto = new PersonalDataDto(userDto, passportDto, addressDto);
+        PersonalDataDto personalDataDto = new PersonalDataDto(userResponseDto, passportDto, addressDto);
 
         log.info("Found user personal data: {}", personalDataDto);
 
