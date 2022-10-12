@@ -29,26 +29,30 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     @Override
     public void transferToAccount(List<Deposit> deposits) {
 
-        deposits.stream()
-                .map(this::createTransfer)
-                .forEach(moneyTransfer::createTransfer);
+        List<TransferRequestDto> list = deposits.stream()
+                .map(this::createTransfer).toList();
 
-        resetAmountAfterTransferToCard(deposits);
+        list.forEach(moneyTransfer::createTransfer);
+
+//        resetAmountAfterTransferToCard(deposits);
     }
 
     private TransferRequestDto createTransfer(Deposit deposit) {
         setUpCurrencyMap();
         setUpPaymentTypeMap();
 
-        return TransferRequestDto.builder()
+        TransferRequestDto transferRequestDto = TransferRequestDto.builder()
                 .amount(deposit.getAmount())
-                .currencyId(currencyMap.get(deposit.getCurrency().getName()))
+                .currencyId(currencyMap.get("EURO"))
                 .userId(deposit.getUserId())
                 .sourcePaymentTypeId(paymentTypeMap.get("DEPOSIT"))
                 .sourceNumber(deposit.getDepositNumber())
                 .destinationPaymentTypeId(paymentTypeMap.get("CARD"))
                 .destinationNumber(getCardNumber(deposit))
                 .build();
+
+
+        return transferRequestDto;
     }
 
     private void setUpCurrencyMap() {
@@ -57,7 +61,7 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     private void setUpPaymentTypeMap() {
-        currencyMap = moneyTransfer.getAllPaymentTypes().stream()
+        paymentTypeMap = moneyTransfer.getAllPaymentTypes().stream()
                 .collect(Collectors.toMap(PaymentTypeDto::getName, PaymentTypeDto::getId));
     }
 
@@ -68,6 +72,6 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     private void resetAmountAfterTransferToCard(List<Deposit> list) {
-        list.stream().peek(x -> x.setAmount(0L));
+        list.forEach(x -> x.setAmount(0L));
     }
 }
