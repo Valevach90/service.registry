@@ -63,3 +63,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
+
+uri:
+  exchange-rates: https://api.exchangerate.host/latest

@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,5 +69,8 @@ public interface InformationController {
     List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
                                                   @PathVariable(value = "id") Long branchId);
 
-
+    @Operation(summary = "Get exchange rates",
+            description = "get list with all exchange rates")
+    @GetMapping("/exchange-rates/{currency}")
+    ExchangeRatesDto getExchangeRates(@PathVariable("currency") String currency);
 }

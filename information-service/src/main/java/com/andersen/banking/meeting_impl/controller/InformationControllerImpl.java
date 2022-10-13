@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_api.dto.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_impl.service.InformationService;
@@ -66,5 +67,11 @@ public class InformationControllerImpl implements InformationController {
     public List<TimeTableDto> getAllTimeTablesByBranchId(Long addressId) {
         log.info("get timetables");
         return informationService.getListTimeTableDtoByBranchId(addressId);
+    }
+
+    @Override
+    public ExchangeRatesDto getExchangeRates(String currency) {
+        log.info("Get exchange rates for currency {}", currency);
+        return informationService.getExchangeRates(currency);
     }
 }
