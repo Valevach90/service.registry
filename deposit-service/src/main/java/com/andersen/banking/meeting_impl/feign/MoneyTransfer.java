@@ -6,9 +6,11 @@ import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
 import com.andersen.banking.meeting_impl.feign.dto.TransferResponseDto;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Component
 @FeignClient(name = "transfer-service")
 public interface MoneyTransfer {
 

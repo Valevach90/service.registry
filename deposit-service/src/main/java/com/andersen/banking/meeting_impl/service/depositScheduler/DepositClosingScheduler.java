@@ -16,22 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DepositClosingScheduler {
 
-    private final DepositRepository depositRepository;
-
     private final ClosedDepositTransferService closedDepositTransferService;
 
-    @Transactional
     @Scheduled(cron = "${scheduler.deposit}")
     public void closingDepositsScheduling() {
         log.info("START SCHEDULING");
-        List<Deposit> list;
-        do {
-            Pageable page = Pageable.ofSize(1000);
-            list = depositRepository.closingScheduler(page);
-            list.forEach(deposit -> deposit.setIsActive(false));
-            closedDepositTransferService.transferToAccount(list);
-            log.info("deposits with the current closing date are closed");
-            depositRepository.saveAll(list);
-        } while (!list.isEmpty());
+        closedDepositTransferService.closingDeposits();
     }
 }
