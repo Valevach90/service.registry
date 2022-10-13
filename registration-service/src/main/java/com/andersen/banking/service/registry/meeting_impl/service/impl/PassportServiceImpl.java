@@ -143,7 +143,7 @@ public class PassportServiceImpl implements PassportService {
         final LocalDate birthDate = passport.getBirthday();
         User user = userService.findById(passport.getUserId());
         String userFirstName = user.getFirstName();
-        String patronymic = user.getPatronymic();
+        Optional<String> patronymic = Optional.ofNullable(user.getPatronymic());
         String userLastName = user.getLastName();
 
         if (dateSupportService.checkIfDateIsLaterThanToday(dateIssue)) {
@@ -179,9 +179,11 @@ public class PassportServiceImpl implements PassportService {
                     String.format("Wrong last name: %s. Does not match the account last name", passport.getLastName()));
         }
 
-        if(!patronymic.equals(passport.getPatronymic())) {
-            throw new WrongNameException(
-                    String.format("Wrong patronymic: %s. Does not match the account patronymic", passport.getPatronymic()));
+        if(patronymic.isPresent() && Optional.ofNullable(passport.getPatronymic()).isPresent()) {
+            if(!patronymic.get().equals(passport.getPatronymic())) {
+                throw new WrongNameException(
+                        String.format("Wrong patronymic: %s. Does not match the account patronymic", passport.getPatronymic()));
+            }
         }
     }
 }

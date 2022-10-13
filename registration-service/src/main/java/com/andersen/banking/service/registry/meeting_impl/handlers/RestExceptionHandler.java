@@ -64,7 +64,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(WrongNameException.class)
     public String handleWrongNameException(WrongNameException exception) {
-        log.error("incorrect data: first name or last name: {}", exception.toString());
+        log.error("incorrect data: first name, last name or patronymic: {}", exception.toString());
         return exception.getLocalizedMessage();
     }
 

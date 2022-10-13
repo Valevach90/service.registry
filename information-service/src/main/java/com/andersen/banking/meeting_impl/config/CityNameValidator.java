@@ -13,5 +13,4 @@ public class CityNameValidator implements ConstraintValidator<CityNameConstraint
     public boolean isValid(String cityName, ConstraintValidatorContext context) {
         return cityName != null && cityName.length() > 2 && cityName.matches("[a-zA-Z]+");
     }
-
 }

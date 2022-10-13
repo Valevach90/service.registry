@@ -1,4 +1,4 @@
-package com.andersen.banking.meeting_impl.config;
+package com.andersen.banking.service.registry.meeting_impl.config;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,11 +9,11 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = CityNameValidator.class)
-@Target( {ElementType.METHOD, ElementType.FIELD})
+@Constraint(validatedBy = PatronymicValidator.class)
+@Target( {ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CityNameConstraint {
-    String message() default "MY CUSTOM <MESSAGE>";
+public @interface PatronymicConstraint {
+    String message() default "Patronymic Validator";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
