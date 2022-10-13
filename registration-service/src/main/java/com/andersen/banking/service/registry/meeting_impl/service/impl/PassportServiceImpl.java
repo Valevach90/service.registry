@@ -141,8 +141,10 @@ public class PassportServiceImpl implements PassportService {
         final LocalDate dateIssue = passport.getDateIssue();
         final LocalDate terminationDate = passport.getTerminationDate();
         final LocalDate birthDate = passport.getBirthday();
-        String userFirstName = userService.findById(passport.getUserId()).getFirstName();
-        String userLastName = userService.findById(passport.getUserId()).getLastName();
+        User user = userService.findById(passport.getUserId());
+        String userFirstName = user.getFirstName();
+        String patronymic = user.getPatronymic();
+        String userLastName = user.getLastName();
 
         if (dateSupportService.checkIfDateIsLaterThanToday(dateIssue)) {
             throw new ValidationException(
@@ -175,6 +177,11 @@ public class PassportServiceImpl implements PassportService {
         if(!userLastName.equals(passport.getLastName())) {
             throw new WrongNameException(
                     String.format("Wrong last name: %s. Does not match the account last name", passport.getLastName()));
+        }
+
+        if(!patronymic.equals(passport.getPatronymic())) {
+            throw new WrongNameException(
+                    String.format("Wrong patronymic: %s. Does not match the account patronymic", passport.getPatronymic()));
         }
     }
 }
