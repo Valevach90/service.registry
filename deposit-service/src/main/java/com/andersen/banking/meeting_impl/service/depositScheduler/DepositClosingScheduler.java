@@ -28,12 +28,10 @@ public class DepositClosingScheduler {
         do {
             Pageable page = Pageable.ofSize(1000);
             list = depositRepository.closingScheduler(page);
-//            list.forEach(deposit -> deposit.setIsActive(false));
+            list.forEach(deposit -> deposit.setIsActive(false));
             closedDepositTransferService.transferToAccount(list);
             log.info("deposits with the current closing date are closed");
             depositRepository.saveAll(list);
         } while (!list.isEmpty());
     }
-
-
 }
