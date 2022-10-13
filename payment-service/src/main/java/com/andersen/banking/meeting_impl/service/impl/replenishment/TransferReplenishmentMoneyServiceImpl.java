@@ -47,8 +47,8 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
             doFilterBeforeTransfer(requestTransferMessage, targetAccount);
         }
 
-        if(requestTransferMessage.getSourceType() == "DEPOSIT") {
-            requestTransferMessage.setAmount(requestTransferMessage.getAmount() * -1);
+        if(requestTransferMessage.getSourceType().equals("DEPOSIT")) {
+            requestTransferMessage.setAmount(requestTransferMessage.getAmount() * -1L);
         }
 
         boolean isTransferred = accountService.changeAccountBalance(targetAccount.getId(),
@@ -58,13 +58,13 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
 
             builder.statusDescription(StatusDescription.FAILED.getDescription());
             builder.status(Status.STATUS_ROLLING_BACK);
-        } else if (requestTransferMessage.getSourceType() == "CARD"){
+        } else if (requestTransferMessage.getSourceType().equals("CARD")){
             log.info("Successfully transfer money. Transfer id : {}", transferId);
 
             builder.statusDescription(StatusDescription.GET_FROM_CARD.getDescription());
             builder.status(Status.STATUS_COMMITTING);
-        } else if (requestTransferMessage.getSourceType() == "DEPOSIT"){
-            log.info("Successfully transfer money frm deposit : {}. Transfer id : {}",
+        } else if (requestTransferMessage.getSourceType().equals("DEPOSIT")){
+            log.info("Successfully transfer money from deposit : {}. Transfer id : {}",
                     requestTransferMessage.getSourceNumber(), transferId);
 
             builder.statusDescription(StatusDescription.GET_FROM_DEPOSIT.getDescription());
@@ -77,7 +77,7 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
 
     private Account getTargetAccount(RequestTransferMessage requestTransferMessage) {
 
-        String requestDestNum = requestTransferMessage.getSourceNumber();
+        String requestDestNum = requestTransferMessage.getDestinationNumber();
         log.info("Getting cards by request destination nums = {}", requestDestNum);
         int srcHash = requestDestNum.length() - LAST_FOUR_NUMBERS_CARD;
 

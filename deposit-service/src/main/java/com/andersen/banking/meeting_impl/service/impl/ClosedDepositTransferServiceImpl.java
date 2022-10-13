@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_db.entities.LinkedCard;
+import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.feign.MoneyTransfer;
 import com.andersen.banking.meeting_impl.feign.dto.CurrencyDto;
 import com.andersen.banking.meeting_impl.feign.dto.PaymentTypeDto;
@@ -34,14 +35,14 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
 
         list.forEach(moneyTransfer::createTransfer);
 
-//        resetAmountAfterTransferToCard(deposits);
+        resetAmountAfterTransferToCard(deposits);
     }
 
     private TransferRequestDto createTransfer(Deposit deposit) {
         setUpCurrencyMap();
         setUpPaymentTypeMap();
 
-        TransferRequestDto transferRequestDto = TransferRequestDto.builder()
+        return TransferRequestDto.builder()
                 .amount(deposit.getAmount())
                 .currencyId(currencyMap.get("EURO"))
                 .userId(deposit.getUserId())
@@ -50,9 +51,6 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
                 .destinationPaymentTypeId(paymentTypeMap.get("CARD"))
                 .destinationNumber(getCardNumber(deposit))
                 .build();
-
-
-        return transferRequestDto;
     }
 
     private void setUpCurrencyMap() {
@@ -66,7 +64,8 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     private String getCardNumber(Deposit deposit) {
-        LinkedCard card = deposit.getLinkedCards().stream().findFirst().get();
+        LinkedCard card = deposit.getLinkedCards().stream().findFirst()
+                .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getDepositNumber(), deposit.getUserId()));
 
         return card.getFirstTwelveNumbers() + card.getLastFourNumbers();
     }
