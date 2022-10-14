@@ -26,15 +26,14 @@ public class CardCredResponseDto {
     private UUID id;
 
     @NotBlank
+    @JsonProperty("first_twelve")
+    private String firstTwelveNumbers;
+
+    @NotBlank
     @JsonProperty("last_four_numbers")
     @Pattern(regexp = "[0-9]{4}", message = "last_four_numbers should contain exactly 4 digits")
     @Schema(example = EXAMPLE_LAST_NUMBER_CARD, defaultValue = EXAMPLE_LAST_NUMBER_CARD)
     private String lastFourNumbers;
-
-    @NotBlank
-    @JsonProperty("first_twelve_numbers_hash")
-    @Schema(example = EXAMPLE_HASH_FIRST_NUMBER_CARD, defaultValue = EXAMPLE_HASH_FIRST_NUMBER_CARD)
-    private String firstTwelveNumbersHash;
 
     @NotBlank
     @JsonProperty("holder_name")
@@ -48,4 +47,8 @@ public class CardCredResponseDto {
     @JsonProperty("payment_system")
     @Schema(example = EXAMPLE_PAYMENT_SYSTEM, defaultValue = EXAMPLE_PAYMENT_SYSTEM)
     private String paymentSystem;
+
+    @NotNull
+    @JsonProperty("type_name")
+    private String typeName;
 }
