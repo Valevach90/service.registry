@@ -8,7 +8,6 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_CODE;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_DATE_ISSUE;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_DEPARTMENT_ISSUED;
-import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_ID;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_SERIAL_NUMBER;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PASSPORT_TERMINATION_DATE;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.DESCRIPTION_PATRONYMIC;
@@ -26,6 +25,7 @@ import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiCon
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_TERMINATION_DATE;
 import static com.andersen.banking.service.registry.meeting_api.utils.OpenApiConstants.EXAMPLE_UUID;
 
+import com.andersen.banking.service.registry.meeting_impl.config.PatronymicConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -94,7 +94,7 @@ public class PassportCreateDto {
 
     @Schema(description = DESCRIPTION_PATRONYMIC, example = EXAMPLE_PATRONYMIC, defaultValue = EXAMPLE_PATRONYMIC)
     @JsonProperty("patronymic")
-    @Pattern(regexp = "(?=.{1,30}$)([a-zA-Z]+(?:[-]?[a-zA-Z]+))|[a-zA-Z]{1,30}", message = "Invalid patronymic.")
+    @PatronymicConstraint
     private String patronymic;
 
     @Schema(description = DESCRIPTION_PASSPORT_DEPARTMENT_ISSUED, example = EXAMPLE_PASSPORT_DEPARTMENT_ISSUED,

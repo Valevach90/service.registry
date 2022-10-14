@@ -100,6 +100,11 @@ public class DepositDto {
     @NotNull(message = "Revocation Option can't be null.")
     private Boolean isRevocable;
 
+    @Schema(description = OpenApiConstants.DESCRIPTION_IS_REVOCABLE, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
+    @JsonProperty("Deposit status (active or nonactive")
+    @NotNull(message = "Revocation Option can't be null.")
+    private Boolean isActive;
+
     @Schema(description = OpenApiConstants.DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("userId")
     @NotNull(message = "User id can't be null.")
