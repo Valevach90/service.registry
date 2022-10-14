@@ -8,7 +8,6 @@ spring:
         size: 4
   application:
     name: payment-service
-
   cloud:
     stream:
       function:
@@ -38,6 +37,10 @@ spring:
     bootstrap-servers: 10.10.14.68:19092
     consumer:
       group-id: payment-service
+      max-poll-records: 100
+      heartbeat-interval: 1000
+    listener:
+      poll-timeout: 30000
 
 
 logging:
