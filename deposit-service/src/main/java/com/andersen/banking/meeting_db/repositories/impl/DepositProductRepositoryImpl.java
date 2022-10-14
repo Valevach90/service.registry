@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_db.repositories.impl;
 
-import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_db.entities.DepositType;
 import com.andersen.banking.meeting_db.repositories.CurrencyRepository;

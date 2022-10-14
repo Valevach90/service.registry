@@ -1,9 +1,9 @@
 package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.dto.DepositCreateRequestDto;
-import com.andersen.banking.meeting_api.dto.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositCreateRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
 
-import com.andersen.banking.meeting_api.dto.DepositRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -65,7 +65,7 @@ public interface DepositController {
             description = "get page of all deposits"
     )
     @GetMapping
-    Page<DepositRequestDto> findAll(
+    Page<DepositDto> findAll(
             @ParameterObject
             @PageableDefault Pageable pageable
     );
@@ -73,9 +73,9 @@ public interface DepositController {
     @Operation(summary = "Update deposit",
             description = "update deposit by params in dto object")
     @PutMapping
-    void update(
+    DepositDto update(
             @RequestBody
-            @Validated DepositDto depositDto
+            @Validated DepositRequestDto depositRequestDto
     );
 
     @Operation(summary = "Delete deposit",

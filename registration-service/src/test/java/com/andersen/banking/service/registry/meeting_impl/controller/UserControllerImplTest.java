@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
 import com.andersen.banking.service.registry.meeting_api.controller.UserController;
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
@@ -34,7 +34,7 @@ class UserControllerImplTest {
     private static final Integer SIZE_PAGE = 10;
     private static final String SORT_FIELD = "id";
 
-    private UserDto userDto;
+    private UserResponseDto userResponseDto;
     private Optional<User> user;
 
     @Autowired
@@ -47,7 +47,7 @@ class UserControllerImplTest {
     @BeforeEach
     void initData() {
         user = Optional.of(new User());
-        userDto = new UserDto();
+        userResponseDto = new UserResponseDto();
     }
 
     @Test
@@ -57,11 +57,11 @@ class UserControllerImplTest {
                 .thenReturn(user);
         Mockito
                 .when(userMapper.toUserDto(user.get()))
-                .thenReturn(userDto);
+                .thenReturn(userResponseDto);
 
         var result = userController.findUser(UUID_ID);
 
-        assertEquals(userDto, result);
+        assertEquals(userResponseDto, result);
     }
 
     @Test
@@ -78,23 +78,23 @@ class UserControllerImplTest {
                 .thenAnswer(invocation -> {
                     User entity = invocation.getArgument(0);
                     if (passports.contains(entity)) {
-                        return userDto;
+                        return userResponseDto;
                     }
-                    return new UserDto();
+                    return new UserResponseDto();
                 });
 
         var result = userController.findAll(pageable);
 
-        result.forEach(resultDto -> assertEquals(userDto, resultDto));
+        result.forEach(resultDto -> assertEquals(userResponseDto, resultDto));
     }
 
     @Test
     void whenUpdate_andOk() {
         Mockito
-                .when(userMapper.toUser(userDto))
+                .when(userMapper.toUser(userResponseDto))
                 .thenReturn(user.get());
 
-        userController.updateUser(userDto);
+        userController.updateUser(userResponseDto);
 
         Mockito
                 .verify(userService, Mockito.times(1))
@@ -104,14 +104,14 @@ class UserControllerImplTest {
     @Test
     void whenUpdate_andNotFound_shouldThrowException() {
         Mockito
-                .when(userMapper.toUser(userDto))
+                .when(userMapper.toUser(userResponseDto))
                 .thenReturn(user.get());
         Mockito
                 .doThrow(NotFoundException.class)
                 .when(userService)
                 .update(user.get());
 
-        assertThrows(NotFoundException.class, () -> userController.updateUser(userDto));
+        assertThrows(NotFoundException.class, () -> userController.updateUser(userResponseDto));
 
         Mockito
                 .verify(userService, Mockito.times(1))
@@ -131,10 +131,10 @@ class UserControllerImplTest {
     void whenCreate_andOk() {
 
         var createdUser = new User();
-        var createdUserDto = new UserDto();
+        var createdUserDto = new UserResponseDto();
 
         Mockito
-                .when(userMapper.toUser(userDto))
+                .when(userMapper.toUser(userResponseDto))
                 .thenReturn(user.get());
         Mockito
                 .when(userService.create(user.get()))
@@ -143,7 +143,7 @@ class UserControllerImplTest {
                 .when(userMapper.toUserDto(createdUser))
                 .thenReturn(createdUserDto);
 
-        userController.create(userDto);
+        userController.create(userResponseDto);
 
         Mockito
                 .verify(userService, Mockito.times(1))

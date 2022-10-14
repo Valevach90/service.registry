@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.utils.OpenApiConstants.EXAMPLE_DESCRIPTION;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,8 +23,10 @@ public class DepositProductDescriptionDto {
 
     @NotBlank
     @JsonProperty("shortDescription")
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String shortDescription;
 
     @JsonProperty("fullDescription")
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String fullDescription;
 }

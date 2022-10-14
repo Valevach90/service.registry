@@ -16,5 +16,4 @@ public @interface CityNameConstraint {
     String message() default "MY CUSTOM <MESSAGE>";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-
 }

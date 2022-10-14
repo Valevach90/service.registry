@@ -16,11 +16,14 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_CURRENCY_ID = "Currency Id";
     public static final String DESCRIPTION_TRANSFER_ID = "Transfer Id";
     public static final String DESCRIPTION_USER_ID = "User Id";
+    public static final String DESCRIPTION_CARD_ID = "Card Id";
     public static final String DESCRIPTION_DEPOSIT_NUMBER = "Deposit Number";
     public static final String DESCRIPTION_DEPOSIT_NAME = "Deposit Name";
     public static final String DESCRIPTION_DEPOSIT_TYPE_NAME = "Deposit Type Name";
     public static final String DESCRIPTION_CURRENCY = "Currency of deposit";
     public static final String DESCRIPTION_CURRENCY_NAME = "Currency Name";
+    public static final String DESCRIPTION_CARD_FIRST_NUMBER = "Card hash first number";
+    public static final String DESCRIPTION_CARD_LAST_NUMBER = "Card last number";
     public static final String DESCRIPTION_DEPOSIT_PRODUCT = "Deposit Product for creating Deposits";
     public static final String DESCRIPTION_TRANSFERS = "List transfers of deposit";
     public static final String EXAMPLE_DEPOSIT_NAME = "Deposit for All";
@@ -68,6 +71,10 @@ public class OpenApiConstants {
     public static final String EXAMPLE_INTEGER = "10";
     public static final String EXAMPLE_BOOLEAN = "true";
     public static final String EXAMPLE_STRING_NUMBER = "1234567890123456";
+    public static final String EXAMPLE_HASH_FIRST_NUMBER_CARD = "95d69aa21111833c62e9bee662c1af5cbfad4c413138e9825297573e57dc68";
+    public static final String EXAMPLE_LAST_NUMBER_CARD = "1111";
+    public static final String EXAMPLE_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer metus metus, tempor ut est ut, eleifend volutpat diam.";
+
     public static final String DESCRIPTION_ERROR = "Error description";
     public static final String EXAMPLE_ERROR_NOT_FOUND = "Not found";
     public static final String DESCRIPTION_ERROR_CODE = "Error code";

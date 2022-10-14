@@ -32,6 +32,15 @@ spring:
     user: psqluser
     password: PoSPa$$woRd
 
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
   redis:
     host: 10.10.14.31
     port: 30002
@@ -51,6 +60,10 @@ spring:
     bootstrap-servers: 10.10.14.68:19092
     consumer:
       group-id: payment-service
+      max-poll-records: 100
+      heartbeat-interval: 1000
+    listener:
+      poll-timeout: 30000
 
 eureka:
   instance:

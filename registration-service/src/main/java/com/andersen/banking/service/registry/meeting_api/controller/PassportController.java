@@ -3,6 +3,7 @@ package com.andersen.banking.service.registry.meeting_api.controller;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
 
+import com.andersen.banking.service.registry.meeting_api.dto.PassportCreateDto;
 import com.andersen.banking.service.registry.meeting_api.dto.PassportDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +14,9 @@ import javax.annotation.security.RolesAllowed;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +68,9 @@ public interface PassportController {
     @RolesAllowed({ADMIN, EMPLOYEE})
     Page<PassportDto> findAll(
             @ParameterObject
-            @PageableDefault Pageable pageable
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC) Pageable pageable
     );
 
     @Operation(summary = "Update passport",
@@ -89,6 +94,6 @@ public interface PassportController {
     @PostMapping
     PassportDto create(
             @RequestBody
-            @Validated PassportDto passportDto
+            @Validated PassportCreateDto passportDto, BindingResult result
     );
 }
