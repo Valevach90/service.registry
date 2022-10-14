@@ -1,8 +1,15 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.*;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -16,14 +23,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ExchangeRatesDto {
 
-    private String success;
+    private Boolean success;
 
+    @Schema(example = EXAMPLE_CURRENCY, defaultValue = EXAMPLE_CURRENCY)
     private String base;
 
     @NotNull
     @JsonProperty("date")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate date;
 
+    @Schema()
     private Map<String, Double> rates;
 }
