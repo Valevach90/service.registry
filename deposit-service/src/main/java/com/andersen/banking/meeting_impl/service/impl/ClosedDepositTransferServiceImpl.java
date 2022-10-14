@@ -42,7 +42,6 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     public void transferToAccount(List<Deposit> deposits) {
-
         List<TransferRequestDto> list = deposits.stream()
                 .map(this::createTransfer).toList();
 
@@ -50,7 +49,6 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     private TransferRequestDto createTransfer(Deposit deposit) {
-
         return TransferRequestDto.builder()
                 .amount(deposit.getAmount())
                 .currencyId(transferMapContainer.getCurrencyMap().get("EURO"))
