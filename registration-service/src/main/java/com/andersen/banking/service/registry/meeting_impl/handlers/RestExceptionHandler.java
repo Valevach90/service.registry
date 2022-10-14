@@ -4,6 +4,7 @@ import com.andersen.banking.service.registry.meeting_api.error.NotFoundError;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.WrongNameException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.ErrorMapper;
 import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,13 @@ public class RestExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public String handlePaymentServiceException(ValidationException exception) {
         log.error("Caught ValidationException: {}", exception.toString());
+        return exception.getLocalizedMessage();
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(WrongNameException.class)
+    public String handleWrongNameException(WrongNameException exception) {
+        log.error("incorrect data: first name, last name or patronymic: {}", exception.toString());
         return exception.getLocalizedMessage();
     }
 

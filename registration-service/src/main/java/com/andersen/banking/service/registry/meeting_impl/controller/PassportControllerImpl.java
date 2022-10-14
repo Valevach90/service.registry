@@ -7,6 +7,7 @@ import com.andersen.banking.service.registry.meeting_db.entities.Address;
 import com.andersen.banking.service.registry.meeting_db.entities.Passport;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.WrongNameException;
 import com.andersen.banking.service.registry.meeting_impl.mapping.PassportMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -95,8 +97,13 @@ public class PassportControllerImpl implements PassportController {
     }
 
     @Override
-    public PassportDto create(PassportCreateDto passportDto) {
+    public PassportDto create(PassportCreateDto passportDto, BindingResult result) {
         log.debug("creating passport: {}", passportDto);
+
+        if(result.hasErrors()) {
+            throw new WrongNameException(
+                    String.format("Invalid patronymic: %s", passportDto.getPatronymic()));
+        }
 
         Passport passport = passportMapper.toPassport(passportDto);
 
