@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class TransferServiceImpl implements TransferService {
 
 
     @Override
+    @Cacheable(value = "transfers", key = "#id")
     public Transfer findById(UUID id) throws NotFoundException {
         log.debug("Finding transfer by id: {}", id);
 
