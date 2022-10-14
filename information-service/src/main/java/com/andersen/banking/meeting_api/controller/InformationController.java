@@ -71,6 +71,6 @@ public interface InformationController {
 
     @Operation(summary = "Get exchange rates",
             description = "get list with all exchange rates")
-    @GetMapping("/exchange-rates/{currency}")
-    ExchangeRatesDto getExchangeRates(@PathVariable("currency") String currency);
+    @GetMapping("/exchange-rates")
+    ExchangeRatesDto getExchangeRates(@RequestParam("currency") String currency);
 }
