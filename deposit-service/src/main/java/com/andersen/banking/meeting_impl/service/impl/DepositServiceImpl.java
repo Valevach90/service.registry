@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
 import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_db.entities.LinkedCard;
@@ -107,20 +108,22 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional
-    public void update(DepositRequestDto depositRequestDto) {
+    public DepositDto update(DepositRequestDto depositRequestDto) {
         log.info("Updating deposit: {}", depositRequestDto);
+
+        Deposit foundDeposit = depositRepository.findById(depositRequestDto.getId())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, depositRequestDto.getId()));
 
         Deposit deposit = depositMapper.toDeposit(depositRequestDto);
         deposit.setDepositProduct(depositProductRepository.getById(depositRequestDto.getProductId()));
         deposit.setCurrency(currencyRepository.getById(depositRequestDto.getCurrencyId()));
         deposit.setType(depositTypeRepository.getById(depositRequestDto.getTypeId()));
 
-        Deposit foundDeposit = depositRepository.findById(deposit.getId())
-                .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getId()));
-
-        depositRepository.save(deposit);
+        Deposit save = depositRepository.save(deposit);
 
         log.info("Deposit: {} updated to version: {}", foundDeposit, deposit);
+
+        return depositMapper.toDepositDto(save);
     }
 
     @Override

@@ -93,12 +93,14 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public void update(DepositRequestDto depositRequestDto) {
+    public DepositDto update(DepositRequestDto depositRequestDto) {
         log.debug("Updating deposit: {}", depositRequestDto);
 
-        depositService.update(depositRequestDto);
+        DepositDto depositDto = depositService.update(depositRequestDto);
 
         log.debug("Updated deposit: {}", depositRequestDto);
+
+        return depositDto;
     }
 
     @Override

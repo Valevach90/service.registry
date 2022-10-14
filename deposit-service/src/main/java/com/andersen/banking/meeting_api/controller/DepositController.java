@@ -73,7 +73,7 @@ public interface DepositController {
     @Operation(summary = "Update deposit",
             description = "update deposit by params in dto object")
     @PutMapping
-    void update(
+    DepositDto update(
             @RequestBody
             @Validated DepositRequestDto depositRequestDto
     );
