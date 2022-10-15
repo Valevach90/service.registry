@@ -35,8 +35,8 @@ public class AtmDtoResponse {
     private Long houseNumber;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_BANK_BRAHCH_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
-    @JsonProperty("bankBranch")
-    private Long bankBranch;
+    @JsonProperty("bankBranchId")
+    private Long bankBranchId;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_ROUND_THE_CLOCK, example = OpenApiConstants.EXAMPLE_ROUND_THE_CLOCK, defaultValue = OpenApiConstants.EXAMPLE_ROUND_THE_CLOCK)
     @JsonProperty("roundTheClock")

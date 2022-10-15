@@ -11,11 +11,12 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface AtmMapper {
 
-    @Mapping(target = "bankBranch.id", source = "bankBranch")
+    @Mapping(target = "bankBranch.id", source = "bankBranchId")
     @Mapping(target = "street.id", source = "streetId")
-    @Mapping(target = "currency.id", source = "currencyId")
     Atm toAtm(AtmDtoRequest atmDtoRequest);
 
+    @Mapping(target = "bankBranchId", source = "bankBranch.id")
+    @Mapping(target = "streetId", source = "street.id")
     AtmDtoResponse toAtmDtoResponse(Atm atm);
 
 }

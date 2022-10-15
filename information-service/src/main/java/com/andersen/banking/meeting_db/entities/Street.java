@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +27,10 @@ public class Street extends BaseEntity {
 
     @Column(nullable = false, name = "street_name", length = 50)
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "street",
+            cascade = {CascadeType.PERSIST})
+    private List<Atm> atms;
 
 }

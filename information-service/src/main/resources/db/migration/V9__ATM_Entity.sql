@@ -1,11 +1,6 @@
 CREATE TABLE atm
 (
     id                      UUID UNIQUE DEFAULT gen_random_uuid()   NOT NULL,
-    created_date            TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
-    created_by              VARCHAR(255)                            NOT NULL,
-    last_modified_date      TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
-    last_modified_by        VARCHAR(255)                            NOT NULL,
-    deleted                 BOOLEAN                                 NOT NULL,
     street_id               BIGINT                                  NOT NULL,
     house_number            BIGINT                                  NOT NULL,
     building                VARCHAR(255),

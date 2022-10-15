@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_db.entities;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -76,5 +78,8 @@ public class BankBranch extends BaseEntity {
     @Column(nullable = false, name = "is_closed")
     private boolean closed;
 
-
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "bankBranch",
+            cascade = {CascadeType.PERSIST})
+    private List<Atm> atms;
 }
