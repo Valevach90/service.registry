@@ -18,6 +18,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_ATM_ID = "ATM id (UUID)";
     public static final String DESCRIPTION_STREET_ID = "Street id";
     public static final String DESCRIPTION_HOUSE_NUMBER = "House number";
+    public static final String DESCRIPTION_BUILDING = "Building";
     public static final String DESCRIPTION_BANK_BRAHCH_ID = "Bank branch id";
     public static final String DESCRIPTION_ROUND_THE_CLOCK = "Round the clock";
     public static final String DESCRIPTION_WORK_AT_WEEKEND = "Working at weekend?";
@@ -35,8 +36,8 @@ public class OpenApiConstants {
     public static final String EXAMPLE_WORK_AT_WEEKEND = "true";
     public static final String EXAMPLE_CASH_WITHDRAW = "true";
     public static final String EXAMPLE_CURRENCY_EXCHANGE = "true";
-
     public static final String EXAMPLE_ATM_IS_ACTIVE = "true";
+    public static final String EXAMPLE_BUILDING = "Shopping mall";
 
 
 }

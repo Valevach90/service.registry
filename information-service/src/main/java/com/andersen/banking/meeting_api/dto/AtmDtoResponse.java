@@ -34,6 +34,10 @@ public class AtmDtoResponse {
     @NotNull(message = "field houseNumber can't be null")
     private Long houseNumber;
 
+    @Schema(description = OpenApiConstants.DESCRIPTION_BUILDING, example = OpenApiConstants.EXAMPLE_BUILDING, defaultValue = OpenApiConstants.EXAMPLE_BUILDING)
+    @JsonProperty("building")
+    private String building;
+
     @Schema(description = OpenApiConstants.DESCRIPTION_BANK_BRAHCH_ID, example = OpenApiConstants.EXAMPLE_LONG, defaultValue = OpenApiConstants.EXAMPLE_LONG)
     @JsonProperty("bankBranchId")
     private Long bankBranchId;
