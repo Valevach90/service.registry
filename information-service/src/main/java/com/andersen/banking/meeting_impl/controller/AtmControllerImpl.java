@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.AtmController;
+import com.andersen.banking.meeting_api.dto.AtmDtoCreateRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoResponse;
 import com.andersen.banking.meeting_db.entities.Atm;
@@ -23,10 +24,10 @@ public class AtmControllerImpl implements AtmController {
     private final AtmMapper atmMapper;
 
     @Override
-    public AtmDtoResponse create(AtmDtoRequest atmDtoRequest) {
-        log.debug("Create ATM: {}", atmDtoRequest);
+    public AtmDtoResponse create(AtmDtoCreateRequest atmDtoCreateRequest) {
+        log.debug("Create ATM: {}", atmDtoCreateRequest);
 
-        Atm atm = atmMapper.toAtm(atmDtoRequest);
+        Atm atm = atmMapper.toAtm(atmDtoCreateRequest);
 
         Atm savedAtm = atmService.create(atm);
 

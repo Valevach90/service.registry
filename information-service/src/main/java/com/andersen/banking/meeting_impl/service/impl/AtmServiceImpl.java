@@ -28,6 +28,8 @@ public class AtmServiceImpl implements AtmService {
     public Atm create(Atm atm) {
         log.info("Create ATM: {}", atm);
 
+        atm.setBankBranch(bankBranchRepository.getById(atm.getBankBranch().getId()));
+        atm.setStreet(streetRepository.getById(atm.getStreet().getId()));
         Atm savedAtm = atmRepository.save(atm);
 
         log.info("Created ATM: {}", savedAtm);

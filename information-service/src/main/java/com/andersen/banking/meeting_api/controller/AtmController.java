@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_api.controller;
 
+import com.andersen.banking.meeting_api.dto.AtmDtoCreateRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public interface AtmController {
             description = "create ATM by params in dto object")
     @PostMapping
     AtmDtoResponse create(
-            @RequestBody AtmDtoRequest atmDtoRequest
+            @RequestBody AtmDtoCreateRequest atmDtoCreateRequest
     );
 
     @Operation(summary = "Get a specific ATM",

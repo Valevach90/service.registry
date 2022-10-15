@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.mapper;
 
+import com.andersen.banking.meeting_api.dto.AtmDtoCreateRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoRequest;
 import com.andersen.banking.meeting_api.dto.AtmDtoResponse;
 import com.andersen.banking.meeting_db.entities.Atm;
@@ -10,6 +11,11 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface AtmMapper {
+
+    @Mapping(target = "bankBranch.id", source = "bankBranchId")
+    @Mapping(target = "street.id", source = "streetId")
+    @Mapping(target = "id", ignore = true)
+    Atm toAtm(AtmDtoCreateRequest atmDtoCreateRequest);
 
     @Mapping(target = "bankBranch.id", source = "bankBranchId")
     @Mapping(target = "street.id", source = "streetId")
