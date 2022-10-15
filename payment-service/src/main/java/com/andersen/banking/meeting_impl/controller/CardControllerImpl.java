@@ -273,7 +273,7 @@ public class CardControllerImpl implements CardController {
      */
     @Override
     public CardCredResponseDto findCardByNotHashedNumbers(String twelveNums, String fourNums) {
-        log.info("Receiving request on getting info about Card by card's number ***{}", fourNums);
+        log.info("Receiving request on getting info about Card by card's number {}{}", twelveNums, fourNums);
         try {
             Card card = cardService.findByNotHashedNums(twelveNums, fourNums);
             CardCredResponseDto credResponseDto = cardMapper.toCardCredResponseDto(card);

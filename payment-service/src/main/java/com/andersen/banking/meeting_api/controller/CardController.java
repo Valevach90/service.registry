@@ -160,13 +160,13 @@ public interface CardController {
             Pageable pageable);
 
 
-    @GetMapping("/from_numbers")
+    @GetMapping("/numbers")
     CardCredResponseDto findCardByNotHashedNumbers(
             @RequestParam(required = true, name = "first_twelve_not_hashed") String twelveNums,
             @RequestParam(required = true, name = "last_four") String fourNums
     );
 
-    @GetMapping("/from_hashed_numbers")
+    @GetMapping("/hashed_numbers")
     CardCredResponseDto findCardByHashedNumbers(
             @RequestParam(required = true, name = "first_twelve_hashed") String twelveNumsNotHashed,
             @RequestParam(required = true, name = "last_four") String fourNums
