@@ -15,12 +15,28 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_LINK = "Download link";
     public static final String DESCRIPTION_DATE_OF_CREATION = "Date of file creation";
     public static final String DESCRIPTION_DATE_OF_UPDATE = "Date of file update";
+    public static final String DESCRIPTION_ATM_ID = "ATM id (UUID)";
+    public static final String DESCRIPTION_STREET_ID = "Street id";
+    public static final String DESCRIPTION_HOUSE_NUMBER = "House number";
+    public static final String DESCRIPTION_BANK_BRAHCH_ID = "Bank branch id";
+    public static final String DESCRIPTION_ROUND_THE_CLOCK = "Round the clock";
+    public static final String DESCRIPTION_WORK_AT_WEEKEND = "Working at weekend?";
+    public static final String DESCRIPTION_CASH_WITHDRAW = "Cash withdraw";
+    public static final String DESCRIPTION_CURRENCY_EXCHANGE = "Currency exchange";
+
+    public static final String DESCRIPTION_ATM_IS_ACTIVE = "Atm is active";
 
     public static final String EXAMPLE_LONG = "10";
     public static final String EXAMPLE_FILE_NAME = "Document.doc";
     public static final String EXAMPLE_LINK = "https://www.documents.com/Document.doc";
     public static final String EXAMPLE_DATE = "2022-07-06 13:33:29,573";
-
     public static final String EXAMPLE_UUID = "84e7ffe0-04bf-40e8-b6ab-ef7b7ba3dc09";
+    public static final String EXAMPLE_ROUND_THE_CLOCK = "true";
+    public static final String EXAMPLE_WORK_AT_WEEKEND = "true";
+    public static final String EXAMPLE_CASH_WITHDRAW = "true";
+    public static final String EXAMPLE_CURRENCY_EXCHANGE = "true";
+
+    public static final String EXAMPLE_ATM_IS_ACTIVE = "true";
+
 
 }

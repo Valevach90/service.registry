@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_api.controller;
 
-import com.andersen.banking.meeting_api.dto.AtmDto;
+import com.andersen.banking.meeting_api.dto.AtmDtoRequest;
+import com.andersen.banking.meeting_api.dto.AtmDtoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,14 +25,14 @@ public interface AtmController {
     @Operation(summary = "Create ATM",
             description = "create ATM by params in dto object")
     @PostMapping
-    AtmDto create(
-            @RequestBody AtmDto atmDto
+    AtmDtoResponse create(
+            @RequestBody AtmDtoRequest atmDtoRequest
     );
 
-    @Operation(summary = "Get ATM",
-            description = "get ATM by id")
+    @Operation(summary = "Get a specific ATM",
+            description = "get a specific ATM by id")
     @GetMapping("/{id}")
-    AtmDto getById(
+    AtmDtoResponse getById(
             @Parameter(description = "ATM id", required = true)
             @PathVariable("id") UUID id
     );
@@ -39,18 +40,31 @@ public interface AtmController {
     @Operation(summary = "Get all ATM",
             description = "get page of all ATM")
     @GetMapping
-    Page<AtmDto> getAll(
+    Page<AtmDtoResponse> getAll(
             @ParameterObject
             @PageableDefault Pageable pageable
+    );
+
+    @Operation(summary = "Get ATM on the street",
+            description = "get page with ATM on the street")
+    @GetMapping("/street/{id}")
+    Page<AtmDtoResponse> getAllAtmOnTheStreet(
+            @Parameter(description = "street id", required = true) @PathVariable("id") Long streetId,
+            @ParameterObject @PageableDefault Pageable pageable
+    );
+
+    @Operation(summary = "Get all ATM on a specific bank branch")
+    @GetMapping("/bankbranch/{id}")
+    Page<AtmDtoResponse> getAllAtmOnTheBankBranchByBranchId(
+            @Parameter(description = "Bank branch id", required = true) @PathVariable("id") Long bankBranchId,
+            @ParameterObject @PageableDefault Pageable pageable
     );
 
     @Operation(summary = "Update ATM",
             description = "update ATM by params in dto object")
     @PutMapping("/{id}")
-    AtmDto update(
-            @Parameter(description = "ATM id", required = true)
-            @PathVariable("id") UUID id,
-            @RequestBody AtmDto atmDto
+    AtmDtoResponse update(
+            @RequestBody AtmDtoRequest atmDtoRequest
     );
 
     @Operation(summary = "Delete ATM",
