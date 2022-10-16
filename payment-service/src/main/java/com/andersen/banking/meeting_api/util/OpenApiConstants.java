@@ -26,6 +26,8 @@ public class OpenApiConstants {
     public static final String EXAMPLE_FREQUENCY = "monthly";
     public static final String EXAMPLE_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer metus metus, tempor ut est ut, eleifend volutpat diam.";
 
+    public static final String EXAMPLE_DESCRIPTION_MINI = "Lorem ipsum dolor sit amet";
+
     public static final String EXAMPLE_PRICE = "9.99";
 
     public static final String EXAMPLE_CASHBACK = "3";

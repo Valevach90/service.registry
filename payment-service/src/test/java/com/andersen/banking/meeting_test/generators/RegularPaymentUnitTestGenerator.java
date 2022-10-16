@@ -4,11 +4,10 @@ import com.andersen.banking.meeting_api.dto.RegularPaymentRequestDto;
 import com.andersen.banking.meeting_api.dto.RegularPaymentResponseDto;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegularPaymentUnitTestGenerator {

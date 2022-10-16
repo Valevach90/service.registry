@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_impl.mapping;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.andersen.banking.meeting_api.dto.TypeCardResponseDto;
 import com.andersen.banking.meeting_api.dto.TypeCardUpdateDto;
 import com.andersen.banking.meeting_db.entities.TypeCard;
@@ -9,9 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static com.andersen.banking.meeting_test.generators.CardUnitTestGenerator.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = TypeCardMapperImpl.class)
 class TypeCardMapperTest {

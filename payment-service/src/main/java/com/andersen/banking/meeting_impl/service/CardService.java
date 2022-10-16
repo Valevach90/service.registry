@@ -1,7 +1,12 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_db.entities.Card;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -92,11 +97,21 @@ public interface CardService {
     Page<Card> findByOwnerIdExceptCard(UUID id, UUID cardId, Pageable pageable);
 
     /**
-     * This method return Card by card's numbers
+     * This method return Card by not hashed card's numbers
      *
      * @param twelveNums
      * @param fourNums
      * @return
      */
-    Card findByNums(String twelveNums, String fourNums);
+    Card findByNotHashedNums(String twelveNums, String fourNums);
+
+    /**
+     * This method return Card by hashed card's numbers
+     *
+     * @param twelveNotHashedNums
+     * @param fourNums
+     * @return
+     */
+    Card findByHashedNums(String twelveNotHashedNums, String fourNums)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 }

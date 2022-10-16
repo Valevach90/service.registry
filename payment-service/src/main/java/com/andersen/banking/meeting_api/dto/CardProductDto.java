@@ -66,6 +66,26 @@ public class CardProductDto {
     private String loyaltyProgram;
 
     @NotBlank
+    @JsonProperty("bank_partners_mini")
+    @Size(
+            min = 3,
+            max = 40,
+            message = "bank_partners_mini should contain at least 3 symbols and not more than 40"
+    )
+    @Schema(example = EXAMPLE_DESCRIPTION_MINI, defaultValue = EXAMPLE_DESCRIPTION_MINI)
+    private String bankPartnersMini;
+
+    @NotBlank
+    @JsonProperty("loyalty_program_mini")
+    @Size(
+            min = 3,
+            max = 40,
+            message = "loyalty_program_mini should contain at least 3 symbols and not more than 40"
+    )
+    @Schema(example = EXAMPLE_DESCRIPTION_MINI, defaultValue = EXAMPLE_DESCRIPTION_MINI)
+    private String loyaltyProgramMini;
+
+    @NotBlank
     @JsonProperty("payment_system")
     @Size(
             min = 3,

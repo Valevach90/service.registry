@@ -11,7 +11,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,10 +88,10 @@ public interface CardController {
             @RequestParam(required = false) String payment,
             @RequestParam(required = false) String type,
             @ParameterObject
-            @PageableDefault(
-                    sort = {"id"},
-                    direction = Sort.Direction.DESC)
-            Pageable pageable);
+                    @PageableDefault(
+                            sort = {"id"},
+                            direction = Sort.Direction.DESC)
+                    Pageable pageable);
 
     @Operation(
             summary = "Get type card by card id",
@@ -154,8 +159,17 @@ public interface CardController {
                     direction = Sort.Direction.DESC)
             Pageable pageable);
 
+
     @GetMapping("/numbers")
-    CardCredResponseDto findCardByCardNumber(
-            @RequestParam(name = "first_twelve") String twelveNums,
-            @RequestParam(name = "last_four") String fourNums);
+    CardCredResponseDto findCardByNotHashedNumbers(
+            @RequestParam(required = true, name = "first_twelve_not_hashed") String twelveNums,
+            @RequestParam(required = true, name = "last_four") String fourNums
+    );
+
+    @GetMapping("/hashed_numbers")
+    CardCredResponseDto findCardByHashedNumbers(
+            @RequestParam(required = true, name = "first_twelve_hashed") String twelveNumsNotHashed,
+            @RequestParam(required = true, name = "last_four") String fourNums
+    )
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException;
 }
