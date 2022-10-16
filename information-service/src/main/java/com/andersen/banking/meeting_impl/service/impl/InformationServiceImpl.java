@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -114,6 +115,7 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
+    @Cacheable(value = "exchange-rates", key = "#currency")
     public ExchangeRatesDto getExchangeRates(String currency) {
         log.debug("Get list for exchange rates for base currency {}", currency);
         return client.get()

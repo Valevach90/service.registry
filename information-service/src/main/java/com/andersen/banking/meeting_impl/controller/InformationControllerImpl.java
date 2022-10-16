@@ -13,7 +13,6 @@ import com.andersen.banking.meeting_impl.service.InformationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,7 +76,6 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
-    @Cacheable(value = "exchange-rates", key = "#currency")
     public ExchangeRatesDto getExchangeRates(String currency) {
         log.info("Get exchange rates for currency {}", currency);
         return informationService.getExchangeRates(currency);
