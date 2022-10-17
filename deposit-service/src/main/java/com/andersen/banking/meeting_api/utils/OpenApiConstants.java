@@ -62,7 +62,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_DESTINATION_NUMBER = "Destination Number for Withdrawal";
     public static final String DESCRIPTION_DESTINATION_TYPE = "Type of Destination for Withdrawal";
     public static final String DESCRIPTION_STATUS_OF_TRANSFER = "Description of transfer status";
-    public static final String DESCRIPTION_FLAG_FOR_TRANSFERRING = "flag for transferring funds when closing a deposit";
+    public static final String DESCRIPTION_FLAG_FOR_DEFAULT_CARD = "flag means that card is a main card for all operations";
     public static final String EXAMPLE_TRANSFER_STATUS_DESCRIPTION = "Transfer is successful";
     public static final String DESCRIPTION_TIME = "Time of an event";
     public static final String EXAMPLE_TIME = "2022-07-06 13:33:29,573";

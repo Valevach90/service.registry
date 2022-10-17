@@ -35,7 +35,7 @@ public class LinkedCardDto {
     private String lastFourNumbers;
 
     @NotNull
-    @JsonProperty("flag for transferring funds when closing a deposit")
-    @Schema(description = DESCRIPTION_FLAG_FOR_TRANSFERRING, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN_FALSE)
-    private Boolean flagForTransferring;
+    @JsonProperty("flag means that card is a main card for all operations")
+    @Schema(description = DESCRIPTION_FLAG_FOR_DEFAULT_CARD, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN_FALSE)
+    private Boolean defaultCard;
 }
