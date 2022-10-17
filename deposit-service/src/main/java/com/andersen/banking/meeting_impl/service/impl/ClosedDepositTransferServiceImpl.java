@@ -61,7 +61,9 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     private String getCardNumber(Deposit deposit) {
-        LinkedCard card = deposit.getLinkedCards().stream().findFirst()
+        LinkedCard card = deposit.getLinkedCards().stream()
+                .filter(x -> x.getFlagForTransferring().equals(true))
+                .findFirst()
                 .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getDepositNumber(), deposit.getUserId()));
 
         return card.getFirstTwelveNumbers() + card.getLastFourNumbers();

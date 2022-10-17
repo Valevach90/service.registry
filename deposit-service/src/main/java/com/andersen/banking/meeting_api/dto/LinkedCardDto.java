@@ -33,4 +33,9 @@ public class LinkedCardDto {
     @JsonProperty("lastFourNumbers")
     @Schema(description = DESCRIPTION_CARD_LAST_NUMBER, example = EXAMPLE_LAST_NUMBER_CARD, defaultValue = EXAMPLE_LAST_NUMBER_CARD)
     private String lastFourNumbers;
+
+    @NotNull
+    @JsonProperty("flag for transferring funds when closing a deposit")
+    @Schema(description = DESCRIPTION_FLAG_FOR_TRANSFERRING, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN_FALSE)
+    private Boolean flagForTransferring;
 }
