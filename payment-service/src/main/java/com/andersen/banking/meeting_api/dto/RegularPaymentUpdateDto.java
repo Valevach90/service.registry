@@ -24,12 +24,26 @@ import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BAL
 public class RegularPaymentUpdateDto {
 
 
+    @JsonProperty("id")
+    @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
+    private UUID id;
+
     @NotBlank
     @Pattern(
             regexp = "[a-zA-Z- ]{3,30}",
             message = "description should have at least 3 and at maximum 30 characters")
     @JsonProperty("description")
     private String description;
+
+    @Schema(
+            description = "Regular payment start date",
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
+    @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull
+    private LocalDate startDate;
 
     @Schema(
             description = "Regular payment start date",

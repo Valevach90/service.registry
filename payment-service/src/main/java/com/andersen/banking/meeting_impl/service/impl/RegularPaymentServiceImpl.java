@@ -5,14 +5,13 @@ import com.andersen.banking.meeting_db.repository.RegularPaymentRepository;
 import com.andersen.banking.meeting_impl.aop.LogAnnotation;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.feign.TransferClient;
-import com.andersen.banking.meeting_impl.feign.dto.CurrencyDto;
-import com.andersen.banking.meeting_impl.feign.dto.PaymentTypeDto;
 import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.service.RegularPaymentService;
-import com.andersen.banking.meeting_impl.util.TransferMapsContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.andersen.banking.meeting_impl.util.RegularPaymentUtil.setUpNextDate;
 import static com.andersen.banking.meeting_impl.util.TransferMapsContainer.getCurrencyMap;
@@ -37,11 +34,9 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
     private final CardService cardService;
     private final TransferClient transferClient;
 
-
-
-    @Transactional
     @Override
     @LogAnnotation(before = true, after = true)
+    @Transactional
     public RegularPayment create(RegularPayment regularPayment) {
         validateStartDate(regularPayment);
 
@@ -59,11 +54,19 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
             throw new DateTimeException("Incorrect date input");
     }
 
-    @Transactional
     @Override
     @LogAnnotation(before = true, after = true)
+    @Transactional
+    public void deleteById(UUID id) {
+        regularPaymentRepository.deleteById(id);
+    }
+
+
+    @Override
+    @LogAnnotation(before = true, after = true)
+    @Transactional
     public RegularPayment update(RegularPayment regularPaymentToUpdate) {
-        regularPaymentRepository.findById(regularPaymentToUpdate.getId())
+         regularPaymentRepository.findById(regularPaymentToUpdate.getId())
                 .orElseThrow(() -> new NotFoundException(RegularPayment.class, regularPaymentToUpdate.getId()));
 
         return regularPaymentRepository.save(regularPaymentToUpdate);
@@ -75,6 +78,12 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         return regularPaymentRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException(RegularPayment.class, id));
+    }
+
+    @Override
+    @LogAnnotation(before = true, after = true)
+    public Page<RegularPayment> findAll(Pageable pageable) {
+        return regularPaymentRepository.findAll(pageable);
     }
 
     @Transactional(propagation = Propagation.NESTED)

@@ -30,7 +30,7 @@ class RegularPaymentMapperTest {
 
     @Test
     void whenRegularPaymentToRegularPaymentResponseDto_AndOk() {
-        var result = regularPaymentMapper.toDto(regularPayment);
+        var result = regularPaymentMapper.toRegularPaymentResponseDto(regularPayment);
         checkForEqualsResponse(result, regularPayment);
     }
 

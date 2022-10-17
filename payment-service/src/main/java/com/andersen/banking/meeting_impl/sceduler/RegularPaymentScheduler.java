@@ -16,7 +16,7 @@ import javax.inject.Inject;
 public class RegularPaymentScheduler {
 
     @Inject
-    private final RegularPaymentServiceImpl regularPaymentService;
+    private final RegularPaymentService regularPaymentService;
 
     private final TransferMapsContainer transferMapsContainer;
 

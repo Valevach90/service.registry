@@ -37,7 +37,7 @@ public class RegularPaymentControllerImplTest {
     void create_ShouldReturnRegularPaymentResponseDto_WhenRegularPaymentRequestIsCorrect() {
         Mockito.when(regularPaymentMapper.toRegularPayment(regularPaymentRequestDto))
                 .thenReturn(regularPayment);
-        Mockito.when(regularPaymentMapper.toDto(regularPayment))
+        Mockito.when(regularPaymentMapper.toRegularPaymentResponseDto(regularPayment))
                 .thenReturn(regularPaymentResponseDto);
         Mockito.when(regularPaymentService.create(regularPayment)).thenReturn(regularPayment);
 

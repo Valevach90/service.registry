@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_db.repository;
 
 import com.andersen.banking.meeting_db.entities.RegularPayment;
+
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +16,5 @@ public interface RegularPaymentRepository extends JpaRepository<RegularPayment, 
             + "FOR UPDATE SKIP LOCKED "
             + "LIMIT 10", nativeQuery = true)
     List<RegularPayment> findRegularPaymentsToExecute();
+
 }
