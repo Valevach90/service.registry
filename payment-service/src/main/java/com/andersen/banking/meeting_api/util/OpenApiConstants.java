@@ -23,7 +23,6 @@ public class OpenApiConstants {
     public static final String EXAMPLE_NAME = EXAMPLE_FIRST_NAME + " " + EXAMPLE_LAST_NAME;
     public static final String EXAMPLE_HASH_FIRST_NUMBER_CARD = "95d69aa21111833c62e9bee662c1af5cbfad4c413138e9825297573e57dc68";
     public static final String EXAMPLE_LAST_NUMBER_CARD = "1111";
-    public static final String EXAMPLE_FREQUENCY = "monthly";
     public static final String EXAMPLE_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer metus metus, tempor ut est ut, eleifend volutpat diam.";
 
     public static final String EXAMPLE_DESCRIPTION_MINI = "Lorem ipsum dolor sit amet";
@@ -33,6 +32,5 @@ public class OpenApiConstants {
     public static final String EXAMPLE_CASHBACK = "3";
 
     public static final String EXAMPLE_DATE = "2022-11-21";
-
     public static final String EXAMPLE_FREQUENCY = "0Y_0M_0W_0D";
 }

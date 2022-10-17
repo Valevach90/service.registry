@@ -14,6 +14,7 @@ import com.andersen.banking.meeting_impl.util.TransferMapsContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DateTimeException;
@@ -76,7 +77,7 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
                 .orElseThrow(() -> new NotFoundException(RegularPayment.class, id));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     public boolean executeSomeAmountOfRegularPayments() {
         List<RegularPayment> regularPaymentsToExecute = regularPaymentRepository.findRegularPaymentsToExecute();
 
@@ -89,6 +90,7 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         }
     }
 
+    @Transactional
     public void executeRegularPayment(RegularPayment regularPayment) {
         log.info("Creating transfer by regular payment id: {}", regularPayment.getId());
 

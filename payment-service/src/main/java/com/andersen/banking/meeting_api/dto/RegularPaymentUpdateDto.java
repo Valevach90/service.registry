@@ -14,8 +14,8 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_DATE;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_FREQUENCY;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -35,21 +35,24 @@ public class RegularPaymentUpdateDto {
             description = "Regular payment start date",
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
-    @JsonProperty("start_date")
+    @JsonProperty("next_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private LocalDate startDate;
+    private LocalDate nextDate;
 
     @JsonProperty("source_card_id")
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID sourceCardId;
 
     @JsonProperty("recipient_card_id")
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID recipientCardId;
 
     @JsonProperty("amount")
     @NotNull
+    @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     private Long amount;
 
     @Schema(

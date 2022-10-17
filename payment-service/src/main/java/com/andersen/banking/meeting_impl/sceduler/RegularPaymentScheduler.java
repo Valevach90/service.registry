@@ -8,11 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class RegularPaymentScheduler {
 
+    @Inject
     private final RegularPaymentServiceImpl regularPaymentService;
 
     private final TransferMapsContainer transferMapsContainer;
