@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.andersen.banking.meeting_api.controller.DepositProductController;
-import com.andersen.banking.meeting_api.dto.DepositProductDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_impl.exceptions.MapperException;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
@@ -32,7 +32,7 @@ public class DepositProductControllerImplTest {
     private DepositProduct product;
     private UUID id;
     private Optional<DepositProduct> productOptional;
-    private DepositProductDto productDto;
+    private DepositProductResponseDto productDto;
 
 
     @Autowired
@@ -62,7 +62,7 @@ public class DepositProductControllerImplTest {
                 .when(depositProductMapper.toDepositProductDto(product))
                 .thenReturn(productDto);
 
-        DepositProductDto result = depositProductController.create(productDto);
+        DepositProductResponseDto result = depositProductController.create(productDto);
 
         assertEquals(productDto, result);
     }
@@ -85,7 +85,7 @@ public class DepositProductControllerImplTest {
                 .when(depositProductMapper.toDepositProductDto(productOptional.get()))
                 .thenReturn(productDto);
 
-        DepositProductDto result = depositProductController.findById(id);
+        DepositProductResponseDto result = depositProductController.findById(id);
 
         assertEquals(productDto, result);
     }
@@ -106,7 +106,7 @@ public class DepositProductControllerImplTest {
     void findAll_whenOk_shouldReturnPageOfDepositProductDto(){
         Pageable pageable = createPageable();
         Page<DepositProduct> pageOfProducts = generatePageOfDepositProducts(pageable);
-        Page<DepositProductDto> pageOfProductsDto = generatePageOfDepositProductsDto(pageOfProducts);
+        Page<DepositProductResponseDto> pageOfProductsDto = generatePageOfDepositProductsDto(pageOfProducts);
 
         Mockito
                 .when(depositProductService.findAll(pageable))
@@ -114,9 +114,9 @@ public class DepositProductControllerImplTest {
 
         Mockito
                 .when(depositProductMapper.toDepositProductDto(Mockito.any(DepositProduct.class)))
-                .thenReturn(new DepositProductDto());
+                .thenReturn(new DepositProductResponseDto());
 
-        Page<DepositProductDto> result = depositProductController.findAll(pageable);
+        Page<DepositProductResponseDto> result = depositProductController.findAll(pageable);
 
         assertEquals(pageOfProductsDto, result);
     }

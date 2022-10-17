@@ -1,11 +1,10 @@
 package com.andersen.banking.meeting_test.generators;
 
 import com.andersen.banking.meeting_db.entities.Account;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountUnitTestGenerator {

@@ -1,7 +1,6 @@
 package com.andersen.banking.meeting_db.entities;
 
 import java.util.UUID;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,7 +23,7 @@ public class DepositProductDescription {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name ="id")
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "short_description")
@@ -33,7 +32,7 @@ public class DepositProductDescription {
     @Column(name = "full_description")
     private String fullDescription;
 
-    @ManyToOne(fetch= FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "deposit_product_id", referencedColumnName = "id")
     @ToString.Exclude
     private DepositProduct depositProduct;

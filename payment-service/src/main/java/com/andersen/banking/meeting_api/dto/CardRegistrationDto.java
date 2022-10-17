@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_NAME;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,10 +21,12 @@ public class CardRegistrationDto {
 
     @NotNull
     @JsonProperty("account_id")
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID accountId;
 
     @NotNull
     @JsonProperty("card_product_id")
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID cardProductId;
 
     @NotBlank

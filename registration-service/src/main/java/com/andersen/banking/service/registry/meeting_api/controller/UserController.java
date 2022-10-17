@@ -3,8 +3,9 @@ package com.andersen.banking.service.registry.meeting_api.controller;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.ADMIN;
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
 
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
-import com.andersen.banking.service.registry.meeting_api.dto.UserRequestDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserCreateResponseDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,6 +15,7 @@ import javax.annotation.security.RolesAllowed;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -39,23 +41,25 @@ public interface UserController {
     @GetMapping
     @SecurityRequirement(name = "Bearer Authentication")
     @RolesAllowed({ADMIN, EMPLOYEE})
-    Page<UserDto> findAll(
+    Page<UserResponseDto> findAll(
             @ParameterObject
-            @PageableDefault Pageable pageable);
+            @PageableDefault(
+                    sort = {"id"},
+                    direction = Sort.Direction.DESC) Pageable pageable);
 
     @Operation(summary = "Get user by user id",
             description = "get user information by id")
     @GetMapping("/find")
     @SecurityRequirement(name = "Bearer Authentication")
-    UserDto findUser(Authentication authentication);
+    UserResponseDto findUser(Authentication authentication);
 
     @Operation(summary = "Create user",
             description = "create user by params in dto object")
     @PostMapping
     @SecurityRequirement(name = "Bearer Authentication")
     @RolesAllowed({ADMIN, EMPLOYEE})
-    UserDto create(@Parameter(description = "user", required = true)
-    @RequestBody @Validated UserDto userDto);
+    UserResponseDto create(@Parameter(description = "user", required = true)
+    @RequestBody @Validated UserCreateResponseDto userResponseDto);
 
     @Operation(summary = "Update user",
             description = "update user by params in dto object")

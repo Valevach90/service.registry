@@ -43,6 +43,12 @@ public class CardProduct {
     @Column(name = "loyalty_program", nullable = false)
     private String loyaltyProgram;
 
+    @Column(name = "bank_partners_mini")
+    private String bankPartnersMini;
+
+    @Column(name = "loyalty_program_mini")
+    private String loyaltyProgramMini;
+
     @ManyToOne
     @JoinColumn(name = "type_card_id", referencedColumnName = "id")
     private TypeCard typeCard;

@@ -1,6 +1,6 @@
 package com.andersen.banking.meeting_db.repositories;
 
-import com.andersen.banking.meeting_api.dto.DepositProductFilterDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductFilterDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
