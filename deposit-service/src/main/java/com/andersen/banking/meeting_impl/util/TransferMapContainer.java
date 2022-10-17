@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,27 +21,17 @@ public class TransferMapContainer {
 
     private final MoneyTransfer moneyTransfer;
 
+    @Cacheable("currencyMap")
     public Map<String, UUID> getCurrencyMap() {
-        checkCurrencyMap();
+        currencyMap = moneyTransfer.getAllCurrencies().stream()
+                .collect(Collectors.toMap(CurrencyDto::getName, CurrencyDto::getId));
         return currencyMap;
     }
 
+    @Cacheable("paymentTypeMap")
     public Map<String, UUID> getPaymentTypeMap() {
-        checkPaymentTypeMap();
+        paymentTypeMap = moneyTransfer.getAllPaymentTypes().stream()
+                .collect(Collectors.toMap(PaymentTypeDto::getName, PaymentTypeDto::getId));
         return paymentTypeMap;
-    }
-
-    public void checkCurrencyMap() {
-        if(currencyMap.isEmpty()) {
-            currencyMap = moneyTransfer.getAllCurrencies().stream()
-                    .collect(Collectors.toMap(CurrencyDto::getName, CurrencyDto::getId));
-        }
-    }
-
-    public void checkPaymentTypeMap() {
-        if(paymentTypeMap.isEmpty()) {
-            paymentTypeMap = moneyTransfer.getAllPaymentTypes().stream()
-                    .collect(Collectors.toMap(PaymentTypeDto::getName, PaymentTypeDto::getId));
-        }
     }
 }

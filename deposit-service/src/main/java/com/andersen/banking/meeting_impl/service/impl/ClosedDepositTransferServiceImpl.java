@@ -9,13 +9,13 @@ import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
 import com.andersen.banking.meeting_impl.service.ClosedDepositTransferService;
 import com.andersen.banking.meeting_impl.util.TransferMapContainer;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferService {
@@ -42,10 +42,10 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     }
 
     public void transferToAccount(List<Deposit> deposits) {
-        List<TransferRequestDto> list = deposits.stream()
+        List<TransferRequestDto> depositsToClose = deposits.stream()
                 .map(this::createTransfer).toList();
 
-        list.forEach(moneyTransfer::createTransfer);
+        depositsToClose.forEach(moneyTransfer::createTransfer);
     }
 
     private TransferRequestDto createTransfer(Deposit deposit) {
