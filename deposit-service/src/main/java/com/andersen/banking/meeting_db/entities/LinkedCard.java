@@ -27,8 +27,8 @@ public class LinkedCard {
     @Column(name = "last_four_numbers", nullable = false, length = 4)
     private String lastFourNumbers;
 
-    @Column(name = "flag_for_transferring", nullable = false)
-    private Boolean flagForTransferring;
+    @Column(name = "default_card", nullable = false)
+    private Boolean defaultCard;
 
     @ManyToOne(fetch= FetchType.LAZY, optional = false)
     @JoinColumn(name = "deposit_id", referencedColumnName = "id")
