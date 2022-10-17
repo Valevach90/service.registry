@@ -115,7 +115,7 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
-    @Cacheable(value = "exchange-rates", key = "#currency")
+    @Cacheable(value = "${cache.name.exchange-rates}", key = "#currency")
     public ExchangeRatesDto getExchangeRates(String currency) {
         log.debug("Get list for exchange rates for base currency {}", currency);
         return client.get()

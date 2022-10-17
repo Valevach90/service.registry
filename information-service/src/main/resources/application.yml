@@ -87,6 +87,8 @@ eureka:
 uri:
   exchange-rates: https://api.exchangerate.host/latest
 
-scheduler:
-  cache:
+cache:
+  name:
+    exchange-rates: exchange-rates
+  scheduler:
     exchange-rates: "0 0 0 * * *"
