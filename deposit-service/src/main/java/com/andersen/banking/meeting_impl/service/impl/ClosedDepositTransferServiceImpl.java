@@ -28,17 +28,17 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
 
     @Override
     @Transactional
-    public void closingDeposits() {
+    public List<Deposit> closingDeposits() {
         List<Deposit> deposits;
         do {
             Pageable page = Pageable.ofSize(1000);
             deposits = depositRepository.closingScheduler(page);
             deposits.forEach(deposit -> deposit.setIsActive(false));
-            transferToAccount(deposits);
             log.info("deposits with the current closing date are closed");
             resetAmountAfterTransferToCard(deposits);
             depositRepository.saveAll(deposits);
         } while (!deposits.isEmpty());
+        return deposits;
     }
 
     public void transferToAccount(List<Deposit> deposits) {
@@ -69,7 +69,7 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
         return card.getFirstTwelveNumbers() + card.getLastFourNumbers();
     }
 
-    private void resetAmountAfterTransferToCard(List<Deposit> list) {
-        list.forEach(x -> x.setAmount(0L));
+    private void resetAmountAfterTransferToCard(List<Deposit> depositsForResetAmount) {
+        depositsForResetAmount.forEach(x -> x.setAmount(0L));
     }
 }
