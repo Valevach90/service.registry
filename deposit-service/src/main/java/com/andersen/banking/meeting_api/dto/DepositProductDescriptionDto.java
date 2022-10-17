@@ -1,11 +1,12 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.utils.OpenApiConstants.EXAMPLE_DESCRIPTION;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -18,13 +19,14 @@ import lombok.Data;
 public class DepositProductDescriptionDto {
 
     @JsonProperty("id")
-    @NotNull
     private UUID id;
 
     @NotBlank
     @JsonProperty("shortDescription")
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String shortDescription;
 
     @JsonProperty("fullDescription")
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String fullDescription;
 }

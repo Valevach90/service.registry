@@ -7,7 +7,7 @@ import static com.andersen.banking.meeting_impl.generators.DepositServiceTestEnt
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.andersen.banking.meeting_api.dto.DepositProductDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
 import com.andersen.banking.meeting_db.entities.DepositProduct;
 import com.andersen.banking.meeting_db.repositories.CurrencyRepository;
 import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
@@ -33,7 +33,7 @@ import org.springframework.web.client.RestTemplate;
 public class DepositProductControllerH2IntegrationTest {
 
     private DepositProduct product;
-    private DepositProductDto productDto;
+    private DepositProductResponseDto productDto;
     private UUID id;
 
     @LocalServerPort
@@ -70,7 +70,7 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void create_whenOk_shouldReturnSavedDepositProductDto(){
-        DepositProductDto response = restTemplate.postForObject(baseUrl, productDto, DepositProductDto.class);
+        DepositProductResponseDto response = restTemplate.postForObject(baseUrl, productDto, DepositProductResponseDto.class);
         productDto.setId(response.getId());
 
         assertEquals(productDto, response);
@@ -79,16 +79,16 @@ public class DepositProductControllerH2IntegrationTest {
 
     @Test
     void create_whenDtoIsIncorrect_shouldThrowException(){
-        DepositProductDto emptyProductDto = new DepositProductDto();
+        DepositProductResponseDto emptyProductDto = new DepositProductResponseDto();
 
-        assertThrows(Exception.class, () -> restTemplate.postForObject(baseUrl, emptyProductDto, DepositProductDto.class));
+        assertThrows(Exception.class, () -> restTemplate.postForObject(baseUrl, emptyProductDto, DepositProductResponseDto.class));
     }
 
     @Test
     void findById_whenOk_shouldReturnFoundDepositProductDto() {
         UUID id = productRepository.save(product).getId();
 
-        DepositProductDto response = restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, id);
+        DepositProductResponseDto response = restTemplate.getForObject(baseUrl + "/{id}", DepositProductResponseDto.class, id);
 
         assertEquals(productDto, response);
         assertEquals(1, productRepository.findAll().size());
@@ -98,17 +98,17 @@ public class DepositProductControllerH2IntegrationTest {
     void findById_whenNotFound_shouldThrowException(){
         assertEquals(1, productRepository.findAll().size());
 
-        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductDto.class, UUID.randomUUID()));
+        assertThrows(Exception.class, () -> restTemplate.getForObject(baseUrl + "/{id}", DepositProductResponseDto.class, UUID.randomUUID()));
     }
 
     @Test
     void findAll_whenOk_shouldReturnPageOfDepositProductDto(){
         productRepository.save(product);
-        List<DepositProductDto> products = new ArrayList<>();
+        List<DepositProductResponseDto> products = new ArrayList<>();
         products.add(productDto);
 
-        ResponseEntity<CustomPageImpl<DepositProductDto>> exchange = restTemplate.exchange(baseUrl, HttpMethod.GET, null,
-                new ParameterizedTypeReference<CustomPageImpl<DepositProductDto>>() {
+        ResponseEntity<CustomPageImpl<DepositProductResponseDto>> exchange = restTemplate.exchange(baseUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<CustomPageImpl<DepositProductResponseDto>>() {
                 });
 
         assertEquals(products, exchange.getBody().getContent());

@@ -8,6 +8,7 @@ import com.andersen.banking.service.registry.meeting_impl.date.DateSupportServic
 import com.andersen.banking.service.registry.meeting_impl.exceptions.FoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.WrongNameException;
 import com.andersen.banking.service.registry.meeting_impl.service.AddressService;
 import com.andersen.banking.service.registry.meeting_impl.service.PassportService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
@@ -130,8 +131,6 @@ public class PassportServiceImpl implements PassportService {
         passport.setAddress(address);
         passport.setUserId(user.getId());
 
-        passport.setId(null);
-
         Passport savedPassport = passportRepository.save(passport);
 
         log.info("created passport: {}", savedPassport);
@@ -142,6 +141,10 @@ public class PassportServiceImpl implements PassportService {
         final LocalDate dateIssue = passport.getDateIssue();
         final LocalDate terminationDate = passport.getTerminationDate();
         final LocalDate birthDate = passport.getBirthday();
+        User user = userService.findById(passport.getUserId());
+        String userFirstName = user.getFirstName();
+        Optional<String> patronymic = Optional.ofNullable(user.getPatronymic());
+        String userLastName = user.getLastName();
 
         if (dateSupportService.checkIfDateIsLaterThanToday(dateIssue)) {
             throw new ValidationException(
@@ -164,6 +167,23 @@ public class PassportServiceImpl implements PassportService {
             throw new ValidationException(
                     String.format("Passport owner should be at least %d years old",
                             PASSPORT_OWNER_MINIMAL_AGE));
+        }
+
+        if(!userFirstName.equals(passport.getFirstName())) {
+            throw new WrongNameException(
+                    String.format("Wrong name: %s. Does not match the account first name", passport.getFirstName()));
+        }
+
+        if(!userLastName.equals(passport.getLastName())) {
+            throw new WrongNameException(
+                    String.format("Wrong last name: %s. Does not match the account last name", passport.getLastName()));
+        }
+
+        if(patronymic.isPresent() && Optional.ofNullable(passport.getPatronymic()).isPresent()) {
+            if(!patronymic.get().equals(passport.getPatronymic())) {
+                throw new WrongNameException(
+                        String.format("Wrong patronymic: %s. Does not match the account patronymic", passport.getPatronymic()));
+            }
         }
     }
 }

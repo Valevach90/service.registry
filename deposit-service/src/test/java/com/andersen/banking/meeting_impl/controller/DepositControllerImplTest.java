@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.andersen.banking.meeting_api.controller.DepositController;
-import com.andersen.banking.meeting_api.dto.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_impl.exceptions.MapperException;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;

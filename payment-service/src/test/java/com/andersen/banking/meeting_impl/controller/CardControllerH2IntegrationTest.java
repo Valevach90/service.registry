@@ -15,7 +15,7 @@ import com.andersen.banking.meeting_db.repository.CardRepository;
 import com.andersen.banking.meeting_db.repository.TypeCardRepository;
 import com.andersen.banking.meeting_impl.controller.util.RestResponsePage;
 import com.andersen.banking.meeting_impl.mapper.CardMapper;
-import com.andersen.banking.meeting_impl.util.CryptWithSHA;
+import com.andersen.banking.meeting_impl.util.Crypter;
 import com.andersen.banking.meeting_test.generators.AccountUnitTestGenerator;
 import java.net.URI;
 import java.time.LocalDate;
@@ -268,6 +268,6 @@ public class CardControllerH2IntegrationTest {
         card.setLastFourNumbers("1234");
         card.setHolderName("Ivanov Ivan Ivanovich");
         String firstTwelveNums = "123456789012";
-        card.setFirstTwelveNumbers(CryptWithSHA.getCrypt(firstTwelveNums));
+        card.setFirstTwelveNumbers(Crypter.getCrypt(firstTwelveNums));
     }
 }

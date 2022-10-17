@@ -178,11 +178,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logoutUser(String refreshToken) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("client_id", keycloak.getClientId());
+        parameters.add("client_id", keycloak.getClientIdRefresh());
         parameters.add("client_secret", keycloak.getClientSecret());
         parameters.add("refresh_token", refreshToken);
 
-        String response = client.post()
+        client.post()
                 .uri(KeycloakUrlUtil.getUriForLogout(
                         keycloak.getAuthServerUrl(),
                         keycloak.getRealm()

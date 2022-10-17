@@ -87,9 +87,8 @@ public class Deposit {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "deposit",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST})
     private List<LinkedCard> linkedCards = new ArrayList<>();
 }

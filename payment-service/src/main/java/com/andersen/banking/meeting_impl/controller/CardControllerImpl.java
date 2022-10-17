@@ -17,7 +17,12 @@ import com.andersen.banking.meeting_impl.mapper.CardMapper;
 import com.andersen.banking.meeting_impl.mapper.TypeCardMapper;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.service.TypeCardService;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,17 +265,17 @@ public class CardControllerImpl implements CardController {
     }
 
     /**
-     * End-point to get information about Card by card's number
+     * End-point to get information about Card by not hashed card numbers
      *
      * @param twelveNums
      * @param fourNums
      * @return
      */
     @Override
-    public CardCredResponseDto findCardByCardNumber(String twelveNums, String fourNums) {
-        log.info("Receiving request on getting info about Card by card's number ***{}", fourNums);
+    public CardCredResponseDto findCardByNotHashedNumbers(String twelveNums, String fourNums) {
+        log.info("Receiving request on getting info about Card by card's number {}{}", twelveNums, fourNums);
         try {
-            Card card = cardService.findByNums(twelveNums, fourNums);
+            Card card = cardService.findByNotHashedNums(twelveNums, fourNums);
             CardCredResponseDto credResponseDto = cardMapper.toCardCredResponseDto(card);
 
             log.info("Response info with info about card with card's number ***{}", fourNums);
@@ -278,5 +283,23 @@ public class CardControllerImpl implements CardController {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found", e);
         }
+    }
+
+    /**
+     * End-point to get information about Card by hashed card numbers
+     *
+     * @param twelveNumsHashed
+     * @param fourNums
+     * @return
+     */
+    @Override
+    public CardCredResponseDto findCardByHashedNumbers(String twelveNumsHashed, String fourNums)
+            throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        log.info("Receiving request on getting info about Card by card's number: {}{}", twelveNumsHashed, fourNums);
+
+        CardCredResponseDto foundCard = cardMapper.toCardCredResponseDto(cardService.findByHashedNums(twelveNumsHashed, fourNums));
+
+        log.info("Returning card: {}", foundCard);
+        return foundCard;
     }
 }

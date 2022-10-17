@@ -12,9 +12,12 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_ADDRESS_ID = "Address Id";
     public static final String DESCRIPTION_PASSPORT_ID = "Passport Id";
     public static final String DESCRIPTION_USER_ID = "User Id";
+
+    public static final String DESCRIPTION_USERNAME = "Username";
     public static final String EXAMPLE_LONG = "10";
 
     public static final String EXAMPLE_UUID = "0d4ff469-465e-412b-9737-34d08d227464";
+    public static final String EXAMPLE_USERNAME = "Default username";
 
     public static final String DESCRIPTION_PASSPORT_SERIAL_NUMBER = "Passport serial number";
     public static final String EXAMPLE_PASSPORT_SERIAL_NUMBER = "12";

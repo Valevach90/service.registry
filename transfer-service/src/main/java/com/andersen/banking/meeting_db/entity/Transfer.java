@@ -1,12 +1,20 @@
 package com.andersen.banking.meeting_db.entity;
 
 
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -54,13 +62,21 @@ public class Transfer extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
         Transfer transfer = (Transfer) o;
-        return sourcePaymentType.equals(transfer.sourcePaymentType) && sourceNumber.equals(transfer.sourceNumber)
+        return sourcePaymentType.equals(transfer.sourcePaymentType) && sourceNumber.equals(
+                transfer.sourceNumber)
                 && destinationPaymentType.equals(transfer.destinationPaymentType)
-                && destinationNumber.equals(transfer.destinationNumber) && amount.equals(transfer.amount)
+                && destinationNumber.equals(transfer.destinationNumber) && amount.equals(
+                transfer.amount)
                 && currency.equals(transfer.currency);
     }
 

@@ -1,5 +1,9 @@
-package com.andersen.banking.meeting_api.dto;
+package com.andersen.banking.meeting_api.dto.deposit;
 
+import com.andersen.banking.meeting_api.dto.CurrencyDto;
+import com.andersen.banking.meeting_api.dto.deposit_product.DepositProductResponseDto;
+import com.andersen.banking.meeting_api.dto.DepositTypeDto;
+import com.andersen.banking.meeting_api.dto.LinkedCardDto;
 import com.andersen.banking.meeting_api.utils.OpenApiConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,7 +36,7 @@ public class DepositDto {
 
     @JsonProperty("depositProduct")
     @NotNull(message = "Deposit product can't be null.")
-    private DepositProductDto depositProduct;
+    private DepositProductResponseDto depositProduct;
 
     @JsonProperty("type")
     @NotNull(message = "Deposit type can't be null.")
@@ -95,6 +99,11 @@ public class DepositDto {
     @JsonProperty("isRevocable")
     @NotNull(message = "Revocation Option can't be null.")
     private Boolean isRevocable;
+
+    @Schema(description = OpenApiConstants.DESCRIPTION_IS_REVOCABLE, example = OpenApiConstants.EXAMPLE_BOOLEAN, defaultValue = OpenApiConstants.EXAMPLE_BOOLEAN)
+    @JsonProperty("isActive_status")
+    @NotNull(message = "Revocation Option can't be null.")
+    private Boolean isActive;
 
     @Schema(description = OpenApiConstants.DESCRIPTION_USER_ID, example = OpenApiConstants.EXAMPLE_UUID, defaultValue = OpenApiConstants.EXAMPLE_UUID)
     @JsonProperty("userId")

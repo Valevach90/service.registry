@@ -36,7 +36,8 @@ public interface CardMapper {
     @Mapping(target = "id", ignore = true)
     Card toCard(CardRegistrationDto cardDto);
 
-    @Mapping(target = "firstTwelveNumbersHash", source = "firstTwelveNumbers")
+    @Mapping(target = "firstTwelveNumbers", source = "firstTwelveNumbers")
     @Mapping(target = "paymentSystem", source = "cardProduct.typeCard.paymentSystem")
+    @Mapping(target = "typeName", source = "cardProduct.typeCard.typeName")
     CardCredResponseDto toCardCredResponseDto(Card card);
 }

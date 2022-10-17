@@ -3,7 +3,6 @@ package com.andersen.banking.meeting_db.entities;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -33,7 +32,7 @@ public class CardProduct {
     private Integer cashback;
 
     @Column(name = "price")
-    private Long price;
+    private Double price;
 
     @Column(name = "advantages", nullable = false)
     private String advantages;
@@ -44,7 +43,13 @@ public class CardProduct {
     @Column(name = "loyalty_program", nullable = false)
     private String loyaltyProgram;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "bank_partners_mini")
+    private String bankPartnersMini;
+
+    @Column(name = "loyalty_program_mini")
+    private String loyaltyProgramMini;
+
+    @ManyToOne
     @JoinColumn(name = "type_card_id", referencedColumnName = "id")
     private TypeCard typeCard;
 }

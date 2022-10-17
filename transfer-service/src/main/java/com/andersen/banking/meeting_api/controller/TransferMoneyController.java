@@ -34,8 +34,7 @@ public interface TransferMoneyController {
             description = "get info about for user by transfer id")
     @GetMapping("/{transfer_id}")
     TransferResponseDto findById(@Parameter(description = "transfer_id", required = true)
-                                 @PathVariable(value = "transfer_id") UUID transferId,
-                                 @RequestParam(required = true) UUID userId);
+                                 @PathVariable(value = "transfer_id") UUID transferId);
 
 
     @Operation(summary = "Get information about transfer status by transfer id",

@@ -1,9 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BANKNAME;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CURRENCY;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_UUID;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,7 +10,6 @@ import java.time.LocalDate;
 import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -38,8 +34,8 @@ public class AccountChangesResponseDto {
     private LocalDate closeDate;
 
     @NotNull
-    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     @JsonProperty("owner_id")
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID ownerId;
 
     @NotBlank
@@ -53,22 +49,21 @@ public class AccountChangesResponseDto {
     private String bankName;
 
     @NotNull
-    @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     @JsonProperty("balance")
+    @Schema(example = EXAMPLE_BALANCE, defaultValue = EXAMPLE_BALANCE)
     private double balance;
 
     @NotNull
-    @Schema(example = "true", defaultValue = "true")
     @JsonProperty("is_active")
     private boolean isActive;
 
     @NotNull
-    @Schema(example = "UPDATE", defaultValue = "UPDATE")
     @JsonProperty("revision_type")
+    @Schema(example = EXAMPLE_REVISION_TYPE, defaultValue = EXAMPLE_REVISION_TYPE)
     private String revisionType;
 
     @NotNull
-    @Schema(example = "0", defaultValue = "0")
     @JsonProperty("timestamp")
+    @Schema(example = EXAMPLE_TIMESTAMP, defaultValue = EXAMPLE_TIMESTAMP)
     private Long timestamp;
 }

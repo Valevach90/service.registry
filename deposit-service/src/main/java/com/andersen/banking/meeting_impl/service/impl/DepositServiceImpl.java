@@ -1,13 +1,20 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
+import com.andersen.banking.meeting_db.entities.LinkedCard;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.entities.Transfer;
+import com.andersen.banking.meeting_db.repositories.CurrencyRepository;
+import com.andersen.banking.meeting_db.repositories.DepositProductRepository;
 import com.andersen.banking.meeting_db.repositories.DepositRepository;
+import com.andersen.banking.meeting_db.repositories.DepositTypeRepository;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage.ResponseTransferMessageBuilder;
+import com.andersen.banking.meeting_impl.mapping.DepositMapper;
 import com.andersen.banking.meeting_impl.mapping.TransferMapper;
 import com.andersen.banking.meeting_impl.service.DepositService;
 import com.andersen.banking.meeting_impl.service.TransferService;
@@ -32,11 +39,17 @@ public class DepositServiceImpl implements DepositService {
     private static final String TRANSFER_WITH_DEPOSIT_TYPE = "Deposit";
     private static final Integer LENGTH_OF_DEPOSIT_NUMBER = 16;
 
+    private static final Long MILLIS_IN_MONTH = 2592000000L;
+
     private final DepositRepository depositRepository;
+    private final DepositProductRepository depositProductRepository;
+    private final CurrencyRepository currencyRepository;
+    private final DepositTypeRepository depositTypeRepository;
 
     private final TransferService transferService;
 
     private final TransferMapper transferMapper;
+    private final DepositMapper depositMapper;
 
     @Override
     @Retryable(value = SQLIntegrityConstraintViolationException.class, backoff = @Backoff(delay = 1000))
@@ -47,7 +60,12 @@ public class DepositServiceImpl implements DepositService {
         deposit.setId(null);
         deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.count() + 1)));
         deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
+        deposit.setCloseDate(new java.sql.Date(System.currentTimeMillis() + MILLIS_IN_MONTH * deposit.getTermMonths()));
         deposit.setIsActive(true);
+
+        for (LinkedCard cards : deposit.getLinkedCards()){
+            cards.setDeposit(deposit);
+        }
 
         Deposit savedDeposit = depositRepository.save(deposit);
 
@@ -90,15 +108,22 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     @Transactional
-    public void update(Deposit deposit) {
-        log.info("Updating deposit: {}", deposit);
+    public DepositDto update(DepositRequestDto depositRequestDto) {
+        log.info("Updating deposit: {}", depositRequestDto);
 
-        Deposit foundDeposit = depositRepository.findById(deposit.getId())
-                .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getId()));
+        Deposit foundDeposit = depositRepository.findById(depositRequestDto.getId())
+                .orElseThrow(() -> new NotFoundException(Deposit.class, depositRequestDto.getId()));
 
-        depositRepository.save(deposit);
+        Deposit deposit = depositMapper.toDeposit(depositRequestDto);
+        deposit.setDepositProduct(depositProductRepository.getById(depositRequestDto.getProductId()));
+        deposit.setCurrency(currencyRepository.getById(depositRequestDto.getCurrencyId()));
+        deposit.setType(depositTypeRepository.getById(depositRequestDto.getTypeId()));
+
+        Deposit save = depositRepository.save(deposit);
 
         log.info("Deposit: {} updated to version: {}", foundDeposit, deposit);
+
+        return depositMapper.toDepositDto(save);
     }
 
     @Override
@@ -286,5 +311,24 @@ public class DepositServiceImpl implements DepositService {
 
     private int setStatusInt(boolean value) {
         return value ? Status.STATUS_COMMITTED : Status.STATUS_ROLLEDBACK;
+    }
+
+    @Transactional
+    public Deposit accrualDepositInterest(UUID depositId, Long startedPeriodAmount) {
+
+        log.info("Trying accrual of interest for deposit with id: {}", depositId);
+
+        Deposit deposit = depositRepository.findById(depositId)
+                .orElseThrow(() -> new NotFoundException(Deposit.class, depositId));
+
+        if (deposit.getAmount() >= startedPeriodAmount) {
+            deposit.setAmount(deposit.getAmount() + (deposit.getAmount() * deposit.getInterestRate() / 100));
+
+            log.info("Saving deposit after successful interest accrual {}", deposit);
+            depositRepository.save(deposit);
+        } else {
+            log.error("Interest accrual forbidden, amount is less than stated period amount {}", deposit);
+        }
+        return deposit;
     }
 }

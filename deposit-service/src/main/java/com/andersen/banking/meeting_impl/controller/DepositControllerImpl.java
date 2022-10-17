@@ -1,9 +1,9 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.DepositController;
-import com.andersen.banking.meeting_api.dto.DepositCreateRequestDto;
-import com.andersen.banking.meeting_api.dto.DepositDto;
-import com.andersen.banking.meeting_api.dto.DepositRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositCreateRequestDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_impl.exceptions.NotFoundException;
 import com.andersen.banking.meeting_impl.mapping.DepositMapper;
@@ -60,11 +60,11 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public Page<DepositRequestDto> findAll(Pageable pageable) {
+    public Page<DepositDto> findAll(Pageable pageable) {
         log.debug("Find all deposits for pageable: {}", pageable);
 
-        Page<DepositRequestDto> allDepositDto = depositService.findAll(pageable)
-                .map(depositMapper::toDepositRequest);
+        Page<DepositDto> allDepositDto = depositService.findAll(pageable)
+                .map(depositMapper::toDepositDto);
 
         log.debug("Found {} deposits", allDepositDto.getContent().size());
         return allDepositDto;
@@ -93,13 +93,14 @@ public class DepositControllerImpl implements DepositController {
     }
 
     @Override
-    public void update(DepositDto depositDto) {
-        log.debug("Updating deposit: {}", depositDto);
+    public DepositDto update(DepositRequestDto depositRequestDto) {
+        log.debug("Updating deposit: {}", depositRequestDto);
 
-        Deposit deposit = depositMapper.toDeposit(depositDto);
-        depositService.update(deposit);
+        DepositDto depositDto = depositService.update(depositRequestDto);
 
-        log.debug("Updated deposit: {}", depositDto);
+        log.debug("Updated deposit: {}", depositRequestDto);
+
+        return depositDto;
     }
 
     @Override

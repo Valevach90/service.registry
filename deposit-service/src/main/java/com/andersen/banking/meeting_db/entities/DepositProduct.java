@@ -28,11 +28,11 @@ public class DepositProduct {
     @Column(name = "deposit_name", nullable = false)
     private String depositName;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deposit_type_id", nullable = false)
     private DepositType type;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
 
@@ -80,6 +80,6 @@ public class DepositProduct {
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "depositProduct",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST})
     private List<DepositProductDescription> descriptions = new ArrayList<>();
 }

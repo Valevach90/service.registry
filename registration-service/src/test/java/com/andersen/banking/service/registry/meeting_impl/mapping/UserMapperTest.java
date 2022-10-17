@@ -2,7 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.mapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.andersen.banking.service.registry.meeting_api.dto.UserDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class UserMapperTest {
 
     private User user;
-    private UserDto userDto;
+    private UserResponseDto userResponseDto;
 
     @Autowired
     UserMapper userMapper;
@@ -30,13 +30,13 @@ class UserMapperTest {
         user.setPatronymic("1");
         user.setPhone("1");
 
-        userDto = new UserDto();
-        userDto.setId(UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464"));
-        userDto.setFirstName("1");
-        userDto.setLastName("1");
-        userDto.setEmail("1");
-        userDto.setPatronymic("1");
-        userDto.setPhone("1");
+        userResponseDto = new UserResponseDto();
+        userResponseDto.setId(UUID.fromString("0d4ff469-465e-412b-9737-34d08d227464"));
+        userResponseDto.setFirstName("1");
+        userResponseDto.setLastName("1");
+        userResponseDto.setEmail("1");
+        userResponseDto.setPatronymic("1");
+        userResponseDto.setPhone("1");
     }
 
     @Test
@@ -47,25 +47,25 @@ class UserMapperTest {
 
     @Test
     void whenMapDtoToEntity_andOk() {
-        var result = userMapper.toUser(userDto);
-        checkForEquals(userDto, result);
+        var result = userMapper.toUser(userResponseDto);
+        checkForEquals(userResponseDto, result);
     }
 
-    private void checkForEquals(User user, UserDto userDto) {
-        assertEquals(user.getId(), userDto.getId());
-        assertEquals(user.getFirstName(), userDto.getFirstName());
-        assertEquals(user.getLastName(), userDto.getLastName());
-        assertEquals(user.getEmail(), userDto.getEmail());
-        assertEquals(user.getPatronymic(), userDto.getPatronymic());
-        assertEquals(user.getPhone(), userDto.getPhone());
+    private void checkForEquals(User user, UserResponseDto userResponseDto) {
+        assertEquals(user.getId(), userResponseDto.getId());
+        assertEquals(user.getFirstName(), userResponseDto.getFirstName());
+        assertEquals(user.getLastName(), userResponseDto.getLastName());
+        assertEquals(user.getEmail(), userResponseDto.getEmail());
+        assertEquals(user.getPatronymic(), userResponseDto.getPatronymic());
+        assertEquals(user.getPhone(), userResponseDto.getPhone());
     }
 
-    private void checkForEquals(UserDto userDto, User user) {
-        assertEquals(userDto.getId(), user.getId());
-        assertEquals(userDto.getFirstName(), user.getFirstName());
-        assertEquals(userDto.getLastName(), user.getLastName());
-        assertEquals(userDto.getEmail(), user.getEmail());
-        assertEquals(userDto.getPatronymic(), user.getPatronymic());
-        assertEquals(userDto.getPhone(), user.getPhone());
+    private void checkForEquals(UserResponseDto userResponseDto, User user) {
+        assertEquals(userResponseDto.getId(), user.getId());
+        assertEquals(userResponseDto.getFirstName(), user.getFirstName());
+        assertEquals(userResponseDto.getLastName(), user.getLastName());
+        assertEquals(userResponseDto.getEmail(), user.getEmail());
+        assertEquals(userResponseDto.getPatronymic(), user.getPatronymic());
+        assertEquals(userResponseDto.getPhone(), user.getPhone());
     }
 }

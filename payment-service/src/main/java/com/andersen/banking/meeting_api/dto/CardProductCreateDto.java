@@ -1,10 +1,5 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_CASHBACK;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PAYMENT_SYSTEM;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_PRICE;
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_TYPENAME;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +9,8 @@ import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -38,6 +35,7 @@ public class CardProductCreateDto {
             max = 255,
             message = "advantages should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String advantages;
 
     @NotBlank
@@ -47,6 +45,7 @@ public class CardProductCreateDto {
             max = 255,
             message = "bank_partners should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String bankPartners;
 
     @NotBlank
@@ -56,7 +55,28 @@ public class CardProductCreateDto {
             max = 255,
             message = "loyalty_program should contain at least 3 symbols and not more than 255"
     )
+    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String loyaltyProgram;
+
+    @NotBlank
+    @JsonProperty("bank_partners_mini")
+    @Size(
+            min = 3,
+            max = 40,
+            message = "bank_partners_mini should contain at least 3 symbols and not more than 40"
+    )
+    @Schema(example = EXAMPLE_DESCRIPTION_MINI, defaultValue = EXAMPLE_DESCRIPTION_MINI)
+    private String bankPartnersMini;
+
+    @NotBlank
+    @JsonProperty("loyalty_program_mini")
+    @Size(
+            min = 3,
+            max = 40,
+            message = "loyalty_program_mini should contain at least 3 symbols and not more than 40"
+    )
+    @Schema(example = EXAMPLE_DESCRIPTION_MINI, defaultValue = EXAMPLE_DESCRIPTION_MINI)
+    private String loyaltyProgramMini;
 
     @NotBlank
     @JsonProperty("payment_system")

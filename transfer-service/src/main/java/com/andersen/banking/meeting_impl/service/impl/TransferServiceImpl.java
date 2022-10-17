@@ -1,5 +1,6 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
+import com.andersen.banking.meeting_api.dto.StatusTransfer;
 import com.andersen.banking.meeting_api.dto.request.TransferRequestDto;
 import com.andersen.banking.meeting_api.dto.responce.TransferStatusResponseDto;
 import com.andersen.banking.meeting_db.entity.Currency;
@@ -11,21 +12,17 @@ import com.andersen.banking.meeting_impl.mapper.TransferMapper;
 import com.andersen.banking.meeting_impl.service.CurrencyService;
 import com.andersen.banking.meeting_impl.service.PaymentTypeService;
 import com.andersen.banking.meeting_impl.service.TransferService;
+import java.util.Objects;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Slf4j
 @Service
-@CacheConfig(cacheNames = {"transfer"})
 @RequiredArgsConstructor
 public class TransferServiceImpl implements TransferService {
 
@@ -94,17 +91,19 @@ public class TransferServiceImpl implements TransferService {
      */
 
     @Override
-    @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()")
     @Transactional
     public Transfer create(TransferRequestDto transferRequestDto) throws RuntimeException {
         log.info("Creating transfer: {}", transferRequestDto);
 
-        PaymentType source = paymentTypeService.getPaymentTypeById(transferRequestDto.getSourcePaymentTypeId());
-        PaymentType destination = paymentTypeService.getPaymentTypeById(transferRequestDto.getDestinationPaymentTypeId());
+        PaymentType source = paymentTypeService.getPaymentTypeById(
+                transferRequestDto.getSourcePaymentTypeId());
+        PaymentType destination = paymentTypeService.getPaymentTypeById(
+                transferRequestDto.getDestinationPaymentTypeId());
 
         Currency currency = currencyService.getCurrencyById(transferRequestDto.getCurrencyId());
 
-        Transfer transfer = transferMapper.transferRequestDto2Transfer(transferRequestDto, source, destination, currency);
+        Transfer transfer = transferMapper.transferRequestDto2Transfer(transferRequestDto, source,
+                destination, currency);
         Transfer savedTransfer = transferRepository.save(transfer);
 
         log.info("Created transfer: {}", savedTransfer);
@@ -112,18 +111,19 @@ public class TransferServiceImpl implements TransferService {
         return savedTransfer;
     }
 
-    /*
-            Not supported now.
-         */
     @Override
     @Transactional(readOnly = true)
     public TransferStatusResponseDto getTransferStatus(UUID transferId) {
-
-        return null;
+        log.info("Get status description for transfer with id: {}", transferId);
+        Transfer transfer = transferRepository.getById(transferId);
+        return TransferStatusResponseDto.builder()
+                .status(transfer.getStatus())
+                .description(Objects.requireNonNull(
+                        StatusTransfer.getStatusTransfer(transfer.getStatus())).name())
+                .build();
     }
 
     @Override
-    @Cacheable(value = "transfers", key = "#userId")
     @Transactional(readOnly = true)
     public Page<Transfer> findByUserId(UUID userId, Pageable pageable) {
 

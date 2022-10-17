@@ -1,5 +1,7 @@
 package com.andersen.banking.meeting_impl.service;
 
+import com.andersen.banking.meeting_api.dto.deposit.DepositDto;
+import com.andersen.banking.meeting_api.dto.deposit.DepositRequestDto;
 import com.andersen.banking.meeting_db.entities.Deposit;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
@@ -52,7 +54,7 @@ public interface DepositService {
      *
      * @param deposit deposit to update
      */
-    void update(Deposit deposit);
+    DepositDto update(DepositRequestDto deposit);
 
     /**
      * Delete deposit by id.
@@ -67,4 +69,13 @@ public interface DepositService {
      * @param message request transfer message to make transfer
      */
     ResponseTransferMessage makeTransfer(RequestTransferMessage message);
+
+    /**
+     * Accrual of deposit interest
+     *
+     * @param depositId id of deposit to interest accrual
+     * @param startedPeriodAmount amount of deposit at start of accrual period
+     * @return deposit after the interest accrual
+     */
+    Deposit accrualDepositInterest(UUID depositId, Long startedPeriodAmount);
 }
