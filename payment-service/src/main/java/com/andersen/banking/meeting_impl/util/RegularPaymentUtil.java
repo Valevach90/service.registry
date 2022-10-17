@@ -2,8 +2,20 @@ package com.andersen.banking.meeting_impl.util;
 
 import com.andersen.banking.meeting_api.dto.FrequencyDto;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
+import com.andersen.banking.meeting_db.repository.RegularPaymentRepository;
+import com.andersen.banking.meeting_impl.feign.TransferClient;
+import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-public class RegularPaymentUtil {
+import static com.andersen.banking.meeting_impl.util.TransferMapsContainer.getCurrencyMap;
+import static com.andersen.banking.meeting_impl.util.TransferMapsContainer.getPaymentTypeMap;
+
+@Slf4j
+public final class RegularPaymentUtil {
 
     public static void setUpNextDate(RegularPayment regularPayment) {
         FrequencyDto frequencyDto = parseFrequency(regularPayment.getFrequency());

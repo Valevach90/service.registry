@@ -34,7 +34,7 @@ public class RegularPaymentResponseDto {
     private String description;
 
     @Schema(
-            description = "Regular payment start date",
+            description = EXAMPLE_DESCRIPTION_START_DATE,
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("start_date")
@@ -42,7 +42,7 @@ public class RegularPaymentResponseDto {
     private LocalDate startDate;
 
     @Schema(
-            description = "Regular payment last date",
+            description = EXAMPLE_DESCRIPTION_NEXT_DATE,
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("next_date")

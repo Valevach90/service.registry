@@ -8,12 +8,12 @@ import com.andersen.banking.meeting_impl.feign.TransferClient;
 import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
 import com.andersen.banking.meeting_impl.service.CardService;
 import com.andersen.banking.meeting_impl.service.RegularPaymentService;
+import com.andersen.banking.meeting_impl.util.RegularPaymentUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DateTimeException;
@@ -86,7 +86,7 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         return regularPaymentRepository.findAll(pageable);
     }
 
-    @Transactional(propagation = Propagation.NESTED)
+    @Transactional
     public boolean executeSomeAmountOfRegularPayments() {
         List<RegularPayment> regularPaymentsToExecute = regularPaymentRepository.findRegularPaymentsToExecute();
 
@@ -99,8 +99,7 @@ public class RegularPaymentServiceImpl implements RegularPaymentService {
         }
     }
 
-    @Transactional
-    public void executeRegularPayment(RegularPayment regularPayment) {
+    private void executeRegularPayment(RegularPayment regularPayment) {
         log.info("Creating transfer by regular payment id: {}", regularPayment.getId());
 
         transferClient.createTransfer(getTransferRequestDto(regularPayment));

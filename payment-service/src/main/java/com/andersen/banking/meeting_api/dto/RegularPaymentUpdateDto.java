@@ -37,7 +37,7 @@ public class RegularPaymentUpdateDto {
     private String description;
 
     @Schema(
-            description = "Regular payment start date",
+            description = EXAMPLE_DESCRIPTION_START_DATE,
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("start_date")
@@ -46,7 +46,7 @@ public class RegularPaymentUpdateDto {
     private LocalDate startDate;
 
     @Schema(
-            description = "Regular payment start date",
+            description = EXAMPLE_DESCRIPTION_NEXT_DATE,
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("next_date")
@@ -70,7 +70,7 @@ public class RegularPaymentUpdateDto {
     private Long amount;
 
     @Schema(
-            description = "Frequency of sending payments",
+            description = EXAMPLE_DESCRIPTION_FREQUENCY,
             example = EXAMPLE_FREQUENCY,
             defaultValue = EXAMPLE_FREQUENCY)
     @JsonProperty("frequency")
