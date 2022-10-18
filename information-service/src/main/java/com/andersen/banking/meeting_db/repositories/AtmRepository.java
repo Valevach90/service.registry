@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AtmRepository extends JpaRepository<Atm, UUID> {
 
-    Optional<Page<Atm>> findAllByStreetId(Long streetId, Pageable pageable);
+    Page<Atm> findAllByStreetId(Long streetId, Pageable pageable);
 
-    Optional<Page<Atm>> findAllByBankBranchId(Long bankBranchId, Pageable pageable);
+    Page<Atm> findAllByBankBranchId(Long bankBranchId, Pageable pageable);
 }

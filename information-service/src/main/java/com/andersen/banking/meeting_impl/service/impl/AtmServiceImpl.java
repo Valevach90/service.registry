@@ -62,9 +62,11 @@ public class AtmServiceImpl implements AtmService {
     public Page<Atm> findAllByStreetId(Long streetId, Pageable pageable) {
         log.debug("Find all ATM on the streetId {} and pageable: {}", streetId, pageable);
 
-        Page<Atm> pageOfAtm = atmRepository.findAllByStreetId(streetId, pageable).orElseThrow(
-                () -> new NotFoundException("Street", "id", streetId.toString())
-        );
+        if (!streetRepository.existsById(streetId)) {
+            throw new NotFoundException("Street", "id", streetId.toString());
+        }
+
+        Page<Atm> pageOfAtm = atmRepository.findAllByStreetId(streetId, pageable);
 
         log.info("Found {} ATM on the streetId {}", pageOfAtm.getContent().size(), streetId);
         return pageOfAtm;
@@ -74,9 +76,11 @@ public class AtmServiceImpl implements AtmService {
     public Page<Atm> findAllByBankBranchId(Long bankBranchId, Pageable pageable) {
         log.info("Find all ATM on the bank branch with id {} and pageable: {}", bankBranchId, pageable);
 
-        Page<Atm> pageOfAtm = atmRepository.findAllByBankBranchId(bankBranchId, pageable).orElseThrow(
-                () -> new NotFoundException("Bank branch", "id", bankBranchId.toString())
-        );
+        if(!bankBranchRepository.existsById(bankBranchId)) {
+            throw new NotFoundException("Bank branch", "id", bankBranchId.toString());
+        }
+
+        Page<Atm> pageOfAtm = atmRepository.findAllByBankBranchId(bankBranchId, pageable);
 
         log.info("Found {} ATM on the bank branch wit id {}", pageOfAtm.getContent().size(), bankBranchId);
         return pageOfAtm;
