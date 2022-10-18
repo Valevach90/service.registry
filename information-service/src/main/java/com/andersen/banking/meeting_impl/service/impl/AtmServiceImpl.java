@@ -62,11 +62,9 @@ public class AtmServiceImpl implements AtmService {
     public Page<Atm> findAllByStreetId(Long streetId, Pageable pageable) {
         log.debug("Find all ATM on the streetId {} and pageable: {}", streetId, pageable);
 
-        Long streetIdForSearch = streetRepository.findById(streetId).orElseThrow(
+        Page<Atm> pageOfAtm = atmRepository.findAllByStreetId(streetId, pageable).orElseThrow(
                 () -> new NotFoundException("Street", "id", streetId.toString())
-        ).getId();
-
-        Page<Atm> pageOfAtm = atmRepository.findAllByStreetId(streetIdForSearch, pageable);
+        );
 
         log.info("Found {} ATM on the streetId {}", pageOfAtm.getContent().size(), streetId);
         return pageOfAtm;
@@ -76,11 +74,9 @@ public class AtmServiceImpl implements AtmService {
     public Page<Atm> findAllByBankBranchId(Long bankBranchId, Pageable pageable) {
         log.info("Find all ATM on the bank branch with id {} and pageable: {}", bankBranchId, pageable);
 
-        Long bankBranchIdForSearch = bankBranchRepository.findById(bankBranchId).orElseThrow(
+        Page<Atm> pageOfAtm = atmRepository.findAllByBankBranchId(bankBranchId, pageable).orElseThrow(
                 () -> new NotFoundException("Bank branch", "id", bankBranchId.toString())
-        ).getId();
-
-        Page<Atm> pageOfAtm = atmRepository.findAllByBankBranchId(bankBranchIdForSearch, pageable);
+        );
 
         log.info("Found {} ATM on the bank branch wit id {}", pageOfAtm.getContent().size(), bankBranchId);
         return pageOfAtm;
@@ -102,11 +98,7 @@ public class AtmServiceImpl implements AtmService {
     public void deleteById(UUID id) {
         log.info("Deleting ATM with id: {}", id);
 
-        UUID atmId = atmRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("ATM", "id", id.toString())
-        ).getId();
-
-        atmRepository.deleteById(atmId);
+        atmRepository.deleteById(id);
 
         log.info("ATM with id: {} deleted successfully", id);
     }
