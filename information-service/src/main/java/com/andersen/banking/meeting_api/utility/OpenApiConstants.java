@@ -17,6 +17,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_DATE_OF_UPDATE = "Date of file update";
 
     public static final String EXAMPLE_LONG = "10";
+    public static final String EXAMPLE_CURRENCY = "USD";
     public static final String EXAMPLE_FILE_NAME = "Document.doc";
     public static final String EXAMPLE_LINK = "https://www.documents.com/Document.doc";
     public static final String EXAMPLE_DATE = "2022-07-06 13:33:29,573";

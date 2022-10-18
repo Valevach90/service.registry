@@ -5,10 +5,11 @@ import com.andersen.banking.meeting_api.dto.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
-import com.andersen.banking.meeting_impl.service.InformationService;
 import com.andersen.banking.meeting_impl.exception.InvalidRequestException;
+import com.andersen.banking.meeting_impl.service.InformationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,11 @@ public class InformationControllerImpl implements InformationController {
 
 
     @Override
-    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable, boolean onlyWithBranches, boolean singlePage) {
-        if (singlePage) pageable = null;
+    public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable,
+            boolean onlyWithBranches, boolean singlePage) {
+        if (singlePage) {
+            pageable = null;
+        }
         if (onlyWithBranches) {
             log.info("get only cities with bank branches");
             return informationService.getListCityDtoWithBankBranchesByCountryId(countryId);
@@ -43,11 +47,14 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
-    public List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(Long countryId, Pageable pageable, CityDtoForSearch cityPartName, BindingResult result) {
+    public List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(Long countryId,
+            Pageable pageable, CityDtoForSearch cityPartName, BindingResult result) {
         log.info("get cities which contain part of the city name");
-        if(result.hasErrors())
+        if (result.hasErrors()) {
             throw new InvalidRequestException("too short string: " + cityPartName);
-        return informationService.getListCityDtoByCountryIdAndPartOfCityName(countryId, cityPartName, pageable);
+        }
+        return informationService.getListCityDtoByCountryIdAndPartOfCityName(countryId,
+                cityPartName, pageable);
     }
 
     @Override
@@ -66,5 +73,11 @@ public class InformationControllerImpl implements InformationController {
     public List<TimeTableDto> getAllTimeTablesByBranchId(Long addressId) {
         log.info("get timetables");
         return informationService.getListTimeTableDtoByBranchId(addressId);
+    }
+
+    @Override
+    public ExchangeRatesDto getExchangeRates(String currency) {
+        log.info("Get exchange rates for currency {}", currency);
+        return informationService.getExchangeRates(currency);
     }
 }

@@ -55,4 +55,5 @@ public interface InformationService {
 
     List<BankBranchDto> getListBankBranchDtoByCityId(Long addressId);
 
+    ExchangeRatesDto getExchangeRates(String currency);
 }
