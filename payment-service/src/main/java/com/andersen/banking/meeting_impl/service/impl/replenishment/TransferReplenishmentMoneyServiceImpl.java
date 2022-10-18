@@ -41,21 +41,33 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
         ResponseTransferMessageBuilder builder = ResponseTransferMessage.builder()
                 .transferId(transferId);
 
-        Account sourceAccount = getSourceAccount(requestTransferMessage);
+        Account targetAccount = getTargetAccount(requestTransferMessage);
 
-        doFilterBeforeTransfer(requestTransferMessage, sourceAccount);
+        if(requestTransferMessage.getSourceType() == "CARD") {
+            doFilterBeforeTransfer(requestTransferMessage, targetAccount);
+        }
 
-        boolean isTransferred = accountService.changeAccountBalance(sourceAccount.getId(),
+        if(requestTransferMessage.getSourceType().equals("DEPOSIT")) {
+            requestTransferMessage.setAmount(requestTransferMessage.getAmount() * -1L);
+        }
+
+        boolean isTransferred = accountService.changeAccountBalance(targetAccount.getId(),
                 requestTransferMessage.getAmount());
-        if (!isTransferred) {
+        if (!isTransferred){
             log.info("Transfer operation failed. Transfer id : {}.", transferId);
 
             builder.statusDescription(StatusDescription.FAILED.getDescription());
             builder.status(Status.STATUS_ROLLING_BACK);
-        } else {
+        } else if (requestTransferMessage.getSourceType().equals("CARD")){
             log.info("Successfully transfer money. Transfer id : {}", transferId);
 
             builder.statusDescription(StatusDescription.GET_FROM_CARD.getDescription());
+            builder.status(Status.STATUS_COMMITTING);
+        } else if (requestTransferMessage.getSourceType().equals("DEPOSIT")){
+            log.info("Successfully transfer money from deposit : {}. Transfer id : {}",
+                    requestTransferMessage.getSourceNumber(), transferId);
+
+            builder.statusDescription(StatusDescription.GET_FROM_DEPOSIT.getDescription());
             builder.status(Status.STATUS_COMMITTING);
         }
 
@@ -63,9 +75,9 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
         return builder.build();
     }
 
-    private Account getSourceAccount(RequestTransferMessage requestTransferMessage) {
+    private Account getTargetAccount(RequestTransferMessage requestTransferMessage) {
 
-        String requestDestNum = requestTransferMessage.getSourceNumber();
+        String requestDestNum = requestTransferMessage.getDestinationNumber();
         log.info("Getting cards by request destination nums = {}", requestDestNum);
         int srcHash = requestDestNum.length() - LAST_FOUR_NUMBERS_CARD;
 
@@ -79,6 +91,14 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
     private void doFilterBeforeTransfer(RequestTransferMessage requestTransferMessage,
             Account source) throws RuntimeException {
 
+        if(requestTransferMessage.getSourceType().equals("CARD")) {
+            /*
+            check on ownerId before the transfer will begin
+         */
+            transferMoneyRequestFilter.checkOnEnoughMoneyOnSrcAccount(
+                    requestTransferMessage, source);
+        }
+
         /*
             check on equals account's owner id and customer's id
          */
@@ -89,11 +109,7 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
          */
         transferMoneyRequestFilter.checkOnEqualsCurrency(
                 requestTransferMessage, source);
-        /*
-            check on ownerId before the transfer will begin
-         */
-        transferMoneyRequestFilter.checkOnEnoughMoneyOnSrcAccount(
-                requestTransferMessage, source);
     }
+
 }
 
