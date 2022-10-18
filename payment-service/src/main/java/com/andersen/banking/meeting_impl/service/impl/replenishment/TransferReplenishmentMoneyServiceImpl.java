@@ -91,7 +91,7 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
     private void doFilterBeforeTransfer(RequestTransferMessage requestTransferMessage,
             Account source) throws RuntimeException {
 
-        if(requestTransferMessage.getSourceType() == "CARD") {
+        if(requestTransferMessage.getSourceType().equals("CARD")) {
             /*
             check on ownerId before the transfer will begin
          */
