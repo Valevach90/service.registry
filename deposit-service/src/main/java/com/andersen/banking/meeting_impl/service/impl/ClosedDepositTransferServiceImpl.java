@@ -33,9 +33,9 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
         do {
             Pageable page = Pageable.ofSize(1000);
             deposits = depositRepository.closingScheduler(page);
-            deposits.forEach(deposit -> deposit.setIsActive(false));
+//            deposits.forEach(deposit -> deposit.setIsActive(false));
             log.info("deposits with the current closing date are closed");
-            resetAmountAfterTransferToCard(deposits);
+//            resetAmountAfterTransferToCard(deposits);
             depositRepository.saveAll(deposits);
         } while (!deposits.isEmpty());
         return deposits;
@@ -62,7 +62,7 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
 
     private String getCardNumber(Deposit deposit) {
         LinkedCard card = deposit.getLinkedCards().stream()
-                .filter(x -> x.getFlagForTransferring().equals(true))
+                .filter(x -> x.getDefaultCard().equals(true))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(Deposit.class, deposit.getDepositNumber(), deposit.getUserId()));
 
