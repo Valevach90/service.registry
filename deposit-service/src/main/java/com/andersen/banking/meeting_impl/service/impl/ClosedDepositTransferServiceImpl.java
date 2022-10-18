@@ -8,6 +8,7 @@ import com.andersen.banking.meeting_impl.feign.MoneyTransfer;
 import com.andersen.banking.meeting_impl.feign.dto.TransferRequestDto;
 import com.andersen.banking.meeting_impl.service.ClosedDepositTransferService;
 import com.andersen.banking.meeting_impl.util.TransferMapContainer;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,16 +30,20 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
     @Override
     @Transactional
     public List<Deposit> closingDeposits() {
-        List<Deposit> deposits;
+        List<Deposit> depositsForClose = new ArrayList<>();
+        List<Deposit> partOfDeposits;
         do {
             Pageable page = Pageable.ofSize(1000);
-            deposits = depositRepository.closingScheduler(page);
-//            deposits.forEach(deposit -> deposit.setIsActive(false));
+            partOfDeposits = depositRepository.closingScheduler(page);
+            partOfDeposits.forEach(deposit -> deposit.setIsActive(false));
             log.info("deposits with the current closing date are closed");
-//            resetAmountAfterTransferToCard(deposits);
-            depositRepository.saveAll(deposits);
-        } while (!deposits.isEmpty());
-        return deposits;
+            if(!partOfDeposits.isEmpty()) {
+                depositsForClose.addAll(partOfDeposits);
+            }
+        } while (!partOfDeposits.isEmpty());
+
+        depositRepository.saveAll(depositsForClose);
+        return depositsForClose;
     }
 
     public void transferToAccount(List<Deposit> deposits) {
@@ -68,8 +73,9 @@ public class ClosedDepositTransferServiceImpl implements ClosedDepositTransferSe
 
         return card.getFirstTwelveNumbers() + card.getLastFourNumbers();
     }
-
-    private void resetAmountAfterTransferToCard(List<Deposit> depositsForResetAmount) {
+    @Transactional
+    public void resetAmountAfterTransferToCard(List<Deposit> depositsForResetAmount) {
         depositsForResetAmount.forEach(x -> x.setAmount(0L));
+        depositRepository.saveAll(depositsForResetAmount);
     }
 }

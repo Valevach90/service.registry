@@ -23,6 +23,7 @@ public class DepositClosingScheduler {
 
         if(!depositsForTransferringToCard.isEmpty()) {
             closedDepositTransferService.transferToAccount(depositsForTransferringToCard);
+            closedDepositTransferService.resetAmountAfterTransferToCard(depositsForTransferringToCard);
         }
 
         log.info("FINISH SCHEDULING OF CLOSING DEPOSITS AND TRANSFER FUNDS TO CARD");

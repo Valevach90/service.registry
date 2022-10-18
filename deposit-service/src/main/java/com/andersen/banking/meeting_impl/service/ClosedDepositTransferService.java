@@ -9,4 +9,6 @@ public interface ClosedDepositTransferService {
 
     void transferToAccount(List<Deposit> depositsForTransfer);
 
+    void resetAmountAfterTransferToCard(List<Deposit> depositsForResetAmountAfterTransfer);
+
 }
