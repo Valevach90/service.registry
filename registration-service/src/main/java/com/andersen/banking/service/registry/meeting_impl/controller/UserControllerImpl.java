@@ -31,12 +31,12 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public Page<UserResponseDto> findAll(Pageable pageable) {
-        log.trace("Find all users");
+        log.debug("Find all users");
 
         Page<UserResponseDto> result = userService.findAll(pageable)
                 .map(userMapper::toUserDto);
 
-        log.trace("Return list of userDto: {}", result.getContent());
+        log.debug("Return list of userDto: {}", result.getContent());
         return result;
     }
 
@@ -49,7 +49,7 @@ public class UserControllerImpl implements UserController {
 
         UserResponseDto result = userMapper.toUserDto(userService.findById(id));
 
-        log.trace("Return userDto: {}", result);
+        log.info("Return userDto: {}", result);
 
         return result;
     }
@@ -70,33 +70,33 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public void updateUser(Authentication authentication, UserRequestDto userRequestDto) {
-        log.trace("Try to update user: {}", userRequestDto);
+        log.debug("Try to update user: {}", userRequestDto);
 
         setAttributes(authentication, userRequestDto);
         User addressUpdated = userMapper.requestDtoToUser(userRequestDto);
         userService.update(addressUpdated);
 
-        log.trace("Updated user success");
+        log.debug("Updated user success");
     }
 
     @Override
     public void updateUserEmail(Authentication authentication, UserUpdateEmailDto userUpdateEmailDto) {
-        log.trace("Try to update user email: {}", userUpdateEmailDto);
+        log.debug("Try to update user email: {}", userUpdateEmailDto);
 
         setAttributesForUpdateEmail(authentication, userUpdateEmailDto);
         User emailUpdateUser = userMapper.updateEmailRequestDtoToUser(userUpdateEmailDto);
         userService.updateEmail(emailUpdateUser);
 
-        log.trace("Updated user email success");
+        log.debug("Updated user email success");
     }
 
     @Override
     public void deleteById(UUID id) {
-        log.trace("Try to delete user with id: {}", id);
+        log.debug("Try to delete user with id: {}", id);
 
         userService.deleteById(id);
 
-        log.trace("Deleted user with id: {}", id);
+        log.debug("Deleted user with id: {}", id);
     }
 
     private void setAttributes(Authentication authentication, UserRequestDto userRequestDto) {

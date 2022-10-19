@@ -78,7 +78,7 @@ public interface UserController {
     @PutMapping("/email")
     void updateUserEmail(
             Authentication authentication,
-            @Parameter(description = "user id", required = true)
+            @Parameter(description = "new email for user", required = true)
             @RequestBody
             @Validated UserUpdateEmailDto userUpdateEmailDto);
 
