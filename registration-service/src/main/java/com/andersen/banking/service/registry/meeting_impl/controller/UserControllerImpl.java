@@ -7,6 +7,7 @@ import com.andersen.banking.service.registry.meeting_api.controller.UserControll
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserCreateResponseDto;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserRequestDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserUpdateEmailDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.mapping.UserMapper;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
@@ -79,6 +80,17 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    public void updateUserEmail(Authentication authentication, UserUpdateEmailDto userUpdateEmailDto) {
+        log.trace("Try to update user email: {}", userUpdateEmailDto);
+
+        setAttributesForUpdateEmail(authentication, userUpdateEmailDto);
+        User emailUpdateUser = userMapper.updateEmailRequestDtoToUser(userUpdateEmailDto);
+        userService.updateEmail(emailUpdateUser);
+
+        log.trace("Updated user email success");
+    }
+
+    @Override
     public void deleteById(UUID id) {
         log.trace("Try to delete user with id: {}", id);
 
@@ -92,5 +104,12 @@ public class UserControllerImpl implements UserController {
         UUID id = UUID.fromString(extractIdFromToken(jwt));
         userRequestDto.setId(id);
         userRequestDto.setUsername(extractLoginFromToken(jwt));
+    }
+
+    private void setAttributesForUpdateEmail(Authentication authentication, UserUpdateEmailDto userUpdateEmailDto) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID id = UUID.fromString(extractIdFromToken(jwt));
+        userUpdateEmailDto.setId(id);
+        userUpdateEmailDto.setUsername(extractLoginFromToken(jwt));
     }
 }

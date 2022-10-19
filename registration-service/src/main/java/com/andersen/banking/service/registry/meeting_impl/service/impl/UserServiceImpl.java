@@ -2,6 +2,7 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.generateRandomPassword;
 
+import com.andersen.banking.service.registry.meeting_api.dto.UserEmailUpdateRepresentation;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation.Credentials;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentationResponse;
@@ -173,6 +174,31 @@ public class UserServiceImpl implements UserService {
 
         UserRepresentation userRepresentation = setParameter(user);
 
+        client.method(HttpMethod.PUT)
+                .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                        keycloak.getAuthServerUrl(),
+                        keycloak.getRealm(),
+                        user.getId().toString()
+                ))
+                .headers(header -> header.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userRepresentation)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+
+        log.debug("Return updated User: {}", user);
+    }
+
+    @Override
+    public void updateEmail(User user) {
+        log.debug("Trying to update users email: {}", user);
+
+        String token = adminService.obtainAccessToken();
+
+        UserEmailUpdateRepresentation userRepresentation = setParameterForUpdateEmail(user);
+
         try {
             client.method(HttpMethod.PUT)
                     .uri(KeycloakUrlUtil.getUrlForCurrentUser(
@@ -190,7 +216,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("User with email: " + user.getEmail() + " exist");
         }
 
-        log.debug("Return updated User: {}", user);
+        log.debug("Return user with updated email: {}", user);
     }
 
     @Override
@@ -227,6 +253,13 @@ public class UserServiceImpl implements UserService {
                 .attributes(attributes)
                 .username(user.getUsername())
                 .enabled(true)
+                .build();
+    }
+
+    private UserEmailUpdateRepresentation setParameterForUpdateEmail(User user) {
+        return UserEmailUpdateRepresentation.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
                 .build();
     }
 

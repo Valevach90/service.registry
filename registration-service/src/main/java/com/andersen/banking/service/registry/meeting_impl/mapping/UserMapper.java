@@ -4,6 +4,7 @@ package com.andersen.banking.service.registry.meeting_impl.mapping;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserCreateResponseDto;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserRequestDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserUpdateEmailDto;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_impl.config.MapperConfig;
 import org.mapstruct.Mapper;
@@ -25,5 +26,7 @@ public interface UserMapper {
     User toUser(UserCreateResponseDto userResponseDto);
 
     User requestDtoToUser(UserRequestDto userRequestDto);
+
+    User updateEmailRequestDtoToUser(UserUpdateEmailDto userUpdateEmailDto);
 }
 
