@@ -8,6 +8,7 @@ import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentationR
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.entities.User.UserBuilder;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.service.AdminService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
@@ -172,18 +173,22 @@ public class UserServiceImpl implements UserService {
 
         UserRepresentation userRepresentation = setParameter(user);
 
-        client.method(HttpMethod.PUT)
-                .uri(KeycloakUrlUtil.getUrlForCurrentUser(
-                        keycloak.getAuthServerUrl(),
-                        keycloak.getRealm(),
-                        user.getId().toString()
-                ))
-                .headers(header -> header.setBearerAuth(token))
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(userRepresentation)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            client.method(HttpMethod.PUT)
+                    .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                            keycloak.getAuthServerUrl(),
+                            keycloak.getRealm(),
+                            user.getId().toString()
+                    ))
+                    .headers(header -> header.setBearerAuth(token))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(userRepresentation)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (RuntimeException e) {
+            throw new ValidationException("User with email: " + user.getEmail() + " exist");
+        }
 
         log.debug("Return updated User: {}", user);
     }
