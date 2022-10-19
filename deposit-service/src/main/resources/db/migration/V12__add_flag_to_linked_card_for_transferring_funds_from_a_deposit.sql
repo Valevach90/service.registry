@@ -1,2 +1,2 @@
 ALTER TABLE linked_cards
-    ADD COLUMN default_card Boolean NOT NULL;
+    ADD COLUMN default_card Boolean NOT NULL default false;
