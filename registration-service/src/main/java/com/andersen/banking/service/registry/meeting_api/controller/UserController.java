@@ -4,8 +4,9 @@ import static com.andersen.banking.service.registry.meeting_impl.security.Securi
 import static com.andersen.banking.service.registry.meeting_impl.security.SecurityUtil.EMPLOYEE;
 
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserCreateResponseDto;
-import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
 import com.andersen.banking.service.registry.meeting_api.dto.user.UserRequestDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserResponseDto;
+import com.andersen.banking.service.registry.meeting_api.dto.user.UserUpdateEmailDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -70,6 +71,16 @@ public interface UserController {
             @Parameter(description = "user id", required = true)
             @RequestBody
             @Validated UserRequestDto userDto);
+
+    @Operation(summary = "Update user email",
+            description = "update user email by params in dto object")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PutMapping("/email")
+    void updateUserEmail(
+            Authentication authentication,
+            @Parameter(description = "new email", required = true)
+            @RequestBody
+            @Validated UserUpdateEmailDto userUpdateEmailDto);
 
     @Operation(summary = "Delete user",
             description = "delete user by id")
