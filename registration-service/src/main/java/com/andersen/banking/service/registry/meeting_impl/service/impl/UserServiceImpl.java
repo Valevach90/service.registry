@@ -28,7 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientResponseException.Conflict;
 
 @Slf4j
 @Service
@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-        } catch (WebClientResponseException e) {
+        } catch (Conflict e) {
             throw new ValidationException("User with email: " + user.getEmail() + " exist");
         }
 
