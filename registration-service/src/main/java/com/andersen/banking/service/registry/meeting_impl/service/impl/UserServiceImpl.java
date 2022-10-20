@@ -28,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 @Service
@@ -193,7 +194,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateEmail(User user) {
-        log.debug("Trying to update users email: {}", user);
+        log.trace("Trying to update users email: {}", user);
 
         String token = adminService.obtainAccessToken();
 
@@ -212,11 +213,11 @@ public class UserServiceImpl implements UserService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-        } catch (RuntimeException e) {
+        } catch (WebClientResponseException e) {
             throw new ValidationException("User with email: " + user.getEmail() + " exist");
         }
 
-        log.debug("Return user with updated email: {}", user);
+        log.trace("Return user with updated email: {}", user);
     }
 
     @Override
