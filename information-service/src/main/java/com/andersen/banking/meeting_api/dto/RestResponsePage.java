@@ -1,14 +1,13 @@
-package com.andersen.banking.gateway.meeting_api.dto;
+package com.andersen.banking.meeting_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RestResponsePage<T> extends PageImpl<T> {
 

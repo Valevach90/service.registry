@@ -81,6 +81,7 @@ eureka:
     instance-id: ${spring.application.name}-${random.uuid}
     preferIpAddress: true
   client:
+    enabled: true
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
 

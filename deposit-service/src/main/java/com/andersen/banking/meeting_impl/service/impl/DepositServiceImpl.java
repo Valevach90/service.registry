@@ -58,6 +58,7 @@ public class DepositServiceImpl implements DepositService {
         log.info("Creating deposit: {}", deposit);
 
         deposit.setId(null);
+        deposit.setDepositProduct(depositProductRepository.getById(deposit.getDepositProduct().getId()));
         deposit.setDepositNumber(String.format("%0" + LENGTH_OF_DEPOSIT_NUMBER + "d", (depositRepository.count() + 1)));
         deposit.setOpenDate(new java.sql.Date(System.currentTimeMillis()));
         deposit.setCloseDate(new java.sql.Date(System.currentTimeMillis() + MILLIS_IN_MONTH * deposit.getTermMonths()));
@@ -66,6 +67,9 @@ public class DepositServiceImpl implements DepositService {
         for (LinkedCard cards : deposit.getLinkedCards()){
             cards.setDeposit(deposit);
         }
+
+        deposit.setType(depositTypeRepository.getById(deposit.getType().getId()));
+        deposit.setCurrency(currencyRepository.getById(deposit.getCurrency().getId()));
 
         Deposit savedDeposit = depositRepository.save(deposit);
 

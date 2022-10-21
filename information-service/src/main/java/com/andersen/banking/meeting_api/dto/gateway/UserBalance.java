@@ -1,20 +1,22 @@
-package com.andersen.banking.gateway.meeting_api.dto.gateway;
+package com.andersen.banking.meeting_api.dto.gateway;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@AllArgsConstructor
 @NoArgsConstructor
-public class Currency {
+@AllArgsConstructor
+public class UserBalance {
 
-    @JsonProperty("currency_name")
-    private String name;
+    @JsonProperty("user_id")
+    private UUID id;
 
-    @JsonProperty("balance")
-    private double balance;
+    @JsonProperty("currency_list")
+    private List<Currency> currency;
 }
