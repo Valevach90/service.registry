@@ -1,0 +1,36 @@
+{
+  "exp": 1666272056,
+  "iat": 1666271096,
+  "jti": "7e9e2e06-97ea-4b83-b6c8-7a113082a307",
+  "iss": "http://localhost:8080/auth/realms/Meetingroom-New",
+  "aud": "account",
+  "sub": "793bd665-9b28-45f4-991b-65e25faa429b",
+  "typ": "Bearer",
+  "azp": "gateway-user-management",
+  "session_state": "eabfdec5-dcd5-43cf-8426-5c6dc275092f",
+  "acr": "1",
+  "realm_access": {
+    "roles": [
+      "offline_access",
+      "uma_authorization",
+      "default-roles-meetingroom-new"
+    ]
+  },
+  "resource_access": {
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "scope": "profile email",
+  "sid": "eabfdec5-dcd5-43cf-8426-5c6dc275092f",
+  "email_verified": false,
+  "name": "Bilbo Bugins",
+  "preferred_username": "user",
+  "given_name": "Bilbo",
+  "family_name": "Bugins",
+  "email": "user@gmail.com"
+}

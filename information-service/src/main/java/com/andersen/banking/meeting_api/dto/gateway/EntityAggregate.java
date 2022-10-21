@@ -1,12 +1,11 @@
-package com.andersen.banking.gateway.meeting_api.dto.gateway;
+package com.andersen.banking.meeting_api.dto.gateway;
 
-import com.andersen.banking.gateway.meeting_api.dto.deposit.Deposit;
-import com.andersen.banking.gateway.meeting_api.dto.payment.Account;
+import com.andersen.banking.meeting_api.dto.deposit.Deposit;
+import com.andersen.banking.meeting_api.dto.payment.Account;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
