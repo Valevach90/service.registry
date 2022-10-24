@@ -28,7 +28,9 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_ATM_IS_ACTIVE = "Atm is active";
 
     public static final String EXAMPLE_LONG = "10";
-    public static final String EXAMPLE_CURRENCY = "USD";
+    public static final String EXAMPLE_CURRENCY_BUY = "USD";
+    public static final String EXAMPLE_CURRENCY_SELL = "EUR";
+    public static final String EXAMPLE_DOUBLE_VALUE = "1.64";
     public static final String EXAMPLE_FILE_NAME = "Document.doc";
     public static final String EXAMPLE_LINK = "https://www.documents.com/Document.doc";
     public static final String EXAMPLE_DATE = "2022-07-06 13:33:29,573";

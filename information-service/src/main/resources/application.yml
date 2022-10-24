@@ -85,8 +85,9 @@ eureka:
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
 
-uri:
-  exchange-rates: https://api.exchangerate.host/latest
+exchange-rates:
+  uri: https://api.exchangerate.host/latest
+  currency: EUR
 
 cache:
   name:

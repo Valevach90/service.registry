@@ -6,6 +6,7 @@ import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_impl.exception.InvalidRequestException;
@@ -76,8 +77,9 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
-    public ExchangeRatesDto getExchangeRates(String currency) {
+    public ExchangeRatesResponseDto getExchangeRates(String currency) {
         log.info("Get exchange rates for currency {}", currency);
-        return informationService.getExchangeRates(currency);
+        ExchangeRatesDto generalExchangeRates = informationService.getGeneralExchangeRates();
+        return informationService.getForSpecificCurrency(generalExchangeRates, currency);
     }
 }
