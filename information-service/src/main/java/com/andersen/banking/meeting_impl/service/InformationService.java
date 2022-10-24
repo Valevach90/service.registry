@@ -55,5 +55,7 @@ public interface InformationService {
 
     List<BankBranchDto> getListBankBranchDtoByCityId(Long addressId);
 
-    ExchangeRatesDto getExchangeRates(String currency);
+    ExchangeRatesDto getGeneralExchangeRates();
+
+    ExchangeRatesResponseDto getForSpecificCurrency(ExchangeRatesDto ratesDto, String currency);
 }

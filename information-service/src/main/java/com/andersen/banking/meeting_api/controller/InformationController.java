@@ -6,6 +6,7 @@ import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,5 +73,5 @@ public interface InformationController {
     @Operation(summary = "Get exchange rates",
             description = "get list with all exchange rates")
     @GetMapping("/exchange-rates")
-    ExchangeRatesDto getExchangeRates(@RequestParam("currency") String currency);
+    ExchangeRatesResponseDto getExchangeRates(@RequestParam("currency") String currency);
 }

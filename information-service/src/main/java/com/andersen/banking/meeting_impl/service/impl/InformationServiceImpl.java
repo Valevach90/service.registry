@@ -9,6 +9,7 @@ import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
+import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
 import com.andersen.banking.meeting_db.repositories.BankBranchRepository;
@@ -30,8 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -58,8 +61,11 @@ public class InformationServiceImpl implements InformationService {
 
     private final WebClient client = WebClient.create();
 
-    @Value("${uri.exchange-rates}")
+    @Value("${exchange-rates.uri}")
     private String uriExchangeRates;
+
+    @Value("${exchange-rates.currency}")
+    private String eurCurrency;
 
     @Override
     public List<CountryDto> getListCountryDto() {
@@ -115,14 +121,28 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
-    @Cacheable(value = "${cache.name.exchange-rates}", key = "#currency")
-    public ExchangeRatesDto getExchangeRates(String currency) {
-        log.debug("Get list for exchange rates for base currency {}", currency);
+    @Cacheable("generalCurrency")
+    public ExchangeRatesDto getGeneralExchangeRates() {
+        log.debug("Get list for exchange rates for base currency {}", eurCurrency);
         return client.get()
-                .uri(UrlUtil.getUrlForGettingExchangeRates(uriExchangeRates, currency))
+                .uri(UrlUtil.getUrlForGettingExchangeRates(uriExchangeRates, eurCurrency))
                 .retrieve()
                 .bodyToMono(ExchangeRatesDto.class)
                 .block();
     }
 
+    //TODO add buy and send rates feature
+    @Override
+    public ExchangeRatesResponseDto getForSpecificCurrency(ExchangeRatesDto ratesDto, String currency) {
+        currency = currency.toUpperCase();
+        if (ratesDto.getSuccess() && ratesDto.getRates().containsKey(currency)) {
+            return ExchangeRatesResponseDto.builder()
+                    .sourceCurrency(ratesDto.getBase())
+                    .destinationCurrency(currency)
+                    .buyPrice(ratesDto.getRates().get(currency))
+                    .sellPrice(ratesDto.getRates().get(currency))
+                    .build();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
 }
