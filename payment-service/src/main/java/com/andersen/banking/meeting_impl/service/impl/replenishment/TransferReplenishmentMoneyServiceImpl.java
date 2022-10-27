@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_db.entities.Account;
 import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.repository.CardRepository;
+import com.andersen.banking.meeting_impl.exception.CardIsNotReadyToUseException;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
@@ -84,6 +85,11 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
         Optional<Card> optionalCardSrc = cardRepository
                 .findByFirstTwelveNumbersAndLastFourNumbers(
                         requestDestNum.substring(0, srcHash), requestDestNum.substring(srcHash));
+
+        Card card = optionalCardSrc.orElseThrow(()->new NotFoundException(Card.class));
+        if(!card.isActive()){
+            throw new CardIsNotReadyToUseException(requestTransferMessage.getUserId());
+        }
 
         return optionalCardSrc.orElseThrow(() -> new NotFoundException(Card.class)).getAccount();
     }

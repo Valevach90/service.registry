@@ -1,6 +1,7 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_db.entities.StatusDescription;
+import com.andersen.banking.meeting_impl.exception.CardIsNotReadyToUseException;
 import com.andersen.banking.meeting_impl.exception.DifferentTransferTypeException;
 import com.andersen.banking.meeting_impl.exception.TransferLogAlreadyExistsException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
@@ -35,6 +36,12 @@ public class TransferMoneyTopicListenerImpl implements TransferMoneyTopicListene
             response = ResponseTransferMessage.builder()
                     .transferId(message.getTransferId())
                     .status(Status.STATUS_UNKNOWN)
+                    .statusDescription(StatusDescription.EXIST.getDescription())
+                    .build();
+        }catch (CardIsNotReadyToUseException e ){
+            response = ResponseTransferMessage.builder()
+                    .transferId(message.getTransferId())
+                    .status(Status.STATUS_ROLLING_BACK)
                     .statusDescription(StatusDescription.EXIST.getDescription())
                     .build();
         }
