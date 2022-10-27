@@ -1,7 +1,6 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,14 +14,19 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
+import static com.andersen.banking.meeting_api.util.OpenApiConstants.EXAMPLE_BALANCE;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegularPaymentResponseDto {
+public class RegularPaymentUpdateDto {
+
 
     @JsonProperty("id")
     @NotNull
+    @Schema(example = EXAMPLE_UUID, defaultValue = EXAMPLE_UUID)
     private UUID id;
 
     @NotBlank
@@ -30,7 +34,6 @@ public class RegularPaymentResponseDto {
             regexp = "[a-zA-Z- ]{3,30}",
             message = "description should have at least 3 and at maximum 30 characters")
     @JsonProperty("description")
-    @Schema(example = EXAMPLE_DESCRIPTION, defaultValue = EXAMPLE_DESCRIPTION)
     private String description;
 
     @Schema(
@@ -38,6 +41,7 @@ public class RegularPaymentResponseDto {
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate startDate;
 
@@ -46,6 +50,7 @@ public class RegularPaymentResponseDto {
             example = EXAMPLE_DATE,
             defaultValue = EXAMPLE_DATE)
     @JsonProperty("next_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate nextDate;
 
@@ -71,7 +76,6 @@ public class RegularPaymentResponseDto {
     @JsonProperty("frequency")
     @NotNull
     private String frequency;
-
 
     @JsonProperty("is_active")
     @NotNull

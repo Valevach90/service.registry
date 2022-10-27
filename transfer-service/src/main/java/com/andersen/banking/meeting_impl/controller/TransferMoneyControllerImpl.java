@@ -64,7 +64,7 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
 
     @Override
     public ResponseEntity<TransferResponseDto> create(TransferRequestDto transferRequestDto) {
-        log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
+        log.info("Get request on transfer money from : {}", transferRequestDto);
         transferRequestDto.setStatusTransfer(StatusTransfer.PREPARING);
         return ResponseEntity.accepted().body(transferManager.run(transferRequestDto));
     }

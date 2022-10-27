@@ -52,4 +52,5 @@ public class RequestTransferMessage {
     @JsonProperty("currencyName")
     private String currencyName;
 
+    private UUID regularId;
 }

@@ -1,5 +1,6 @@
-package com.andersen.banking.meeting_impl.kafka.message;
+package com.andersen.banking.meeting_impl.feign.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,14 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestTransferMessage {
-
-    @NotNull
-    private UUID transferId;
+public class TransferRequestDto {
 
     @NotNull
     private UUID userId;
@@ -23,23 +21,27 @@ public class RequestTransferMessage {
     @NotBlank
     private String sourceNumber;
 
-    @NotBlank
-    private String sourceType;
+    @NotNull
+    private UUID sourcePaymentTypeId;
 
     @NotBlank
     private String destinationNumber;
 
-    @NotBlank
-    private String destinationType;
+    @NotNull
+    private UUID destinationPaymentTypeId;
 
     @NotNull
     private Long amount;
 
     @NotNull
-    private Integer status;
+    private UUID currencyId;
 
-    @NotBlank
-    private String currencyName;
+    @Schema(hidden = true)
+    private StatusTransfer statusTransfer;
 
+    @Schema(hidden = true)
     private UUID regularId;
+
+    private String comment;
+
 }

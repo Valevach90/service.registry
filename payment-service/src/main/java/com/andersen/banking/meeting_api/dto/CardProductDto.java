@@ -31,7 +31,6 @@ public class CardProductDto {
     private Integer cashback;
 
     @JsonProperty("price")
-
     @Schema(example = EXAMPLE_PRICE, defaultValue = EXAMPLE_PRICE)
     private Double price;
 

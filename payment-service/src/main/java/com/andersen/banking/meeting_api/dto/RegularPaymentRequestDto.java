@@ -2,6 +2,7 @@ package com.andersen.banking.meeting_api.dto;
 
 import static com.andersen.banking.meeting_api.util.OpenApiConstants.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,20 +31,13 @@ public class RegularPaymentRequestDto {
     private String description;
 
     @Schema(
-            description = "Regular payment start date",
-            example = "2022-09-21",
-            defaultValue = "2022-09-21")
-    @JsonProperty("first_date")
+            description = EXAMPLE_DESCRIPTION_START_DATE,
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
+    @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private LocalDate firstDate;
-
-    @Schema(
-            description = "Regular payment last date",
-            example = "2023-09-21",
-            defaultValue = "2023-09-21")
-    @JsonProperty("last_date")
-    @NotNull
-    private LocalDate lastDate;
+    private LocalDate startDate;
 
     @JsonProperty("source_card_id")
     @NotNull

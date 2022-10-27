@@ -8,7 +8,7 @@ spring:
   task:
     scheduling:
       pool:
-        size: 4
+        size: 10
   application:
     name: payment-service
   cloud:
@@ -87,4 +87,6 @@ keycloak:
     jwks: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
 
 scheduler:
-  card: "0 0 0 * * *"
+  card: "0 10 0 * * *"
+  account: "0 0 0 * * *"
+  regular: "0 0 * * * *"

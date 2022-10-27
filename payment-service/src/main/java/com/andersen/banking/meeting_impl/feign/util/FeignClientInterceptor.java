@@ -1,3 +1,8 @@
+
+/*
+
+    Will be needed in future(After security integration)
+
 package com.andersen.banking.meeting_impl.feign.util;
 
 import feign.RequestInterceptor;
@@ -22,3 +27,4 @@ public class FeignClientInterceptor implements RequestInterceptor {
         requestTemplate.header(AUTHORIZATION_HEADER, getBearerTokenHeader());
     }
 }
+*/

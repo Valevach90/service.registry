@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -58,9 +59,9 @@ public class Card {
     private String holderName;
 
     @Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_product_id", referencedColumnName = "id")
     private CardProduct cardProduct;
 }

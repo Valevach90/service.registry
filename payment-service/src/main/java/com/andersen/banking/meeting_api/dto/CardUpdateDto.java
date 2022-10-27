@@ -70,6 +70,7 @@ public class CardUpdateDto {
     @Schema(example = EXAMPLE_NAME, defaultValue = EXAMPLE_NAME)
     private String holderName;
 
+    @NotNull
     @JsonProperty("is_active")
-    private boolean isActive;
+    private Boolean isActive;
 }

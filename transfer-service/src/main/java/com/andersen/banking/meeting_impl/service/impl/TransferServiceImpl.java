@@ -132,6 +132,7 @@ public class TransferServiceImpl implements TransferService {
         log.info("Finding transfers for userId: {}", userId);
 
         Page<Transfer> transfers = transferRepository.findByUserId(userId, pageable);
+        log.info("Info: {}" ,transferRepository.findByUserId(userId, pageable).stream().toList());
 
         log.info("Found transfers : {}", transfers);
 
