@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Deposit {
+
     @JsonProperty("id")
     @NotNull(message = "Deposit id can't be null.")
     private UUID id;

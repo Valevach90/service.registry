@@ -18,11 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeTableDto {
-
-    @NotNull
-    @Schema(example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
-    private Long id;
+public class TimeTableCreateDto {
 
     @NotNull
     @Schema(example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)

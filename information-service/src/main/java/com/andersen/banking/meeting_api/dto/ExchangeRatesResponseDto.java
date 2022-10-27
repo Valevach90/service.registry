@@ -1,12 +1,12 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.utility.OpenApiConstants.*;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_CURRENCY_BUY;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_CURRENCY_SELL;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_DOUBLE_VALUE;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

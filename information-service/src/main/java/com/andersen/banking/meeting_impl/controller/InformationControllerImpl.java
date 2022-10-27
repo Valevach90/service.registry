@@ -1,7 +1,7 @@
 package com.andersen.banking.meeting_impl.controller;
 
 import com.andersen.banking.meeting_api.controller.InformationController;
-import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
@@ -9,6 +9,7 @@ import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchResponseDto;
 import com.andersen.banking.meeting_impl.exception.InvalidRequestException;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import java.util.List;
@@ -30,8 +31,6 @@ public class InformationControllerImpl implements InformationController {
         log.info("get countries");
         return informationService.getListCountryDto();
     }
-
-
     @Override
     public List<CityDto> getAllCitiesByCountryId(Long countryId, Pageable pageable,
             boolean onlyWithBranches, boolean singlePage) {
@@ -65,7 +64,7 @@ public class InformationControllerImpl implements InformationController {
     }
 
     @Override
-    public List<BankBranchDto> getAllBankBranchesByCityId(Long addressId) {
+    public List<BankBranchResponseDto> getAllBankBranchesByCityId(Long addressId) {
         log.info("get bank branches");
         return informationService.getListBankBranchDtoByCityId(addressId);
     }

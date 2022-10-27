@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.service.impl;
 
 import com.andersen.banking.meeting_db.entities.Atm;
+import com.andersen.banking.meeting_db.entities.BankBranch;
+import com.andersen.banking.meeting_db.entities.Street;
 import com.andersen.banking.meeting_db.repositories.AtmRepository;
 import com.andersen.banking.meeting_db.repositories.BankBranchRepository;
 import com.andersen.banking.meeting_db.repositories.StreetRepository;
@@ -41,7 +43,7 @@ public class AtmServiceImpl implements AtmService {
         log.info("Search ATM with id: {}", id);
 
         Atm atm = atmRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("ATM", "id", id.toString())
+                () -> new NotFoundException(Atm.class, "id", id.toString())
         );
 
         log.info("Find deposit with id: {}", id);
@@ -63,7 +65,7 @@ public class AtmServiceImpl implements AtmService {
         log.debug("Find all ATM on the streetId {} and pageable: {}", streetId, pageable);
 
         if (!streetRepository.existsById(streetId)) {
-            throw new NotFoundException("Street", "id", streetId.toString());
+            throw new NotFoundException(Street.class, "id", streetId.toString());
         }
 
         Page<Atm> pageOfAtm = atmRepository.findAllByStreetId(streetId, pageable);
@@ -77,7 +79,7 @@ public class AtmServiceImpl implements AtmService {
         log.info("Find all ATM on the bank branch with id {} and pageable: {}", bankBranchId, pageable);
 
         if(!bankBranchRepository.existsById(bankBranchId)) {
-            throw new NotFoundException("Bank branch", "id", bankBranchId.toString());
+            throw new NotFoundException(BankBranch.class, "id", bankBranchId.toString());
         }
 
         Page<Atm> pageOfAtm = atmRepository.findAllByBankBranchId(bankBranchId, pageable);

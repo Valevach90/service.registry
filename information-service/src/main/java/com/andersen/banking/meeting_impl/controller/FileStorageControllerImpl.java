@@ -4,6 +4,7 @@ import com.andersen.banking.meeting_api.controller.FileStorageController;
 import com.andersen.banking.meeting_api.dto.FileInfoDto;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.service.FileStorageService;
+import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ public class FileStorageControllerImpl implements FileStorageController {
         log.trace("Receiving download link by file name: {}", name);
 
         String link = fileStorageService.getFileDownloadLink(name)
-                .orElseThrow(() -> new NotFoundException("file download link", "name", name));
+                .orElseThrow(() -> new NotFoundException(File.class, "name", name));
 
         log.trace("Returning download link: file {}, link {}", name, link);
 

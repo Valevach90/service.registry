@@ -9,4 +9,12 @@ import java.util.List;
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Long> {
     List<Country> getCountriesByDeletedIsFalse();
+
+    boolean existsByName(String name);
+
+    List<Country> findAllByNameIn(List<String> names);
+
+    List<Country> findAllByIdIn(List<Long> ids);
+
+    Country getCountryByName(String name);
 }
