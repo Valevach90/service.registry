@@ -261,9 +261,9 @@ public class UserServiceImpl implements UserService {
         return UserEmailUpdateRepresentation.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .enabled(true)
                 .build();
     }
+
 
     private User getParameter(UserRepresentationResponse userRep) {
         UserBuilder builder = User.builder()
