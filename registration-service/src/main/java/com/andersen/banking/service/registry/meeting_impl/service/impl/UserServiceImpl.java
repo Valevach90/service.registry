@@ -265,6 +265,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+
     private User getParameter(UserRepresentationResponse userRep) {
         UserBuilder builder = User.builder()
                 .id(userRep.getId())
