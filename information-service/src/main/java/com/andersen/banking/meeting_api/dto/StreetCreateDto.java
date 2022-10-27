@@ -1,10 +1,9 @@
 package com.andersen.banking.meeting_api.dto;
 
-import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_COUNTRY;
 import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_LONG;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,14 +14,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CountryDto {
+public class StreetCreateDto {
 
     @NotNull
     @Schema(example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
-    private Long id;
+    private Long cityId;
 
-    @NotBlank
-    @Schema(example = EXAMPLE_COUNTRY, defaultValue = EXAMPLE_COUNTRY)
-    private String name;
+    @NotNull
+    private List<String> names;
 
 }

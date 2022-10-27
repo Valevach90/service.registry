@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_impl.service;
 
 import com.andersen.banking.meeting_api.dto.*;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchResponseDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -53,7 +55,7 @@ public interface InformationService {
 
     List<TimeTableDto> getListTimeTableDtoByBranchId(Long addressId);
 
-    List<BankBranchDto> getListBankBranchDtoByCityId(Long addressId);
+    List<BankBranchResponseDto> getListBankBranchDtoByCityId(Long addressId);
 
     ExchangeRatesDto getGeneralExchangeRates();
 

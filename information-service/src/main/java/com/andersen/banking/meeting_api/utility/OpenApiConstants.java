@@ -28,6 +28,14 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_ATM_IS_ACTIVE = "Atm is active";
 
     public static final String EXAMPLE_LONG = "10";
+    public static final String EXAMPLE_STREET = "Centre Street";
+    public static final String EXAMPLE_COORDINATES = "63.73299:-76.57072";
+    public static final String EXAMPLE_COUNTRY = "Thailand";
+    public static final String EXAMPLE_CITY = "Bangkok";
+    public static final String EXAMPLE_TIME_FROM = "9:00";
+    public static final String EXAMPLE_TIME_TO = "18:00";
+    public static final String EXAMPLE_DAY_FROM = "MON";
+    public static final String EXAMPLE_DAY_TO = "FRI";
     public static final String EXAMPLE_CURRENCY_BUY = "USD";
     public static final String EXAMPLE_CURRENCY_SELL = "EUR";
     public static final String EXAMPLE_DOUBLE_VALUE = "1.64";

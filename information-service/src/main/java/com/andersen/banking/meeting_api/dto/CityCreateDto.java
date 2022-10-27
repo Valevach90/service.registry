@@ -1,9 +1,11 @@
 package com.andersen.banking.meeting_api.dto;
 
 import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_CITY;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_LONG;
 
-import com.andersen.banking.meeting_impl.config.CityNameConstraint;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +15,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityDtoForSearch {
+public class CityCreateDto {
 
-    @CityNameConstraint
+    @NotNull
+    @Schema(example = EXAMPLE_LONG, defaultValue = EXAMPLE_LONG)
+    private Long countryId;
+
+    @NotBlank
     @Schema(example = EXAMPLE_CITY, defaultValue = EXAMPLE_CITY)
     private String name;
+
 }
