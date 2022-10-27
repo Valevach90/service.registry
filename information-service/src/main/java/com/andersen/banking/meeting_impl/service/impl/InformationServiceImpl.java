@@ -4,7 +4,7 @@ import static com.andersen.banking.meeting_db.repositories.specifications.CitySp
 import static com.andersen.banking.meeting_db.repositories.specifications.CitySpecification.hasCountry;
 import static org.springframework.data.jpa.domain.Specification.where;
 
-import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
@@ -12,6 +12,7 @@ import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchResponseDto;
 import com.andersen.banking.meeting_db.repositories.BankBranchRepository;
 import com.andersen.banking.meeting_db.repositories.CityRepository;
 import com.andersen.banking.meeting_db.repositories.CountryRepository;
@@ -25,7 +26,6 @@ import com.andersen.banking.meeting_impl.mapper.TimeTableMapper;
 import com.andersen.banking.meeting_impl.service.InformationService;
 import com.andersen.banking.meeting_impl.util.UrlUtil;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,7 +113,7 @@ public class InformationServiceImpl implements InformationService {
     }
 
     @Override
-    public List<BankBranchDto> getListBankBranchDtoByCityId(Long cityId) {
+    public List<BankBranchResponseDto> getListBankBranchDtoByCityId(Long cityId) {
         log.debug("get bank branches by addressId: {}", cityId);
         return bankBranchRepository.getBankBranchByCity_IdAndDeletedIsFalse(cityId)
                 .stream().map(bankBranchMapper::bankBranch2BankBranchDto)

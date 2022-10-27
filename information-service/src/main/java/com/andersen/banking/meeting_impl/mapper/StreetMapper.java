@@ -13,4 +13,7 @@ public interface StreetMapper {
     @Mapping(source = "city.id", target = "cityId")
     StreetDto street2StreetDto(Street street);
 
+
+    Street streetDtoToStreet(StreetDto streetDto);
+
 }

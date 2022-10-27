@@ -10,4 +10,8 @@ public class JwtUtil {
     public static String extractIdFromToken(Jwt jwt) {
         return jwt.getClaim("sub").toString();
     }
+
+    public static String extractLoginFromToken(Jwt jwt) {
+        return jwt.getClaim("preferred_username").toString();
+    }
 }

@@ -34,20 +34,20 @@ public class RegularPaymentResponseDto {
     private String description;
 
     @Schema(
-            description = "Regular payment start date",
-            example = "2022-09-21",
-            defaultValue = "2022-09-21")
-    @JsonProperty("first_date")
+            description = EXAMPLE_DESCRIPTION_START_DATE,
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
+    @JsonProperty("start_date")
     @NotNull
-    private LocalDate firstDate;
+    private LocalDate startDate;
 
     @Schema(
-            description = "Regular payment last date",
-            example = "2023-09-21",
-            defaultValue = "2023-09-21")
-    @JsonProperty("last_date")
+            description = EXAMPLE_DESCRIPTION_NEXT_DATE,
+            example = EXAMPLE_DATE,
+            defaultValue = EXAMPLE_DATE)
+    @JsonProperty("next_date")
     @NotNull
-    private LocalDate lastDate;
+    private LocalDate nextDate;
 
     @JsonProperty("source_card_id")
     @NotNull
@@ -71,4 +71,9 @@ public class RegularPaymentResponseDto {
     @JsonProperty("frequency")
     @NotNull
     private String frequency;
+
+
+    @JsonProperty("is_active")
+    @NotNull
+    private Boolean isActive;
 }

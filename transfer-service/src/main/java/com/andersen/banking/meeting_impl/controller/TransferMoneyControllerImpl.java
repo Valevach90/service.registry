@@ -40,7 +40,6 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     private final CurrencyService currencyService;
 
     @Override
-    @Cacheable(value = "transfers", key = "#userId.toString()")
     public List<TransferResponseDto> findAllByUserId(UUID userId, Pageable pageable) {
         log.info("Find all transfers by user_id: {}", userId);
         List<TransferResponseDto> transferResponseDtos = transferService
@@ -64,9 +63,8 @@ public class TransferMoneyControllerImpl implements TransferMoneyController {
     }
 
     @Override
-    @CacheEvict(value = "transfers", key = "#transferRequestDto.getUserId()")
     public ResponseEntity<TransferResponseDto> create(TransferRequestDto transferRequestDto) {
-        log.info("Get request on transfer money from : {}", transferRequestDto.getSourceNumber());
+        log.info("Get request on transfer money from : {}", transferRequestDto);
         transferRequestDto.setStatusTransfer(StatusTransfer.PREPARING);
         return ResponseEntity.accepted().body(transferManager.run(transferRequestDto));
     }

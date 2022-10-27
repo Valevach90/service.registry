@@ -1,14 +1,14 @@
 package com.andersen.banking.meeting_api.controller;
 
 
-import com.andersen.banking.meeting_api.dto.BankBranchDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchDto;
 import com.andersen.banking.meeting_api.dto.CityDto;
 import com.andersen.banking.meeting_api.dto.CityDtoForSearch;
 import com.andersen.banking.meeting_api.dto.CountryDto;
-import com.andersen.banking.meeting_api.dto.ExchangeRatesDto;
 import com.andersen.banking.meeting_api.dto.ExchangeRatesResponseDto;
 import com.andersen.banking.meeting_api.dto.StreetDto;
 import com.andersen.banking.meeting_api.dto.TimeTableDto;
+import com.andersen.banking.meeting_api.dto.bank_brunch.BankBranchResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,16 +38,17 @@ public interface InformationController {
             description = "get list with all cities in a selected country by countryId.")
     @GetMapping("/country/{id}/city")
     List<CityDto> getAllCitiesByCountryId(@Parameter(description = "country id", required = true)
-                                          @PathVariable(value = "id") Long countryId,
-                                          @ParameterObject Pageable pageable,
-                                          @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
-                                          @RequestParam(defaultValue = "false", required = false) boolean singlePage);
+    @PathVariable(value = "id") Long countryId,
+            @ParameterObject Pageable pageable,
+            @RequestParam(defaultValue = "false", required = false) boolean onlyWithBranches,
+            @RequestParam(defaultValue = "false", required = false) boolean singlePage);
 
     @Operation(summary = "Get all cities by countryId and part of the name of the city",
             description = "get list with all cities in a selected country by countryId and part of city name")
     @PostMapping("/country/{id}/cities")
-    List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(@Parameter(description = "country id", required = true)
-    @PathVariable(value = "id") Long countryId,
+    List<CityDto> getAllCitiesByCountryIdAndByPartOfCityName(
+            @Parameter(description = "country id", required = true)
+            @PathVariable(value = "id") Long countryId,
             @ParameterObject @PageableDefault(sort = {"name"}) Pageable pageable,
             @RequestBody @Valid CityDtoForSearch cityName, BindingResult result);
 
@@ -55,20 +56,22 @@ public interface InformationController {
             description = "get list with all streets in a selected city by cityId")
     @GetMapping("/city/{id}/street")
     List<StreetDto> getAllStreetsByCityId(@Parameter(description = "city id", required = true)
-                                          @PathVariable(value = "id") Long cityId);
+    @PathVariable(value = "id") Long cityId);
 
 
     @Operation(summary = "Get all bank branches by cityId",
             description = "get list with all bank branches in a selected cityId")
     @GetMapping("/city/{id}/branch")
-    List<BankBranchDto> getAllBankBranchesByCityId(@Parameter(description = "city id", required = true)
-                                                   @PathVariable(value = "id") Long cityId);
+    List<BankBranchResponseDto> getAllBankBranchesByCityId(
+            @Parameter(description = "city id", required = true)
+            @PathVariable(value = "id") Long cityId);
 
     @Operation(summary = "Get all timetables by branch id",
             description = "get list with all timetables in a selected address by branch id")
     @GetMapping("/branch/{id}/timetable")
-    List<TimeTableDto> getAllTimeTablesByBranchId(@Parameter(description = "branch id", required = true)
-                                                  @PathVariable(value = "id") Long branchId);
+    List<TimeTableDto> getAllTimeTablesByBranchId(
+            @Parameter(description = "branch id", required = true)
+            @PathVariable(value = "id") Long branchId);
 
     @Operation(summary = "Get exchange rates",
             description = "get list with all exchange rates")

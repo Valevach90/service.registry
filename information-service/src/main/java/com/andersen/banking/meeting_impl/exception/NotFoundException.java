@@ -5,7 +5,7 @@ package com.andersen.banking.meeting_impl.exception;
  */
 public class NotFoundException extends RuntimeException {
 
-    public <T> NotFoundException(String objectType, String objectParamName, String objectParamValue) {
+    public NotFoundException(Class<?> objectType, String objectParamName, String objectParamValue) {
         super(String.format("Not found %s with %s = %s", objectType, objectParamName, objectParamValue));
     }
 }

@@ -27,6 +27,7 @@ public class Transfer2RequestKafkaTransferMessageConverter implements
         RequestTransferMessage requestTransferMessage = RequestTransferMessage.builder()
                 .transferId(transfer.getId())
                 .userId(transfer.getUserId())
+                .regularId(transfer.getRegularId())
                 .currencyName(transfer.getCurrency().getName())
                 .amount(transfer.getAmount())
                 .sourceNumber(transfer.getSourceNumber())

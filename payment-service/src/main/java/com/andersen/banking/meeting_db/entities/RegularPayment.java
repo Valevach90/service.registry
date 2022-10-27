@@ -1,11 +1,21 @@
 package com.andersen.banking.meeting_db.entities;
 
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
@@ -24,17 +34,17 @@ public class RegularPayment {
     @Column(name = "payment_description", nullable = false)
     private String description;
 
-    @Column(name = "first_date", nullable = false)
-    private LocalDate firstDate;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
-    @Column(name = "last_date", nullable = false)
-    private LocalDate lastDate;
+    @Column(name = "next_date", nullable = false)
+    private LocalDate nextDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id")
     private Card sourceCard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id")
     private Card recipientCard;
 
@@ -43,4 +53,7 @@ public class RegularPayment {
 
     @Column(name = "frequency", nullable = false)
     private String frequency;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 }

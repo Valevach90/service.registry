@@ -136,7 +136,7 @@ public class AccountServiceImpl implements AccountService {
     private void deactivateAllCardsByAccountId(UUID accountId) {
         List<Card> cardsToDeactivate = cardRepository.findAllByAccount_Id(accountId);
         cardsToDeactivate.forEach(card -> {
-            card.setActive(false);
+            card.setIsActive(false);
             log.info("Card with id: {} was successfully deactivated", card.getId());
         });
         cardRepository.saveAll(cardsToDeactivate);

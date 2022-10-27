@@ -1,14 +1,21 @@
 package com.andersen.banking.meeting_api.dto;
 
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.DESCRIPTION_DATE_OF_CREATION;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.DESCRIPTION_DATE_OF_UPDATE;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.DESCRIPTION_FILE_INFO_ID;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.DESCRIPTION_FILE_NAME;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.DESCRIPTION_LINK;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_DATE;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_FILE_NAME;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_LINK;
+import static com.andersen.banking.meeting_api.utility.OpenApiConstants.EXAMPLE_LONG;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-
-import static com.andersen.banking.meeting_api.utility.OpenApiConstants.*;
+import javax.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  * Dto for file info.

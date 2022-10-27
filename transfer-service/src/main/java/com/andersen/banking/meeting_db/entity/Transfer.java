@@ -57,6 +57,9 @@ public class Transfer extends BaseEntity {
     @Column(name = "service")
     private String service;
 
+    @Column(name = "regular_id")
+    private UUID regularId;;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
