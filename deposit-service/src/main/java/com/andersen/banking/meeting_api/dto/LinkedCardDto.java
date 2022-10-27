@@ -33,4 +33,9 @@ public class LinkedCardDto {
     @JsonProperty("lastFourNumbers")
     @Schema(description = DESCRIPTION_CARD_LAST_NUMBER, example = EXAMPLE_LAST_NUMBER_CARD, defaultValue = EXAMPLE_LAST_NUMBER_CARD)
     private String lastFourNumbers;
+
+    @NotNull
+    @JsonProperty("flag means that card is a main card for all operations")
+    @Schema(description = DESCRIPTION_FLAG_FOR_DEFAULT_CARD, example = EXAMPLE_BOOLEAN, defaultValue = EXAMPLE_BOOLEAN_FALSE)
+    private Boolean defaultCard;
 }

@@ -62,6 +62,7 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_DESTINATION_NUMBER = "Destination Number for Withdrawal";
     public static final String DESCRIPTION_DESTINATION_TYPE = "Type of Destination for Withdrawal";
     public static final String DESCRIPTION_STATUS_OF_TRANSFER = "Description of transfer status";
+    public static final String DESCRIPTION_FLAG_FOR_DEFAULT_CARD = "flag means that card is a main card for all operations";
     public static final String EXAMPLE_TRANSFER_STATUS_DESCRIPTION = "Transfer is successful";
     public static final String DESCRIPTION_TIME = "Time of an event";
     public static final String EXAMPLE_TIME = "2022-07-06 13:33:29,573";
@@ -70,6 +71,7 @@ public class OpenApiConstants {
     public static final String EXAMPLE_LONG = "10";
     public static final String EXAMPLE_INTEGER = "10";
     public static final String EXAMPLE_BOOLEAN = "true";
+    public static final String EXAMPLE_BOOLEAN_FALSE = "false";
     public static final String EXAMPLE_STRING_NUMBER = "1234567890123456";
     public static final String EXAMPLE_HASH_FIRST_NUMBER_CARD = "95d69aa21111833c62e9bee662c1af5cbfad4c413138e9825297573e57dc68";
     public static final String EXAMPLE_LAST_NUMBER_CARD = "1111";

@@ -2,12 +2,14 @@ package com.andersen.banking.service.registry.meeting_impl.service.impl;
 
 import static com.andersen.banking.service.registry.meeting_impl.util.AuthServiceUtil.generateRandomPassword;
 
+import com.andersen.banking.service.registry.meeting_api.dto.UserEmailUpdateRepresentation;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentation.Credentials;
 import com.andersen.banking.service.registry.meeting_api.dto.UserRepresentationResponse;
 import com.andersen.banking.service.registry.meeting_db.entities.User;
 import com.andersen.banking.service.registry.meeting_db.entities.User.UserBuilder;
 import com.andersen.banking.service.registry.meeting_impl.exceptions.NotFoundException;
+import com.andersen.banking.service.registry.meeting_impl.exceptions.ValidationException;
 import com.andersen.banking.service.registry.meeting_impl.service.AdminService;
 import com.andersen.banking.service.registry.meeting_impl.service.UserService;
 import com.andersen.banking.service.registry.meeting_impl.util.KeycloakUrlUtil;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException.Conflict;
 
 @Slf4j
 @Service
@@ -185,7 +188,36 @@ public class UserServiceImpl implements UserService {
                 .bodyToMono(String.class)
                 .block();
 
+
         log.debug("Return updated User: {}", user);
+    }
+
+    @Override
+    public void updateEmail(User user) {
+        log.trace("Trying to update users email: {}", user);
+
+        String token = adminService.obtainAccessToken();
+
+        UserEmailUpdateRepresentation userRepresentation = setParameterForUpdateEmail(user);
+
+        try {
+            client.method(HttpMethod.PUT)
+                    .uri(KeycloakUrlUtil.getUrlForCurrentUser(
+                            keycloak.getAuthServerUrl(),
+                            keycloak.getRealm(),
+                            user.getId().toString()
+                    ))
+                    .headers(header -> header.setBearerAuth(token))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(userRepresentation)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Conflict e) {
+            throw new ValidationException("User with email: " + user.getEmail() + " exist");
+        }
+
+        log.trace("Return user with updated email: {}", user);
     }
 
     @Override
@@ -224,6 +256,15 @@ public class UserServiceImpl implements UserService {
                 .enabled(true)
                 .build();
     }
+
+    private UserEmailUpdateRepresentation setParameterForUpdateEmail(User user) {
+        return UserEmailUpdateRepresentation.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .enabled(true)
+                .build();
+    }
+
 
     private User getParameter(UserRepresentationResponse userRep) {
         UserBuilder builder = User.builder()

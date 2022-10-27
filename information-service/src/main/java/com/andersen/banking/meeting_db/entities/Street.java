@@ -1,6 +1,8 @@
 package com.andersen.banking.meeting_db.entities;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "street")
@@ -25,5 +28,10 @@ public class Street extends BaseEntity {
 
     @Column(nullable = false, name = "street_name", length = 50)
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "street",
+            cascade = {CascadeType.PERSIST})
+    private List<Atm> atms;
 
 }

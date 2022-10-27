@@ -38,7 +38,7 @@ spring:
         - id: information-service
           uri: lb://information-service
           predicates:
-            - Path=/api/v1/files/**, /api/v1/information/**, /api/v1/delivery/**
+            - Path=/api/v1/files/**, /api/v1/information/**, /api/v1/delivery/**, /api/v1/balance/**, /api/v1/atm/**
         - id: deposit-service
           uri: lb://deposit-service
           predicates:

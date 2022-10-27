@@ -11,4 +11,6 @@ public interface CountryMapper {
 
     CountryDto country2CountryDto(Country country);
 
+    Country countryDtoToCountry(CountryDto countryDto);
+
 }

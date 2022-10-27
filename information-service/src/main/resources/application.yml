@@ -23,6 +23,26 @@ spring:
         jwt:
           issuer-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New
           jwk-set-uri: http://10.10.14.31:30001/auth/realms/Meetingroom-New/protocol/openid-connect/certs
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  redis:
+    host: 10.10.14.31
+    port: 30002
+    timeout: 2000ms
+    database: 1
+    password: JsuuII12
+
+  task:
+    scheduling:
+      pool:
+        size: 2
 
 
 logging:
@@ -61,5 +81,16 @@ eureka:
     instance-id: ${spring.application.name}-${random.uuid}
     preferIpAddress: true
   client:
+    enabled: true
     serviceUrl:
       defaultZone: http://10.10.14.31:30100/eureka
+
+exchange-rates:
+  uri: https://api.exchangerate.host/latest
+  currency: EUR
+
+cache:
+  name:
+    exchange-rates: exchange-rates
+  scheduler:
+    exchange-rates: "0 0 0 * * *"
