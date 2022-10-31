@@ -87,7 +87,7 @@ public class TransferReplenishmentMoneyServiceImpl implements TransferMoneyServi
                         requestDestNum.substring(0, srcHash), requestDestNum.substring(srcHash));
 
         Card card = optionalCardSrc.orElseThrow(()->new NotFoundException(Card.class));
-        if(!card.isActive()){
+        if(!card.getIsActive()){
             throw new CardIsNotReadyToUseException(requestTransferMessage.getUserId());
         }
 

@@ -5,6 +5,7 @@ import com.andersen.banking.meeting_db.entities.Card;
 import com.andersen.banking.meeting_db.entities.RegularPayment;
 import com.andersen.banking.meeting_db.entities.StatusDescription;
 import com.andersen.banking.meeting_db.repository.CardRepository;
+import com.andersen.banking.meeting_impl.exception.CardIsNotReadyToUseException;
 import com.andersen.banking.meeting_impl.exception.NotFoundException;
 import com.andersen.banking.meeting_impl.kafka.message.RequestTransferMessage;
 import com.andersen.banking.meeting_impl.kafka.message.ResponseTransferMessage;
@@ -113,6 +114,10 @@ public class TransferInternalMoneyServiceImpl implements TransferMoneyService {
 
         Card srcCard = cards.left;
         Card destCard = cards.right;
+
+        if(!destCard.getIsActive()){
+            throw new CardIsNotReadyToUseException(requestTransferMessage.getUserId());
+        }
 
         Account srcAccount = srcCard.getAccount();
         Account destAccount = destCard.getAccount();
